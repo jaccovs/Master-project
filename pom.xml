@@ -42,7 +42,7 @@
         <junit.version>4.10</junit.version>
         <distributionRepositoryId>releases</distributionRepositoryId>
         <distributionRepositoryUrl>
-            https://vcs-isbi.aau.at/nexus/content/repositories/releases
+            https://vcs-isbi.aau.at/nexus/content/repositories/releases  
         </distributionRepositoryUrl>
     </properties>
 
