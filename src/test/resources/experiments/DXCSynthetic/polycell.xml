@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<systemCatalog xsi:schemaLocation="urn:org:dx-competition:system DXCSystemCatalogSchema.xsd" xmlns="urn:org:dx-competition:system" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemInstances>
+    <systemInstance id="polycell" system="polycell" />
+  </systemInstances>
+  <systems>
+    <system>
+      <systemName>polycell</systemName>
+      <description>Polycell DXC Framework Example.</description>
+      <components>
+        <!-- inputs -->
+        <component>
+          <name>i1</name>
+          <componentType>Port</componentType>
+          <probeCost>1</probeCost>
+        </component>
+        <component>
+          <name>i2</name>
+          <componentType>Port</componentType>
+        </component>
+        <!-- outputs -->
+        <component>
+          <name>o1</name>
+          <componentType>Port</componentType>
+        </component>
+        <!-- internal variables -->
+        <component>
+          <name>a1</name>
+          <componentType>AndGate</componentType>
+        </component>
+        <component>
+          <name>a1.i1</name>
+          <componentType>Wire</componentType>
+        </component>
+        <component>
+          <name>a1.i2</name>
+          <componentType>Wire</componentType>
+        </component>
+        <component>
+          <name>a1.o1</name>
+          <componentType>Wire</componentType>
+        </component>
+      </components>
+      <connections>
+        <connection>
+          <c1>i1</c1>
+          <c2>a1.i1</c2>
+        </connection>
+        <connection>
+          <c1>i2</c1>
+          <c2>a1.i2</c2>
+        </connection>
+        <connection>
+          <c1>a1.i1</c1>
+          <c2>a1</c2>
+        </connection>
+        <connection>
+          <c1>a1.i2</c1>
+          <c2>a1</c2>
+        </connection>
+        <connection>
+          <c1>a1</c1>
+          <c2>a1.o1</c2>
+        </connection>
+        <connection>
+          <c1>a1.o1</c1>
+          <c2>o1</c2>
+        </connection>
+      </connections>
+    </system>
+  </systems>
+  <componentTypeCatalog>
+    <componentType>
+      <name>Wire</name>
+      <description>An interconnection wire.</description>
+      <modesRef>Wire</modesRef>
+    </componentType>
+    <componentType xsi:type="sensor">
+      <name>Port</name>
+      <description>An input/output port.</description>
+      <modesRef>Port</modesRef>
+      <sensorValue xsi:type="numberValue">
+        <dataType>bool</dataType>
+      </sensorValue>
+    </componentType>
+    <componentType>
+      <name>AndGate</name>
+      <description>A 2-input logic NAND gate.</description>
+      <modesRef>AndGate</modesRef>
+    </componentType>
+  </componentTypeCatalog>
+  <modeCatalog>
+    <modeGroup>
+      <name>Wire</name>
+      <mode xsi:type="mode">
+        <name>Healthy</name>
+        <description>Logical values in both ends of the wire are equivalent.</description>
+      </mode>
+    </modeGroup>
+    <modeGroup>
+      <name>Port</name>
+      <mode xsi:type="mode">
+        <name>Healthy</name>
+        <description>The input/output port is functioning normally.</description>
+      </mode>
+    </modeGroup>
+    <modeGroup>
+      <name>AndGate</name>
+      <mode xsi:type="mode">
+        <name>Healthy</name>
+        <description>The gate computes a correct output given its inputs.</description>
+      </mode>
+      <mode xsi:type="faultMode">
+        <name>Faulty</name>
+        <description>The logic gate malfunctions, producing an arbitrary output.</description>
+        <faultSource />
+        <parameters />
+      </mode>
+    </modeGroup>
+  </modeCatalog>
+</systemCatalog>

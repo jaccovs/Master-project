@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+<presentation maxConstraintArity="5" format="XCSP 2.1"/>
+<domains nbDomains="1">
+ <domain name="D0" nbValues="28">2..29</domain>
+</domains>
+<variables nbVariables="100">
+ <variable name="V0" domain="D0"/>
+ <variable name="V1" domain="D0"/>
+ <variable name="V2" domain="D0"/>
+ <variable name="V3" domain="D0"/>
+ <variable name="V4" domain="D0"/>
+ <variable name="V5" domain="D0"/>
+ <variable name="V6" domain="D0"/>
+ <variable name="V7" domain="D0"/>
+ <variable name="V8" domain="D0"/>
+ <variable name="V9" domain="D0"/>
+ <variable name="V10" domain="D0"/>
+ <variable name="V11" domain="D0"/>
+ <variable name="V12" domain="D0"/>
+ <variable name="V13" domain="D0"/>
+ <variable name="V14" domain="D0"/>
+ <variable name="V15" domain="D0"/>
+ <variable name="V16" domain="D0"/>
+ <variable name="V17" domain="D0"/>
+ <variable name="V18" domain="D0"/>
+ <variable name="V19" domain="D0"/>
+ <variable name="V20" domain="D0"/>
+ <variable name="V21" domain="D0"/>
+ <variable name="V22" domain="D0"/>
+ <variable name="V23" domain="D0"/>
+ <variable name="V24" domain="D0"/>
+ <variable name="V25" domain="D0"/>
+ <variable name="V26" domain="D0"/>
+ <variable name="V27" domain="D0"/>
+ <variable name="V28" domain="D0"/>
+ <variable name="V29" domain="D0"/>
+ <variable name="V30" domain="D0"/>
+ <variable name="V31" domain="D0"/>
+ <variable name="V32" domain="D0"/>
+ <variable name="V33" domain="D0"/>
+ <variable name="V34" domain="D0"/>
+ <variable name="V35" domain="D0"/>
+ <variable name="V36" domain="D0"/>
+ <variable name="V37" domain="D0"/>
+ <variable name="V38" domain="D0"/>
+ <variable name="V39" domain="D0"/>
+ <variable name="V40" domain="D0"/>
+ <variable name="V41" domain="D0"/>
+ <variable name="V42" domain="D0"/>
+ <variable name="V43" domain="D0"/>
+ <variable name="V44" domain="D0"/>
+ <variable name="V45" domain="D0"/>
+ <variable name="V46" domain="D0"/>
+ <variable name="V47" domain="D0"/>
+ <variable name="V48" domain="D0"/>
+ <variable name="V49" domain="D0"/>
+ <variable name="V50" domain="D0"/>
+ <variable name="V51" domain="D0"/>
+ <variable name="V52" domain="D0"/>
+ <variable name="V53" domain="D0"/>
+ <variable name="V54" domain="D0"/>
+ <variable name="V55" domain="D0"/>
+ <variable name="V56" domain="D0"/>
+ <variable name="V57" domain="D0"/>
+ <variable name="V58" domain="D0"/>
+ <variable name="V59" domain="D0"/>
+ <variable name="V60" domain="D0"/>
+ <variable name="V61" domain="D0"/>
+ <variable name="V62" domain="D0"/>
+ <variable name="V63" domain="D0"/>
+ <variable name="V64" domain="D0"/>
+ <variable name="V65" domain="D0"/>
+ <variable name="V66" domain="D0"/>
+ <variable name="V67" domain="D0"/>
+ <variable name="V68" domain="D0"/>
+ <variable name="V69" domain="D0"/>
+ <variable name="V70" domain="D0"/>
+ <variable name="V71" domain="D0"/>
+ <variable name="V72" domain="D0"/>
+ <variable name="V73" domain="D0"/>
+ <variable name="V74" domain="D0"/>
+ <variable name="V75" domain="D0"/>
+ <variable name="V76" domain="D0"/>
+ <variable name="V77" domain="D0"/>
+ <variable name="V78" domain="D0"/>
+ <variable name="V79" domain="D0"/>
+ <variable name="V80" domain="D0"/>
+ <variable name="V81" domain="D0"/>
+ <variable name="V82" domain="D0"/>
+ <variable name="V83" domain="D0"/>
+ <variable name="V84" domain="D0"/>
+ <variable name="V85" domain="D0"/>
+ <variable name="V86" domain="D0"/>
+ <variable name="V87" domain="D0"/>
+ <variable name="V88" domain="D0"/>
+ <variable name="V89" domain="D0"/>
+ <variable name="V90" domain="D0"/>
+ <variable name="V91" domain="D0"/>
+ <variable name="V92" domain="D0"/>
+ <variable name="V93" domain="D0"/>
+ <variable name="V94" domain="D0"/>
+ <variable name="V95" domain="D0"/>
+ <variable name="V96" domain="D0"/>
+ <variable name="V97" domain="D0"/>
+ <variable name="V98" domain="D0"/>
+ <variable name="V99" domain="D0"/>
+</variables>
+<predicates nbPredicates="20">
+<predicate name="P0">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(262,add(mul(-5,X0),add(mul(5,X1),add(mul(2,X2),add(mul(-13,X3),mul(29,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P1">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(-47,add(mul(-13,X0),add(mul(19,X1),mul(7,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P2">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(266,add(mul(-29,X0),add(mul(2,X1),mul(13,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P3">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(-257,add(mul(-3,X0),add(mul(29,X1),mul(-23,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P4">
+ <parameters>int X0 int X1 int X2 int X3</parameters>
+ <expression>
+  <functional>eq(-552,add(mul(-7,X0),add(mul(-13,X1),add(mul(-5,X2),mul(-23,X3)))))</functional>
+ </expression>
+</predicate>
+<predicate name="P5">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(69,add(mul(7,X0),add(mul(-7,X1),add(mul(17,X2),add(mul(-7,X3),mul(17,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P6">
+ <parameters>int X0 int X1</parameters>
+ <expression>
+  <functional>eq(358,add(mul(19,X0),mul(7,X1)))</functional>
+ </expression>
+</predicate>
+<predicate name="P7">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(273,add(mul(5,X0),add(mul(7,X1),add(mul(2,X2),add(mul(-13,X3),mul(2,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P8">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(281,add(mul(-5,X0),add(mul(17,X1),mul(-11,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P9">
+ <parameters>int X0 int X1 int X2 int X3</parameters>
+ <expression>
+  <functional>eq(-776,add(mul(3,X0),add(mul(11,X1),add(mul(-29,X2),mul(-17,X3)))))</functional>
+ </expression>
+</predicate>
+<predicate name="P10">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(186,add(mul(17,X0),add(mul(2,X1),mul(5,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P11">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(42,add(mul(23,X0),add(mul(29,X1),add(mul(-5,X2),add(mul(-3,X3),mul(-3,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P12">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(730,add(mul(2,X0),add(mul(2,X1),add(mul(29,X2),add(mul(2,X3),mul(5,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P13">
+ <parameters>int X0 int X1 int X2 int X3</parameters>
+ <expression>
+  <functional>eq(97,add(mul(-23,X0),add(mul(2,X1),add(mul(-29,X2),mul(17,X3)))))</functional>
+ </expression>
+</predicate>
+<predicate name="P14">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(-344,add(mul(-11,X0),add(mul(-3,X1),add(mul(-7,X2),add(mul(-17,X3),mul(5,X4))))))</functional>
+ </expression>
+</predicate>
+<predicate name="P15">
+ <parameters>int X0 int X1 int X2 int X3</parameters>
+ <expression>
+  <functional>eq(-304,add(mul(7,X0),add(mul(-11,X1),add(mul(-23,X2),mul(17,X3)))))</functional>
+ </expression>
+</predicate>
+<predicate name="P16">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(431,add(mul(7,X0),add(mul(13,X1),mul(13,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P17">
+ <parameters>int X0 int X1 int X2</parameters>
+ <expression>
+  <functional>eq(628,add(mul(2,X0),add(mul(19,X1),mul(17,X2))))</functional>
+ </expression>
+</predicate>
+<predicate name="P18">
+ <parameters>int X0 int X1 int X2 int X3</parameters>
+ <expression>
+  <functional>eq(-83,add(mul(-2,X0),add(mul(-23,X1),add(mul(13,X2),mul(-5,X3)))))</functional>
+ </expression>
+</predicate>
+<predicate name="P19">
+ <parameters>int X0 int X1 int X2 int X3 int X4</parameters>
+ <expression>
+  <functional>eq(-204,add(mul(-29,X0),add(mul(-5,X1),add(mul(-11,X2),add(mul(5,X3),mul(29,X4))))))</functional>
+ </expression>
+</predicate>
+</predicates>
+<constraints nbConstraints="20">
+ <constraint name="C0" arity="2" scope="V17 V24" reference="P6">
+  <parameters>V17 V24</parameters>
+ </constraint>
+ <constraint name="C1" arity="3" scope="V8 V19 V32" reference="P2">
+  <parameters>V32 V19 V8</parameters>
+ </constraint>
+ <constraint name="C2" arity="3" scope="V8 V26 V58" reference="P8">
+  <parameters>V26 V8 V58</parameters>
+ </constraint>
+ <constraint name="C3" arity="3" scope="V21 V28 V48" reference="P17">
+  <parameters>V21 V28 V48</parameters>
+ </constraint>
+ <constraint name="C4" arity="3" scope="V27 V81 V97" reference="P1">
+  <parameters>V81 V27 V97</parameters>
+ </constraint>
+ <constraint name="C5" arity="3" scope="V46 V55 V64" reference="P3">
+  <parameters>V46 V55 V64</parameters>
+ </constraint>
+ <constraint name="C6" arity="3" scope="V76 V84 V95" reference="P10">
+  <parameters>V95 V84 V76</parameters>
+ </constraint>
+ <constraint name="C7" arity="3" scope="V86 V96 V97" reference="P16">
+  <parameters>V97 V86 V96</parameters>
+ </constraint>
+ <constraint name="C8" arity="4" scope="V0 V33 V46 V90" reference="P15">
+  <parameters>V33 V90 V46 V0</parameters>
+ </constraint>
+ <constraint name="C9" arity="4" scope="V3 V39 V47 V51" reference="P18">
+  <parameters>V3 V47 V51 V39</parameters>
+ </constraint>
+ <constraint name="C10" arity="4" scope="V19 V42 V90 V98" reference="P13">
+  <parameters>V42 V98 V90 V19</parameters>
+ </constraint>
+ <constraint name="C11" arity="4" scope="V27 V36 V37 V56" reference="P4">
+  <parameters>V56 V27 V36 V37</parameters>
+ </constraint>
+ <constraint name="C12" arity="4" scope="V31 V33 V63 V99" reference="P9">
+  <parameters>V31 V33 V63 V99</parameters>
+ </constraint>
+ <constraint name="C13" arity="5" scope="V1 V41 V44 V92 V97" reference="P0">
+  <parameters>V97 V92 V1 V41 V44</parameters>
+ </constraint>
+ <constraint name="C14" arity="5" scope="V4 V5 V44 V54 V79" reference="P14">
+  <parameters>V79 V5 V4 V54 V44</parameters>
+ </constraint>
+ <constraint name="C15" arity="5" scope="V6 V10 V12 V59 V72" reference="P11">
+  <parameters>V12 V59 V10 V6 V72</parameters>
+ </constraint>
+ <constraint name="C16" arity="5" scope="V10 V11 V61 V68 V99" reference="P7">
+  <parameters>V11 V99 V68 V10 V61</parameters>
+ </constraint>
+ <constraint name="C17" arity="5" scope="V22 V27 V58 V81 V92" reference="P12">
+  <parameters>V27 V58 V22 V81 V92</parameters>
+ </constraint>
+ <constraint name="C18" arity="5" scope="V28 V29 V35 V38 V43" reference="P5">
+  <parameters>V35 V28 V29 V43 V38</parameters>
+ </constraint>
+ <constraint name="C19" arity="5" scope="V41 V43 V49 V88 V90" reference="P19">
+  <parameters>V49 V88 V43 V90 V41</parameters>
+ </constraint>
+</constraints>
+</instance>

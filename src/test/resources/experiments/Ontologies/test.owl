@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl">
+        <rdfs:comment rdf:datatype="&xsd;string">Probabilities {DifferentFrom=0.01, inverse=0.01, SubClassOf=0.01, EquivalentTo=0.01, InverseOf=0.01, Type=0.01, SubPropertyOf=0.01, Range=0.01, Symmetric=0.01, some=0.05, max=0.01, not=0.01, Domain=0.01, min=0.01, exactly=0.01, and=0.0010, Transitive=0.01, Functional=0.01, DisjointWith=0.01, DisjointClasses=0.01, SameAs=0.01, value=0.01, or=0.0010, only=0.05}</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#teaches -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#teaches"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_1 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_1">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_2"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_2 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_2"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_1 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_1">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Researcher_1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_2 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_2">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_1"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Student_2"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Researcher_1 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Researcher_1">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Student_2 -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#Student_2">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#DeptMember_2"/>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#s2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#s2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ontologies/2012/2/Ontology1330902056445.owl#PHD_2"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+

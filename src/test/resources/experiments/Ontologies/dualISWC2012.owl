@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY Ontology1338808528221 "http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:Ontology1338808528221="http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl">
+        <rdfs:comment rdf:datatype="&xsd;string">Probabilities {DifferentFrom=0.01, only=0.05, not=0.01, some=0.05, SubClassOf=0.01, value=0.01, Transitive=0.01, min=0.01, Functional=0.01, and=0.0010, max=0.01, exactly=0.01, or=0.0010, Domain=0.01, EquivalentTo=0.01, SameAs=0.01, SubPropertyOf=0.01, DisjointWith=0.01, inverse=0.01, InverseOf=0.01, Type=0.01, Symmetric=0.01, DisjointClasses=0.01, Range=0.01}</rdfs:comment>
+        <rdfs:comment rdf:datatype="&xsd;string">Testcases &lt;?xml version=&quot;1.0&quot;?&gt;
+
+
+&lt;!DOCTYPE rdf:RDF [
+    &lt;!ENTITY owl &quot;http://www.w3.org/2002/07/owl#&quot; &gt;
+    &lt;!ENTITY xsd &quot;http://www.w3.org/2001/XMLSchema#&quot; &gt;
+    &lt;!ENTITY rdfs &quot;http://www.w3.org/2000/01/rdf-schema#&quot; &gt;
+    &lt;!ENTITY rdf &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; &gt;
+]&gt;
+
+
+&lt;rdf:RDF xmlns=&quot;http://www.w3.org/2002/07/owl#&quot;
+     xml:base=&quot;http://www.w3.org/2002/07/owl&quot;
+     xmlns:rdfs=&quot;http://www.w3.org/2000/01/rdf-schema#&quot;
+     xmlns:owl=&quot;http://www.w3.org/2002/07/owl#&quot;
+     xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema#&quot;
+     xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;&gt;
+    
+
+
+    &lt;!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     --&gt;
+
+    
+
+
+    &lt;!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     --&gt;
+
+    
+
+
+    &lt;!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     --&gt;
+
+    
+
+
+    &lt;!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#B --&gt;
+
+    &lt;Class rdf:about=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#B&quot;/&gt;
+    
+
+
+    &lt;!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#C --&gt;
+
+    &lt;Class rdf:about=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#C&quot;/&gt;
+    
+
+
+    &lt;!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     --&gt;
+
+    
+
+
+    &lt;!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#w --&gt;
+
+    &lt;NamedIndividual rdf:about=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#w&quot;&gt;
+        &lt;rdf:type rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#B&quot;/&gt;
+        &lt;rdf:type&gt;
+            &lt;Class&gt;
+                &lt;complementOf rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#C&quot;/&gt;
+            &lt;/Class&gt;
+        &lt;/rdf:type&gt;
+    &lt;/NamedIndividual&gt;
+    &lt;Axiom&gt;
+        &lt;rdfs:comment xml:lang=&quot;en&quot;&gt;ET0&lt;/rdfs:comment&gt;
+        &lt;annotatedTarget rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#B&quot;/&gt;
+        &lt;annotatedSource rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#w&quot;/&gt;
+        &lt;annotatedProperty rdf:resource=&quot;&amp;rdf;type&quot;/&gt;
+    &lt;/Axiom&gt;
+    &lt;Axiom&gt;
+        &lt;rdfs:comment xml:lang=&quot;en&quot;&gt;NET0&lt;/rdfs:comment&gt;
+        &lt;annotatedSource rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#w&quot;/&gt;
+        &lt;annotatedProperty rdf:resource=&quot;&amp;rdf;type&quot;/&gt;
+        &lt;annotatedTarget&gt;
+            &lt;Class&gt;
+                &lt;complementOf rdf:resource=&quot;http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#C&quot;/&gt;
+            &lt;/Class&gt;
+        &lt;/annotatedTarget&gt;
+    &lt;/Axiom&gt;
+&lt;/rdf:RDF&gt;
+
+
+
+&lt;!-- Generated by the OWL API (version 3.3.1957) http://owlapi.sourceforge.net --&gt;
+
+</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#s -->
+
+    <owl:ObjectProperty rdf:about="&Ontology1338808528221;s"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#A -->
+
+    <owl:Class rdf:about="&Ontology1338808528221;A">
+        <rdfs:subClassOf rdf:resource="&Ontology1338808528221;B"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#B -->
+
+    <owl:Class rdf:about="&Ontology1338808528221;B">
+        <rdfs:subClassOf rdf:resource="&Ontology1338808528221;E"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&Ontology1338808528221;D"/>
+                    <owl:Class>
+                        <owl:complementOf>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&Ontology1338808528221;s"/>
+                                <owl:someValuesFrom rdf:resource="&Ontology1338808528221;C"/>
+                            </owl:Restriction>
+                        </owl:complementOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#C -->
+
+    <owl:Class rdf:about="&Ontology1338808528221;C">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&Ontology1338808528221;D"/>
+                            <rdf:Description rdf:about="&Ontology1338808528221;E"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:complementOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#D -->
+
+    <owl:Class rdf:about="&Ontology1338808528221;D">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf rdf:resource="&Ontology1338808528221;B"/>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#E -->
+
+    <owl:Class rdf:about="&Ontology1338808528221;E"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#v -->
+
+    <owl:NamedIndividual rdf:about="&Ontology1338808528221;v">
+        <rdf:type rdf:resource="&Ontology1338808528221;A"/>
+        <s rdf:resource="&Ontology1338808528221;w"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2012/5/Ontology1338808528221.owl#w -->
+
+    <owl:NamedIndividual rdf:about="&Ontology1338808528221;w">
+        <rdf:type rdf:resource="&Ontology1338808528221;A"/>
+        <rdf:type rdf:resource="&Ontology1338808528221;C"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.3.1957) http://owlapi.sourceforge.net -->
+

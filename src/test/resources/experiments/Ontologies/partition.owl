@@ -1,0 +1,70 @@
+Prefix: xsd:
+<http://www.w3.org/2001/XMLSchema#>
+        Prefix: owl2xml: <http://www.w3.org/2006/12/owl2-xml#>
+        Prefix: owl: <http://www.w3.org/2002/07/owl#>
+        Prefix: : <http://www.semanticweb.org/ontologies/2010/0/ecai.owl#>
+        Prefix: xml: <http://www.w3.org/XML/1998/namespace>
+        Prefix: rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        Prefix: dc: <http://purl.org/dc/elements/1.1/>
+        Prefix: rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        Prefix: skos: <http://www.w3.org/2004/02/skos/core#>
+        Prefix: ecai: <http://www.semanticweb.org/ontologies/2010/0/ecai.owl#>
+
+
+        Ontology: <http://www.semanticweb.org/ontologies/2010/0/ecai.owl>
+
+
+        Class: owl:Thing
+
+
+        Class: A
+
+        SubClassOf:
+        B
+
+
+        Class: B
+
+        SubClassOf:
+        D
+
+
+        Class: D
+
+        SubClassOf:
+        E,
+        F
+
+
+        Class: E
+
+
+        Class: F
+
+        SubClassOf:
+        owl:Thing
+
+
+        Individual: y
+
+        Types:
+        B
+
+
+        Individual: x
+
+
+        Individual: w
+
+        Types:
+        A,
+        not (F)
+
+
+        Individual: v
+
+        Types:
+        not (E),
+        A
+    
+    

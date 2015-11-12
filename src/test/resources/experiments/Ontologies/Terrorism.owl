@@ -1,0 +1,2446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY terrorism "http://counterterror.mindswap.org/2005/terrorism.owl#">
+  <!ENTITY terrorism.owl "http://counterterror.mindswap.org/2005/terrorism.owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&terrorism.owl;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+         xmlns:terrorism="&terrorism;">
+
+<!-- Ontology Information -->
+  <owl:ObjectProperty rdf:about=""
+                      rdfs:label="Terrorism@en">
+    <rdf:type rdf:resource="&owl;Ontology"/>
+  </owl:ObjectProperty>
+
+<!-- Classes -->
+  <owl:Class rdf:about="#Activity"
+             rdfs:label="Activity">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Address">
+    <rdfs:label>Address</rdfs:label>
+    <rdfs:label xml:lang="en">Address</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Airplane">
+    <rdfs:label xml:lang="en">Airplane</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Vehicle"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Arrest"
+             rdfs:label="Arrest">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Arson"
+             rdfs:label="Arson">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Bombing"
+             rdfs:label="Bombing">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+    <rdfs:subClassOf rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Building">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Location"/>
+    <rdfs:label>Building</rdfs:label>
+    <rdfs:label xml:lang="en">Building</rdfs:label>
+    <rdfs:range rdf:resource="#Building"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Car">
+    <rdfs:label xml:lang="en">Car</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Vehicle"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#City">
+    <rdfs:label>City</rdfs:label>
+    <rdfs:label xml:lang="en">City</rdfs:label>
+    <rdfs:label xml:lang="en">In city</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Cold_Weapons">
+    <rdfs:label xml:lang="en">Cold Weapon Attack</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Weapon_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Colleague"
+             rdfs:label="Colleague">
+    <rdfs:subClassOf rdf:resource="#Relationship"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Contact"
+             rdfs:label="Contact">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Conversion_induction_ceremony"
+             rdfs:label="Conversion/Induction Ceremony">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Country">
+    <rdfs:label xml:lang="en">Country</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Criminal"
+             rdfs:label="Criminal">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Detonation"
+             rdfs:label="Detonation">
+    <rdfs:subClassOf rdf:resource="#Moment"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Diplomat"
+             rdfs:label="Diplomat">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Document"
+             rdfs:label="Document">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Email"
+             rdfs:label="Email">
+    <rdfs:subClassOf rdf:resource="#Contact"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Embassy"
+             rdfs:label="Embassy">
+    <rdfs:subClassOf rdf:resource="#Facility"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Employed"
+             rdfs:label="Employed">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Event"
+             rdfs:label="Event">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Explosive"
+             rdfs:label="Explosive">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Facility"
+             rdfs:label="Facility">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Fundraising"
+             rdfs:label="Fundraising">
+    <rdfs:subClassOf rdf:resource="#Activity"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Grenade_Attack">
+    <rdfs:comment xml:lang="en">Grenade Attack</rdfs:comment>
+    <rdfs:label xml:lang="en">Grenade Attack</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Weapon_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Heavy_Weapons">
+    <rdfs:label xml:lang="en">Heavy Weapons</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Weapon_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Helicopter">
+    <rdfs:label xml:lang="en">Helicopter</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Vehicle"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Hospital"
+             rdfs:label="Hospital">
+    <rdfs:subClassOf rdf:resource="#Facility"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Housemate"
+             rdfs:label="Housemate">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subClassOf rdf:resource="#Relationship"/>
+    <rdfs:subPropertyOf rdf:resource="#residence"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Illness">
+    <rdfs:label xml:lang="en">Illness, Injury, or Hospitalization</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Incarcerated"
+             rdfs:label="Incarcerated">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Kidnapping"
+             rdfs:label="Kidnapping">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+    <rdfs:subClassOf rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Location"
+             rdfs:label="Location">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Married"
+             rdfs:label="Married">
+    <rdfs:subClassOf rdf:resource="#Relationship"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Meeting"
+             rdfs:label="Meeting">
+    <rdfs:subClassOf rdf:resource="#Contact"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Moment"
+             rdfs:label="Moment">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Moment"/>
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#NBCR_Attack"
+             rdfs:label="WMD Terror Attack">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+    <rdfs:subClassOf rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Neighborhood">
+    <rdf:type rdf:resource="&owl;DatatypeProperty"/>
+    <rdfs:label xml:lang="en">In neighborhood</rdfs:label>
+    <rdfs:label>Neighborhood</rdfs:label>
+    <rdfs:label xml:lang="en">Neighborhood</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Organization">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#military_service"/>
+    <rdfs:label>Organization</rdfs:label>
+    <rdfs:label xml:lang="en">Organization</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Organization_Founded">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:label>Founding of Organization</rdfs:label>
+    <rdfs:label>Organization Founded</rdfs:label>
+    <rdfs:range rdf:resource="#Organization_Founded"/>
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Organization_split"
+             rdfs:label="Organization split">
+    <rdfs:subClassOf rdf:resource="#Organization_Founded"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Organizational_affiliation"
+             rdfs:label="Organizations involved with">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#OwnershipTransfer">
+    <rdfs:label xml:lang="en">Ownership_Transfer</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Person"
+             rdfs:label="Person">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Personal_Status"
+             rdfs:label="Personal Status">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Planted_Explosive"
+             rdfs:label="Planted Explosive">
+    <rdfs:subClassOf rdf:resource="#Bombing"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Planted_Vehicle_Bomb"
+             rdfs:label="Planted Vehicle Bomb">
+    <rdfs:subClassOf rdf:resource="#Bombing"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Politician"
+             rdfs:label="Politician">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Propaganda">
+    <rdfs:label xml:lang="en">Propaganda</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Activity"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Province">
+    <rdfs:label xml:lang="en">Province</rdfs:label>
+    <rdfs:label>State or Province</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Public_event"
+             rdfs:label="Public Event">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Recruitment"
+             rdfs:label="Recruitment">
+    <rdfs:subClassOf rdf:resource="#Activity"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Region"
+             rdfs:label="Region">
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Relationship"
+             rdfs:label="Relationship">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:range rdf:resource="#Relationship"/>
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Residence"
+             rdfs:label="Residence">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Ship">
+    <rdfs:label xml:lang="en">Ship</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Vehicle"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Shooting">
+    <rdfs:label xml:lang="en">Firearms</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Weapon_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Statement">
+    <rdfs:label xml:lang="en">Statement</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Student"
+             rdfs:label="Student">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Suicide_Bombing"
+             rdfs:label="Suicide Bombing">
+    <rdfs:subClassOf rdf:resource="#Bombing"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Suicide_Vehicle"
+             rdfs:label="Suicide Vehicle">
+    <rdfs:subClassOf rdf:resource="#Bombing"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Telephone_Call"
+             rdfs:label="Telephone Call">
+    <rdfs:subClassOf rdf:resource="#Contact"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terror_Attack">
+    <rdfs:label xml:lang="en">Terror Attack</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Event"/>
+    <owl:disjointWith rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terror_Plot"
+             rdfs:label="Terror Plot">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+    <owl:disjointWith rdf:resource="#Terror_Attack"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terror_Training_Camp"
+             rdfs:label="Terror Training Camp">
+    <rdfs:subClassOf rdf:resource="#Facility"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terrorism_Resource"
+             rdfs:label="Terrorism Resource"/>
+  <owl:Class rdf:about="#Terrorist"
+             rdfs:label="Terrorist">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#TerroristIncident"
+             rdfs:label="Terrorist Incident">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#TerroristLeader">
+    <rdfs:label xml:lang="en">Terrorist Leader</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Terrorist"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terrorist_Group"
+             rdfs:label="Terrorist Group">
+    <rdfs:subClassOf rdf:resource="#Organization"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Terrorist_cell"
+             rdfs:label="Terrorist Cell">
+    <rdfs:subClassOf rdf:resource="#Organization"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Text_message"
+             rdfs:label="Text Message">
+    <rdfs:subClassOf rdf:resource="#Contact"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Training_type"
+             rdfs:label="Training Type"/>
+  <owl:Class rdf:about="#TransferLocation">
+    <rdfs:label xml:lang="en">Transfer_Location</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="#TravelEvent"
+             rdfs:label="Travel Event">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Truck">
+    <rdfs:label xml:lang="en">Truck</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Vehicle"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Vehicle">
+    <rdfs:label xml:lang="en">Vehicle</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Vehicle_moment"
+             rdfs:label="Vehicle Moment">
+    <rdfs:subClassOf rdf:resource="#Moment"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Weapon"
+             rdfs:label="Weapon">
+    <rdfs:subClassOf rdf:resource="#Terrorism_Resource"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Weapon_Attack"
+             rdfs:label="Weapon">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+    <rdfs:subClassOf rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Wedding"
+             rdfs:label="Wedding">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#autotheft"
+             rdfs:label="Autotheft">
+    <rdfs:subClassOf rdf:resource="#crime"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#cash_transfer">
+    <rdfs:label xml:lang="en">Electronic Cash Transfer</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Contact"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#chemical"
+             rdfs:label="Chemical">
+    <rdfs:subClassOf rdf:resource="#Explosive"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#cluster"
+             rdfs:label="Cluster"/>
+  <owl:Class rdf:about="#crime"
+             rdfs:label="Crime">
+    <rdfs:subClassOf rdf:resource="#Event"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#documenttheft"
+             rdfs:label="Document Theft">
+    <rdfs:subClassOf rdf:resource="#crime"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#financial_account"
+             rdfs:label="Bank Account"/>
+  <owl:Class rdf:about="#ideologicalorientation"
+             rdfs:label="Ideological Orientation"/>
+  <owl:Class rdf:about="#injury"
+             rdfs:label="Injury"/>
+  <owl:Class rdf:about="#isle"
+             rdfs:label="Isle"/>
+  <owl:Class rdf:about="#letter_bomb"
+             rdfs:label="Letter Bomb">
+    <rdfs:subClassOf rdf:resource="#Bombing"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#logistics"
+             rdfs:label="Logistics">
+    <rdfs:subClassOf rdf:resource="#Activity"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#military_service"
+             rdfs:label="Military Service">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#movementaffiliation">
+    <rdfs:label xml:lang="en">Movement Affiliation, Recruitment, Conversion</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#other_attack"
+             rdfs:label="Other Attack">
+    <rdfs:subClassOf rdf:resource="#Terror_Attack"/>
+    <rdfs:subClassOf rdf:resource="#Terror_Plot"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#robbery"
+             rdfs:label="Robbery">
+    <rdfs:subClassOf rdf:resource="#crime"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#terrorist_training"
+             rdfs:label="Terrorist Training">
+    <rdfs:subClassOf rdf:resource="#Personal_Status"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="&owl;Thing"/>
+  <owl:Class rdf:nodeID="b0">
+    <owl:unionOf rdf:parseType="Collection"/>
+  </owl:Class>
+
+<!-- Datatypes -->
+  <rdfs:Datatype rdf:about="&rdfs;Literal"/>
+  <rdfs:Datatype rdf:about="&xsd;anyURI"/>
+  <rdfs:Datatype rdf:about="&xsd;date"/>
+  <rdfs:Datatype rdf:about="&xsd;gYearMonth"/>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="#Audience_Present">
+    <rdfs:domain rdf:resource="#Statement"/>
+    <rdfs:label xml:lang="en">Audience Present</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Began_Studies">
+    <rdfs:label xml:lang="en">Began Studies</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Cause_of_Arrest"
+                        rdfs:label="Cause of Arrest">
+    <rdfs:domain rdf:resource="#Arrest"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Completed_Studies">
+    <rdfs:label xml:lang="en">Completed Studies</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#DOB">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:label xml:lang="en">Date of Birth</rdfs:label>
+    <rdfs:range rdf:resource="&xsd;date"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Damages"
+                        rdfs:label="Damages">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Degree_Recieved">
+    <rdfs:domain rdf:resource="#Student"/>
+    <rdfs:label xml:lang="en">Degree Received</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Description"
+                        rdfs:label="Description">
+    <rdfs:domain rdf:resource="#Illness"/>
+    <rdfs:domain rdf:resource="#Neighborhood"/>
+    <rdfs:domain rdf:resource="#injury"/>
+    <rdfs:domain rdf:resource="#terrorist_training"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Details">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:label xml:lang="en">Details</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Evidence_Obtained"
+                        rdfs:label="Evidence Obtained">
+    <rdfs:domain rdf:resource="#Arrest"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Explosive_Fuse"
+                        rdfs:label="Fuse">
+    <rdfs:domain rdf:resource="#Explosive"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Explosive_Ingredients"
+                        rdfs:label="Ingredients">
+    <rdfs:domain rdf:resource="#Explosive"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Explosive_Size"
+                        rdfs:label="Size">
+    <rdfs:domain rdf:resource="#Explosive"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Light_Injuries"
+                        rdfs:label="Light Injuries">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:subPropertyOf rdf:resource="#Total_Injured"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Link"
+                        rdfs:label="Link">
+    <rdfs:range rdf:resource="&xsd;anyURI"/>
+    <rdfs:subPropertyOf rdf:resource="#Source"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Moved_In">
+    <rdfs:domain rdf:resource="#Personal_Status"/>
+    <rdfs:label xml:lang="en">Start Date</rdfs:label>
+    <rdfs:range rdf:resource="&xsd;date"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Moved_Out"/>
+  <owl:DatatypeProperty rdf:about="#Moved_in"
+                        rdfs:label="Moved in"/>
+  <owl:DatatypeProperty rdf:about="#Moved_out">
+    <rdfs:domain rdf:resource="#Personal_Status"/>
+    <rdfs:label xml:lang="en">End Date</rdfs:label>
+    <rdfs:range rdf:resource="&xsd;date"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Number_Injured_Severely"
+                        rdfs:label="Injured Severely">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:subPropertyOf rdf:resource="#Total_Injured"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Number_Killed"
+                        rdfs:label="Number Killed">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Number_of_Hostages"
+                        rdfs:label="Number of Hostages">
+    <rdfs:domain rdf:resource="#Kidnapping"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Phone_number"
+                        rdfs:label="Phone Number"/>
+  <owl:DatatypeProperty rdf:about="#Plot_Type"
+                        rdfs:label="Plot Type">
+    <rdfs:domain rdf:resource="#Terror_Plot"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Ransom"
+                        rdfs:label="Ransom"/>
+  <owl:DatatypeProperty rdf:about="#Source"
+                        rdfs:label="Source">
+    <rdfs:domain rdf:resource="#Terrorism_Resource"/>
+    <rdfs:range rdf:resource="&xsd;anyURI"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Statement_Content"
+                        rdfs:label="Statement Content">
+    <rdfs:domain rdf:resource="#Statement"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Statement_Title"
+                        rdfs:label="Statement Title">
+    <rdfs:domain rdf:resource="#Statement"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Statement_signatories"
+                        rdfs:label="Statement Signatories">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Statement"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Summary"
+                        rdfs:label="Summay">
+    <rdfs:domain rdf:resource="#Statement"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Target_Type"
+                        rdfs:label="Target Type"/>
+  <owl:DatatypeProperty rdf:about="#Technical_Means">
+    <rdfs:domain rdf:resource="#Statement"/>
+    <rdfs:label xml:lang="en">Means of Dissemination</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Telephone_Number"
+                        rdfs:label="Telephone Number"/>
+  <owl:DatatypeProperty rdf:about="#Time"
+                        rdfs:label="Time">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:domain rdf:resource="#Moment"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Total_Injured"
+                        rdfs:label="Total Injured">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#Total_Injuries"/>
+  <owl:DatatypeProperty rdf:about="#TransferDate">
+    <rdfs:domain rdf:resource="#OwnershipTransfer"/>
+    <rdfs:label xml:lang="en">Transfer Date</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#account_opened"
+                        rdfs:label="Date Account Opened">
+    <rdfs:domain rdf:resource="#financial_account"/>
+    <rdfs:range rdf:resource="&xsd;date"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#acronym">
+    <rdfs:label xml:lang="en">Acronym for Official Name</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="#officialorganizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#acronymforalternatename"
+                        rdfs:label="Acronym for alternate name">
+    <rdfs:subPropertyOf rdf:resource="#organizationknownas"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#akaalternatespelling"
+                        rdfs:label="AKA alternate spelling">
+    <rdfs:subPropertyOf rdf:resource="#organizationknownas"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#akameaning"
+                        rdfs:label="Meaning of AKA name">
+    <rdfs:subPropertyOf rdf:resource="#organizationknownas"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#alias"
+                        rdfs:label="Alias">
+    <rdfs:subPropertyOf rdf:resource="#name"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#alias-alternatespelling"
+                        rdfs:label="Alias - Alternate Spelling">
+    <rdfs:subPropertyOf rdf:resource="#alias"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#alternativespelling">
+    <rdfs:label xml:lang="en">Alternate Spellings for Official Name</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="#officialorganizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#cash_transferred"
+                        rdfs:label="Cash Transferred">
+    <rdfs:domain rdf:resource="#Contact"/>
+    <rdfs:domain rdf:resource="#cash_transfer"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#content_of_contact"
+                        rdfs:label="content of contact">
+    <rdfs:domain rdf:resource="#Contact"/>
+    <rdfs:range rdf:resource="&rdfs;Literal"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#criminal_record"
+                        rdfs:label="criminal record">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#date"
+                        rdfs:label="date">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:domain rdf:resource="#Moment"/>
+    <rdfs:range rdf:resource="&xsd;date"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#datesInPosition">
+    <rdfs:domain rdf:resource="#TerroristLeader"/>
+    <rdfs:label xml:lang="en">Dates in Position</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#dates_of_operation"
+                        rdfs:label="dates of operation">
+    <rdfs:domain rdf:resource="#Facility"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#description">
+    <rdfs:domain rdf:resource="#Activity"/>
+    <rdfs:domain rdf:resource="#Moment"/>
+    <rdfs:domain rdf:resource="#Terror_Plot"/>
+    <rdfs:domain rdf:resource="&owl;Thing"/>
+    <rdfs:label xml:lang="en">Description</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#facility_name"
+                        rdfs:label="facility name">
+    <rdfs:domain rdf:resource="#Facility"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#founding_date"
+                        rdfs:label="Founding Date">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="&xsd;gYearMonth"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#gender"
+                        rdfs:label="gender">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#given_name"
+                        rdfs:label="Given Name">
+    <rdfs:subPropertyOf rdf:resource="#name"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#givenname_alternatespelling"
+                        rdfs:label="Given Name - Alternate Spelling">
+    <rdfs:subPropertyOf rdf:resource="#given_name"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasAbbreviation">
+    <rdfs:label xml:lang="en">Abbreviation</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasActivity">
+    <rdfs:label xml:lang="en">has Activity</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasDescription">
+    <rdfs:label xml:lang="en">Description</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasExternalAid">
+    <rdfs:label xml:lang="en">External Aid</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasLocation">
+    <rdfs:label xml:lang="en">Location of Operations</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasName">
+    <rdfs:label xml:lang="en">Name</rdfs:label>
+    <owl:equivalentProperty rdf:resource="#name"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasStrength">
+    <rdfs:label xml:lang="en">Strength</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasprobability"
+                        rdfs:label="Probability"/>
+  <owl:DatatypeProperty rdf:about="#height"
+                        rdfs:label="height">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#meaning">
+    <rdfs:label xml:lang="en">Meaning for Official Name</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="#officialorganizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#means_of_contact"
+                        rdfs:label="means of contact">
+    <rdfs:domain rdf:resource="#Contact"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#name"
+                        rdfs:label="name">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="&rdfs;label"/>
+    <owl:equivalentProperty rdf:resource="#hasName"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#nativetongueaka"
+                        rdfs:label="AKA in Native Tongue">
+    <rdfs:subPropertyOf rdf:resource="#organizationknownas"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#nativetonguename">
+    <rdfs:label xml:lang="en">Official Name in Native Tongue</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="#officialorganizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#nickname"
+                        rdfs:label="Nickname">
+    <rdfs:subPropertyOf rdf:resource="#name"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#nickname_alternatespelling"
+                        rdfs:label="Alternate Spelling - Nickname">
+    <rdfs:subPropertyOf rdf:resource="#nickname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#officialorganizationname"
+                        rdfs:label="Official organization name">
+    <rdfs:subPropertyOf rdf:resource="#organizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#organizationType"
+                        rdfs:label="organization type">
+    <rdfs:domain rdf:resource="#Organization"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#organizationknownas"
+                        rdfs:label="Organization known as">
+    <rdfs:subPropertyOf rdf:resource="#organizationname"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#organizationname"
+                        rdfs:label="Organization Name">
+    <rdfs:domain rdf:resource="#Organization"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#profession"
+                        rdfs:label="profession">
+    <rdfs:domain rdf:resource="#Employed"/>
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#roleInEvent">
+    <rdfs:domain rdf:nodeID="b0"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#source_of_contact"
+                        rdfs:label="source of contact">
+    <rdfs:domain rdf:resource="#Contact"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#statements"
+                        rdfs:label="statements">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#status"
+                        rdfs:label="status">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#title">
+    <rdfs:domain rdf:resource="#Employed"/>
+    <rdfs:domain rdf:resource="#Organizational_affiliation"/>
+    <rdfs:domain rdf:resource="#TerroristLeader"/>
+    <rdfs:domain rdf:resource="#military_service"/>
+    <rdfs:label xml:lang="en">Title</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#travelAction"
+                        rdfs:label="action">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#travelDate">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Travdl Date</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#type"
+                        rdfs:label="type">
+    <rdfs:domain rdf:resource="#Event"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#vehicle_identification">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#vehicle_make"
+                        rdfs:label="Vehicle Make">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#weight"
+                        rdfs:label="weight">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="&rdfs;label"/>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="#Assassinated"
+                      rdfs:label="Assassinated">
+    <rdfs:subPropertyOf rdf:resource="#Death"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Attendee"
+                      rdfs:label="Attendee">
+    <rdfs:domain rdf:resource="#Conversion_induction_ceremony"/>
+    <rdfs:domain rdf:resource="#Wedding"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Bank"
+                      rdfs:label="Bank">
+    <rdfs:domain rdf:resource="#financial_account"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Boss"
+                      rdfs:label="Boss">
+    <rdfs:domain rdf:resource="#Employed"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Claim_of_Responsibility"
+                      rdfs:label="Claim of Responsibility">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:range rdf:resource="#Statement"/>
+    <rdfs:subPropertyOf rdf:resource="#post-event_activity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Death"
+                      rdfs:label="Death">
+    <rdfs:domain rdf:resource="#Illness"/>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Moment"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Demands"
+                      rdfs:label="Demands">
+    <rdfs:domain rdf:resource="#Kidnapping"/>
+    <rdfs:range rdf:resource="#Statement"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Disseminated_by">
+    <rdfs:domain rdf:resource="#Statement"/>
+    <rdfs:label xml:lang="en">Disseminated by</rdfs:label>
+    <rdfs:range rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Distance_From"
+                      rdfs:label="Distance From">
+    <rdfs:subPropertyOf rdf:resource="#Near"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Driver"
+                      rdfs:label="Driver">
+    <rdfs:domain rdf:resource="#Vehicle_moment"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Educational_Institution">
+    <rdfs:domain rdf:resource="#Student"/>
+    <rdfs:label xml:lang="en">Educational Institution</rdfs:label>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Employer"
+                      rdfs:label="Employer">
+    <rdfs:domain rdf:resource="#Employed"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Explosive_Builder"
+                      rdfs:label="Explosive Builder">
+    <rdfs:domain rdf:resource="#Explosive"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Explosive_Obtained"
+                      rdfs:label="Explosive Obtained">
+    <rdfs:domain rdf:resource="#Explosive"/>
+    <rdfs:range rdf:resource="#TerroristIncident"/>
+    <rdfs:subPropertyOf rdf:resource="#related_planning_activity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Explosive_Used"
+                      rdfs:label="Explosive Used">
+    <rdfs:domain rdf:resource="#Bombing"/>
+    <rdfs:range rdf:resource="#Explosive"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Explosive_detonated"
+                      rdfs:label="Explosive Detonated">
+    <rdfs:domain rdf:resource="#Bombing"/>
+    <rdfs:range rdf:resource="#Detonation"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Hostage_Release"
+                      rdfs:label="Hostage Release">
+    <rdfs:domain rdf:resource="#Kidnapping"/>
+    <rdfs:range rdf:resource="#Moment"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Husband"
+                      rdfs:label="Husband">
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Isle"
+                      rdfs:label="Isle">
+    <rdfs:range rdf:resource="#isle"/>
+    <rdfs:subPropertyOf rdf:resource="#location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#LOB">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:label xml:lang="en">Place of Birth</rdfs:label>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Near"
+                      rdfs:label="Near">
+    <rdfs:domain rdf:resource="#Location"/>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Number_Released"
+                      rdfs:label="Number Released">
+    <rdfs:subPropertyOf rdf:resource="#Hostage_Release"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Passenger"
+                      rdfs:label="Passenger">
+    <rdfs:domain rdf:resource="#Vehicle_moment"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Presiding_Official"
+                      rdfs:label="Presiding Official">
+    <rdfs:domain rdf:resource="#Conversion_induction_ceremony"/>
+    <rdfs:domain rdf:resource="#Wedding"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#organizer"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Rationale"
+                      rdfs:label="Rationale">
+    <rdfs:range rdf:resource="#Statement"/>
+    <rdfs:subPropertyOf rdf:resource="#Hostage_Release"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#RegisteringAuthority">
+    <rdfs:domain rdf:resource="#OwnershipTransfer"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Split_from"
+                      rdfs:label="Split from">
+    <rdfs:domain rdf:resource="#Organization_split"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Sponsored_event"
+                      rdfs:label="Sponsored Terror Attack">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Event"/>
+    <owl:inverseOf rdf:resource="#sponsoring_group"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Statement_Issued_by">
+    <rdfs:domain rdf:resource="#Statement"/>
+    <rdfs:label xml:lang="en">Statement Issued By</rdfs:label>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#SubAttack"
+                      rdfs:label="SubAttack">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:range rdf:resource="#Terror_Attack"/>
+    <rdfs:subPropertyOf rdf:resource="#related_event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Subordinate"
+                      rdfs:label="Subordinate">
+    <rdfs:domain rdf:resource="#Employed"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Suicide_Bomber"
+                      rdfs:label="Suicide Bomber">
+    <rdfs:domain rdf:resource="#Suicide_Bombing"/>
+    <rdfs:domain rdf:resource="#Suicide_Vehicle"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Target"
+                      rdfs:label="Target">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:domain rdf:resource="#Terror_Plot"/>
+    <rdfs:range rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Teacher"
+                      rdfs:label="Teacher">
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Training_received"
+                      rdfs:label="Training received">
+    <rdfs:domain rdf:resource="#terrorist_training"/>
+    <rdfs:range rdf:resource="#Training_type"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#TransferredFrom">
+    <rdfs:domain rdf:resource="#OwnershipTransfer"/>
+    <rdfs:label xml:lang="en">Transferred From</rdfs:label>
+    <rdfs:range rdf:nodeID="b0"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#TransferredTo">
+    <rdfs:domain rdf:resource="#OwnershipTransfer"/>
+    <rdfs:label xml:lang="en">Transferred to</rdfs:label>
+    <rdfs:range rdf:nodeID="b0"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Vehicle_Bomb"
+                      rdfs:label="Vehicle Bomb">
+    <rdfs:domain rdf:resource="#Planted_Vehicle_Bomb"/>
+    <rdfs:domain rdf:resource="#Suicide_Vehicle"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+    <rdfs:subPropertyOf rdf:resource="#Vehicle_Used"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Vehicle_Used"
+                      rdfs:label="Vehicle Used">
+    <rdfs:domain rdf:resource="#Planted_Vehicle_Bomb"/>
+    <rdfs:domain rdf:resource="#Suicide_Vehicle"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Victim"
+                      rdfs:label="Victim">
+    <rdfs:domain rdf:resource="#Terror_Attack"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Weapon_Obtained">
+    <rdfs:domain rdf:resource="#Weapon"/>
+    <rdfs:range rdf:resource="#TerroristIncident"/>
+    <rdfs:subPropertyOf rdf:resource="#related_planning_activity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Weapon_Type"
+                      rdfs:label="Weapon Type">
+    <rdfs:domain rdf:resource="#Weapon"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Weapon_Used"
+                      rdfs:label="Weapon Used">
+    <rdfs:domain rdf:resource="#Weapon_Attack"/>
+    <rdfs:range rdf:resource="#Weapon"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#Wife"
+                      rdfs:label="Wife">
+    <rdfs:domain rdf:resource="#Married"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#account_holder"
+                      rdfs:label="Account Holder">
+    <rdfs:domain rdf:resource="#financial_account"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#affiliation"
+                      rdfs:label="affiliation">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Organization"/>
+    <owl:inverseOf rdf:resource="#member"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#areas_of_operation"
+                      rdfs:label="areas of operation">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#arresting_authority"
+                      rdfs:label="arresting authority">
+    <rdfs:domain rdf:resource="#Arrest"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#assassinationattempt"
+                      rdfs:label="Assassination Attempt">
+    <rdfs:range rdf:resource="#Moment"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#bank_branch"
+                      rdfs:label="Bank Branch">
+    <rdfs:domain rdf:resource="#financial_account"/>
+    <rdfs:range rdf:resource="#Facility"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#belongsto"
+                      rdfs:label="Belongs to">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#cluster"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#cells"
+                      rdfs:label="cells">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#Terrorist_cell"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#child">
+    <rdfs:domain rdf:resource="#Married"/>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:label xml:lang="en">haschild</rdfs:label>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#document"
+                      rdfs:label="document">
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="#Document"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#education"
+                      rdfs:label="education">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#employment"
+                      rdfs:label="employment">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Employed"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#event"
+                      rdfs:label="event">
+    <rdfs:domain rdf:resource="#Activity"/>
+    <rdfs:domain rdf:resource="#Personal_Status"/>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#event_location"
+                      rdfs:label="event location">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:domain rdf:resource="#Moment"/>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facilities"
+                      rdfs:label="facilities">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#Facility"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_activities"
+                      rdfs:label="facility activities">
+    <rdfs:domain rdf:resource="#Facility"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_affiliation"
+                      rdfs:label="facility affiliation">
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_leadership"
+                      rdfs:label="facility leadership">
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_location"
+                      rdfs:label="facility location">
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_members"
+                      rdfs:label="facility member">
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <owl:inverseOf rdf:resource="#used_facility"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#facility_picture"
+                      rdfs:label="facility picture">
+    <rdfs:domain rdf:resource="#Facility"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#funded_by"
+                      rdfs:label="Funded by">
+    <rdfs:domain rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#global_links"
+                      rdfs:label="global_links">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasAddress"
+                      rdfs:label="Has Address">
+    <rdfs:range rdf:resource="#Address"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasSubOrganization"
+                      rdfs:label="Sub-organization of this organization">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#has_contact"
+                      rdfs:label="has contact">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Contact"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#husband"
+                      rdfs:label="Husband">
+    <rdfs:domain rdf:resource="#Married"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#ideology"
+                      rdfs:label="ideology">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#ideologicalorientation"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#incidents"
+                      rdfs:label="incidents">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#injuredin"
+                      rdfs:label="Injured In">
+    <rdfs:domain rdf:resource="#injury"/>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#injuriessustained"
+                      rdfs:label="Injuries Sustained">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#injury"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#involved_person"
+                      rdfs:label="involved person">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:domain rdf:resource="#Moment"/>
+    <rdfs:domain rdf:resource="#Relationship"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <owl:inverseOf rdf:resource="#participated_in_event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#item_transferred"
+                      rdfs:label="Item Transferred">
+    <rdfs:domain rdf:resource="#Contact"/>
+    <rdfs:range rdf:resource="#Document"/>
+    <rdfs:range rdf:resource="#Explosive"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+    <rdfs:range rdf:resource="#Weapon"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#keyingredient"
+                      rdfs:label="Key Ingredient">
+    <rdfs:domain rdf:resource="#Explosive"/>
+    <rdfs:range rdf:resource="#chemical"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#leader"
+                      rdfs:label="leader">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Terrorist"/>
+    <rdfs:subPropertyOf rdf:resource="#member"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#life_event"
+                      rdfs:label="Life Event">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Personal_Status"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#links"
+                      rdfs:label="links">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#links_to_other_groups"
+                      rdfs:label="links to other group">
+    <rdfs:domain rdf:resource="#Terrorist_Group"/>
+    <rdfs:range rdf:resource="#Terrorist_Group"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#locatedinCity"
+                      rdfs:label="Located in City">
+    <rdfs:domain rdf:resource="#Address"/>
+    <rdfs:domain rdf:resource="#Neighborhood"/>
+    <rdfs:range rdf:resource="#City"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#locatedinCountry"
+                      rdfs:label="Located in Country">
+    <rdfs:domain rdf:resource="#City"/>
+    <rdfs:domain rdf:resource="#Province"/>
+    <rdfs:domain rdf:resource="#Region"/>
+    <rdfs:range rdf:resource="#Country"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#locatedinNeighborhood"
+                      rdfs:label="Located in Neighborhood">
+    <rdfs:domain rdf:resource="#Address"/>
+    <rdfs:range rdf:resource="#Neighborhood"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#locatedinProvince"
+                      rdfs:label="Located in Province">
+    <rdfs:domain rdf:resource="#City"/>
+    <rdfs:domain rdf:resource="#Region"/>
+    <rdfs:range rdf:resource="#Province"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#locatedinRegion"
+                      rdfs:label="Located in Region">
+    <rdfs:domain rdf:resource="#Address"/>
+    <rdfs:domain rdf:resource="#City"/>
+    <rdfs:domain rdf:resource="#Neighborhood"/>
+    <rdfs:domain rdf:resource="#Province"/>
+    <rdfs:domain rdf:resource="#Region"/>
+    <rdfs:range rdf:resource="#Region"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#location"
+                      rdfs:label="location">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:domain rdf:resource="#OwnershipTransfer"/>
+    <rdfs:domain rdf:resource="#Residence"/>
+    <rdfs:domain rdf:resource="#terrorist_training"/>
+    <rdfs:range rdf:resource="#Location"/>
+    <rdfs:subPropertyOf rdf:resource="#residence"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#mapOfLocation">
+    <rdfs:domain rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#member"
+                      rdfs:label="member">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <owl:inverseOf rdf:resource="#affiliation"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#name_of_organization_founded"
+                      rdfs:label="Identity of new organization">
+    <rdfs:domain rdf:resource="#Organization_Founded"/>
+    <rdfs:range rdf:resource="#Facility"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#nationality"
+                      rdfs:label="nationality">
+    <rdfs:domain rdf:resource="#Neighborhood"/>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="#Country"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#organization_joined"
+                      rdfs:label="Organization/Movement Joined">
+    <rdfs:domain rdf:resource="#Conversion_induction_ceremony"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#organizer"
+                      rdfs:label="organizer">
+    <rdfs:domain rdf:resource="#Activity"/>
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Terrorist_cell"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#ownership">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+    <rdfs:range rdf:nodeID="b0"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#participated_in_event"
+                      rdfs:label="participated in event">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Event"/>
+    <owl:inverseOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#person_arrested"
+                      rdfs:label="person arrested">
+    <rdfs:domain rdf:resource="#Arrest"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#person_contacted"
+                      rdfs:label="person contacted">
+    <rdfs:domain rdf:resource="#Contact"/>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#picture"
+                      rdfs:label="picture">
+    <rdfs:domain rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#post-event_activity"
+                      rdfs:label="post event activity">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Event"/>
+    <rdfs:subPropertyOf rdf:resource="#related_event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#recipient_account"
+                      rdfs:label="Recipient Account">
+    <rdfs:domain rdf:resource="#cash_transfer"/>
+    <rdfs:range rdf:resource="#financial_account"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#related_event"
+                      rdfs:label="Related Event">
+    <rdfs:domain rdf:resource="#Activity"/>
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#related_planning_activity"
+                      rdfs:label="related planning activity">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Event"/>
+    <rdfs:subPropertyOf rdf:resource="#related_event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#residence"
+                      rdfs:label="residence">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#roleInEncompasingOrganization">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:label>Role of this sub-organization in larger organization</rdfs:label>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#samedesign"
+                      rdfs:label="Same design as">
+    <rdfs:domain rdf:resource="#Explosive"/>
+    <rdfs:range rdf:resource="#Explosive"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#source_account"
+                      rdfs:label="Source Account">
+    <rdfs:domain rdf:resource="#cash_transfer"/>
+    <rdfs:range rdf:resource="#financial_account"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#sponsoring_group"
+                      rdfs:label="Sponsoring Group">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Organization"/>
+    <owl:inverseOf rdf:resource="#Sponsored_event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#spouse"
+                      rdfs:label="spouse">
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#subOrganizationOf">
+    <rdfs:domain rdf:resource="#Organization"/>
+    <rdfs:label>This organization is a sub organization of</rdfs:label>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#trainedby"
+                      rdfs:label="Trained By">
+    <rdfs:domain rdf:resource="#terrorist_training"/>
+    <rdfs:range rdf:resource="#Organization"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#transferOfOwnership">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+    <rdfs:label xml:lang="en">Ownership Transfer</rdfs:label>
+    <rdfs:range rdf:resource="#OwnershipTransfer"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#traveSegment">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Travel Segment</rdfs:label>
+    <rdfs:range rdf:resource="#TravelEvent"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#travelFrom">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Travel From</rdfs:label>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#travelTo">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Travel to</rdfs:label>
+    <rdfs:range rdf:resource="#Location"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#travelVehicle">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Travel Vehicle</rdfs:label>
+    <rdfs:range rdf:resource="#Vehicle"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#traveler">
+    <rdfs:domain rdf:resource="#TravelEvent"/>
+    <rdfs:label xml:lang="en">Traveler</rdfs:label>
+    <rdfs:range rdf:resource="#Person"/>
+    <rdfs:subPropertyOf rdf:resource="#involved_person"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#usedInTerroristIncident">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+    <rdfs:range rdf:resource="#TerroristIncident"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#used_facility"
+                      rdfs:label="used facility">
+    <rdfs:domain rdf:resource="#Conversion_induction_ceremony"/>
+    <rdfs:domain rdf:resource="#Illness"/>
+    <rdfs:domain rdf:resource="#Incarcerated"/>
+    <rdfs:domain rdf:resource="#Person"/>
+    <rdfs:domain rdf:resource="#terrorist_training"/>
+    <rdfs:range rdf:resource="#Facility"/>
+    <owl:inverseOf rdf:resource="#facility_members"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#vehicleEvent">
+    <rdfs:domain rdf:resource="#Vehicle"/>
+    <rdfs:range rdf:resource="#Event"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#vehicle_used"
+                      rdfs:label="Vehicle Used">
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#vehiclestolen"
+                      rdfs:label="vehicle stolen">
+    <rdfs:domain rdf:resource="#autotheft"/>
+    <rdfs:range rdf:resource="#Vehicle"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#victim"
+                      rdfs:label="victim">
+    <rdfs:range rdf:resource="#Event"/>
+    <rdfs:range rdf:resource="#Person"/>
+  </owl:ObjectProperty>
+
+<!-- Instances -->
+  <terrorism:Terrorist_Group rdf:about="#ALF-ELF"
+                             rdfs:label="ALF/ELF">
+    <terrorism:name rdf:datatype="&xsd;string">Animal Liberation Front</terrorism:name>
+    <terrorism:name rdf:datatype="&xsd;string">Earth Liberation Front</terrorism:name>
+  </terrorism:Terrorist_Group>
+
+  <terrorism:Facility rdf:about="#Baker_Street_Prayer_Group"
+                      rdfs:label="Baker Street Prayer Group"/>
+  <terrorism:Facility rdf:about="#Khalden_Camp"
+                      rdfs:label="Khalden Training Camp"/>
+  <terrorism:Terrorist_cell rdf:about="#Roubaix_gang">
+    <rdfs:label xml:lang="en">Roubaix Gang</rdfs:label>
+  </terrorism:Terrorist_cell>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization00">
+    <terrorism:hasAbbreviation xml:lang="EN">ANO</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Has carried out terrorist attacks in 20 countries, killing or injuring almost 900 persons. Targets include the United States, the United Kingdom, France, Israel, moderate Palestinians, the PLO, and various Arab countries. Major attacks included the Rome and Vienna airports in December 1985, the Neve Shalom synagogue in Istanbul and the Pan Am flight 73 hijacking in Karachi in September 1986, and the City of Poros day-excursion ship attack in Greece in July 1988. Suspected of assassinating PLO deputy chief Abu Iyad and PLO security chief Abu Hul in Tunis in January 1991. ANO assassinated a Jordanian diplomat in Lebanon in January 1994 and has been linked to the killing of the PLO representative there. Has not attacked Western targets since the late 1980s.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The Abu Nidal organization is an international terrorist organization led by Sabri al-Banna. Split from PLO in 1974. Made up of various functional committees, including political, military, and financial.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Has received considerable support, including safehaven, training, logistic assistance, and financial aid from Iraq, Libya, and Syria (until 1987), in addition to close support for selected operations.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Al-Banna relocated to Iraq in December 1998, where the group maintains a presence. Has an operational presence in Lebanon, including in several Palestinian refugee camps. Financial problems and internal disorganization have reduced the group's activities and capabilities. Authorities shut down the ANO's operations in Libya and Egypt in 1999. Has demonstrated ability to operate over wide area, including the Middle East, Asia, and Europe</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Abu Nidal organization</terrorism:hasName>
+    <rdfs:label xml:lang="en">Abu Nidal Organization</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization01">
+    <terrorism:hasAbbreviation xml:lang="EN">ASG</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Engages in bombings, assassinations, kidnappings, and extortion to promote an independent Islamic state in western Mindanao and the Sulu Archipelago, areas in the southern Philippines heavily populated by Muslims. Raided the town of Ipil in Mindanao in April 1995--the group's first large-scale action--and kidnapped more than 30 foreigners, including a US citizen, in 2000.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The ASG is the smallest and most radical of the Islamic separatist groups operating in the southern Philippines. Some ASG members have studied or worked in the Middle East and developed ties to mjuahidin while fighting and training in Afghanistan. The group split from the Moro National Liberation Front in 1991 under the leadership of Abdurajik Abubakar Janjalani, who was killed in a clash with Philippine police on 18 December 1998. Press reports place his younger brother, Khadafi Janjalani, as the nominal leader of the group, which is composed of several factions.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Probably receives support from Islamic extremists in the Middle East and South Asia.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">The ASG primarily operates in the southern Philippines with members occasionally traveling to Manila, but the group expanded its operations to Malaysia this year when it abducted foreigners from two different resorts.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Abu Sayyaf Group</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Believed to have about 200 core fighters, but more than 2,000 individuals motivated by the prospect of receiving ransom payments for foreign hostages allegedly joined the group in August.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Abu Sayyaf Group</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization02">
+    <terrorism:hasName xml:lang="EN">al-Aqsa Martyrs Brigade</terrorism:hasName>
+    <rdfs:label xml:lang="en">al-Aqsa Martyr's Brigade</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization03">
+    <terrorism:hasAbbreviation xml:lang="EN">ABB</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Responsible for more than 100 murders and believed to have been involved in the murder in 1989 of US Army Col. James Rowe in the Philippines. In March 1997 the group announced it had formed an alliance with another armed group, the Revolutionary Proletarian Army. In March 2000, the group claimed credit for a rifle grenade attack against the Department of Energy building in Manila and strafed Shell Oil offices in the central Philippines to protest rising oil prices.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The ABB, the breakaway urban hit squad of the Communist Party of the Philippines New People's Army, was formed in the mid-1980s.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Unknown.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates in Manila and central Philippines.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Alex Boncayao Brigade</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Approximately 500.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Alex Boncayao Brigade</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization04">
+    <terrorism:hasName xml:lang="EN">Al Faran</terrorism:hasName>
+    <rdfs:label xml:lang="en">al Faran</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization05">
+    <terrorism:hasAbbreviation xml:lang="EN">IG</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Group specialized in armed attacks against Egyptian security and other government officials, Coptic Christians, and Egyptian opponents of Islamic extremism before the cease-fire. From 1993 until the cease-fire, al-Gama'a launched attacks on tourists in Egypt, most notably the attack in November 1997 at Luxor that killed 58 foreign tourists. Also claimed responsibility for the attempt in June 1995 to assassinate Egyptian President Hosni Mubarak in Addis Ababa, Ethiopia. The Gama'a has never specifically attacked a US citizen or facility but has threatened US interests.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Egypt's largest militant group, active since the late 1970s; appears to be loosely organized. Has an external wing with a worldwide presence. The group issued a cease-fire in March 1999, but its spiritual leader, Shaykh Umar Abd al-Rahman, incarcerated in the United States, rescinded his support for the cease-fire in June 2000. The Gama'a has not conducted an attack inside Egypt since August 1998. Rifa'i Taha Musa-a hardline former senior member of the group-signed Usama Bin Ladin's February 1998 fatwa calling for attacks against US civilians. The IG since has publicly denied that it supports Bin Ladin and frequently differs with public statements made by Taha Musa. Taha Musa has in the last year sought to push the group toward a return to armed operations, but the group, which still is led by Mustafa Hamza, has yet to break the unilaterally declared cease-fire. In late 2000, Taha Musa appeared in an undated video with Bin Ladin and Ayman al-Zawahiri threatening retaliation against the United States for Abd al-Rahman's continued incarceration. The IG's primary goal is to overthrow the Egyptian Government and replace it with an Islamic state, but Taha Musa also may be interested in attacking US and Israeli interests.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Unknown. The Egyptian Government believes that Iran, Bin Ladin, and Afghan militant groups support the organization. Also may obtain some funding through various Islamic nongovernmental organizations.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates mainly in the Al-Minya, Asyu't, Qina, and Sohaj Governorates of southern Egypt. Also appears to have support in Cairo, Alexandria, and other urban locations, particularly among unemployed graduates and students. Has a worldwide presence, including Sudan, the United Kingdom, Afghanistan, Austria, and Yemen.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Al-Gama'a al-Islamiyya</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown. At its peak the IG probably commanded several thousand hard-core members and a like number of sympathizers. The 1998 cease-fire and security crackdowns following the attack in Luxor in 1997 probably have resulted in a substantial decrease in the group's numbers.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">al-Gama'a al-Islamiyya</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization06">
+    <terrorism:hasName xml:lang="EN">Algeti Wolves</terrorism:hasName>
+    <rdfs:label xml:lang="en">Algeti Wolves</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization07">
+    <terrorism:hasActivity xml:lang="EN">Specializes in armed attacks against high-level Egyptian Government personnel, including cabinet ministers, and car-bombings against official US and Egyptian facilities. The original Jihad was responsible for the assassination in 1981 of Egyptian President Anwar Sadat. Claimed responsibility for the attempted assassinations of Interior Minister Hassan al-Alfi in August 1993 and Prime Minister Atef Sedky in November 1993. Has not conducted an attack inside Egypt since 1993 and has never targeted foreign tourists there. Responsible for Egyptian Embassy bombing in Islamabad in 1995; in 1998, planned attack against US Embassy in Albania was thwarted.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Egyptian Islamic extremist group active since the late 1970s. Close partner of Bin Ladin's al-Qaida organization. Suffered setbacks as a result of numerous arrests of operatives worldwide, most recently in Lebanon and Yemen. Primary goals are to overthrow the Egyptian Government and replace it with an Islamic state and attack US and Israeli interests in Egypt and abroad.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Not known. The Egyptian Government claims that both Iran and Bin Ladin support the Jihad. Also may obtain some funding through various Islamic nongovernmental organizations, cover businesses, and criminal acts.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates in the Cairo area. Has a network outside Egypt, including Yemen, Afghanistan, Pakistan, Sudan, Lebanon, and the United Kingdom.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Al-Jihad</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Not known but probably has several hundred hard-core members.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">al-Jihad</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization08">
+    <terrorism:hasActivity xml:lang="EN">Plotted to carry out terrorist operations against US and Israeli tourists visiting Jordan for millennial celebrations. (Jordanian authorities thwarted the planned attacks and put 28 suspects on trial.) Conducted the bombings in August 1998 of the US Embassies in Nairobi, Kenya, and Dar es Salaam, Tanzania, that killed at least 301 persons and injured more than 5,000 others. Claims to have shot down US helicopters and killed US servicemen in Somalia in 1993 and to have conducted three bombings that targeted US troops in Aden, Yemen, in December 1992. Linked to the following plans that were not carried out: to assassinate Pope John Paul II during his visit to Manila in late 1994, simultaneous bombings of the US and Israeli Embassies in Manila and other Asian capitals in late 1994, the midair bombing of a dozen US trans-Pacific flights in 1995, and to kill President Clinton during a visit to the Philippines in early 1995. Continues to train, finance, and provide logistic support to terrorist groups in support of these goals.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Established by Usama Bin Ladin in the late 1980s to bring together Arabs who fought in Afghanistan against the Soviet invasion. Helped finance, recruit, transport, and train Sunni Islamic extremists for the Afghan resistance. Current goal is to establish a pan-Islamic Caliphate throughout the world by working with allied Islamic extremist groups to overthrow regimes it deems 'non-Islamic' and expelling Westerners and non-Muslims from Muslim countries. Issued statement under banner of 'the World Islamic Front for Jihad Against the Jews and Crusaders' in February 1998, saying it was the duty of all Muslims to kill US citizens--civilian or military--and their allies everywhere.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Bin Ladin, son of a billionaire Saudi family, is said to have inherited approximately $300 million that he uses to finance the group. Al-Qaida also maintains moneymaking front organizations, solicits donations from like-minded supporters, and illicitly siphons funds from donations to Muslim charitable organizations.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Al-Qaida has a worldwide reach, has cells in a number of countries, and is reinforced by its ties to Sunni extremist networks. Bin Ladin and his key lieutenants reside in Afghanistan, and the group maintains terrorist training camps there.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">al-Qaida</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">May have several hundred to several thousand members. Also serves as a focal point or umbrella organization for a worldwide network that includes many Sunni Islamic extremist groups such as Egyptian Islamic Jihad, some members of al-Gama'at al-Islamiyya, the Islamic Movement of Uzbekistan, and the Harakat ul-Mujahidin.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">al-Qaida</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization09">
+    <terrorism:hasName xml:lang="EN">Amal</terrorism:hasName>
+    <rdfs:label xml:lang="en">Amal</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization10">
+    <terrorism:hasName xml:lang="EN">Armata Corsa</terrorism:hasName>
+    <rdfs:label xml:lang="en">Armata Corsa</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization11">
+    <terrorism:hasAbbreviation xml:lang="EN">GIA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Frequent attacks against civilians and government workers. Between 1992 and 1998 the GIA conducted a terrorist campaign of civilian massacres, sometimes wiping out entire villages in its area of operation. Since announcing its campaign against foreigners living in Algeria in 1993, the GIA has killed more than 100 expatriate men and women--mostly Europeans--in the country. The group uses assassinations and bombings, including car bombs, and it is known to favor kidnapping victims and slitting their throats. The GIA hijacked an Air France flight to Algiers in December 1994. In late 1999 several GIA members were convicted by a French court for conducting a series of bombings in France in 1995.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">An Islamic extremist group, the GIA aims to overthrow the secular Algerian regime and replace it with an Islamic state. The GIA began its violent activities in 1992 after Algiers voided the victory of the Islamic Salvation Front (FIS)--the largest Islamic opposition party--in the first round of legislative elections in December 1991.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Algerian expatriates and GSPC members abroad, many of whom reside in Western Europe, provide financial and logistic support. In addition, the Algerian Government has accused Iran and Sudan of supporting Algerian extremists.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Algeria.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Armed Islamic Group</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unkown; probably several hundred to several thousand.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">GIA</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization12">
+    <terrorism:hasActivity xml:lang="EN">The group seeks to topple Rwanda's Tutsi-dominated government, reinstitute Hutu control, and, possibly, complete the genocide. In 1996, a message--allegedly from the ALIR--threatened to kill the US Ambassador to Rwanda and other US citizens. In 1999, ALIR guerrillas critical of alleged US-UK support for the Rwandan regime kidnapped and killed eight foreign tourists, including two US citizens, in a game park on the Congo-Uganda border. In the current Congolese war, the ALIR is allied with Kinshasa against the Rwandan invaders.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The FAR was the army of the Rwandan Hutu regime that carried out the genocide of 500,000 or more Tutsis and regime opponents in 1994. The Interahamwe was the civilian militia force that carried out much of the killing. The groups merged after they were forced from Rwanda into the Democratic Republic of the Congo (then-Zaire) in 1994. They are now often known as the Army for the Liberation of Rwanda (ALIR), which is the armed branch of the PALIR or Party for the Liberation of Rwanda.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">External Support From the Rwandan invasion of 1998 until his death in early 2001, the Laurent Kabila regime in the Democratic Republic of the Congo provided the ALIR with training, arms, and supplies.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Mostly Democratic Republic of the Congo and Rwanda, but a few may operate in Burundi.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Army for the Liberation of Rwanda</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Several thousand ALIR regular forces operate alongside the Congolese Army on the front lines of the Congo civil war, while a like number of ALIR guerrillas operate behind Rwanda lines in eastern Congo closer to the Rwandan border and sometimes within Rwanda.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Army for the Liberation of Rwanda</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization13">
+    <terrorism:hasActivity xml:lang="EN">On 20 March 1995, Aum members simultaneously released the chemical nerve agent sarin on several Tokyo subway trains, killing 12 persons and injuring up to 6,000. (Recent studies put the number of persons who suffered actual physical injuries closer to 1,300, with the rest suffering from some form of psychological trauma.) The group was responsible for other mysterious chemical accidents in Japan in 1994. Its efforts to conduct attacks using biological agents have been unsuccessful. Japanese police arrested Asahara in May 1995, and he remained on trial, facing 17 counts of murder at the end of 2000. Since 1997 the cult continued to recruit new members, engage in commercial enterprise, and acquire property, although the cult scaled back these activities significantly in 2000 in response to public outcry. The cult maintains an Internet homepage.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">A cult established in 1987 by Shoko Asahara, the Aum aimed to take over Japan, then the world. Approved as a religious entity in 1989 under Japanese law, the group ran candidates in a Japanese parliamentary election in 1990. Over time the cult began to emphasize the imminence of the end of the world and stated that the United States would initiate Armageddon by starting World War III with Japan. The Japanese Government revoked its recognition of the Aum as a religious organization in October 1995, but in 1997 a government panel decided not to invoke the Anti-Subversive Law against the group, which would have outlawed the cult. In 2000, Fumihiro Joyu took control of the Aum following his three-year jail sentence for perjury. Joyu was previously the group's spokesman and Russia Branch leader. Under Joyu's leadership the Aum changed its name to Aleph and claims to have rejected the violent and apocalyptic teachings of its founder.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">The Aum's principal membership is located only in Japan, but a residual branch comprising an unknown number of followers has surfaced in Russia.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Aum Supreme Truth</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">The Aum's current membership is estimated at 1,500 to 2,000 persons. At the time of the Tokyo subway attack, the group claimed to have 9,000 members in Japan and up to 40,000 worldwide.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Aum Shinrikyo</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization14">
+    <terrorism:hasAbbreviation xml:lang="EN">ETA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Primarily bombings and assassinations of Spanish Government officials, especially security and military forces, politicians, and judicial figures. ETA finances its activities through kidnappings, robberies, and extortion. The group has killed more than 800 persons since it began lethal attacks in the early 1960s. In November 1999, ETA broke its 'unilateral and indefinite' cease-fire and began an assassination and bombing campaign that killed 23 individuals and wounded scores more by the end of 2000.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Founded in 1959 with the aim of establishing an independent homeland based on Marxist principles in the northern Spanish provinces of Vizcaya, Guipuzcoa, Alava, and Navarra and the southwestern French departments of Labourd, Basse-Navarra, and Soule.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Has received training at various times in the past in Libya, Lebanon, and Nicaragua. Some ETA members allegedly have received sanctuary in Cuba while others reside in South America. Also appears to have ties to the Irish Republican Army through the two groups' legal political wings.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Area of Operation: Operates primarily in the Basque autonomous regions of northern Spain and southwestern France, but also has bombed Spanish and French interests elsewhere.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Basque Fatherland and Liberty</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown; may have hundreds of members, plus supporters.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">ETA</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization15">
+    <terrorism:hasName xml:lang="EN">Bavarian Liberation Army</terrorism:hasName>
+    <rdfs:label xml:lang="en">Bavarian Liberation Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization16">
+    <terrorism:hasName xml:lang="EN">Chechen Rebel Resistence</terrorism:hasName>
+    <rdfs:label xml:lang="en">Chechen Rebel Resistance</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization17">
+    <terrorism:hasName xml:lang="EN">Chukaku-Ha</terrorism:hasName>
+    <rdfs:label xml:lang="en">Chukaka-Ha</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization18">
+    <terrorism:hasAbbreviation xml:lang="EN">CIRA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Bombings, assassinations, extortion, and robberies. Targets include British military and Northern Ireland security targets and Northern Ireland Loyalist paramilitary groups. Also has launched bomb attacks against civilian targets in Northern Ireland. Does not have an established presence or capability to launch attacks on the UK mainland.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Radical terrorist splinter group formed in 1994 as the clandestine armed wing of Republican Sinn Fein (RSF), a political organization dedicated to the reunification of Ireland and to forcing British troops from Northern Ireland. RSF formed after the Irish Republican Army announced a cease-fire in September 1994.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Suspected of receiving funds and arms from sympathizers in the United States. May have acquired arms and materiel from the Balkans in cooperation with the Real IRA.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Northern Ireland, Irish Republic.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Continuity Irish Republican Army</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Fewer than 50 hard-core activists.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Continuity Irish Republican Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization19">
+    <terrorism:hasAbbreviation xml:lang="EN">DFLP</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Democratic Front for the Liberation of Palestine</terrorism:hasName>
+    <rdfs:label xml:lang="en">DFLP</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization20">
+    <terrorism:hasName xml:lang="EN">Djibouti Youth Movement</terrorism:hasName>
+    <rdfs:label xml:lang="en">Djibouti Youth Movement</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization21">
+    <terrorism:hasName xml:lang="EN">Dukhtaran-E-Millat</terrorism:hasName>
+    <rdfs:label xml:lang="en">Dukhtaran-E-Millat</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization22">
+    <terrorism:hasAbbreviation xml:lang="EN">EPL</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Ejercito Popular de Liberation</terrorism:hasName>
+    <rdfs:label xml:lang="en">Ejercito Popular de Liberation</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization23">
+    <terrorism:hasName xml:lang="EN">FMLN</terrorism:hasName>
+    <rdfs:label xml:lang="en">FMLN</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization24">
+    <terrorism:hasName xml:lang="EN">Fatah</terrorism:hasName>
+    <rdfs:label xml:lang="en">Fatah</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization25">
+    <terrorism:hasName xml:lang="EN">Fatah Tanzim</terrorism:hasName>
+    <rdfs:label xml:lang="en">Fatah Tanzim</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization26">
+    <terrorism:hasActivity xml:lang="EN">GRAPO has killed more than 80 persons and injured more than 200. The group's operations customarily have been designed to cause material damage and gain publicity rather than inflict casualties, but the terrorists have conducted lethal bombings and close-range assassinations. In November 2000, GRAPO operatives shot to death a Spanish policeman in reprisal for the arrest that month in France of several group leaders, while in May, GRAPO operatives murdered two guards during a botched robbery against an armored security van.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Formed in 1975 as the armed wing of the illegal Communist Party of Spain of the Franco era. Advocating the overthrow of the Spanish Government and replacement with a Marxist-Leninist regime, GRAPO is vehemently anti-US, calls for the removal of all US military forces from Spanish territory, and has conducted and attempted several attacks against US targets since 1977.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Spain.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">First of October Antifascist Resistance Group</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown but likely fewer than a dozen hard-core activists. Numerous GRAPO members also currently are in Spanish prisons.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">GRAPO</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization27">
+    <terrorism:hasName xml:lang="EN">Force 17</terrorism:hasName>
+    <rdfs:label xml:lang="en">Force 17</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization28">
+    <terrorism:hasActivity xml:lang="EN">HAMAS activists, especially those in the Izz el-Din al-Qassam Brigades, have conducted many attacks--including large-scale suicide bombings--against Israeli civilian and military targets. In the early 1990s, they also targeted suspected Palestinian collaborators and Fatah rivals. Claimed several attacks during the unrest in late 2000.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Formed in late 1987 as an outgrowth of the Palestinian branch of the Muslim Brotherhood. Various HAMAS elements have used both political and violent means, including terrorism, to pursue the goal of establishing an Islamic Palestinian state in place of Israel. Loosely structured, with some elements working clandestinely and others working openly through mosques and social service institutions to recruit members, raise money, organize activities, and distribute propaganda. HAMAS's strength is concentrated in the Gaza Strip and a few areas of the West Bank. Also has engaged in peaceful political activity, such as running candidates in West Bank Chamber of Commerce elections.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives funding from Palestinian expatriates, Iran, and private benefactors in Saudi Arabia and other moderate Arab states. Some fundraising and propaganda activities take place in Western Europe and North America.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Primarily the occupied territories, Israel. In August 1999, Jordanian authorities closed the group's Political Bureau offices in Amman, arrested its leaders, and prohibited the group from operating on Jordanian territory.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">HAMAS</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown number of hard-core members; tens of thousands of supporters and sympathizers.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">HAMAS</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization29">
+    <terrorism:hasAbbreviation xml:lang="EN">HUM</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Has conducted a number of operations against Indian troops and civilian targets in Kashmir. Linked to the Kashmiri militant group al-Faran that kidnapped five Western tourists in Kashmir in July 1995; one was killed in August 1995 and the other four reportedly were killed in December of the same year. The new millennium brought significant developments for Pakistani militant groups, particularly the HUM. Most of these sprang from the hijacking of an Indian airliner on 24 December by militants believed to be associated with the HUM. The hijackers negotiated the release of Masood Azhar, an important leader in the former Harakat ul-Ansar imprisoned by the Indians in 1994. Azhar did not, however, return to the HUM, choosing instead to form the Jaish-e-Mohammed (JEM), a rival militant group expressing a more radical line than the HUM.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Formerly known as the Harakat al-Ansar, the HUM is an Islamic militant group based in Pakistan that operates primarily in Kashmir. Long-time leader of the group, Fazlur Rehman Khalil, in mid-February stepped down as HUM emir, turning the reins over to the popular Kashmiri commander and his second-in-command, Farooq Kashmiri. Khalil, who has been linked to Bin Ladin and signed his fatwa in February 1998 calling for attacks on US and Western interests, assumed the position of HUM Secretary General. Continued to operate terrorist training camps in eastern Afghanistan.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Collects donations from Saudi Arabia and other Gulf and Islamic states and from Pakistanis and Kashmiris. The sources and amount of HUM's military funding are unknown.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Based in Muzaffarabad, Rawalpindi, and several other towns in Pakistan and Afghanistan, but members conduct insurgent and terrorist activities primarily in Kashmir. The HUM trains its militants in Afghanistan and Pakistan.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Harakat ul-Mujahidin</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Has several thousand armed supporters located in Azad Kashmir, Pakistan, and India's southern Kashmir and Doda regions. Supporters are mostly Pakistanis and Kashmiris and also include Afghans and Arab veterans of the Afghan war. Uses light and heavy machineguns, assault rifles, mortars, explosives, and rockets. HUM lost some of its membership in defections to the JEM.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Harakat ul-Mujahidin</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization30">
+    <terrorism:hasActivity xml:lang="EN">Known or suspected to have been involved in numerous anti-US terrorist attacks, including the suicide truck bombing of the US Embassy and US Marine barracks in Beirut in October 1983 and the US Embassy annex in Beirut in September 1984. Elements of the group were responsible for the kidnapping and detention of US and other Western hostages in Lebanon. The group also attacked the Israeli Embassy in Argentina in 1992 and is a suspect in the 1994 bombing of the Israeli cultural center in Buenos Aires. In fall 2000, it captured three Israeli soldiers in the Shabaa Farms and kidnapped an Israeli noncombatant whom it may have lured to Lebanon under false pretenses.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Radical Shia group formed in Lebanon; dedicated to increasing its political power in Lebanon and opposing Israel and the Middle East peace negotiations. Strongly anti-West and anti-Israel. Closely allied with, and often directed by, Iran but may have conducted operations that were not approved by Tehran.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives substantial amounts of financial, training, weapons, explosives, political, diplomatic, and organizational aid from Iran and Syria.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates in the Bekaa Valley, the southern suburbs of Beirut, and southern Lebanon. Has established cells in Europe, Africa, South America, North America, and Asia.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Hizballah</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Several thousand supporters and a few hundred terrrorist operatives.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Hizballah</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization31">
+    <terrorism:hasName xml:lang="EN">Hizb-ul Mujehideen</terrorism:hasName>
+    <rdfs:label xml:lang="en">Hizb-ul Majehideen</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization32">
+    <terrorism:hasName xml:lang="EN">International Justice Group</terrorism:hasName>
+    <rdfs:label xml:lang="en">International Justice Group</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization33">
+    <terrorism:hasAbbreviation xml:lang="EN">IRA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Bombings, assassinations, kidnappings, punishment beatings, extortion, smuggling, and robberies. Targets have included senior British Government officials, British military and police in Northern Ireland, and Northern Ireland Loyalist paramilitary groups. Bombing campaigns have been conducted against train and subway stations and shopping areas on mainland Britain, as well as against British and Royal Ulster Constabulary targets in Northern Ireland, and a British military facility on the European Continent. The IRA has been observing a cease-fire since July 1997 and previously observed a cease-fire from 1 September 1994 to February 1996.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Terrorist group formed in 1969 as clandestine armed wing of Sinn Fein, a legal political movement dedicated to removing British forces from Northern Ireland and unifying Ireland. Has a Marxist orientation. Organized into small, tightly knit cells under the leadership of the Army Council.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Has in the past received aid from a variety of groups and countries and considerable training and arms from Libya and the PLO. Is suspected of receiving funds, arms, and other terrorist-related materiel from sympathizers in the United States. Similarities in operations suggest links to the ETA.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Northern Ireland, Irish Republic, Great Britain, Europe.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">rish Republican Army</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Largely unchanged--several hundred members, plus several thousand sympathizers--despite the defection of some members to the dissident splinter groups.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Irish Republican Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization34">
+    <terrorism:hasName xml:lang="EN">Islamic Movement for Change</terrorism:hasName>
+    <rdfs:label xml:lang="en">Islamic Movement for Change</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization35">
+    <terrorism:hasAbbreviation xml:lang="EN">IMU</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Believed to be responsible for five car bombs in Tashkent in February 1999. Took hostages on several occasions in 1999 and 2000, including four US citizens who were mountain climbing in August 2000, and four Japanese geologists and eight Kyrgyzstani soldiers in August 1999.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Coalition of Islamic militants from Uzbekistan and other Central Asian states opposed to Uzbekistani President Islom Karimov's secular regime. Goal is the establishment of an Islamic state in Uzbekistan. The group's propaganda also includes anti-Western and anti-Israeli rhetoric.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Support from other Islamic extremist groups in Central and South Asia. IMU leadership broadcasts statements over Iranian radio.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Militants are based in Afghanistan and Tajikistan. Area of operations includes Uzbekistan, Tajikistan, Kyrgyzstan, and Afghanistan.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Islamic Movement of Uzbekistan</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Militants probably number in the thousands.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Islamic Movement of Uzbekistan</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization36">
+    <terrorism:hasAbbreviation xml:lang="EN">JEM</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The JEM's leader, Masood Azhar, was released from Indian imprisonment in December 1999 in exchange for 155 hijacked Indian Airlines hostages in Afghanistan. The 1994 HUA kidnappings of US and British nationals in New Delhi and the July 1995 HUA/Al Faran kidnappings of Westerners in Kashmir were two of several previous HUA efforts to free Azhar. Azhar organized large rallies and recruitment drives across Pakistan throughout 2000. In July, a JEM rocket-grenade attack failed to injure the Chief Minister at his office in Srinagar, India, but wounded four other persons. In December, JEM militants launched grenade attacks at a bus stop in Kupwara, India, injuring 24 persons, and at a marketplace in Chadoura, India, injuring 16 persons. JEM militants also planted two bombs that killed 21 persons in Qamarwari and Srinagar.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The Jaish-e-Mohammed (JEM) is an Islamist group based in Pakistan that has rapidly expanded in size and capability since Maulana Masood Azhar, a former ultrafundamentalist Harakat ul-Ansar (HUA) leader, announced its formation in February. The group's aim is to unite Kashmir with Pakistan. It is politically aligned with the radical, pro-Taliban, political party, Jamiat-i Ulema-i Islam (JUI-F).</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Most of the JEM's cadre and material resources have been drawn from the militant groups Harakat ul-Jihad al-Islami (HUJI) and the Harakat ul-Mujahedin (HUM). The JEM has close ties to Afghan Arabs and the Taliban. Usama Bin Ladin is suspected of giving funding to the JEM.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Based in Peshawar and Muzaffarabad, but members conduct terrorist activities primarily in Kashmir. The JEM maintains training camps in Afghanistan.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Jaish-e-Mohammed</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Has several hundred armed supporters located in Azad Kashmir, Pakistan, and in India's southern Kashmir and Doda regions. Following Maulana Masood Azhar's release from detention in India, a reported three quarters of Harakat ul-Mujahedin (HUM) members defected to the new organization, which has managed to attract a large number of urban Kashmiri youth. Supporters are mostly Pakistanis and Kashmiris and also include Afghans and Arab veterans of the Afghan war. Uses light and heavy machineguns, assault rifles, mortars, improvised explosive devices, and rocket grenades.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Jaish-e-Mohammed</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization37">
+    <terrorism:hasName xml:lang="EN">Jammu and Kashmir</terrorism:hasName>
+    <rdfs:label xml:lang="en">Jammu and Kashmir</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization38">
+    <terrorism:hasAbbreviation xml:lang="EN">JRA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">During the 1970s, the JRA carried out a series of attacks around the world, including the massacre in 1972 at Lod Airport in Israel, two Japanese airliner hijackings, and an attempted takeover of the US Embassy in Kuala Lumpur. In April 1988, JRA operative Yu Kikumura was arrested with explosives on the New Jersey Turnpike, apparently planning an attack to coincide with the bombing of a USO club in Naples, a suspected JRA operation that killed five, including a US servicewoman. He was convicted of the charges and is serving a lengthy prison sentence in the United States. Tsutomu Shirosaki, captured in 1996, is also jailed in the United States. In 2000, Lebanon deported to Japan four members it arrested in 1997, but granted a fifth operative, Kozo Okamoto, political asylum. Longtime leader Shigenobu was arrested in November 2000 and faces charges of terrorism and passport fraud.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">An international terrorist group formed around 1970 after breaking away from Japanese Communist League-Red Army Faction. The JRA was led by Fusako Shigenobu until her arrest in Japan in November 2000. The JRA's historical goal has been to overthrow the Japanese Government and monarchy and to help foment world revolution. After her arrest Shigenobu announced she intended to pursue her goals using a legitimate political party rather than revolutionary violence. May control or at least have ties to Anti-Imperialist International Brigade (AIIB); also may have links to Antiwar Democratic Front--an overt leftist political organization--inside Japan. Details released following Shigenobu's arrest indicate that the JRA was organizing cells in Asian cities, such as Manila and Singapore. Has history of close relations with Palestinian terrorist groups--based and operating outside Japan--since its inception, primarily through Shigenobu. The current status of these connections is unknown.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Unknown.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">unknown, but possibly traveling in Asia or Syrian-controlled areas of Lebanon.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Japanese Red Army</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">About six hard-core members; undetermined number of sympathizers.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Japanese Red Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization39">
+    <terrorism:hasActivity xml:lang="EN">Organize protests against the Israeli Government. Harass and threaten Palestinians in Hebron and the West Bank. Have threatened to attack Arabs, Palestinians, and Israeli Government officials. Have vowed revenge for the death of Binyamin Kahane and his wife.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Stated goal is to restore the biblical state of Israel. Kach (founded by radical Israeli-American rabbi Meir Kahane) and its offshoot Kahane Chai, which means 'Kahane Lives' (founded by Meir Kahane's son Binyamin following his father's assassination in the United States), were declared to be terrorist organizations in March 1994 by the Israeli Cabinet under the 1948 Terrorism Law. This followed the groups' statements in support of Dr. Baruch Goldstein's attack in February 1994 on the al-Ibrahimi Mosque--Goldstein was affiliated with Kach--and their verbal attacks on the Israeli Government. Palestinian gunmen killed Binyamin Kahane and his wife in a drive-by shooting on 31 December in the West Bank.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives support from sympathizers in the United States and Europe.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Israel and West Bank settlements, particularly Qiryat Arba' in Hebron.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Kach and Kahane Chai</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Kach and Kahane Chai</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization40">
+    <terrorism:hasStrength xml:lang="EN">The Leader of the AbuSayyafGroup.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">The Leader of Abu Sayyaf</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization41">
+    <terrorism:hasStrength xml:lang="EN">Khmer Rouge</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Khmer Rouge</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization42">
+    <terrorism:hasAbbreviation xml:lang="EN">PKK</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Primary targets have been Turkish Government security forces in Turkey. Conducted attacks on Turkish diplomatic and commercial facilities in dozens of West European cities in 1993 and again in spring 1995. In an attempt to damage Turkey's tourist industry, the PKK bombed tourist sites and hotels and kidnapped foreign tourists in the early-to-mid-1990s.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Founded in 1974 as a Marxist-Leninist insurgent group primarily composed of Turkish Kurds. The group's goal has been to establish an independent Kurdish state in southeastern Turkey, where the population is predominantly Kurdish. In the early 1990s, the PKK moved beyond rural-based insurgent activities to include urban terrorism. Turkish authorities captured Chairman Abdullah Ocalan in Kenya in early 1999; the Turkish State Security Court subsequently sentenced him to death. In August 1999, Ocalan announced a 'peace initiative,' ordering members to refrain from violence and withdraw from Turkey and requesting dialogue with Ankara on Kurdish issues. At a PKK Congress in January 2000, members supported Ocalan's initiative and claimed the group now would use only political means to achieve its new goal, improved rights for Kurds in Turkey.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Has received safehaven and modest aid from Syria, Iraq, and Iran. The Syrian Government expelled PKK leader Ocalan and known elements of the group from its territory in October 1998.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates in Turkey, Europe, and the Middle East.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Kurdistan Workers' Party</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Approximately 4,000 to 5,000, most of whom currently are located in northern Iraq. Has thousands of sympathizers in Turkey and Europe.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">PKK</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization43">
+    <terrorism:hasAbbreviation xml:lang="EN">LT</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Has conducted a number of operations against Indian troops and civilian targets in Kashmir since 1993. The LT is suspected of eight separate attacks in August that killed nearly 100, mostly Hindu Indians. LT militants are suspected of kidnapping six persons in Akhala, India, in November 2000 and killing five of them. The group also operates a chain of religious schools in the Punjab.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The LT is the armed wing of the Pakistan-based religious organization, Markaz-ud-Dawa-wal-Irshad (MDI)--a Sunni anti-US missionary organization formed in 1989. One of the three largest and best-trained groups fighting in Kashmir against India, it is not connected to a political party. The LT leader is MDI chief, Professor Hafiz Mohammed Saeed.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Collects donations from the Pakistani community in the Persian Gulf and United Kingdom, Islamic NGOs, and Pakistani and Kashmiri businessmen. The amount of LT funding is unknown. The LT maintains ties to religious/military groups around the world, ranging from the Philippines to the Middle East and Chechnya through the MDI fraternal network.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Based in Muridke (near Lahore) and Muzaffarabad. The LT trains its militants in mobile training camps across Pakistan-administered Kashmir and Afghanistan.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Lashkar-e-Tayyiba</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Has several hundred members in Azad Kashmir, Pakistan, and in India's southern Kashmir and Doda regions. Almost all LT cadres are foreigners--mostly Pakistanis from seminaries across the country and Afghan veterans of the Afghan wars. Uses assault rifles, light and heavy machineguns, mortars, explosives, and rocket propelled grenades.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Lashkar-e-Tayyiba</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization44">
+    <terrorism:hasAbbreviation xml:lang="EN">LTTE</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The Tigers have integrated a battlefield insurgent strategy with a terrorist program that targets not only key personnel in the countryside but also senior Sri Lankan political and military leaders in Colombo and other urban centers. The Tigers are most notorious for their cadre of suicide bombers, the Black Tigers. Political assassinations and bombings are commonplace. The LTTE has refrained from targeting foreign diplomatic and commercial establishments.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Founded in 1976, the LTTE is the most powerful Tamil group in Sri Lanka and uses overt and illegal methods to raise funds, acquire weapons, and publicize its cause of establishing an independent Tamil state. The LTTE began its armed conflict with the Sri Lankan Government in 1983 and relies on a guerrilla strategy that includes the use of terrorist tactics.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">The LTTE's overt organizations support Tamil separatism by lobbying foreign governments and the United Nations. The LTTE also uses its international contacts to procure weapons, communications, and any other equipment and supplies it needs. The LTTE exploits large Tamil communities in North America, Europe, and Asia to obtain funds and supplies for its fighters in Sri Lanka. Information obtained since the mid-1980s indicates that some Tamil communities in Europe are also involved in narcotics smuggling. Tamils historically have served as drug couriers moving narcotics into Europe.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">The Tigers control most of the northern and eastern coastal areas of Sri Lanka but have conducted operations throughout the island. Headquartered in northern Sri Lanka, LTTE leader Velupillai Prabhakaran has established an extensive network of checkpoints and informants to keep track of any outsiders who enter the group's area of control.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Liberation Tigers of Tamil Eelam</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Exact strength is unknown, but the LTTE is estimated to have 8,000 to 10,000 armed combatants in Sri Lanka, with a core of trained fighters of approximately 3,000 to 6,000. The LTTE also has a significant overseas support structure for fundraising, weapons procurement, and propaganda activities.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">LTTE</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization45">
+    <terrorism:hasAbbreviation xml:lang="EN">LVF</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Bombings, kidnappings, and close-quarter shooting attacks. LVF bombs often have contained Powergel commercial explosives, typical of many loyalist groups. LVF attacks have been particularly vicious: the group has murdered numerous Catholic civilians with no political or terrorist affiliations, including an 18-year-old Catholic girl in July 1997 because she had a Protestant boyfriend. The terrorists also have conducted successful attacks against Irish targets in Irish border towns. In 2000, the LVF also engaged in a brief but violent feud with other loyalists in which several individuals were killed.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Terrorist group formed in 1996 as a faction of the mainstream loyalist Ulster Volunteer Force (UVF) but did not emerge publicly until February 1997. Composed largely of UVF hardliners who have sought to prevent a political settlement with Irish nationalists in Northern Ireland by attacking Catholic politicians, civilians, and Protestant politicians who endorse the Northern Ireland peace process. Has been observing a cease-fire since 15 May 1998. The LVF decommissioned a small but significant amount of weapons in December 1998, but it has not repeated this gesture and in fact threatened in 2000 to resume killing Catholics.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Northern Ireland, Ireland.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Loyalist Volunteer Force</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Approximately 150 activists.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Loyalist Volunteer Force</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization46">
+    <terrorism:hasAbbreviation xml:lang="EN">FPMR</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Manuel Rodriquez Patriotic Front</terrorism:hasName>
+    <rdfs:label xml:lang="en">Manuel Rodriquez Patriotic Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization47">
+    <terrorism:hasAbbreviation xml:lang="EN">FPM</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Moranzanist Patriotic Front</terrorism:hasName>
+    <rdfs:label xml:lang="en">Moranzanist Patriotic Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization48">
+    <terrorism:hasAbbreviation xml:lang="EN">MEK</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Worldwide campaign against the Iranian Government stresses propaganda and occasionally uses terrorist violence. During the 1970s the MEK staged terrorist attacks inside Iran and killed several US military personnel and civilians working on defense projects in Tehran. Supported the takeover in 1979 of the US Embassy in Tehran. In April 1992 conducted attacks on Iranian embassies in 13 different countries, demonstrating the group's ability to mount large-scale operations overseas. The normal pace of anti-Iranian operations increased during the 'Operation Great Bahman' in February 2000, when the group claimed it launched a dozen attacks against Iran. During the remainder of the year, the MEK regularly claimed that its members were involved in mortar attacks and hit-and-run raids on Iranian military, law enforcement units, and government buildings near the Iran-Iraq border. The MEK also claimed six mortar attacks on civilian government and military buildings in Tehran.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Formed in the 1960s by the college-educated children of Iranian merchants, the MEK sought to counter what it perceived as excessive Western influence in the Shah's regime. Following a philosophy that mixes Marxism and Islam, has developed into the largest and most active armed Iranian dissident group. Its history is studded with anti-Western activity, and, most recently, attacks on the interests of the clerical regime in Iran and abroad.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Beyond support from Iraq, the MEK uses front organizations to solicit contributions from expatriate Iranian communities.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">In the 1980s the MEK's leaders were forced by Iranian security forces to flee to France. Most resettled in Iraq by 1987. In the mid-1980s the group did not mount terrorist operations in Iran at a level similar to its activities in the 1970s. In the 1990s, however, the MEK claimed credit for an increasing number of operations in Iran.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Mujahedin-e Khalq Organization</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Several thousand fighters based in Iraq with an extensive overseas support structure. Most of the fighters are organized in the MEK's National Liberation Army (NLA).</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">MEK</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization49">
+    <terrorism:hasAbbreviation xml:lang="EN">ELN</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Kidnapping, hijacking, bombing, extortion, and guerrilla war. Modest conventional military capability. Annually conducts hundreds of kidnappings for ransom, often targeting foreign employees of large corporations, especially in the petroleum industry. Frequently assaults energy infrastructure and has inflicted major damage on pipelines and the electric distribution network.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Marxist insurgent group formed in 1965 by urban intellectuals inspired by Fidel Castro and Che Guevara. Began a dialogue with Colombian officials in 1999 following a campaign of mass kidnappings--each involving at least one US citizen--to demonstrate its strength and continuing viability and to force the Pastrana administration to negotiate. Bogota and the ELN spent most of 2000 discussing where to establish an ELN safehaven in which to hold peace talks. A proposed location in north central Colombia faces stiff local and paramilitary opposition.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Cuba provides some medical care and political consultation.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Mostly in rural and mountainous areas of north, northeast, and southwest Colombia and Venezuela border regions.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">National Liberation Army</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Approximately 3,000 to 6,000 armed combatants and an unknown number of active supporters.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">ELN</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization50">
+    <terrorism:hasAbbreviation xml:lang="EN">FLNC</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">National Liberation Front of Corsica</terrorism:hasName>
+    <rdfs:label xml:lang="en">National Liberation Front of Corsica</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization51">
+    <terrorism:hasName xml:lang="EN">National Union for the Total Independence of Angola</terrorism:hasName>
+    <rdfs:label xml:lang="en">National Union for the Total Independence of Angola</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization52">
+    <terrorism:hasAbbreviation xml:lang="EN">CNPZ</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Nestor Paz Zamora Commission</terrorism:hasName>
+    <rdfs:label xml:lang="en">Nestor Paz Zamora Commission</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization53">
+    <terrorism:hasAbbreviation xml:lang="EN">NPA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The NPA primarily targets Philippine security forces, corrupt politicians, and drug traffickers. Opposes any US military presence in the Philippines and attacked US military interests before the US base closures in 1992. Press reports in 1999 indicated that the NPA would target US troops participating in joint military exercises under the Visiting Forces Agreement and US Embassy personnel.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The military wing of the Communist Party of the Philippines (CPP), the NPA is a Maoist group formed in March 1969 with the aim of overthrowing the government through protracted guerrilla warfare. Although primarily a rural-based guerrilla group, the NPA has an active urban infrastructure to conduct terrorism and uses city-based assassination squads called sparrow units. Derives most of its funding from contributions of supporters and so-called revolutionary taxes extorted from local businesses.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Unknown.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates in rural Luzon, Visayas, and parts of Mindanao. Has cells in Manila and other metropolitan centers.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">New People's Army</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Estimated between 6,000 and 8,000.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">New People's Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization54">
+    <terrorism:hasAbbreviation xml:lang="EN">OV</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The OV declared a cease-fire in September 2000, but the group maintains ability to conduct bombings, arson, beatings, and possibly robberies.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Terrorist group comprised largely of disgruntled loyalist hardliners who split from groups observing the cease-fire. OV seeks to prevent a political settlement with Irish nationalists by attacking Catholic civilian interests in Northern Ireland.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Area of Operation:s Northern Ireland.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Orange Volunteers</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Up to 20 hard-core members, some of whom are experienced in terrorist tactics and bombmaking.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Orange Volunteers</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization55">
+    <terrorism:hasAbbreviation xml:lang="EN">PIJ</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Conducted at least three attacks against Israeli interests in late 2000, including one to commemorate the anniversary of former PIJ leader Fathi Shaqaqi's murder in Malta on 26 October 1995. Conducted suicide bombings against Israeli targets in the West Bank, Gaza Strip, and Israel.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Originated among militant Palestinians in the Gaza Strip during the 1970s. Committed to the creation of an Islamic Palestinian state and the destruction of Israel through holy war. Because of its strong support for Israel, the United States has been identified as an enemy of the PIJ, but the group has not specifically conducted attacks against US interests in the past. In July 2000, however, publicly threatened to attack US interests if the US Embassy is moved from Tel Aviv to Jerusalem. Also opposes moderate Arab governments that it believes have been tainted by Western secularism.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives financial assistance from Iran and limited logistic assistance from Syria.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Primarily Israel and the occupied territories and other parts of the Middle East, including Jordan and Lebanon. Headquartered in Syria.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Palestine Islamic Jihad</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Palestinian Islamic Jihad</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization56">
+    <terrorism:hasAbbreviation xml:lang="EN">PLF</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The Abu Abbas-led faction is known for aerial attacks against Israel. Abbas's group also was responsible for the attack in 1985 on the cruise ship Achille Lauro and the murder of US citizen Leon Klinghoffer. A warrant for Abu Abbas's arrest is outstanding in Italy.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Broke away from the PFLP-GC in mid-1970s. Later split again into pro-PLO, pro-Syrian, and pro-Libyan factions. Pro-PLO faction led by Muhammad Abbas (Abu Abbas), who became member of PLO Executive Committee in 1984 but left it in 1991.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives support mainly from Iraq. Has received support from Libya in the past.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">PLO faction based in Tunisia until Achille Lauro attack. Now based in Iraq.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Palestine Liberation Front</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Palestine Liberation Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization57">
+    <terrorism:hasAbbreviation xml:lang="EN">PAGAD</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">PAGAD is suspected of conducting recurring bouts of urban terrorism--particularly bomb sprees--in Cape Town since 1998, including nine bombings in 2000. Bombing targets have included South African authorities, moderate Muslims, synagogues, gay nightclubs, tourist attractions, and Western-associated restaurants. PAGAD is believed to have masterminded the bombing on 25 August 1998 of the Cape Town Planet Hollywood.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">PAGAD was formed in 1996 as a community anticrime group fighting drugs and violence in the Cape Flats section of Cape Town but by early 1998 had also become antigovernment and anti-Western. PAGAD and its Islamic ally Qibla view the South African Government as a threat to Islamic values and consequently promote greater political voice for South African Muslims. The group is led by Abdus Salaam Ebrahim. PAGAD's G-Force (Gun Force) operates in small cells and is believed responsible for carrying out acts of terrorism. PAGAD uses several front names, including Muslims Against Global Oppression (MAGO) and Muslims Against Illegitimate Leaders (MAIL), when launching anti-Western protests and campaigns.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Probably has ties to Islamic extremists in the Middle East.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Operates mainly in the Cape Town area, South Africa's foremost tourist venue.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">People Against Gangsterism and Drugs</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Estimated at several hundred members. PAGAD's G-Force probably contains fewer than 50 members.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">People Against Gangsterism and Drugs</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization58">
+    <terrorism:hasName xml:lang="EN">People's Liberation Army</terrorism:hasName>
+    <rdfs:label xml:lang="en">People's Liberation Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization59">
+    <terrorism:hasAbbreviation xml:lang="EN">PFLP</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Committed numerous international terrorist attacks during the 1970s. Since 1978 has conducted attacks against Israeli or moderate Arab targets, including killing a settler and her son in December 1996.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Marxist-Leninist group founded in 1967 by George Habash as a member of the PLO. Joined the Alliance of Palestinian Forces (APF) to oppose the Declaration of Principles signed in 1993 and suspended participation in the PLO. Broke away from the APF, along with the DFLP, in 1996 over ideological differences. Took part in meetings with Arafat's Fatah party and PLO representatives in 1999 to discuss national unity and the reinvigoration of the PLO but continues to oppose current negotiations with Israel.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives safehaven and some logistic assistance from Syria.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Syria, Lebanon, Israel, and the occupied territories.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Popular Front for the Liberation of Palestine</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Some 800.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">PFLP</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization60">
+    <terrorism:hasAbbreviation xml:lang="EN">PFLP-GC</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Carried out dozens of attacks in Europe and the Middle East during 1970s-80s. Known for cross-border terrorist attacks into Israel using unusual means, such as hot-air balloons and motorized hang gliders. Primary focus now on guerrilla operations in southern Lebanon, small-scale attacks in Israel, West Bank, and Gaza Strip.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">plit from the PFLP in 1968, claiming it wanted to focus more on fighting and less on politics. Violently opposed to Arafat's PLO. Led by Ahmad Jabril, a former captain in the Syrian Army. Closely tied to both Syria and Iran.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Receives logistic and military support from Syria and financial support from Iran.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Headquartered in Damascus with bases in Lebanon</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Popular Front for the Liberation of Palestine-General Command</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Several hundred.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">PFLP-GC</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization61">
+    <terrorism:hasActivity xml:lang="EN">Bombings, assassinations, smuggling, extortion, and robberies. Many Real IRA members are former IRA who opposed the IRA's cease-fire and bring to RIRA a wealth of experience in terrorist tactics and bombmaking. Targets include British military and police in Northern Ireland and Northern Ireland civilian targets. Has attempted several unsuccessful bomb attacks on the UK mainland. Claimed responsibility for the car bomb attack in Omagh, Northern Ireland, on 15 August 1998 that killed 29 and injured 220 persons. The group declared a cease-fire following Omagh but in early 2000 resumed attacks in Northern Ireland and on the UK mainland. These include a bombing of Hammersmith Bridge and a rocket attack against MI-6 Headquarters in London.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Formed in February-March 1998 as clandestine armed wing of the 32-County Sovereignty Movement, a 'political pressure group' dedicated to removing British forces from Northern Ireland and unifying Ireland. The 32-County Sovereignty Movement opposed Sinn Fein's adoption in September 1997 of the Mitchell principles of democracy and nonviolence and opposed the December 1999 amendment of Articles 2 and 3 of the Irish Constitution, which lay claim to Northern Ireland. Former IRA 'quartermaster general' Mickey McKevitt leads the group; Bernadette Sands-McKevitt, his common-law wife, is the vice-chair of the 32-County Sovereignty Movement.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Suspected of receiving funds from sympathizers in the United States. RIRA also is thought to have purchased sophisticated weapons from the Balkans, according to press reports.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Northern Ireland, Irish Republic, Great Britain.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Real IRA</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">150 to 200 activists plus possible limited support from IRA hardliners dissatisfied with the IRA cease-fire and other republican sympathizers.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Real IRA</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization62">
+    <terrorism:hasName xml:lang="EN">Recontra 380</terrorism:hasName>
+    <rdfs:label xml:lang="en">Recontra 380</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization63">
+    <terrorism:hasName xml:lang="EN">Red Army Faction</terrorism:hasName>
+    <rdfs:label xml:lang="en">Red Army Faction</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization64">
+    <terrorism:hasAbbreviation xml:lang="EN">BR</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Red Brigades3</terrorism:hasName>
+    <rdfs:label xml:lang="en">Red Brigades</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization65">
+    <terrorism:hasAbbreviation xml:lang="EN">RHD</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">RHD was quiet in 2000, following a damaging security crackdown in late 1999. In recent years, however, the group has carried out numerous pipe bombings and arson attacks against 'soft' civilian targets, such as homes, churches, and private businesses, to cause outrage in the republican community and to provoke IRA retaliation. RHD claimed responsibility for the car-bombing murder on 15 March 1999 of Rosemary Nelson, a prominent Catholic nationalist lawyer and human rights campaigner in Northern Ireland.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Extremist terrorist group composed largely of Protestant hardliners from loyalist groups observing a cease-fire. RHD seeks to prevent a political settlement with Irish nationalists by attacking Catholic civilian interests in Northern Ireland.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasName xml:lang="EN">Red Hand Defenders</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Up to 20 members, some of whom have considerable experience in terrorist tactics and bomb-making.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Red Hand Defenders</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization66">
+    <terrorism:hasAbbreviation xml:lang="EN">FARC</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Bombings, murder, kidnapping, extortion, hijacking, as well as guerrilla and conventional military action against Colombian political, military, and economic targets. In March 1999 the FARC executed three US Indian rights activists on Venezuelan territory after it kidnapped them in Colombia. Foreign citizens often are targets of FARC kidnapping for ransom. Has well-documented ties to narcotics traffickers, principally through the provision of armed protection.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Established in 1964 as the military wing of the Colombian Communist Party, the FARC is Colombia's oldest, largest, most capable, and best-equipped Marxist insurgency. The FARC is governed by a secretariat, led by septuagenarian Manuel Marulanda, a.k.a. 'Tirofijo,' and six others, including senior military commander Jorge Briceno, a.k.a. 'Mono Jojoy.' Organized along military lines and includes several urban fronts. In 2000, the group continued a slow-moving peace negotiation process with the Pastrana Administration, which has gained the group several concessions, including a demilitarized zone used as a venue for negotiations.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Cuba provides some medical care and political consultation.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Colombia with some activities--extortion, kidnapping, logistics, and R and R--in Venezuela, Panama, and Ecuador.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Revolutionary Armed Forces of Colombia</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Approximately 9,000 to 12,000 armed combatants and an unknown number of supporters, mostly in rural areas.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">FARC</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization67">
+    <terrorism:hasActivity xml:lang="EN">Initial attacks were assassinations of senior US officials and Greek public figures. Added bombings in 1980s. Since 1990 has expanded targets to include EU facilities and foreign firms investing in Greece and has added improvised rocket attacks to its methods. Most recent attack claimed was the murder in June 2000 of British Defense Attache Stephen Saunders.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Radical leftist group established in 1975 and named for the student uprising in Greece in November 1973 that protested the military regime. Anti-Greek establishment, anti-US, anti-Turkey, anti-NATO, and committed to the ouster of US bases, removal of Turkish military presence from Cyprus, and severing of Greece's ties to NATO and the European Union (EU).</terrorism:hasDescription>
+    <terrorism:hasLocation xml:lang="EN">Athens, Greece.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Revolutionary Organization 17 November</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown, but presumed to be small.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Revolutionary Organization 17 November</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization68">
+    <terrorism:hasActivity xml:lang="EN">Since the late 1980s has concentrated attacks against current and retired Turkish security and military officials. Began a new campaign against foreign interests in 1990. Assassinated two US military contractors and wounded a US Air Force officer to protest the Gulf war. Launched rockets at US Consulate in Istanbul in 1992. Assassinated prominent Turkish businessman and two others in early 1996, its first significant terrorist act as DHKP/C. Turkish authorities thwarted DHKP/C attempt in June 1999 to fire light antitank weapon at US Consulate in Istanbul. Series of safehouse raids, arrests by Turkish police over last two years has weakened group significantly. Turkish security forces stormed prison wards controlled by the DHKP/C in December 2000, transferring militants to cell-type penitentiaries and further undermining DHKP/C cohesion.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Originally formed in 1978 as Devrimci Sol, or Dev Sol, a splinter faction of the Turkish People's Liberation Party/Front. Renamed in 1994 after factional infighting, it espouses a Marxist ideology and is virulently anti-US and anti-NATO. Finances its activities chiefly through armed robberies and extortion.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Unknown.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Conducts attacks in Turkey, primarily in Istanbul, Ankara, Izmir, and Adana. Raises funds in Western Europe.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Revolutionary People's Liberation Party/Front</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Unknown.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Revolutionary People's Liberation Party/Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization69">
+    <terrorism:hasActivity xml:lang="EN">Since 1974 has conducted bombings against Greek Government and economic targets as well as US military and business facilities. In 1986 stepped up attacks on Greek Government and commercial interests. Raid on a safehouse in 1990 revealed a weapons cache and direct contacts with other Greek terrorist groups, including 1 May and Revolutionary Solidarity. In 1991, ELA and 1 May claimed joint responsibility for more than 20 bombings. Greek police believe they have established links between ELA and Revolutionary Organization 17 November. Although ELA has not claimed an attack since January 1995, other groups have emerged with similar modus operandi. Of these, Revolutionary Nuclei (a.k.a. Revolutionary Cells) appears most likely to be the successor group to ELA.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Extreme leftist group that developed from opposition to the military junta that ruled Greece from 1967 to 1974. Formed in 1971, ELA is a self-described revolutionary, anti-capitalist, and anti-imperialist group that has declared its opposition to 'imperialist domination, exploitation, and oppression.' Strongly anti-US and seeks the removal of US military forces from Greece.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">Received weapons and other assistance from international terrorist Carlos during 1980s. Currently no known foreign sponsors.rdfs:label ELA</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Greece.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Revolutionary People's Struggle</terrorism:hasName>
+    <rdfs:label xml:lang="en">Revolutionary People's Struggle</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization70">
+    <terrorism:hasAbbreviation xml:lang="EN">RUF</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">The RUF uses guerrilla, criminal, and terror tactics, such as murder, torture, and mutilation, to fight the government, intimidate civilians, and keep UN peacekeeping units in check. In 2000 they held hundreds of UN peacekeepers hostage until their release was negotiated, in part, by the RUF's chief sponsor Liberian President Charles Taylor. The group also has been accused of attacks in Guinea at the behest of President Taylor.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The RUF is a loosely organized group--but an effective guerrilla force because of its flexibility and brutal discipline--seeking to topple the current government of Sierra Leone and to retain control of the lucrative diamond-producing regions of the country. The group funds itself largely through the extraction and sale of diamonds obtained in areas of Sierra Leone that it controls.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">A UN experts panel report on Sierra Leone said President Charles Taylor of Liberia provides support and leadership to the RUF. The UN has identified Libya, Gambia, and Burkina Faso as conduits for weapons and other materiel for the RUF.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Sierra Leone, Liberia, Guinea.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Revolutionary United Front</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Estimated at several thousand fighters and possibly a similar number of supporters and sympathizers.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Revolutionary United Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization71">
+    <terrorism:hasAbbreviation xml:lang="EN">SL</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Conducted indiscriminate bombing campaigns and selective assassinations. Detonated explosives at diplomatic missions of several countries in Peru in 1990, including an attempt to car-bomb the US Embassy in December. SL continued in 2000 to clash with Peruvian authorities and military units in the countryside and conducted periodic raids on villages. Despite numerous threats, the remaining active SL guerrillas were unable to cause any significant disruption to the Peruvian national elections held on 9 April.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Former university professor Abimael Guzman formed Sendero Luminoso in the late 1960s, and his teachings created the foundation of SL's militant Maoist doctrine. In the 1980s, SL became one of the most ruthless terrorist groups in the Western Hemisphere-approximately 30,000 persons have died since Shining Path took up arms in 1980. Its stated goal is to destroy existing Peruvian institutions and replace them with a communist peasant revolutionary regime. It also opposes any influence by foreign governments, as well as by other Latin American guerrilla groups, especially the Tupac Amaru Revolutionary Movement (MRTA).</terrorism:hasDescription>
+    <terrorism:hasDescription xml:lang="EN">In 2000, government authorities continued to arrest and prosecute active SL members, including, in April, commander Jose Arcela Chiroque, a.k.a. Ormeno. Counterterrorist operations targeted pockets of terrorist activity in the Upper Huallaga River Valley and the Apurimac/Ene River Valley, where SL columns continued to conduct periodic attacks.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None.</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Peru, with most activity in rural areas.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Sendero Luminoso</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Membership is unknown but estimated to be 100 to 200 armed militants. SL's strength has been vastly diminished by arrests and desertions.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Sendero Luminoso</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization72">
+    <terrorism:hasName xml:lang="EN">Sikh Terrorism</terrorism:hasName>
+    <rdfs:label xml:lang="en">Sikh Terrorism</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization73">
+    <terrorism:hasAbbreviation xml:lang="EN">SSP</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Sipah-e-Sahaba Pakistan</terrorism:hasName>
+    <rdfs:label xml:lang="en">Sipah-e-Sahaba</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization74">
+    <terrorism:hasName xml:lang="EN">The Islamic Great Eastern Raiders Front</terrorism:hasName>
+    <rdfs:label xml:lang="en">Islamic Great Eastern Raiders Front</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization75">
+    <terrorism:hasAbbreviation xml:lang="EN">MRTA</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">Previously conducted bombings, kidnappings, ambushes, and assassinations, but recent activity has fallen drastically. In December 1996, 14 MRTA members occupied the Japanese Ambassador's residence in Lima and held 72 hostages for more than four months. Peruvian forces stormed the residence in April 1997, rescuing all but one of the remaining hostages and killing all 14 group members, including the remaining leaders. The group has not conducted a significant terrorist operation since and appears more focused on obtaining the release of imprisoned MRTA members.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">Traditional Marxist-Leninist revolutionary movement formed in 1983 from remnants of the Movement of the Revolutionary Left, a Peruvian insurgent group active in the 1960s. Aims to establish a Marxist regime and to rid Peru of all imperialist elements (primarily US and Japanese influence). Peru's counterterrorist program has diminished the group's ability to carry out terrorist attacks, and the MRTA has suffered from infighting, the imprisonment or deaths of senior leaders, and loss of leftist support. Several MRTA members also remain imprisoned in Bolivia.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">Peru with supporters throughout Latin America and Western Europe.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">Tupac Amaru Revolutionary Movemen</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">Believed to be no more than 100 members, consisting largely of young fighters who lack leadership skills and experience.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">Tupac Amaru Revolutionary Movement</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization76">
+    <terrorism:hasAbbreviation xml:lang="EN">EGTK</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Tupac Katari Guerilla Army</terrorism:hasName>
+    <rdfs:label xml:lang="en">Tupac Katari Guerilla Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization77">
+    <terrorism:hasAbbreviation xml:lang="EN">TIKKO</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Turkish Workers' and Peasants' Liberation Army</terrorism:hasName>
+    <rdfs:label xml:lang="en">Turkish Workers' and Peasants Liberation Army</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization78">
+    <terrorism:hasAbbreviation xml:lang="EN">UVF</terrorism:hasAbbreviation>
+    <terrorism:hasName xml:lang="EN">Ulster Volunteer Force</terrorism:hasName>
+    <rdfs:label xml:lang="en">Ulster Volunteer Force</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization79">
+    <terrorism:hasName xml:lang="EN">United Liberation Front of Assam</terrorism:hasName>
+    <rdfs:label xml:lang="en">United Liberation Front of Assam</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization80">
+    <terrorism:hasName xml:lang="EN">United Popular Action Movement</terrorism:hasName>
+    <rdfs:label xml:lang="en">United Popular Action Movement</rdfs:label>
+  </terrorism:Organization>
+
+  <terrorism:Organization rdf:about="#TerroristOrganization81">
+    <terrorism:hasAbbreviation xml:lang="EN">AUC</terrorism:hasAbbreviation>
+    <terrorism:hasActivity xml:lang="EN">AUC operations vary from assassinating suspected insurgent supporters to engaging guerrilla combat units. Colombian National Police reported the AUC conducted 804 assassinations, 203 kidnappings, and 75 massacres with 507 victims during the first 10 months of 2000. The AUC claims the victims were guerrillas or sympathizers. Combat tactics consist of conventional and guerilla operations against main force insurgent units. AUC clashes with military and police units are increasing, although the group has traditionally avoided government security forces. The paramilitaries have not taken action against US personnel.</terrorism:hasActivity>
+    <terrorism:hasDescription xml:lang="EN">The AUC--commonly referred to as autodefensas or paramilitaries--is an umbrella organization formed in April 1997 to consolidate most local and regional paramilitary groups each with the mission to protect economic interests and combat insurgents locally. The AUC--supported by economic elites, drug traffickers, and local communities lacking effective government security--claims its primary objective is to protect its sponsors from insurgents. The AUC now asserts itself as a regional and national counterinsurgent force. It is adequately equipped and armed and reportedly pays its members a monthly salary. AUC leader Carlos Casta o in 2000 claimed 70 percent of the AUC's operational costs were financed with drug-related earnings, the rest from 'donations' from its sponsors.</terrorism:hasDescription>
+    <terrorism:hasExternalAid xml:lang="EN">None</terrorism:hasExternalAid>
+    <terrorism:hasLocation xml:lang="EN">AUC forces are strongest in the north and northwest: Antioquia, Cordoba, Sucre, Bolivar, Atlantico, and Magdalena Departments. Since 1999, the group demonstrated a growing presence in other northeastern and southwestern departments and a limited presence in the Amazon plains. Clashes between the AUC and the FARC insurgents in Putumayo in 2000 demonstrated the range of the AUC to contest insurgents throughout Colombia.</terrorism:hasLocation>
+    <terrorism:hasName xml:lang="EN">United Self-Defense Forces/Group of Colombia</terrorism:hasName>
+    <terrorism:hasStrength xml:lang="EN">In early 2001, the government estimated there were 8,000 paramilitary fighters, including former military and insurgent personnel.</terrorism:hasStrength>
+    <rdfs:label xml:lang="en">AUC</rdfs:label>
+  </terrorism:Organization>
+</rdf:RDF>

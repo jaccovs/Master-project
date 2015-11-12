@@ -1,0 +1,4 @@
+sensors @0 { i1 = false, i2 = false, i3 = false, i4 = false, i5 = false, i6 = true, i7 = false, i8 = true, i9 = true, i10 = false, i11 = true, o1 = false, o2 = false, o3 = true };
+faultInjection @5000 isInjection = true, fault = { gate106 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate68 = faulty }, parameters = {};
+sensors @6000 { i1 = false, i2 = false, i3 = false, i4 = false, i5 = false, i6 = true, i7 = false, i8 = true, i9 = true, i10 = false, i11 = true, o1 = true, o2 = false, o3 = false };

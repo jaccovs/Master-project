@@ -1,0 +1,369 @@
+#Vars;#Constraints;#CSP props.;#CSP solved;Diag. time (ms);Max Search Depth;Diagnoses;ThreadPoolSize;#Diags
+
+Version:0
+286;309;219;106;1467;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;211;102;1520;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1648;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1562;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1511;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1446;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1553;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1592;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1589;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1494;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1444;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1464;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1534;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1408;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;223;108;1539;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;207;100;1411;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1468;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1350;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1524;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1607;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1495;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1497;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1519;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1493;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1605;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1464;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1475;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1535;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1573;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1593;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1472;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1501;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1471;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1553;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1442;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1460;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1557;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;223;108;1548;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;227;110;1483;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1491;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1515;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1596;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1498;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;223;108;1493;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1516;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1519;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;211;102;1564;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1508;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1598;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1569;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1398;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1492;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1610;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;229;111;1648;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1439;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1562;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1489;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;223;108;1481;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1495;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;211;102;1402;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;225;109;1528;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1566;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1528;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1505;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1500;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1411;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1443;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1507;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1513;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1513;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1497;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1446;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1465;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1515;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1414;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1467;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1525;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1567;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1539;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1425;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1537;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;225;109;1575;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;205;99;1436;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1389;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1620;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1402;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1427;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;211;102;1427;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;213;103;1461;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1504;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;219;106;1470;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1498;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1581;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1464;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;223;108;1533;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;215;104;1485;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1503;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1562;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;217;105;1544;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;209;101;1462;-1;[eq eq lt lt lt lt not not not];4;1
+
+Version:1
+286;309;319;151;1460;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;260;124;1411;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;265;128;1427;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;301;143;1535;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;230;110;1236;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;241;116;1483;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;277;132;1433;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;276;131;1470;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;294;138;1337;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;280;135;1282;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;225;109;1392;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;294;139;1385;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;140;1382;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;275;131;1450;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;250;120;1485;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;299;143;1395;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;304;145;1439;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;249;118;1347;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;340;160;1415;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;339;160;1349;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;274;132;1415;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;257;121;1383;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;323;152;1307;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;243;115;1234;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;317;149;1478;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;293;141;1462;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;257;123;1390;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;290;139;1350;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;276;130;1375;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;294;141;1416;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;129;1366;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;313;148;1487;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;255;123;1545;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;310;147;1352;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;347;164;1539;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;265;127;1491;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;277;133;1374;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;243;117;1394;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;282;135;1553;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;245;118;1435;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;309;147;1413;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;263;127;1465;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;264;126;1319;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;281;134;1396;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;139;1389;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;276;131;1418;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;130;1537;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;130;1344;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;127;1448;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;285;135;1418;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1393;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;221;107;1341;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;296;142;1429;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;303;145;1448;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;300;143;1507;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;319;151;1531;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;303;143;1407;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;252;119;1348;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;256;122;1443;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;301;144;1581;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;259;123;1414;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;279;134;1494;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;323;154;1458;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;291;140;1455;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;129;1463;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;293;137;1321;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;229;110;1318;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;257;123;1407;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;142;1454;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;252;120;1409;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;278;132;1455;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;293;141;1441;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;301;143;1515;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;236;114;1356;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;317;150;1395;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;302;145;1447;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;278;133;1437;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;253;121;1469;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;331;158;1530;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;278;133;1471;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;257;123;1391;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;248;118;1429;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;238;114;1402;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;304;146;1483;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;297;142;1404;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;275;131;1392;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;250;120;1326;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;272;131;1375;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;297;140;1432;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;274;132;1339;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;331;156;1391;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;287;137;1373;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;254;122;1334;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;292;139;1337;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;237;114;1424;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;321;153;1566;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;284;136;1476;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;280;134;1494;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;279;133;1533;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;235;113;1411;-1;[eq eq lt lt lt lt not not not];4;1
+
+Version:2
+286;309;334;161;1546;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;356;170;1615;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;347;167;1535;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;318;154;1485;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;350;168;1532;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;150;1496;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1600;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;301;145;1401;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;309;149;1385;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;376;180;1539;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;330;159;1552;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;151;1492;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;334;161;1334;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;322;155;1393;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;320;155;1375;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;150;1652;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;364;175;1667;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;358;172;1574;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;326;158;1423;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;362;173;1474;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;328;158;1445;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;322;152;1527;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;343;164;1431;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;151;1560;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;328;159;1498;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;315;152;1521;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1502;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;320;155;1411;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;354;170;1605;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;314;152;1506;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;317;153;1488;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;288;140;1374;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;340;163;1641;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;150;1507;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;318;154;1490;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;310;150;1513;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;316;153;1455;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;142;1388;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;314;152;1602;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;318;153;1452;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;142;1442;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;376;179;1568;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;334;161;1512;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;370;177;1453;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;296;143;1452;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;289;138;1359;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;310;149;1584;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;310;150;1454;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;310;150;1514;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;297;143;1394;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;316;152;1538;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;294;143;1370;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;354;169;1778;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;298;144;1358;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;336;162;1583;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;292;142;1329;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;296;144;1356;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;350;168;1496;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;316;153;1515;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;350;168;1577;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;317;153;1375;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;358;172;1664;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;358;171;1512;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;337;161;1427;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;290;141;1343;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;302;147;1478;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;326;156;1512;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;330;159;1535;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;322;156;1468;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;142;1441;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;358;172;1720;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;314;151;1500;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1604;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;356;171;1499;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;304;147;1477;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;296;143;1555;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1474;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;283;135;1341;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;382;182;1666;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;320;154;1446;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;339;163;1413;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;319;153;1466;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;295;141;1367;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;151;1471;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;314;150;1567;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;311;150;1460;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;360;172;1711;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1386;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;320;155;1547;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;320;155;1574;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;361;173;1581;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;328;158;1508;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;316;153;1494;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;332;160;1301;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;316;153;1542;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;319;153;1426;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;344;165;1575;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;312;151;1542;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;308;148;1522;-1;[eq eq lt lt lt lt not not not];4;1
+286;309;348;167;1448;-1;[eq eq lt lt lt lt not not not];4;1
+
+File: normalized-protein.xml
+MaxDiagSize: -1
+WaitTime: 10
+Initialization Runs: 20
+Test Runs: 100
+Shuffle Constraints: true
+Use LastLevelCheck: true
+
+Sequential version:
+Evaluated runs: 100
+Average Diag Time (ms): 1505.04
+Average Propagations: 217.0
+Average CSP Solves: 105.0
+Average Constructed Nodes: 15.94
+Average QXP Calls: 11.0
+Number of Diags: 1.0
+Average Diag Size: 9.0
+Average Solver Time (ms): 10.003142857142857
+Average Conflict Size: 1.1111111111111134
+Cache reuse QX: 0.0
+Average Tree Width: 1.4939999999999998
+Average conflicts created: 0.0
+Average conflict reuse: 4.94
+
+Level-wise parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 1420.55
+Average Propagations: 279.36
+Average CSP Solves: 133.22
+Average Constructed Nodes: 17.08
+Average QXP Calls: 14.16
+Number of Diags: 1.0
+Average Diag Size: 9.0
+Average Solver Time (ms): 10.071610869238853
+Average Conflict Size: 1.099999999999998
+Cache reuse QX: 0.0
+Average Tree Width: 1.6079999999999988
+Average conflicts created: 0.0
+Average conflict reuse: 2.92
+
+Full parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 1495.56
+Average Propagations: 324.78
+Average CSP Solves: 156.37
+Average Constructed Nodes: 17.31
+Average QXP Calls: 16.83
+Number of Diags: 1.0
+Average Diag Size: 9.0
+Average Solver Time (ms): 10.042079682803607
+Average Conflict Size: 1.099999999999998
+Cache reuse QX: 0.0
+Average Tree Width: 1.5923636363636353
+Average conflicts created: 0.0
+Average conflict reuse: 0.48
+
+
+Total Seq: 1505
+Total Lev: 1421 (6%)
+Total Full:1496 (1%)
+

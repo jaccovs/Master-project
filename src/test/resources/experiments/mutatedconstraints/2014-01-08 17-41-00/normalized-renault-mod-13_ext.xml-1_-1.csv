@@ -1,0 +1,369 @@
+#Vars;#Constraints;#CSP props.;#CSP solved;Diag. time (ms);Max Search Depth;Diagnoses;ThreadPoolSize;#Diags
+
+Version:0
+111;132;234;131;2465;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;218;124;1966;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;215;123;1482;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;223;127;2652;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;2698;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2137;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;206;118;1888;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;128;2886;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;126;2933;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2793;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;197;114;1965;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;238;133;2808;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;254;144;2511;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;225;128;2559;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;240;135;2715;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;220;126;2449;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;256;145;2309;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;2558;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;252;144;2933;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;128;1903;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;202;115;2730;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;213;122;1497;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;252;143;2402;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;227;129;2761;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;226;128;3448;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2605;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;238;136;3385;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;220;124;2652;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;212;120;2465;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;246;140;3260;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;125;1670;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;128;2262;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;233;132;2403;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;231;131;3916;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;236;132;3338;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;2122;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;224;127;2356;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;133;1326;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;131;2215;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;234;131;3182;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;3463;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;254;144;3166;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;264;149;3276;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;238;133;3073;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;224;126;3026;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;238;134;2792;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;266;151;2933;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2184;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;227;129;1779;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;258;146;2870;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;256;145;3650;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;130;2839;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;210;119;1653;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;238;133;2589;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;234;134;2574;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;125;2153;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;129;1623;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;216;124;1638;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;128;3463;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;225;128;1840;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;228;129;2449;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;126;2652;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;244;139;2637;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;226;127;2839;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;234;131;2714;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;232;131;2637;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;231;131;2746;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;248;141;2964;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;266;150;3167;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2793;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;256;145;3619;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;234;132;2465;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;264;149;3354;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;244;140;2137;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;254;145;3104;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;224;127;3026;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;126;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;236;132;3214;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;234;132;2356;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;126;3307;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;222;126;2761;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;264;150;4009;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;262;148;2121;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;226;128;3291;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;229;130;2652;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;262;148;3634;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;2433;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;217;124;2028;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;223;127;3010;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;224;127;3198;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;232;131;2917;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;223;127;1794;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;252;143;2871;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;254;144;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;220;125;2372;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;205;118;2480;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;233;132;2746;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;247;141;2590;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;227;129;1856;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;230;129;2745;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+
+Version:1
+111;132;416;229;5117;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;334;187;3151;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;329;184;2777;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;354;197;2590;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;373;207;2059;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;328;184;3307;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;342;191;3136;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;2168;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;258;148;3432;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;268;153;3276;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;288;163;2917;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;377;209;2215;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;389;215;2684;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;322;181;3073;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;270;154;3276;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;284;161;1451;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;298;168;2169;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;414;228;3822;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;276;157;2449;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;406;224;3463;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;292;165;2262;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;352;196;2995;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;274;156;3962;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;270;154;2012;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;352;196;3338;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;274;156;2418;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;278;159;3074;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;322;181;1965;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;274;156;2324;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;288;163;3510;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;322;181;2278;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;361;200;4056;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;290;164;3105;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;298;169;2668;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;274;156;3323;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;324;182;2823;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;3198;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;334;187;2871;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;290;164;2293;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;332;186;2215;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;342;191;2324;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;331;185;3322;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;298;168;2901;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;390;216;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;385;213;3182;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;389;215;4041;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;342;191;3261;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;270;154;2839;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;331;185;3526;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;266;152;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;346;194;2465;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;312;176;3198;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;284;161;2995;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;268;153;2840;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;380;211;2527;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;346;193;3136;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;276;157;3120;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;282;160;3229;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;3120;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;2340;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;2855;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;320;180;3089;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;254;146;3448;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;292;165;2262;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;312;176;4353;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;328;184;3198;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;318;179;2870;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;359;199;2293;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;336;188;3432;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;286;162;2246;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;300;169;2433;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;266;152;2215;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;258;148;2465;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;416;229;3619;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;346;193;3105;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;284;161;2449;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;302;170;1700;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;292;165;3104;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;268;153;3760;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;424;233;4415;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;318;179;2839;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;352;196;3198;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;332;186;2028;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;292;165;3432;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;286;162;2714;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;354;197;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;292;165;2028;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;300;169;3213;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;388;215;3822;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;274;156;2605;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;266;152;2636;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;300;169;2746;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;363;201;3011;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;282;160;1826;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;334;187;2231;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;404;223;4431;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;272;155;3213;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;334;187;2823;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;348;194;2855;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;340;190;2761;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+
+Version:2
+111;132;463;256;4891;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;419;236;4044;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;408;232;4453;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;367;209;4069;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;514;285;3281;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;349;198;3213;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;366;204;3630;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;312;179;2126;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;362;206;3115;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;336;194;2426;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;368;210;3033;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;350;196;2972;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;406;228;3592;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;358;205;3516;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;189;3853;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;378;215;4094;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;358;206;4030;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;329;186;3811;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;361;202;2754;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;516;288;5971;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;338;190;3653;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;320;183;2044;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;373;211;4203;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;346;198;4033;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;350;196;3110;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;492;276;4559;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;365;210;3190;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;373;214;3788;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;368;210;2987;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;353;205;3196;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;379;214;3813;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;352;200;2714;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;353;198;3527;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;350;197;3618;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;389;222;2937;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;351;199;3256;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;416;234;3505;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;350;200;2861;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;344;192;4175;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;386;219;2718;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;356;204;3086;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;340;196;4041;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;341;194;3303;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;343;193;3969;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;336;193;2345;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;347;201;2569;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;330;185;4315;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;343;199;3684;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;310;178;1971;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;316;186;3395;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;378;215;3491;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;372;212;2968;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;337;191;2563;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;350;200;3314;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;508;289;5220;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;475;271;4458;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;368;206;3589;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;327;185;3537;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;347;195;4013;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;494;277;4250;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;360;204;4098;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;286;166;2484;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;508;289;4764;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;354;198;3472;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;377;213;3979;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;346;199;2699;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;361;208;2250;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;372;212;3737;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;396;224;3968;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;499;281;3660;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;447;255;3772;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;371;213;3202;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;503;286;5694;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;314;180;2808;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;351;197;4179;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;353;198;2452;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;331;187;2156;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;344;193;4195;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;518;289;4472;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;351;199;3140;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;451;257;3894;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;370;211;3126;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;509;281;4185;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;416;234;4365;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;384;218;2401;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;516;288;5983;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;318;182;2297;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;326;186;2502;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;529;295;4979;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;378;215;4009;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;319;181;1999;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;324;185;2834;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;520;290;4516;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;310;178;2437;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;341;194;2945;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;334;188;3483;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;327;187;3960;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;336;189;3070;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;324;189;3412;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+111;132;356;205;2244;-1;[table table table] [table table table] [table table table] [table table table table];4;4
+
+File: normalized-renault-mod-13_ext.xml
+MaxDiagSize: -1
+WaitTime: -1
+Initialization Runs: 20
+Test Runs: 100
+Shuffle Constraints: true
+Use LastLevelCheck: true
+
+Sequential version:
+Evaluated runs: 100
+Average Diag Time (ms): 2642.75
+Average Propagations: 232.76
+Average CSP Solves: 131.89
+Average Constructed Nodes: 30.06
+Average QXP Calls: 11.28
+Number of Diags: 4.0
+Average Diag Size: 3.25
+Average Solver Time (ms): 1.7588899840776404
+Average Conflict Size: 2.4799999999999986
+Cache reuse QX: 0.0
+Average Tree Width: 5.396666666666665
+Average conflicts created: 0.0
+Average conflict reuse: 18.78
+
+Level-wise parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 2914.08
+Average Propagations: 320.47
+Average CSP Solves: 179.91
+Average Constructed Nodes: 35.03
+Average QXP Calls: 14.57
+Number of Diags: 4.0
+Average Diag Size: 3.25
+Average Solver Time (ms): 1.9077316435995775
+Average Conflict Size: 2.4285714285714235
+Cache reuse QX: 0.0
+Average Tree Width: 6.236666666666666
+Average conflicts created: 0.0
+Average conflict reuse: 20.46
+
+Full parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 3506.64
+Average Propagations: 377.54
+Average CSP Solves: 214.06
+Average Constructed Nodes: 38.84
+Average QXP Calls: 18.08
+Number of Diags: 4.0
+Average Diag Size: 3.25
+Average Solver Time (ms): 2.0984770625058395
+Average Conflict Size: 2.4285714285714235
+Cache reuse QX: 0.0
+Average Tree Width: 6.267666666666669
+Average conflicts created: 0.0
+Average conflict reuse: 20.77
+
+
+Total Seq: 2643
+Total Lev: 2914 (-10%)
+Total Full:3507 (-33%)
+

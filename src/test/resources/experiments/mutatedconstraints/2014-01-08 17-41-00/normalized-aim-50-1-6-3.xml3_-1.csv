@@ -1,0 +1,369 @@
+#Vars;#Constraints;#CSP props.;#CSP solved;Diag. time (ms);Max Search Depth;Diagnoses;ThreadPoolSize;#Diags
+
+Version:0
+100;130;1761;1100;1981;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;398;269;281;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;515;342;370;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;424;283;296;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;391;269;282;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;450;306;314;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;513;339;350;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;563;393;442;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;552;360;379;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;857;582;779;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;392;266;327;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;587;428;588;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;515;340;378;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;611;417;461;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;599;427;477;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;759;515;596;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;406;273;299;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1617;1008;1741;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1773;1106;1940;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;465;310;331;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;509;339;359;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;343;345;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;343;370;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;509;340;360;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;432;287;295;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;343;363;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;521;345;353;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;386;265;270;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;532;352;367;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;410;276;284;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;422;282;292;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;529;349;362;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;337;370;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;418;279;286;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;396;268;268;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;543;356;377;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;511;343;365;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;451;304;326;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;519;338;369;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1763;1101;1916;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;491;328;343;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;404;273;274;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;515;336;361;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;394;267;272;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;513;341;348;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;392;266;265;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;343;373;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;525;347;353;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;657;439;478;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;420;281;288;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;511;340;357;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;521;340;367;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;418;280;284;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;418;279;280;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;400;272;292;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;531;348;368;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;505;337;344;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;532;352;370;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;530;352;374;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;512;340;407;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;394;268;269;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;400;272;288;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;600;403;444;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;396;269;261;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1658;1003;1767;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;569;390;413;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1773;1106;1936;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;420;281;291;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;404;272;269;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;533;354;375;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;412;277;289;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;507;332;351;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;515;347;360;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;467;311;313;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;515;342;350;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;426;284;294;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;410;275;290;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;527;348;375;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;416;279;277;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;400;270;284;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1623;1010;1634;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;489;329;346;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;513;341;397;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;420;281;279;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;548;371;399;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;521;346;369;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1753;1096;1905;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;422;282;289;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;3145;1838;4580;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1784;1101;1910;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;496;334;326;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;406;274;274;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;481;325;345;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;437;297;307;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;512;342;357;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;402;272;279;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;410;275;286;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;517;341;349;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1777;1108;1925;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;540;368;414;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+
+Version:1
+100;130;880;537;427;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;908;603;545;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;620;368;293;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;565;367;291;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;618;370;270;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;832;505;405;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;810;495;385;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;613;392;330;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1122;716;634;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1128;717;638;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;645;382;288;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1030;630;530;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1035;634;562;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;911;569;467;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;642;410;342;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1078;694;614;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;860;520;427;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;836;506;420;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1584;1131;1070;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;662;424;386;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;625;397;338;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;611;360;303;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;987;609;539;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;824;502;420;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;656;416;364;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;881;571;531;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;713;467;562;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;650;413;351;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;706;424;348;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;826;511;467;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1136;721;642;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1018;624;518;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1066;653;613;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1014;622;535;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;603;387;306;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1126;718;607;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;879;535;464;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;909;566;506;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1125;726;679;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1105;697;587;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;616;397;360;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;630;403;362;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;853;516;423;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;565;337;262;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1085;657;566;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;597;384;332;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1181;785;675;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1164;735;660;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;630;372;329;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;589;349;275;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;569;371;302;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;844;521;464;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;874;528;445;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1132;719;628;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;601;386;308;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1088;673;564;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;615;396;334;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;599;356;280;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1030;642;511;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;597;354;284;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;547;328;257;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1082;661;602;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;589;380;299;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;875;529;443;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1181;757;686;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1058;644;542;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1030;630;609;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;609;390;319;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1022;619;553;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;780;472;373;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1106;708;589;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1046;640;568;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;996;611;537;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;625;400;346;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;866;524;436;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;634;375;313;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1018;624;544;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;595;351;291;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;585;377;325;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;619;368;292;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;683;432;376;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;680;431;374;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;659;388;304;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;597;384;336;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;986;608;483;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1071;652;577;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;663;421;365;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;608;359;299;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;717;438;352;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;554;333;249;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;587;351;269;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;634;375;311;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;628;369;301;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;567;338;252;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;952;591;516;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;686;415;321;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;642;412;343;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1102;692;582;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;826;502;414;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;987;608;516;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+
+Version:2
+100;130;864;507;492;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;720;483;407;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;735;496;424;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1302;849;786;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;730;446;380;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;711;477;393;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1126;696;607;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;997;579;645;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1203;741;661;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;935;580;520;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;719;476;394;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1176;728;639;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1098;683;627;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1336;821;758;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;955;645;596;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;928;566;528;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;833;556;500;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;779;493;472;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;919;560;457;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;974;655;571;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;725;439;352;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;730;449;374;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1324;860;792;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;886;541;463;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1163;714;612;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1135;700;613;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;908;531;506;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1145;712;631;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1303;813;796;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1160;704;666;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1309;853;759;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;792;537;474;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1298;849;797;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1443;920;924;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1318;857;763;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;853;502;467;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1367;882;847;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;851;500;538;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;710;430;363;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1406;970;894;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1145;705;674;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;883;537;488;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;763;468;423;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;734;444;418;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1328;862;821;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;709;435;370;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;759;457;426;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1130;698;600;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1290;876;757;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;792;534;455;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;866;526;462;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;727;491;401;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;862;506;493;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;767;518;436;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1173;728;670;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1082;673;604;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;730;440;368;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1241;772;693;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;853;523;417;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;914;559;466;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;821;550;464;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;734;493;401;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;842;510;387;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1174;719;666;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;723;484;388;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1143;704;656;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;861;506;480;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;741;449;400;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1229;742;701;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;829;553;485;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;871;525;410;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;820;548;477;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1159;712;645;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1101;683;589;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;772;521;430;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1185;725;698;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;750;456;395;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1295;847;840;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1072;706;606;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1162;713;647;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;701;471;395;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;897;566;461;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1192;736;667;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1282;798;716;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;797;492;418;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1101;683;657;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;857;577;494;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1245;845;730;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;856;574;500;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;828;556;459;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;839;495;488;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;885;559;480;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;719;482;395;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;737;448;382;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;884;539;464;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1183;725;632;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;748;455;385;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;712;437;351;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;1326;861;838;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+100;130;840;511;429;3;[eq eq eq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq] [eq eq geq];4;12
+
+File: normalized-aim-50-1-6-3.xml
+MaxDiagSize: 3
+WaitTime: -1
+Initialization Runs: 20
+Test Runs: 100
+Shuffle Constraints: true
+Use LastLevelCheck: true
+
+Sequential version:
+Evaluated runs: 100
+Average Diag Time (ms): 541.73
+Average Propagations: 637.11
+Average CSP Solves: 415.98
+Average Constructed Nodes: 164.35
+Average QXP Calls: 49.6
+Number of Diags: 12.0
+Average Diag Size: 3.0
+Average Solver Time (ms): 0.08620606759940382
+Average Conflict Size: 8.384833333333336
+Cache reuse QX: 0.0
+Average Tree Width: 40.8375
+Average conflicts created: 0.0
+Average conflict reuse: 114.75
+
+Level-wise parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 438.32
+Average Propagations: 823.9
+Average CSP Solves: 512.57
+Average Constructed Nodes: 172.01
+Average QXP Calls: 36.32
+Number of Diags: 12.0
+Average Diag Size: 3.0
+Average Solver Time (ms): 0.09996683379831048
+Average Conflict Size: 9.810666666666668
+Cache reuse QX: 0.0
+Average Tree Width: 42.7525
+Average conflicts created: 0.0
+Average conflict reuse: 135.69
+
+Full parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 550.36
+Average Propagations: 975.27
+Average CSP Solves: 615.08
+Average Constructed Nodes: 171.9
+Average QXP Calls: 55.84
+Number of Diags: 12.0
+Average Diag Size: 3.0
+Average Solver Time (ms): 0.09972686479807505
+Average Conflict Size: 10.001666666666674
+Cache reuse QX: 0.0
+Average Tree Width: 42.72
+Average conflicts created: 0.0
+Average conflict reuse: 116.06
+
+
+Total Seq: 542
+Total Lev: 438 (19%)
+Total Full:550 (-2%)
+

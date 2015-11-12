@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!DOCTYPE owl [
+<!ENTITY dc "http://purl.org/dc/elements/1.1/">
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+<!ENTITY policyContainmentTest "http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#">
+<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+]>
+<rdf:RDF
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:policyContainmentTest="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+ xml:base="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl"
+>
+<owl:Ontology rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl">
+<rdfs:comment>This is an example ontology with some toy WS-Policies expressed as OWL Classes.</rdfs:comment>
+</owl:Ontology>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#ExactlyOneExamplePolicy">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#GeneralReliabilityKerberosPolicy">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#GeneralReliabilityUsernamePolicy">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#UsernameToken">
+        </owl:Class>
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Reliable">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#IncoherentPolicy">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-Until-SucceedUsernamePolicy">
+        </owl:Class>
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-On-FailureUsernamePolicy">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Kerberos">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#SecurityTokenType">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Messaging">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Reliable">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Messaging">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-On-Failure">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Reliable">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-On-FailureUsernamePolicy">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-On-Failure">
+        </owl:Class>
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#UsernameToken">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-Until-Succeed">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Reliable">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-Until-SucceedUsernamePolicy">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Retry-Until-Succeed">
+        </owl:Class>
+        <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#UsernameToken">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Policy">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#SecurityTokenType">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#UsernameToken">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#SecurityTokenType">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#X509">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#SecurityTokenType">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testProperty">
+  <rdfs:domain>
+    <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Reliable">
+    </owl:Class>
+  </rdfs:domain>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testSubProperty">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testSubSubProperty">
+</owl:ObjectProperty>
+
+
+
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Messaging">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Kerberos">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#Messaging">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#GeneralReliabilityUsernamePolicy">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testSubSubProperty">
+  <rdfs:subPropertyOf>
+  <owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testSubProperty">
+  </owl:ObjectProperty>
+  </rdfs:subPropertyOf>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testSubProperty">
+  <rdfs:subPropertyOf>
+  <owl:ObjectProperty rdf:about="http://www.mindswap.org/dav/ontologies/policyContainmentTest.owl#testProperty">
+  </owl:ObjectProperty>
+  </rdfs:subPropertyOf>
+</owl:ObjectProperty>
+
+</rdf:RDF>

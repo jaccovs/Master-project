@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+<presentation maxConstraintArity="39" format="XCSP 2.1"/>
+<domains nbDomains="1">
+ <domain name="D0" nbValues="2">0..1</domain>
+</domains>
+<variables nbVariables="39">
+ <variable name="V0" domain="D0"/>
+ <variable name="V1" domain="D0"/>
+ <variable name="V2" domain="D0"/>
+ <variable name="V3" domain="D0"/>
+ <variable name="V4" domain="D0"/>
+ <variable name="V5" domain="D0"/>
+ <variable name="V6" domain="D0"/>
+ <variable name="V7" domain="D0"/>
+ <variable name="V8" domain="D0"/>
+ <variable name="V9" domain="D0"/>
+ <variable name="V10" domain="D0"/>
+ <variable name="V11" domain="D0"/>
+ <variable name="V12" domain="D0"/>
+ <variable name="V13" domain="D0"/>
+ <variable name="V14" domain="D0"/>
+ <variable name="V15" domain="D0"/>
+ <variable name="V16" domain="D0"/>
+ <variable name="V17" domain="D0"/>
+ <variable name="V18" domain="D0"/>
+ <variable name="V19" domain="D0"/>
+ <variable name="V20" domain="D0"/>
+ <variable name="V21" domain="D0"/>
+ <variable name="V22" domain="D0"/>
+ <variable name="V23" domain="D0"/>
+ <variable name="V24" domain="D0"/>
+ <variable name="V25" domain="D0"/>
+ <variable name="V26" domain="D0"/>
+ <variable name="V27" domain="D0"/>
+ <variable name="V28" domain="D0"/>
+ <variable name="V29" domain="D0"/>
+ <variable name="V30" domain="D0"/>
+ <variable name="V31" domain="D0"/>
+ <variable name="V32" domain="D0"/>
+ <variable name="V33" domain="D0"/>
+ <variable name="V34" domain="D0"/>
+ <variable name="V35" domain="D0"/>
+ <variable name="V36" domain="D0"/>
+ <variable name="V37" domain="D0"/>
+ <variable name="V38" domain="D0"/>
+</variables>
+<predicates nbPredicates="7">
+<predicate name="P0">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(X24,add(X25,add(mul(X26,X27),add(mul(X28,X29),add(mul(X30,X31),add(mul(X32,X33),add(X34,add(X35,add(mul(X36,X37),add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(X44,add(mul(X45,X46),add(mul(X47,X48),add(mul(X49,X50),add(mul(X51,X52),add(X53,add(mul(X54,X55),add(mul(X56,X57),add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(mul(X64,X65),add(mul(X66,X67),add(mul(X68,X69),X70)))))))))))))))))))))))))))))))))))))),X71)</functional>
+ </expression>
+</predicate>
+<predicate name="P7">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71</parameters>
+ <expression>
+  <functional>eq(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(X24,add(X25,add(mul(X26,X27),add(mul(X28,X29),add(mul(X30,X31),add(mul(X32,X33),add(X34,add(X35,add(mul(X36,X37),add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(X44,add(mul(X45,X46),add(mul(X47,X48),add(mul(X49,X50),add(mul(X51,X52),add(X53,add(mul(X54,X55),add(mul(X56,X57),add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(mul(X64,X65),add(mul(X66,X67),add(mul(X68,X69),X70)))))))))))))))))))))))))))))))))))))),X71)</functional>
+ </expression>
+</predicate>
+<predicate name="P1">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71 int X72 int X73 int X74 int X75</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(mul(X24,X25),add(X26,add(mul(X27,X28),add(mul(X29,X30),add(mul(X31,X32),add(mul(X33,X34),add(mul(X35,X36),add(X37,add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(mul(X44,X45),add(X46,add(mul(X47,X48),add(mul(X49,X50),add(mul(X51,X52),add(mul(X53,X54),add(mul(X55,X56),add(mul(X57,X58),add(mul(X59,X60),add(mul(X61,X62),add(mul(X63,X64),add(mul(X65,X66),add(mul(X67,X68),add(mul(X69,X70),add(mul(X71,X72),mul(X73,X74))))))))))))))))))))))))))))))))))))))),X75)</functional>
+ </expression>
+</predicate>
+<predicate name="P2">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71 int X72 int X73 int X74 int X75 int X76</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(mul(X24,X25),add(X26,add(mul(X27,X28),add(mul(X29,X30),add(mul(X31,X32),add(mul(X33,X34),add(mul(X35,X36),add(mul(X37,X38),add(mul(X39,X40),add(mul(X41,X42),add(mul(X43,X44),add(mul(X45,X46),add(mul(X47,X48),add(mul(X49,X50),add(mul(X51,X52),add(mul(X53,X54),add(mul(X55,X56),add(X57,add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(mul(X64,X65),add(mul(X66,X67),add(mul(X68,X69),add(mul(X70,X71),add(mul(X72,X73),mul(X74,X75))))))))))))))))))))))))))))))))))))))),X76)</functional>
+ </expression>
+</predicate>
+<predicate name="P3">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71 int X72 int X73 int X74 int X75 int X76 int X77</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(mul(X24,X25),add(mul(X26,X27),add(mul(X28,X29),add(mul(X30,X31),add(mul(X32,X33),add(mul(X34,X35),add(mul(X36,X37),add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(mul(X44,X45),add(mul(X46,X47),add(mul(X48,X49),add(mul(X50,X51),add(mul(X52,X53),add(mul(X54,X55),add(mul(X56,X57),add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(mul(X64,X65),add(mul(X66,X67),add(X68,add(mul(X69,X70),add(mul(X71,X72),add(mul(X73,X74),mul(X75,X76))))))))))))))))))))))))))))))))))))))),X77)</functional>
+ </expression>
+</predicate>
+<predicate name="P4">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71 int X72 int X73 int X74 int X75</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(X24,add(mul(X25,X26),add(mul(X27,X28),add(mul(X29,X30),add(mul(X31,X32),add(mul(X33,X34),add(mul(X35,X36),add(X37,add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(mul(X44,X45),add(mul(X46,X47),add(mul(X48,X49),add(mul(X50,X51),add(mul(X52,X53),add(mul(X54,X55),add(mul(X56,X57),add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(X64,add(mul(X65,X66),add(mul(X67,X68),add(mul(X69,X70),add(mul(X71,X72),mul(X73,X74))))))))))))))))))))))))))))))))))))))),X75)</functional>
+ </expression>
+</predicate>
+<predicate name="P5">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24 int X25 int X26 int X27 int X28 int X29 int X30 int X31 int X32 int X33 int X34 int X35 int X36 int X37 int X38 int X39 int X40 int X41 int X42 int X43 int X44 int X45 int X46 int X47 int X48 int X49 int X50 int X51 int X52 int X53 int X54 int X55 int X56 int X57 int X58 int X59 int X60 int X61 int X62 int X63 int X64 int X65 int X66 int X67 int X68 int X69 int X70 int X71 int X72 int X73 int X74 int X75 int X76 int X77 int X78</parameters>
+ <expression>
+  <functional>eq(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),add(mul(X10,X11),add(mul(X12,X13),add(mul(X14,X15),add(mul(X16,X17),add(mul(X18,X19),add(mul(X20,X21),add(mul(X22,X23),add(mul(X24,X25),add(mul(X26,X27),add(mul(X28,X29),add(mul(X30,X31),add(mul(X32,X33),add(mul(X34,X35),add(mul(X36,X37),add(mul(X38,X39),add(mul(X40,X41),add(mul(X42,X43),add(mul(X44,X45),add(mul(X46,X47),add(mul(X48,X49),add(mul(X50,X51),add(mul(X52,X53),add(mul(X54,X55),add(mul(X56,X57),add(mul(X58,X59),add(mul(X60,X61),add(mul(X62,X63),add(mul(X64,X65),add(mul(X66,X67),add(mul(X68,X69),add(mul(X70,X71),add(mul(X72,X73),add(mul(X74,X75),mul(X76,X77))))))))))))))))))))))))))))))))))))))),X78)</functional>
+ </expression>
+</predicate>
+</predicates>
+<constraints nbConstraints="7">
+ <constraint name="C0" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P0">
+  <parameters>40 V0 91 V1 10 V2 30 V3 160 V4 20 V5 3 V6 12 V7 3 V8 18 V9 9 V10 25 V11 V12 V13 10 V14 280 V15 10 V16 8 V17 V18 V19 49 V20 8 V21 21 V22 6 V23 V24 5 V25 10 V26 8 V27 2 V28 V29 0 V30 10 V31 42 V32 6 V33 4 V34 8 V35 0 V36 10 V37 V38 600</parameters>
+ </constraint>
+ <constraint name="C7" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P7">
+  <parameters>40 V0 91 V1 10 V2 30 V3 160 V4 20 V5 3 V6 12 V7 3 V8 18 V9 9 V10 25 V11 V12 V13 10 V14 280 V15 10 V16 8 V17 V18 V19 49 V20 8 V21 21 V22 6 V23 V24 5 V25 10 V26 8 V27 2 V28 V29 0 V30 10 V31 42 V32 6 V33 4 V34 8 V35 0 V36 10 V37 V38 600</parameters>
+ </constraint>
+ <constraint name="C1" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P1">
+  <parameters>16 V0 92 V1 41 V2 16 V3 150 V4 23 V5 4 V6 18 V7 6 V8 0 V9 12 V10 8 V11 2 V12 V13 0 V14 200 V15 20 V16 6 V17 2 V18 V19 70 V20 9 V21 22 V22 4 V23 V24 5 V25 10 V26 6 V27 4 V28 0 V29 4 V30 12 V31 8 V32 4 V33 3 V34 0 V35 10 V36 0 V37 6 V38 500</parameters>
+ </constraint>
+ <constraint name="C2" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P2">
+  <parameters>38 V0 39 V1 32 V2 71 V3 80 V4 26 V5 5 V6 40 V7 8 V8 12 V9 30 V10 15 V11 0 V12 V13 23 V14 100 V15 0 V16 20 V17 3 V18 0 V19 40 V20 6 V21 8 V22 0 V23 6 V24 4 V25 22 V26 4 V27 6 V28 V29 5 V30 14 V31 8 V32 2 V33 8 V34 0 V35 20 V36 0 V37 0 V38 500</parameters>
+ </constraint>
+ <constraint name="C3" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P3">
+  <parameters>8 V0 71 V1 30 V2 60 V3 200 V4 18 V5 6 V6 30 V7 4 V8 8 V9 31 V10 6 V11 3 V12 0 V13 18 V14 60 V15 21 V16 4 V17 0 V18 2 V19 32 V20 15 V21 31 V22 2 V23 2 V24 7 V25 8 V26 2 V27 8 V28 0 V29 2 V30 8 V31 6 V32 7 V33 V34 0 V35 0 V36 20 V37 8 V38 500</parameters>
+ </constraint>
+ <constraint name="C4" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P4">
+  <parameters>38 V0 52 V1 30 V2 42 V3 170 V4 9 V5 7 V6 20 V7 0 V8 3 V9 21 V10 4 V11 V12 2 V13 14 V14 310 V15 8 V16 4 V17 6 V18 V19 18 V20 15 V21 38 V22 10 V23 4 V24 8 V25 6 V26 0 V27 0 V28 3 V29 0 V30 10 V31 6 V32 V33 3 V34 0 V35 3 V36 5 V37 4 V38 600</parameters>
+ </constraint>
+ <constraint name="C5" arity="39" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38" reference="P5">
+  <parameters>560 V0 1125 V1 300 V2 620 V3 2100 V4 431 V5 68 V6 328 V7 47 V8 122 V9 322 V10 196 V11 41 V12 25 V13 425 V14 4260 V15 416 V16 115 V17 82 V18 22 V19 631 V20 132 V21 420 V22 86 V23 42 V24 103 V25 215 V26 81 V27 91 V28 26 V29 49 V30 420 V31 316 V32 72 V33 71 V34 49 V35 108 V36 116 V37 90 V38 10618</parameters>
+ </constraint>
+</constraints>
+</instance>

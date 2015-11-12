@@ -1,0 +1,1990 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://ainf.at/TempAnchorAssExtractionOntology#"
+     xml:base="http://ainf.at/TempAnchorAssExtractionOntology"
+     xmlns:Thesaurus="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:fmaOwlDlComponent_2_0="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#">
+    <owl:Ontology rdf:about="http://ainf.at/TempAnchorAssExtractionOntology"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of">
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind"/>
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug">
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Process -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Process">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Affects_Gene_Product -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Affects_Gene_Product">
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Mechanism_Of_Action -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Mechanism_Of_Action">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Has_Component -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Has_Component">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Encoded_By_Gene -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Encoded_By_Gene">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Associated_Anatomy -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Associated_Anatomy">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Biochemical_Function -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Biochemical_Function">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process -->
+
+    <owl:ObjectProperty rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process">
+        <rdfs:range rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <rdfs:domain rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension -->
+
+    <owl:DatatypeProperty rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+        <rdfs:range>
+            <rdfs:Datatype>
+                <owl:oneOf>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0-dimension</rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1-dimension</rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2-dimension</rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3-dimension</rdf:first>
+                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </owl:oneOf>
+            </rdfs:Datatype>
+        </rdfs:range>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_boundary -->
+
+    <owl:DatatypeProperty rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_boundary">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_dimension -->
+
+    <owl:DatatypeProperty rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_dimension">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Non_physical_anatomical_entity_template"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_inherent_3_D_shape -->
+
+    <owl:DatatypeProperty rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_inherent_3_D_shape">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_body_substance"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_genital_system"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_hemolymphoid_system"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_nervous_system"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_mass -->
+
+    <owl:DatatypeProperty rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_mass">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Immaterial_anatomical_entity"/>
+                    <rdf:Description rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_set -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_set">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_inherent_3_D_shape"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_body_substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Biological_macromolecule -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Biological_macromolecule">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cardinal_cell_part -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cardinal_cell_part">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3-dimension</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Part"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cardinal_cell_part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytokine -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytokine">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Cytokine"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Protein"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytoplasm -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytoplasm">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasm"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytoplasmic_organelle -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytoplasmic_organelle">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasmic_Organelle"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Organelle"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Differentiated_hemal_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Differentiated_hemal_cell">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hemal_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Diploid_nucleated_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Diploid_nucleated_cell">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nucleated_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hemal_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hemal_cell">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Somatic_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hematopoietic_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hematopoietic_cell">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_Cell"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Hemal_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Immaterial_anatomical_entity -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Immaterial_anatomical_entity">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_mass"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Immune_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Immune_system">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_System"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Leukocyte -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Leukocyte">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Leukocyte_WBC_MMHCC"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Differentiated_hemal_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphatic_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphatic_system">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphatic_System"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_lymphoid_system"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphocyte -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphocyte">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nongranular_leukocyte"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphoid_tissue -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphoid_tissue">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphoid_Tissue"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphomyeloid_tissue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphomyeloid_tissue -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphomyeloid_tissue">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_heterogeneous_tissue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3-dimension</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_boundary"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_mass"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Membranous_cytoplasmic_organelle -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Membranous_cytoplasmic_organelle">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Membranous_Cytoplasmic_Organelle"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cytoplasmic_organelle"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Non_physical_anatomical_entity_template -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Non_physical_anatomical_entity_template">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nongranular_leukocyte -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nongranular_leukocyte">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Granular_Leukocyte"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Leukocyte"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nucleated_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Nucleated_cell">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3-dimension</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Organ_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Organ_system">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Organ_System"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension"/>
+                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3-dimension</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Organelle -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Organelle">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Physical_anatomical_entity">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_dimension"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Plasma_membrane -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Plasma_membrane">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Plasma_Membrane"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_body_substance -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_body_substance">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Material_anatomical_entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#has_inherent_3_D_shape"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_heterogeneous_tissue -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_heterogeneous_tissue">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_tissue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_tissue -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Portion_of_tissue">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_structure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Protein -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Protein">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Biological_macromolecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Protoplasm -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Protoplasm">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protoplasm"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Cell_component"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Anatomical_set"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Somatic_cell -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Somatic_cell">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Somatic_Cell"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Diploid_nucleated_cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_genital_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_genital_system">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_hemolymphoid_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_hemolymphoid_system">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_lymphoid_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_lymphoid_system">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_hemolymphoid_system"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_nervous_system -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Subdivision_of_nervous_system">
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Set_of_heterogeneous_clusters"/>
+    </owl:Class>
+    
+
+
+    <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte -->
+
+    <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte">
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte"/>
+        <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphocyte"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Agent_Combination -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Agent_Combination">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomy_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antibody-Dependent_Cellular_Cytotoxicity -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antibody-Dependent_Cellular_Cytotoxicity">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Cytolysis"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Agent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen_Binding_Interaction -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen_Binding_Interaction">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Molecular_Interaction"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Development -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Development">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Response"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Lymphocyte"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Proliferation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Proliferation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Development"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Lymphocyte"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Lymphocyte -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Lymphocyte">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Subcellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Reaction -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Reaction">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Subcellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Agent -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Agent">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Pharmacologic_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Response_Modifier -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Response_Modifier">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Pharmacologic_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biophysical_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biophysical_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Subcellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Body_Part -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Body_Part">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Microanatomy"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Cytolysis -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Cytolysis">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Response"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Immunity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Immunity -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell-Mediated_Immunity">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation_Process"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Histogenesis"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Differentiation_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Developmental_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Part -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Part">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Body_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue_Growth"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation_Regulation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation_Regulation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Signaling_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Signaling_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Structure -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Structure">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Surface_Receptor -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Surface_Receptor">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Associated_Anatomy"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Plasma_Membrane"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cellular_Membrane -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cellular_Membrane">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Structure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Surface_Receptor"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Encoded_By_Gene"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Gene"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Biochemical_Function"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Activation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Activation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Activation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Gene -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Gene">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Gene"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasm -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasm">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Structure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protoplasm"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasmic_Organelle -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasmic_Organelle">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Part"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasm"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Developmental_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Developmental_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Drugs_and_Chemicals -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Drugs_and_Chemicals">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemicals_and_Drugs_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Eukaryotic_Cell -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Eukaryotic_Cell">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Experimental_Organism_Anatomical_Concepts -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Experimental_Organism_Anatomical_Concepts">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#EO_Anatomy_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#GD3_Binding_Interaction -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#GD3_Binding_Interaction">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen_Binding_Interaction"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Alteration -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Alteration">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Kind">
+        <owl:disjointWith rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Kind"/>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_Cell -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_Cell">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphoid_Tissue"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Organ_System"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System_Part -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System_Part">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Body_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphoid_Tissue -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphoid_Tissue">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#High_Affinity_Interleukin-2_Receptor -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#High_Affinity_Interleukin-2_Receptor">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_or_Riboprotein_Complex"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Biochemical_Function"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Cell_Proliferation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Cell_Proliferation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Histogenesis -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Histogenesis">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Developmental_Process"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue_Growth"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense_Mechanism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense_Mechanism -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense_Mechanism">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Cell_Activation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Cell_Activation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Response"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense_Mechanism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Response -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Response">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_System -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_System">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Organ_System"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunity -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunity">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunopotentiation_Effect -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunopotentiation_Effect">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunoregulation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunoregulation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunoregulation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Function"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Host_Defense"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Inhibition_of_Cell_Proliferation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Inhibition_of_Cell_Proliferation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation_Regulation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Process"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Chemical_Or_Drug"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Signaling_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Induction -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Induction">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Interleukin-2_Monoclonal-Antibody-R24 -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Interleukin-2_Monoclonal-Antibody-R24">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Current_Chemotherapy_Regimen_or_Association"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Has_Component"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody_R24"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemotherapy_Regimen_Has_Component"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin-2"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Leukocyte_WBC_MMHCC -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Leukocyte_WBC_MMHCC">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphohematopoietic_System_MMHCC"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Molecular_Interaction"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biochemical_Reaction"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_Organized_by_Function"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Encoded_By_Gene"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein_Gene"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein_Gene -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein_Gene">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphatic_System -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphatic_System">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System_Part"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphatic_System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_Cell"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphoid_Tissue"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte_Activation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte_Activation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immune_Cell_Activation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphohematopoietic_System_MMHCC -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphohematopoietic_System_MMHCC">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Murine_Tissue_Type"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphoid_Tissue -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphoid_Tissue">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Hematopoietic_and_Lymphoid_Tissue"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphatic_System"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Membranous_Cytoplasmic_Organelle -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Membranous_Cytoplasmic_Organelle">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytoplasmic_Organelle"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Microanatomy -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Microanatomy">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Molecular_Interaction -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Molecular_Interaction">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biophysical_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Agent"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Mechanism_Of_Action"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antigen_Binding_Interaction"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody_R24 -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody_R24">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Monoclonal_Antibody"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Antibody-Dependent_Cellular_Cytotoxicity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Mechanism_Of_Action"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#GD3_Binding_Interaction"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Murine_Tissue_Type -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Murine_Tissue_Type">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Experimental_Organism_Anatomical_Concepts"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Current_Chemotherapy_Regimen_or_Association -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Current_Chemotherapy_Regimen_or_Association">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Agent_Combination"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Granular_Leukocyte -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Non-Granular_Leukocyte">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Other_Anatomic_Concept"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Organ_System -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Organ_System">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Other_Anatomic_Concept -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Other_Anatomic_Concept">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_System_or_Substance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Pharmacologic_Substance -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Pharmacologic_Substance">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Drugs_and_Chemicals"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Physiology-Regulatory_Factor -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Physiology-Regulatory_Factor">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Drugs_and_Chemicals"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Plasma_Membrane -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Plasma_Membrane">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cellular_Membrane"/>
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Membranous_Cytoplasmic_Organelle"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_Organized_by_Function -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_Organized_by_Function">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_or_Riboprotein_Complex -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protein_or_Riboprotein_Complex">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protoplasm -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Protoplasm">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Structure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Anatomic_Structure_Is_Physical_Part_Of"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Encoded_By_Gene"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Gene"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Has_Biochemical_Function"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Activation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Activation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Signaling_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Gene -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Gene">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Ligand_Binding_Protein_Gene"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Plays_Role_In_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Receptor_Signaling">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Signaling_Process"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Is_Part_Of_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Signaling_Molecule -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Signaling_Molecule">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Physiology-Regulatory_Factor"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Somatic_Cell -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Somatic_Cell">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Eukaryotic_Cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Subcellular_Process -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Subcellular_Process">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Cell_Proliferation -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Cell_Proliferation">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Initiator_Process"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte_and_Natural_Killer_Cell"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte_and_Natural_Killer_Cell -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte_and_Natural_Killer_Cell">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Cytokine -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Cytokine">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Agent"/>
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Response_Modifier"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Cytokine"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Inhibition_of_Cell_Proliferation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin-2 -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin-2">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Therapeutic_Interleukin"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Affects_Gene_Product"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#High_Affinity_Interleukin-2_Receptor"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Mechanism_Of_Action"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytokine_Receptor_Activation"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Expression_Alteration"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Immunopotentiation_Effect"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Intercellular_Communication_Induction"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chemical_Or_Drug_Has_Physiologic_Effect"/>
+                        <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte_Activation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Microanatomy"/>
+    </owl:Class>
+    
+
+
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue_Growth -->
+
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Tissue_Growth">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Multicellular_Process"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 1.3.6.1087) http://owlapi.sourceforge.net -->
+

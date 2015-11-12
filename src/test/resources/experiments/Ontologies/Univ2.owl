@@ -1,0 +1,399 @@
+<?xml version="1.0"?>
+<!DOCTYPE owl [
+<!ENTITY dc "http://purl.org/dc/elements/1.1/">
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+<!ENTITY university "http://www.mindswap.org/ontologies/debugging/university.owl#">
+<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+]>
+<rdf:RDF
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+ xmlns:university="http://www.mindswap.org/ontologies/debugging/university.owl#"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:owl="http://www.w3.org/2002/07/owl#"
+ xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+ xml:base="http://www.mindswap.org/ontologies/debugging/university.owl"
+>
+<owl:Ontology rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl">
+</owl:Ontology>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AIStudent">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Student">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasAdvisor" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#ProfessorInHCIorAI">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AI_Dept">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasResearchArea" />
+          <owl:hasValue rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#AI" />
+        </owl:Restriction>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Department">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AssistantProfessor">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasTenure" />
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</owl:hasValue>
+        </owl:Restriction>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Course">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#offeredIn" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Department">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Course">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Department">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#affiliatedWith" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Library">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Department">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Library">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Library">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#affiliatedWith" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Library">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Student">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#takesCourse" />
+      <owl:allValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Course">
+        </owl:Class>
+      </owl:allValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Student">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_StudentTakingCourses">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Student">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#takesCourse" />
+      <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Course">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Department">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Course">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#offeredIn" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Department">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Course">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Department">
+  <owl:equivalentClass>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#affiliatedWith" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Library">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Department">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Library">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Library">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Faculty">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Person">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#FacultyPhoneBook">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#PhoneBook">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#HCIStudent">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Student">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasAdvisor" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#ProfessorInHCIorAI">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Lecturer">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasTenure" />
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</owl:hasValue>
+        </owl:Restriction>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Library">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Person">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#PhoneBook">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Professor">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasTenure" />
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+        </owl:Restriction>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+        </owl:Class>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#ProfessorInHCIorAI">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#advisorOf" />
+      <owl:allValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AIStudent">
+        </owl:Class>
+      </owl:allValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Professor">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#advisorOf" />
+      <owl:allValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#HCIStudent">
+        </owl:Class>
+      </owl:allValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#ResearchArea">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Schedule">
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Student">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Person">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasDegree" />
+      <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Faculty">
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasResearchArea" />
+      <owl:someValuesFrom>
+        <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#ResearchArea">
+        </owl:Class>
+      </owl:someValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#UniversityPhoneBook">
+  <rdfs:subClassOf>
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#PhoneBook">
+    </owl:Class>
+  </rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+</owl:Class>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#advisorOf">
+  <owl:inverseOf rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#hasAdvisor" />
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#affiliatedWith">
+  <rdf:type rdf:resource="&owl;TransitiveProperty" />
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#hasAdvisor">
+  <owl:inverseOf rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#advisorOf" />
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#hasDegree">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#hasResearchArea">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#memberOf">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#offeredIn">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#offersCourse">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#takesCourse">
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#worksFor">
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#hasTenure">
+  <rdfs:domain>    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#TeachingFaculty">
+    </owl:Class>
+</rdfs:domain>
+  <rdfs:range>    <rdfs:Datatype rdf:about="http://www.w3.org/2001/XMLSchema#boolean"/>
+</rdfs:range>
+</owl:DatatypeProperty>
+
+<rdf:Description rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AI">
+  <rdf:type>
+    <owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+    </owl:Class>
+  </rdf:type>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Graphics">
+  <rdf:type>
+    <owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+    </owl:Class>
+  </rdf:type>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#HCI">
+  <rdf:type>
+    <owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+    </owl:Class>
+  </rdf:type>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Network">
+  <rdf:type>
+    <owl:Class rdf:about="http://www.w3.org/2002/07/owl#Thing">
+    </owl:Class>
+  </rdf:type>
+</rdf:Description>
+
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Professor">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Lecturer">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#HCIStudent">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AIStudent">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#CS_Department">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#EE_Department">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Professor">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AssistantProfessor">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+<owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#AssistantProfessor">
+  <owl:disjointWith>
+  <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Lecturer">
+  </owl:Class>
+  </owl:disjointWith>
+</owl:Class>
+</rdf:RDF>

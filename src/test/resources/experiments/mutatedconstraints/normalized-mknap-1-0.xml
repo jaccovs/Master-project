@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+<presentation maxConstraintArity="6" format="XCSP 2.1"/>
+<domains nbDomains="1">
+ <domain name="D0" nbValues="2">0..1</domain>
+</domains>
+<variables nbVariables="6">
+ <variable name="V0" domain="D0"/>
+ <variable name="V1" domain="D0"/>
+ <variable name="V2" domain="D0"/>
+ <variable name="V3" domain="D0"/>
+ <variable name="V4" domain="D0"/>
+ <variable name="V5" domain="D0"/>
+</variables>
+<predicates nbPredicates="2">
+<predicate name="P0">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12</parameters>
+ <expression>
+  <functional>le(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),mul(X10,X11)))))),X12)</functional>
+ </expression>
+</predicate>
+<predicate name="P1">
+ <parameters>int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12</parameters>
+ <expression>
+  <functional>eq(add(mul(X0,X1),add(mul(X2,X3),add(mul(X4,X5),add(mul(X6,X7),add(mul(X8,X9),mul(X10,X11)))))),X12)</functional>
+ </expression>
+</predicate>
+</predicates>
+<constraints nbConstraints="11">
+ <constraint name="C0" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>8 V0 12 V1 13 V2 64 V3 22 V4 41 V5 80</parameters>
+ </constraint>
+ <constraint name="C1" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>8 V0 12 V1 13 V2 75 V3 22 V4 41 V5 96</parameters>
+ </constraint>
+ <constraint name="C2" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>3 V0 6 V1 4 V2 18 V3 6 V4 4 V5 20</parameters>
+ </constraint>
+ <constraint name="C3" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>5 V0 10 V1 8 V2 32 V3 6 V4 12 V5 36</parameters>
+ </constraint>
+ <constraint name="C4" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>5 V0 13 V1 8 V2 42 V3 6 V4 20 V5 44</parameters>
+ </constraint>
+ <constraint name="C5" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>5 V0 13 V1 8 V2 48 V3 6 V4 20 V5 48</parameters>
+ </constraint>
+ <constraint name="C6" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>0 V0 0 V1 0 V2 0 V3 8 V4 0 V5 10</parameters>
+ </constraint>
+ <constraint name="C7" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>3 V0 0 V1 4 V2 0 V3 8 V4 0 V5 18</parameters>
+ </constraint>
+ <constraint name="C8" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>3 V0 2 V1 4 V2 0 V3 8 V4 4 V5 22</parameters>
+ </constraint>
+ <constraint name="C9" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P0">
+  <parameters>3 V0 2 V1 4 V2 8 V3 8 V4 4 V5 24</parameters>
+ </constraint>
+ <constraint name="C10" arity="6" scope="V0 V1 V2 V3 V4 V5" reference="P1">
+  <parameters>100 V0 600 V1 1200 V2 2400 V3 500 V4 2000 V5 3800</parameters>
+ </constraint>
+</constraints>
+</instance>

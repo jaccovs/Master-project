@@ -1,0 +1,89 @@
+<ExquisiteAppXML xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Exquisite.Domain.DataModels">
+  <Assertions xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <CellsInRange xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfstringArrayOfstringty7Ep6D1>
+      <d2p1:Key>WS_1_A1:A5</d2p1:Key>
+      <d2p1:Value>
+        <d2p1:string>WS_1_A1</d2p1:string>
+        <d2p1:string>WS_1_A2</d2p1:string>
+        <d2p1:string>WS_1_A3</d2p1:string>
+        <d2p1:string>WS_1_A4</d2p1:string>
+        <d2p1:string>WS_1_A5</d2p1:string>
+      </d2p1:Value>
+    </d2p1:KeyValueOfstringArrayOfstringty7Ep6D1>
+    <d2p1:KeyValueOfstringArrayOfstringty7Ep6D1>
+      <d2p1:Key>WS_1_D1</d2p1:Key>
+      <d2p1:Value>
+        <d2p1:string>WS_1_D1</d2p1:string>
+      </d2p1:Value>
+    </d2p1:KeyValueOfstringArrayOfstringty7Ep6D1>
+  </CellsInRange>
+  <CorrectFormulas xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <DefaultValueBound>
+    <Lower>0</Lower>
+    <Step>0.1</Step>
+    <Upper>10000</Upper>
+  </DefaultValueBound>
+  <FaultyValues xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <Flag>Original</Flag>
+  <Formulas xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfstringstring>
+      <d2p1:Key>WS_1_B1</d2p1:Key>
+      <d2p1:Value>SUM(A1:A5)</d2p1:Value>
+    </d2p1:KeyValueOfstringstring>
+    <d2p1:KeyValueOfstringstring>
+      <d2p1:Key>WS_1_C1</d2p1:Key>
+      <d2p1:Value>B1/2</d2p1:Value>
+    </d2p1:KeyValueOfstringstring>
+    <d2p1:KeyValueOfstringstring>
+      <d2p1:Key>WS_1_F1</d2p1:Key>
+      <d2p1:Value>(D1*100)/C1</d2p1:Value>
+    </d2p1:KeyValueOfstringstring>
+  </Formulas>
+  <Inputs xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:string>WS_1_A1</d2p1:string>
+    <d2p1:string>WS_1_A2</d2p1:string>
+    <d2p1:string>WS_1_A3</d2p1:string>
+    <d2p1:string>WS_1_A4</d2p1:string>
+    <d2p1:string>WS_1_A5</d2p1:string>
+    <d2p1:string>WS_1_D1</d2p1:string>
+  </Inputs>
+  <Interims xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:string>WS_1_B1</d2p1:string>
+    <d2p1:string>WS_1_C1</d2p1:string>
+  </Interims>
+  <Outputs xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:string>WS_1_F1</d2p1:string>
+  </Outputs>
+  <PathCopy>C:\exquisite\TCGenTests_Debug.xlsx</PathCopy>
+  <PathOriginal>C:\Users\Arash\Desktop\Corpus Tests\TCGenTests.xlsx</PathOriginal>
+  <TestCases xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+  <Types xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfstringstring>
+      <d2p1:Key>WS_1_A1:A5</d2p1:Key>
+      <d2p1:Value>Integer</d2p1:Value>
+    </d2p1:KeyValueOfstringstring>
+    <d2p1:KeyValueOfstringstring>
+      <d2p1:Key>WS_1_D1</d2p1:Key>
+      <d2p1:Value>Integer</d2p1:Value>
+    </d2p1:KeyValueOfstringstring>
+  </Types>
+  <ValueBounds xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfstringExquisiteValueBoundVRP4STFz>
+      <d2p1:Key>WS_1_A1:A5</d2p1:Key>
+      <d2p1:Value>
+        <Lower>1</Lower>
+        <Step>0.1</Step>
+        <Upper>10</Upper>
+      </d2p1:Value>
+    </d2p1:KeyValueOfstringExquisiteValueBoundVRP4STFz>
+    <d2p1:KeyValueOfstringExquisiteValueBoundVRP4STFz>
+      <d2p1:Key>WS_1_D1</d2p1:Key>
+      <d2p1:Value>
+        <Lower>1</Lower>
+        <Step>0.1</Step>
+        <Upper>99</Upper>
+      </d2p1:Value>
+    </d2p1:KeyValueOfstringExquisiteValueBoundVRP4STFz>
+  </ValueBounds>
+</ExquisiteAppXML>

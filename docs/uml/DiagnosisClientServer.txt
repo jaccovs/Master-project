@@ -1,0 +1,23 @@
+title Diagnosis Conversation Example
+note left of Client: Client is online
+note right of Server: Server state is "IDLE"
+Client->Server: POST_MODEL
+note right of Server: Server switches state to "RECIEVING_MODEL"
+Server->Client: OK
+note left of Client: Client serializes model to xml.
+Client->Server: <ExquisiteAppXML/>
+note right of Server: Server parses <AppXML/>
+note right of Server: Server state switches to IDLE
+Server->Client: OK
+Client->Server: REQUEST_DIAGNOSIS
+note right of Server: Server starts tests.diagnosis engine.
+note right of Server: Server state switches to "RUNNING_DIAGNOSIS"
+Server->Client: OK
+Client->Server: REQUEST_DIAGNOSIS_RESULT
+note left of Client: client begins polling server for result.
+note right of Server: tests.diagnosis is still running
+Server->Client: BUSY
+note right of Server: tests.diagnosis has finished
+Client->Server: REQUEST_DIAGNOSIS_RESULT
+Server->Client: Sends Diagnosis Result
+note left of Client: Client displays tests.diagnosis result.

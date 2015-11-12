@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.exquisite</groupId>
+    <artifactId>exquisite</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>thomas</id>
+            <name>Thomas Schmitz</name>
+        </developer>
+        <developer>
+            <id>dietmar</id>
+            <name>Dietmar Jannach</name>
+        </developer>
+        <developer>
+            <id>wolfi</id>
+            <name>Wolfgang Schmid</name>
+        </developer>
+        <developer>
+            <id>kostya</id>
+            <name>Konstantin Schekotihin</name>
+        </developer>
+    </developers>
+
+    <properties>
+        <java.source.version>1.8</java.source.version>
+        <java.target.version>1.8</java.target.version>
+        <junit.version>4.10</junit.version>
+        <distributionRepositoryId>releases</distributionRepositoryId>
+        <distributionRepositoryUrl>
+            https://vcs-isbi.aau.at/nexus/content/repositories/releases
+        </distributionRepositoryUrl>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>maven-central</id>
+            <name>Maven central repository</name>
+            <url>http://repo.maven.apache.org/maven2/</url>
+            <releases>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>local-snapshot-repository</id>
+            <name>Local Snapshot Repository</name>
+            <url>https://vcs-isbi.aau.at/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>local-public</id>
+            <name>Local Public Repository (custom + maven2)</name>
+            <url>https://vcs-isbi.aau.at/nexus/content/groups/public/</url>
+            <releases>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>2.0.23</version>
+        </dependency>
+        <dependency>
+            <groupId>org.choco-solver</groupId>
+            <artifactId>choco</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>choco</groupId>
+            <artifactId>choco</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>choco</groupId>
+            <artifactId>choco-parsers</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hermit-reasoner</groupId>
+            <artifactId>org.semanticweb.hermit</artifactId>
+            <version>1.3.8.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jgap</groupId>
+            <artifactId>jgap</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ansell.pellet</groupId>
+            <artifactId>pellet-owlapiv3</artifactId>
+            <version>2.3.6-ansell</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${java.source.version}</source>
+                        <target>${java.target.version}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

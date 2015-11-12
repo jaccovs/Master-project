@@ -1,0 +1,369 @@
+#Vars;#Constraints;#CSP props.;#CSP solved;Diag. time (ms);Max Search Depth;Diagnoses;ThreadPoolSize;#Diags
+
+Version:0
+88;87;6614;3405;25398;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1140;692;2091;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4756;2087;12637;3;[gt gt] [allDifferent eq gt];4;2
+88;87;857;464;3136;3;[gt gt] [allDifferent eq gt];4;2
+88;87;825;391;2325;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4645;3608;11452;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1388;933;3947;3;[gt gt] [allDifferent eq gt];4;2
+88;87;840;391;1686;3;[gt gt] [allDifferent eq gt];4;2
+88;87;849;371;1530;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4895;2237;11997;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6823;2755;18939;3;[gt gt] [allDifferent eq gt];4;2
+88;87;792;392;1935;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4556;3649;28986;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1023;540;1811;3;[gt gt] [allDifferent eq gt];4;2
+88;87;973;533;1966;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4952;2488;13729;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2072;1518;5555;3;[gt gt] [allDifferent eq gt];4;2
+88;87;716;298;1670;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1235;609;4026;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6043;2901;23027;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7882;4130;29563;3;[gt gt] [allDifferent eq gt];4;2
+88;87;898;423;3401;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1731;1214;6366;3;[gt gt] [allDifferent eq gt];4;2
+88;87;8341;3278;36552;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5875;3239;16303;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1599;1066;2481;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6206;2616;18331;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1467;963;3449;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5312;2328;16459;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1357;977;5554;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2182;1558;12013;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5445;3193;14431;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3311;2639;15086;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1553;1100;2887;3;[gt gt] [allDifferent eq gt];4;2
+88;87;826;414;1546;3;[gt gt] [allDifferent eq gt];4;2
+88;87;818;371;1857;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1206;729;2232;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1171;711;3153;3;[gt gt] [allDifferent eq gt];4;2
+88;87;793;384;3027;3;[gt gt] [allDifferent eq gt];4;2
+88;87;864;395;1904;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2069;1307;4821;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5996;2424;17473;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1348;825;3090;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2477;1853;5336;3;[gt gt] [allDifferent eq gt];4;2
+88;87;906;427;2950;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5500;3198;15975;3;[gt gt] [allDifferent eq gt];4;2
+88;87;889;465;1904;3;[gt gt] [allDifferent eq gt];4;2
+88;87;891;413;2481;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1004;516;2419;3;[gt gt] [allDifferent eq gt];4;2
+88;87;838;408;3324;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1212;599;2872;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1056;528;2465;3;[gt gt] [allDifferent eq gt];4;2
+88;87;864;416;2232;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6662;2696;17535;3;[gt gt] [allDifferent eq gt];4;2
+88;87;764;349;1499;3;[gt gt] [allDifferent eq gt];4;2
+88;87;735;331;1327;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3164;2355;6319;3;[gt gt] [allDifferent eq gt];4;2
+88;87;999;576;3028;3;[gt gt] [allDifferent eq gt];4;2
+88;87;963;577;1982;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1087;567;2450;3;[gt gt] [allDifferent eq gt];4;2
+88;87;937;485;2746;3;[gt gt] [allDifferent eq gt];4;2
+88;87;735;345;1421;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6778;3596;18627;3;[gt gt] [allDifferent eq gt];4;2
+88;87;879;393;2403;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1232;661;3480;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1725;1165;4135;3;[gt gt] [allDifferent eq gt];4;2
+88;87;940;459;1780;3;[gt gt] [allDifferent eq gt];4;2
+88;87;8777;4964;30717;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6060;2545;17114;3;[gt gt] [allDifferent eq gt];4;2
+88;87;786;375;3215;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1028;574;1779;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3467;2726;16771;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1249;805;3870;3;[gt gt] [allDifferent eq gt];4;2
+88;87;973;508;3105;3;[gt gt] [allDifferent eq gt];4;2
+88;87;894;387;2902;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1122;569;3777;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2607;1933;7801;3;[gt gt] [allDifferent eq gt];4;2
+88;87;894;422;1904;3;[gt gt] [allDifferent eq gt];4;2
+88;87;683;318;1437;3;[gt gt] [allDifferent eq gt];4;2
+88;87;998;498;2153;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2021;1415;3730;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1769;1161;5336;3;[gt gt] [allDifferent eq gt];4;2
+88;87;959;439;2170;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6849;3170;21482;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6646;2725;19314;3;[gt gt] [allDifferent eq gt];4;2
+88;87;985;508;3324;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2071;1380;6584;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1693;1218;4198;3;[gt gt] [allDifferent eq gt];4;2
+88;87;694;298;1249;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1545;1042;3589;3;[gt gt] [allDifferent eq gt];4;2
+88;87;812;412;1546;3;[gt gt] [allDifferent eq gt];4;2
+88;87;825;391;1717;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5565;2883;16162;3;[gt gt] [allDifferent eq gt];4;2
+88;87;809;421;1717;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1145;540;2591;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2288;1621;6209;3;[gt gt] [allDifferent eq gt];4;2
+88;87;901;466;1920;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4588;3437;19314;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2018;1471;5539;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1007;532;1920;3;[gt gt] [allDifferent eq gt];4;2
+
+Version:1
+88;87;808;367;859;3;[gt gt] [allDifferent eq gt];4;2
+88;87;970;501;1092;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6031;2764;9034;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1517;950;7380;3;[gt gt] [allDifferent eq gt];4;2
+88;87;947;502;3745;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3629;2798;4618;3;[gt gt] [allDifferent eq gt];4;2
+88;87;989;481;1047;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5769;3510;7567;3;[gt gt] [allDifferent eq gt];4;2
+88;87;768;359;797;3;[gt gt] [allDifferent eq gt];4;2
+88;87;722;376;578;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2261;1545;1685;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1146;710;1203;3;[gt gt] [allDifferent eq gt];4;2
+88;87;11795;5593;30031;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2859;1947;3465;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1085;530;1093;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1112;619;1935;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1733;1077;1717;3;[gt gt] [allDifferent eq gt];4;2
+88;87;9353;5213;20125;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1074;568;999;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1635;1063;1982;3;[gt gt] [allDifferent eq gt];4;2
+88;87;980;453;1218;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4417;3328;5289;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3440;2623;3246;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1995;1441;2248;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7442;4386;11545;3;[gt gt] [allDifferent eq gt];4;2
+88;87;935;493;2029;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2052;1462;2263;3;[gt gt] [allDifferent eq gt];4;2
+88;87;939;499;1030;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3942;3042;4650;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1004;500;1155;3;[gt gt] [allDifferent eq gt];4;2
+88;87;691;331;672;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1145;688;1045;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1085;546;1592;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1046;550;3137;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1732;1198;1904;3;[gt gt] [allDifferent eq gt];4;2
+88;87;859;412;1031;3;[gt gt] [allDifferent eq gt];4;2
+88;87;908;488;890;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3582;2831;8237;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1122;561;1639;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1037;561;1343;3;[gt gt] [allDifferent eq gt];4;2
+88;87;8142;4992;16833;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6807;3362;15882;3;[gt gt] [allDifferent eq gt];4;2
+88;87;761;348;766;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1042;600;983;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1081;655;1077;3;[gt gt] [allDifferent eq gt];4;2
+88;87;892;399;1093;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2861;2064;3933;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1023;467;1327;3;[gt gt] [allDifferent eq gt];4;2
+88;87;813;432;781;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1026;439;1217;3;[gt gt] [allDifferent eq gt];4;2
+88;87;869;443;983;3;[gt gt] [allDifferent eq gt];4;2
+88;87;823;436;796;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1025;504;1109;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6117;3736;10889;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1132;738;1515;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1033;521;1108;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1070;530;1405;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2859;2115;2825;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3040;2163;3152;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3932;3013;4868;3;[gt gt] [allDifferent eq gt];4;2
+88;87;10495;8144;25663;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4061;3170;4946;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1024;520;1062;3;[gt gt] [allDifferent eq gt];4;2
+88;87;802;372;1218;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2365;1649;2481;3;[gt gt] [allDifferent eq gt];4;2
+88;87;851;438;796;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1327;653;1670;3;[gt gt] [allDifferent eq gt];4;2
+88;87;824;404;1483;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2541;1829;2309;3;[gt gt] [allDifferent eq gt];4;2
+88;87;835;455;891;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1003;572;1185;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6405;3829;9283;3;[gt gt] [allDifferent eq gt];4;2
+88;87;9727;5549;19813;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1189;638;1608;3;[gt gt] [allDifferent eq gt];4;2
+88;87;968;510;828;3;[gt gt] [allDifferent eq gt];4;2
+88;87;925;463;1029;3;[gt gt] [allDifferent eq gt];4;2
+88;87;989;510;1047;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6712;4018;9455;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1078;588;906;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1039;502;1155;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3266;2431;3776;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5082;3910;7707;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2776;2079;3121;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1044;581;1093;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2200;1575;2247;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2578;1905;5149;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1245;600;1452;3;[gt gt] [allDifferent eq gt];4;2
+88;87;914;492;2013;3;[gt gt] [allDifferent eq gt];4;2
+88;87;15640;12231;52402;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6300;2873;10141;3;[gt gt] [allDifferent eq gt];4;2
+88;87;815;419;766;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1341;868;1185;3;[gt gt] [allDifferent eq gt];4;2
+88;87;897;475;953;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1651;1097;1513;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3854;3061;8643;3;[gt gt] [allDifferent eq gt];4;2
+88;87;8571;4853;17473;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3408;2528;3355;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5520;2402;7068;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3328;2483;3574;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4652;3457;4728;3;[gt gt] [allDifferent eq gt];4;2
+
+Version:2
+88;87;2740;2088;2856;3;[gt gt] [allDifferent eq gt];4;2
+88;87;8944;5311;23730;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2275;1640;1851;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2758;1974;2155;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3738;2698;4038;3;[gt gt] [allDifferent eq gt];4;2
+88;87;817;440;658;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2772;1888;2226;3;[gt gt] [allDifferent eq gt];4;2
+88;87;882;409;1022;3;[gt gt] [allDifferent eq gt];4;2
+88;87;865;420;1889;3;[gt gt] [allDifferent eq gt];4;2
+88;87;784;389;1183;3;[gt gt] [allDifferent eq gt];4;2
+88;87;834;409;1247;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1176;555;952;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1512;1006;1175;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3327;2575;3867;3;[gt gt] [allDifferent eq gt];4;2
+88;87;998;481;826;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4378;2991;8867;3;[gt gt] [allDifferent eq gt];4;2
+88;87;711;338;563;3;[gt gt] [allDifferent eq gt];4;2
+88;87;937;474;760;3;[gt gt] [allDifferent eq gt];4;2
+88;87;907;480;1233;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1015;472;3312;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2458;1649;2058;3;[gt gt] [allDifferent eq gt];4;2
+88;87;5706;4278;9305;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1184;680;1843;3;[gt gt] [allDifferent eq gt];4;2
+88;87;10675;5201;24848;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4090;2918;5046;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2782;2061;4216;3;[gt gt] [allDifferent eq gt];4;2
+88;87;753;363;573;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1156;689;1332;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1051;532;930;3;[gt gt] [allDifferent eq gt];4;2
+88;87;11910;7540;35348;3;[gt gt] [allDifferent eq gt];4;2
+88;87;805;363;667;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1092;553;1921;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2379;1579;2221;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1735;1189;3979;3;[gt gt] [allDifferent eq gt];4;2
+88;87;906;471;804;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1106;553;1080;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3150;2333;2767;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2131;1535;1635;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7681;4597;12872;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7124;4240;13894;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1705;1203;1717;3;[gt gt] [allDifferent eq gt];4;2
+88;87;942;501;1303;3;[gt gt] [allDifferent eq gt];4;2
+88;87;837;375;693;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3483;2517;3256;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3162;2391;5031;3;[gt gt] [allDifferent eq gt];4;2
+88;87;884;389;722;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1937;1381;1432;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3608;2718;4122;3;[gt gt] [allDifferent eq gt];4;2
+88;87;971;509;1981;3;[gt gt] [allDifferent eq gt];4;2
+88;87;908;479;760;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1211;625;1758;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3796;2865;4144;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6358;3251;9428;3;[gt gt] [allDifferent eq gt];4;2
+88;87;759;361;875;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3076;2261;3169;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1168;571;1316;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3893;2789;3953;3;[gt gt] [allDifferent eq gt];4;2
+88;87;10043;7000;27311;3;[gt gt] [allDifferent eq gt];4;2
+88;87;840;440;709;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1055;535;1046;3;[gt gt] [allDifferent eq gt];4;2
+88;87;967;483;713;3;[gt gt] [allDifferent eq gt];4;2
+88;87;961;464;751;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1196;582;1087;3;[gt gt] [allDifferent eq gt];4;2
+88;87;827;418;582;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1006;494;794;3;[gt gt] [allDifferent eq gt];4;2
+88;87;897;442;2056;3;[gt gt] [allDifferent eq gt];4;2
+88;87;749;390;519;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1016;512;1767;3;[gt gt] [allDifferent eq gt];4;2
+88;87;808;427;806;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1159;578;1004;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4177;3186;5368;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1179;582;1160;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1240;617;5517;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7886;3392;14225;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1161;553;2348;3;[gt gt] [allDifferent eq gt];4;2
+88;87;840;368;767;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3648;2460;3592;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1040;524;1436;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3014;2234;2808;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4055;3015;4441;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1023;513;831;3;[gt gt] [allDifferent eq gt];4;2
+88;87;964;424;857;3;[gt gt] [allDifferent eq gt];4;2
+88;87;931;496;934;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1344;736;1378;3;[gt gt] [allDifferent eq gt];4;2
+88;87;6918;3118;11809;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2176;1467;2674;3;[gt gt] [allDifferent eq gt];4;2
+88;87;9141;5713;24619;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2012;1353;1911;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1079;533;1067;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1103;525;888;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4096;3138;5098;3;[gt gt] [allDifferent eq gt];4;2
+88;87;975;492;857;3;[gt gt] [allDifferent eq gt];4;2
+88;87;4247;3272;4910;3;[gt gt] [allDifferent eq gt];4;2
+88;87;940;492;992;3;[gt gt] [allDifferent eq gt];4;2
+88;87;929;458;718;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1148;532;1958;3;[gt gt] [allDifferent eq gt];4;2
+88;87;1404;861;1134;3;[gt gt] [allDifferent eq gt];4;2
+88;87;3600;2620;3326;3;[gt gt] [allDifferent eq gt];4;2
+88;87;2152;1478;1962;3;[gt gt] [allDifferent eq gt];4;2
+88;87;7509;4904;25518;3;[gt gt] [allDifferent eq gt];4;2
+
+File: normalized-costasArray-13.xml
+MaxDiagSize: 3
+WaitTime: -1
+Initialization Runs: 20
+Test Runs: 100
+Shuffle Constraints: true
+Use LastLevelCheck: true
+
+Sequential version:
+Evaluated runs: 100
+Average Diag Time (ms): 7366.68
+Average Propagations: 2422.09
+Average CSP Solves: 1320.78
+Average Constructed Nodes: 2153.65
+Average QXP Calls: 370.12
+Number of Diags: 2.0
+Average Diag Size: 2.5
+Average Solver Time (ms): 2.728993473553506
+Average Conflict Size: 29.64624547630345
+Cache reuse QX: 0.0
+Average Tree Width: 538.1625
+Average conflicts created: 0.0
+Average conflict reuse: 1783.53
+
+Level-wise parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 4568.44
+Average Propagations: 2731.46
+Average CSP Solves: 1709.56
+Average Constructed Nodes: 1673.73
+Average QXP Calls: 298.66
+Number of Diags: 2.0
+Average Diag Size: 2.5
+Average Solver Time (ms): 3.0023924284611243
+Average Conflict Size: 30.66082376477964
+Cache reuse QX: 0.0
+Average Tree Width: 418.1825
+Average conflicts created: 0.0
+Average conflict reuse: 1375.06
+
+Full parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 4116.57
+Average Propagations: 2543.97
+Average CSP Solves: 1583.69
+Average Constructed Nodes: 1864.61
+Average QXP Calls: 281.57
+Number of Diags: 2.0
+Average Diag Size: 2.5
+Average Solver Time (ms): 4.015369169471298
+Average Conflict Size: 30.550702325753218
+Cache reuse QX: 0.0
+Average Tree Width: 473.16
+Average conflicts created: 0.0
+Average conflict reuse: 1604.77
+
+
+Total Seq: 7367
+Total Lev: 4568 (38%)
+Total Full:4117 (44%)
+

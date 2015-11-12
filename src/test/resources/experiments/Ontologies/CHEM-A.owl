@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY unnamed.owl "http://www.owl-ontologies.com/unnamed.owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&unnamed.owl;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about=""/>
+
+<!-- Classes -->
+  <owl:Class rdf:about="#AC_Agent">
+    <rdfs:subClassOf rdf:resource="#BloodAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#AC_Precursor">
+    <rdfs:subClassOf rdf:resource="#BloodAgentPrecursor"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Agent"
+             rdfs:label="Chemical Agent">
+    <rdfs:subClassOf rdf:resource="#ChemicalElement"/>
+    <owl:disjointWith rdf:resource="#Person"/>
+    <owl:disjointWith rdf:resource="#Precursor"/>
+    <owl:disjointWith rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BlisterAgent"
+             rdfs:label="Blister Agent">
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BlisterAgentPrecursor"
+             rdfs:label="Blister Agent Precursor">
+    <rdfs:subClassOf rdf:resource="#Precursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#BlisterAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BlisterAgentRelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#BlisterAgentPrecursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BlisterAgentSpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToAgent"/>
+        <owl:someValuesFrom rdf:resource="#BlisterAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BloodAgent"
+             rdfs:label="BloodAgent">
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BloodAgentPrecursor"
+             rdfs:label="Blood Agent Precursor">
+    <rdfs:subClassOf rdf:resource="#Precursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#BloodAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BloodAgentRelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#BloodAgentSpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CG_Agent">
+    <rdfs:subClassOf rdf:resource="#ChokingAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CG_Precursor">
+    <rdfs:subClassOf rdf:resource="#ChokingAgentPrecursor"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ChemicalElement">
+    <owl:disjointWith rdf:resource="#Person"/>
+    <owl:disjointWith rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ChokingAgent"
+             rdfs:label="Choking Agent">
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ChokingAgentPrecursor"
+             rdfs:label="Choking Agent Precursor">
+    <rdfs:subClassOf rdf:resource="#Precursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#ChokingAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ChokingAgentRelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#ChokingAgentPrecursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ChokingAgentSpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToAgent"/>
+        <owl:someValuesFrom rdf:resource="#ChokingAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GA_Agent">
+    <rdfs:subClassOf rdf:resource="#NerveAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GA_Precursor">
+    <rdfs:subClassOf rdf:resource="#NerveAgentPrecursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#GA_Agent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GA_RelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentRelatedPublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#GA_Precursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GA_SpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentSpecificPublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GB_Agent">
+    <rdfs:subClassOf rdf:resource="#NerveAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GB_Precursor">
+    <rdfs:subClassOf rdf:resource="#NerveAgentPrecursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#GB_Agent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GB_RelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentRelatedPublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#GB_Precursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GB_SpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentSpecificPublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GF_Agent">
+    <rdfs:subClassOf rdf:resource="#NerveAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GF_Precursor">
+    <rdfs:subClassOf rdf:resource="#NerveAgentPrecursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#GF_Agent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GF_RelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentRelatedPublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#GF_Precursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#GF_SpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentSpecificPublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#HD_Agent">
+    <rdfs:subClassOf rdf:resource="#BlisterAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#HD_Precursor">
+    <rdfs:subClassOf rdf:resource="#BlisterAgentPrecursor"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#NerveAgent"
+             rdfs:label="Nerve Agent">
+    <rdfs:subClassOf rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#NerveAgentPrecursor"
+             rdfs:label="Nerve Agent Precursor">
+    <rdfs:subClassOf rdf:resource="#Precursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#NerveAgent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#NerveAgentRelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#NerveAgentSpecificPublishedWork"
+             rdfs:label="Nerve Agent Specific Published Work">
+    <rdfs:subClassOf rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Person">
+    <owl:disjointWith rdf:resource="#Agent"/>
+    <owl:disjointWith rdf:resource="#ChemicalElement"/>
+    <owl:disjointWith rdf:resource="#PublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Precursor">
+    <rdfs:subClassOf rdf:resource="#ChemicalElement"/>
+    <owl:disjointWith rdf:resource="#Agent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#PublishedAuthor">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#authors"/>
+        <owl:someValuesFrom rdf:resource="#PublishedWork"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#PublishedWork">
+    <owl:disjointWith rdf:resource="#Agent"/>
+    <owl:disjointWith rdf:resource="#ChemicalElement"/>
+    <owl:disjointWith rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VR_Agent">
+    <rdfs:subClassOf rdf:resource="#NerveAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VR_Precursor">
+    <rdfs:subClassOf rdf:resource="#NerveAgentPrecursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#VR_Agent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VR_RelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentRelatedPublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#VR_Precursor"/>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VR_SpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentSpecificPublishedWork"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VX_Agent">
+    <rdfs:subClassOf rdf:resource="#NerveAgent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VX_Precursor">
+    <rdfs:subClassOf rdf:resource="#NerveAgentPrecursor"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#isPrecursorOf"/>
+        <owl:someValuesFrom rdf:resource="#VX_Agent"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VX_RelatedPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentRelatedPublishedWork"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#refersToPrecursor"/>
+        <owl:someValuesFrom rdf:resource="#VX_Precursor"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#VX_SpecificPublishedWork">
+    <rdfs:subClassOf rdf:resource="#NerveAgentSpecificPublishedWork"/>
+  </owl:Class>
+
+<!-- Annotation Properties -->
+  <owl:AnnotationProperty rdf:about="&rdfs;label"/>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="#abstractText">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#agentName">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#description">
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#documentId">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#formula">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#keyword">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#language">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#precursorForAgent">
+    <rdfs:domain rdf:resource="#Precursor"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#precursorName">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="#Precursor"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#title">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="#agentReferedBy">
+    <rdfs:domain rdf:resource="#Agent"/>
+    <rdfs:range rdf:resource="#PublishedWork"/>
+    <rdfs:subPropertyOf rdf:resource="#referedBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#authoredBy">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="#PublishedAuthor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#authors">
+    <rdfs:domain rdf:resource="#PublishedAuthor"/>
+    <rdfs:range rdf:resource="#PublishedWork"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isPrecursorOf">
+    <rdfs:domain rdf:resource="#Precursor"/>
+    <rdfs:range rdf:resource="#Agent"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#precursorReferedBy">
+    <rdfs:domain rdf:resource="#Precursor"/>
+    <rdfs:range rdf:resource="#PublishedWork"/>
+    <rdfs:subPropertyOf rdf:resource="#referedBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#referedBy">
+    <rdfs:range rdf:resource="#PublishedWork"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#refersTo">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#refersToAgent">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="#Agent"/>
+    <rdfs:subPropertyOf rdf:resource="#refersTo"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#refersToPrecursor">
+    <rdfs:domain rdf:resource="#PublishedWork"/>
+    <rdfs:range rdf:resource="#Precursor"/>
+    <rdfs:subPropertyOf rdf:resource="#refersTo"/>
+  </owl:ObjectProperty>
+
+<!-- Instances -->
+  <rdfs:Datatype rdf:about="&xsd;string"/>
+</rdf:RDF>

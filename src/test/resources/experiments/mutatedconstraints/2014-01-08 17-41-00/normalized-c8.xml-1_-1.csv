@@ -1,0 +1,369 @@
+#Vars;#Constraints;#CSP props.;#CSP solved;Diag. time (ms);Max Search Depth;Diagnoses;ThreadPoolSize;#Diags
+
+Version:0
+239;523;204;108;421;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;208;110;422;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;343;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;375;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;190;101;421;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;188;100;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;374;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;192;102;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;359;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;376;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;499;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;515;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;192;102;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;360;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;422;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;500;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;188;100;374;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;188;100;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;485;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;190;101;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;391;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;374;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;186;99;421;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;208;110;546;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;452;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;360;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;516;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;499;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;376;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;188;100;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;192;102;281;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;423;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;192;102;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;210;111;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;452;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;376;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;344;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;180;96;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;421;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;188;100;329;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;452;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;192;102;345;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;194;103;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;407;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;198;105;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;375;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;421;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;422;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;190;101;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;391;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;359;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;196;104;422;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;208;110;436;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;180;96;405;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+
+Version:1
+239;523;204;108;390;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;348;181;687;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;242;127;501;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;126;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;324;169;625;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;262;138;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;322;168;672;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;238;125;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;358;186;827;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;364;189;952;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;329;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;248;131;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;330;172;624;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;224;119;469;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;312;163;515;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;200;106;376;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;270;142;624;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;208;110;469;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;342;178;686;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;358;186;859;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;360;187;749;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;254;134;500;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;220;116;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;342;178;609;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;242;127;483;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;656;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;238;126;530;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;252;133;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;530;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;274;143;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;316;164;686;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;442;228;937;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;288;151;516;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;228;121;546;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;234;123;594;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;266;139;485;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;298;156;718;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;274;143;422;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;286;150;609;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;260;137;485;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;356;185;592;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;246;129;516;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;212;112;499;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;276;145;640;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;346;180;827;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;294;154;656;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;126;530;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;268;141;469;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;300;157;530;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;244;128;469;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;468;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;608;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;216;115;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;216;114;499;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;206;109;312;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;230;121;454;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;242;128;515;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;238;125;375;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;394;204;608;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;236;124;406;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;346;180;671;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;262;138;594;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;238;126;514;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;258;135;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;264;138;640;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;340;177;812;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;280;147;546;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;322;168;672;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;366;190;718;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;126;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;300;156;546;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;280;146;563;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;126;561;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;276;144;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;202;107;359;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;434;224;858;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;248;130;483;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;296;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;272;142;452;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;308;161;656;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;348;181;608;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;242;128;469;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;499;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;145;484;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;284;149;671;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;338;175;733;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;145;594;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;318;166;531;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;230;122;407;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;336;175;578;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;318;166;765;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;242;127;483;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;500;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;126;546;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;270;142;625;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;280;147;608;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;204;108;438;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+
+Version:2
+239;523;256;135;404;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;261;138;649;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;312;163;702;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;264;139;598;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;593;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;323;168;753;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;201;107;415;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;322;168;722;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;343;178;878;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;298;156;627;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;312;164;671;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;439;227;986;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;201;107;453;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;260;137;576;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;302;158;547;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;256;135;600;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;223;118;387;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;304;159;658;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;322;168;665;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;336;175;605;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;274;145;612;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;294;154;660;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;603;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;262;138;347;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;215;114;507;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;334;174;602;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;388;204;902;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;300;157;695;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;234;124;597;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;236;125;459;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;272;143;467;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;278;146;580;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;252;133;608;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;277;146;594;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;260;137;575;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;338;176;761;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;369;193;726;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;201;107;397;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;223;118;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;629;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;127;450;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;337;177;558;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;286;150;566;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;320;167;743;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;193;104;539;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;346;181;778;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;215;114;514;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;276;146;762;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;302;158;642;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;605;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;302;158;664;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;189;101;434;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;369;194;775;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;282;148;596;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;368;191;814;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;197;105;450;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;338;175;717;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;270;142;714;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;258;136;542;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;270;142;595;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;313;164;695;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;426;222;872;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;376;195;915;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;296;155;677;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;272;144;439;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;298;156;637;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;377;198;863;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;275;145;513;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;256;135;526;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;320;167;725;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;296;156;584;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;314;164;814;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;331;174;700;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;346;179;820;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;440;227;913;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;290;152;734;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;264;139;640;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;236;125;558;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;322;168;724;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;332;173;525;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;276;145;558;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;258;136;520;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;258;136;465;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;127;437;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;207;110;429;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;360;187;790;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;472;244;1005;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;371;194;667;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;276;145;482;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;207;110;454;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;330;172;697;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;292;153;595;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;386;202;600;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;294;154;517;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;306;160;628;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;232;123;511;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;272;144;473;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;240;127;677;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;368;191;916;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+239;523;292;153;588;-1;[lt lt lt lt lt lt] [geq lt lt lt lt lt] [geq lt lt lt lt lt] [geq geq geq lt lt lt lt];4;4
+
+File: normalized-c8.xml
+MaxDiagSize: -1
+WaitTime: -1
+Initialization Runs: 20
+Test Runs: 100
+Shuffle Constraints: true
+Use LastLevelCheck: true
+
+Sequential version:
+Evaluated runs: 100
+Average Diag Time (ms): 425.62
+Average Propagations: 198.98
+Average CSP Solves: 105.49
+Average Constructed Nodes: 18.13
+Average QXP Calls: 11.0
+Number of Diags: 4.0
+Average Diag Size: 6.25
+Average Solver Time (ms): 0.6053654374822258
+Average Conflict Size: 1.5714285714285725
+Cache reuse QX: 0.0
+Average Tree Width: 2.14125
+Average conflicts created: 0.0
+Average conflict reuse: 7.13
+
+Level-wise parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 558.73
+Average Propagations: 276.06
+Average CSP Solves: 144.6
+Average Constructed Nodes: 18.87
+Average QXP Calls: 14.38
+Number of Diags: 4.0
+Average Diag Size: 6.25
+Average Solver Time (ms): 0.5706777316735823
+Average Conflict Size: 1.5714285714285725
+Cache reuse QX: 0.0
+Average Tree Width: 2.23375
+Average conflicts created: 0.0
+Average conflict reuse: 4.49
+
+Full parallel version:
+Evaluated runs: 100
+Average Diag Time (ms): 625.88
+Average Propagations: 293.41
+Average CSP Solves: 153.91
+Average Constructed Nodes: 18.94
+Average QXP Calls: 15.44
+Number of Diags: 4.0
+Average Diag Size: 6.25
+Average Solver Time (ms): 0.5832629458774609
+Average Conflict Size: 1.5714285714285725
+Cache reuse QX: 0.0
+Average Tree Width: 2.20625
+Average conflicts created: 0.0
+Average conflict reuse: 3.5
+
+
+Total Seq: 426
+Total Lev: 559 (-31%)
+Total Full:626 (-47%)
+

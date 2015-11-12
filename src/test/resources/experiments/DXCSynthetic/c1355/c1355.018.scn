@@ -1,0 +1,14 @@
+sensors @0 { i1 = true, i2 = false, i3 = false, i4 = false, i5 = false, i6 = true, i7 = true, i8 = true, i9 = true, i10 = true, i11 = false, i12 = true, i13 = true, i14 = false, i15 = false, i16 = true, i17 = false, i18 = false, i19 = false, i20 = true, i21 = true, i22 = true, i23 = false, i24 = true, i25 = true, i26 = false, i27 = true, i28 = true, i29 = true, i30 = true, i31 = true, i32 = false, i33 = true, i34 = true, i35 = false, i36 = true, i37 = true, i38 = false, i39 = false, i40 = false, i41 = true, o1 = true, o2 = false, o3 = false, o4 = false, o5 = false, o6 = true, o7 = true, o8 = true, o9 = true, o10 = true, o11 = false, o12 = true, o13 = true, o14 = false, o15 = false, o16 = true, o17 = false, o18 = false, o19 = false, o20 = true, o21 = true, o22 = true, o23 = false, o24 = true, o25 = true, o26 = true, o27 = true, o28 = true, o29 = true, o30 = true, o31 = true, o32 = false };
+faultInjection @5000 isInjection = true, fault = { gate1001 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1016 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1057 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1096 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1147 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1177 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1291 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1321 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1341 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate1347 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate806 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gate964 = faulty }, parameters = {};
+sensors @6000 { i1 = true, i2 = false, i3 = false, i4 = false, i5 = false, i6 = true, i7 = true, i8 = true, i9 = true, i10 = true, i11 = false, i12 = true, i13 = true, i14 = false, i15 = false, i16 = true, i17 = false, i18 = false, i19 = false, i20 = true, i21 = true, i22 = true, i23 = false, i24 = true, i25 = true, i26 = false, i27 = true, i28 = true, i29 = true, i30 = true, i31 = true, i32 = false, i33 = true, i34 = true, i35 = false, i36 = true, i37 = true, i38 = false, i39 = false, i40 = false, i41 = true, o1 = true, o2 = false, o3 = false, o4 = false, o5 = false, o6 = true, o7 = false, o8 = false, o9 = true, o10 = true, o11 = false, o12 = true, o13 = true, o14 = false, o15 = false, o16 = false, o17 = true, o18 = false, o19 = false, o20 = true, o21 = false, o22 = true, o23 = false, o24 = false, o25 = false, o26 = true, o27 = true, o28 = true, o29 = true, o30 = false, o31 = true, o32 = true };

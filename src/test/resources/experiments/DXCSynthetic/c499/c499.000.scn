@@ -1,0 +1,17 @@
+sensors @0 { i1 = false, i2 = true, i3 = true, i4 = false, i5 = false, i6 = false, i7 = true, i8 = true, i9 = false, i10 = false, i11 = false, i12 = false, i13 = true, i14 = false, i15 = true, i16 = true, i17 = false, i18 = true, i19 = true, i20 = true, i21 = false, i22 = true, i23 = false, i24 = false, i25 = false, i26 = false, i27 = true, i28 = false, i29 = false, i30 = false, i31 = false, i32 = false, i33 = true, i34 = true, i35 = false, i36 = true, i37 = false, i38 = false, i39 = false, i40 = false, i41 = false, o1 = false, o2 = true, o3 = true, o4 = false, o5 = false, o6 = false, o7 = true, o8 = true, o9 = false, o10 = false, o11 = false, o12 = false, o13 = true, o14 = false, o15 = true, o16 = true, o17 = false, o18 = true, o19 = true, o20 = true, o21 = false, o22 = true, o23 = false, o24 = false, o25 = false, o26 = false, o27 = true, o28 = false, o29 = false, o30 = false, o31 = false, o32 = false };
+faultInjection @5000 isInjection = true, fault = { gatee11 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatee2 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatee22 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatee26 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatee27 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatee31 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gateod17 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gateod23 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gateod5 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatet1 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatewb = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatewf = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatexb2 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatexd1 = faulty }, parameters = {};
+faultInjection @5000 isInjection = true, fault = { gatexd6 = faulty }, parameters = {};
+sensors @6000 { i1 = false, i2 = true, i3 = true, i4 = false, i5 = false, i6 = false, i7 = true, i8 = true, i9 = false, i10 = false, i11 = false, i12 = false, i13 = true, i14 = false, i15 = true, i16 = true, i17 = false, i18 = true, i19 = true, i20 = true, i21 = false, i22 = true, i23 = false, i24 = false, i25 = false, i26 = false, i27 = true, i28 = false, i29 = false, i30 = false, i31 = false, i32 = false, i33 = true, i34 = true, i35 = false, i36 = true, i37 = false, i38 = false, i39 = false, i40 = false, i41 = false, o1 = false, o2 = true, o3 = false, o4 = false, o5 = true, o6 = false, o7 = true, o8 = false, o9 = true, o10 = true, o11 = false, o12 = false, o13 = true, o14 = false, o15 = true, o16 = true, o17 = false, o18 = false, o19 = true, o20 = true, o21 = false, o22 = false, o23 = false, o24 = true, o25 = false, o26 = false, o27 = false, o28 = true, o29 = false, o30 = false, o31 = false, o32 = true };
