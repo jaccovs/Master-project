@@ -47,8 +47,8 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
 
     // ----------------------------------------------------
     // Directories
-    static String inputFileDirectory = "experiments/spreadsheetsindividual/";
-    static String logFileDirectory = "logs/spreadsheetsindividual/";
+    static String inputFileDirectory = "src/test/resources/experiments/spreadsheetsindividual/";
+    static String logFileDirectory = "src/test/resources/logs/spreadsheetsindividual/";
     // ----------------------------------------------------
 
     // Number of runs
