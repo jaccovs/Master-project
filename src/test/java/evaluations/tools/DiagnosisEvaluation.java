@@ -1,8 +1,5 @@
 package evaluations.tools;
 
-import java.util.HashSet;
-import java.util.List;
-
 import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.engines.common.SharedDAGNodeQueue;
@@ -11,16 +8,33 @@ import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Evaluation of different diagnosis runs to calculate average values.
  * @author Thomas
  */
-public class DiagnosisEvaluation {
-	
+public class DiagnosisEvaluation<T> {
+
+	public double AvgTime = 0;
+	public double AvgProps = 0;
+	public double AvgSolves = 0;
+	public double AvgSolverTime = 0;
+	public double AvgNodes = 0;
+	public double AvgQXPCalls = 0;
+	public double AvgTotalQXCacheReuse = 0;
+	public double AvgConflictCount = 0;
+	public double AvgConflictSize = 0;
+	public double AvgDiagSize = 0;
+	public double AvgDiags = 0;
+	public double AvgTreeWidth = 0;
+	public double AvgSearchesForConflicts = 0;
+	public double AvgMXPConflicts = 0;
+	public double AvgMXPSplittingTechniqueConflicts = 0;
+	// DJ TEST
+	public double AvgConflictReuse = 0;
 	int totalRuns = 0;
-	
 	double totalTime = 0;
 	int nbDiags = 0;
 	int totalProps = 0;
@@ -37,28 +51,8 @@ public class DiagnosisEvaluation {
 	int totalSearchesForConflicts = 0;
 	int totalMXPConflicts = 0;
 	int totalMXPSplittingTechniqueConflicts = 0;
-	
 	// DJ TESt
 	int conflictReuse = 0;
-	
-	public double AvgTime = 0;
-	public double AvgProps = 0;
-	public double AvgSolves = 0;
-	public double AvgSolverTime = 0;
-	public double AvgNodes = 0;
-	public double AvgQXPCalls = 0;
-	public double AvgTotalQXCacheReuse = 0;
-	public double AvgConflictCount = 0;
-	public double AvgConflictSize = 0;
-	public double AvgDiagSize = 0;
-	public double AvgDiags = 0;
-	public double AvgTreeWidth = 0;
-	public double AvgSearchesForConflicts = 0;
-	public double AvgMXPConflicts = 0;
-	public double AvgMXPSplittingTechniqueConflicts = 0;
-	
-	// DJ TEST
-	public double AvgConflictReuse = 0;
 	
 	/**
 	 * Analyzes one run. Analysis needs to be finished with finishCalculation(), before average values can be retrieved.
@@ -66,7 +60,7 @@ public class DiagnosisEvaluation {
 	 * @param start   the start time of the diagnosis
 	 * @param end   the end time of the diagnosis
 	 */
-	public void analyzeRun(IDiagnosisEngine engine, double ms) {
+	public void analyzeRun(IDiagnosisEngine<T> engine, double ms) {
 //		System.err.println("Analyzing");
 		if (engine != null) {
 			totalRuns++;
@@ -81,7 +75,7 @@ public class DiagnosisEvaluation {
 			totalMXPSplittingTechniqueConflicts += engine.getMXPSplittingTechniqueConflicts();
 			
 			if (engine instanceof AbstractHSDagBuilder) {
-				AbstractHSDagBuilder dagEngine = (AbstractHSDagBuilder)engine;
+				AbstractHSDagBuilder<T> dagEngine = (AbstractHSDagBuilder<T>) engine;
 				
 //				printConflicts(dagEngine.knownConflicts.getCollection(), dagEngine.model);
 				
@@ -92,15 +86,15 @@ public class DiagnosisEvaluation {
 				totalNodes += dagEngine.getConstructedNodeCount();
 				
 				int conflictSizes = 0;
-				List<List<Constraint>> conflicts = dagEngine.knownConflicts.getCollection();
-				for (List<Constraint> conflict: conflicts) {
+				List<List<T>> conflicts = dagEngine.knownConflicts.getCollection();
+				for (List<T> conflict : conflicts) {
 					conflictSizes += conflict.size();
 				}
 				totalConflictSizes += conflictSizes / (double) conflicts.size();
 				totalConflictCount += conflicts.size();
 				
 				int diagSizes = 0;
-				for (Diagnosis d : dagEngine.diagnoses) {
+				for (Diagnosis<T> d : dagEngine.diagnoses) {
 					// System.out.println(d.getElements());
 					if (d.getElements() != null) {
 						diagSizes += d.getElements().size();
@@ -110,8 +104,8 @@ public class DiagnosisEvaluation {
 				}
 				totalDiagSizes += (double) diagSizes; // / engine.diagnoses.size();
 				totalDiags += dagEngine.diagnoses.size();
-				
-				List<DAGNode> nodes = dagEngine.allConstructedNodes.getCollection();
+
+				List<DAGNode<T>> nodes = dagEngine.allConstructedNodes.getCollection();
 				calculateAverageTreeWidth(nodes);
 				
 				checkForDuplicateNodes(dagEngine.allConstructedNodes.getCollection());
@@ -119,10 +113,10 @@ public class DiagnosisEvaluation {
 		}
 		
 	}
-	
-	private void printConflicts(List<List<Constraint>> conflicts, DiagnosisModel model) {
+
+	private void printConflicts(List<List<T>> conflicts, DiagnosisModel<T> model) {
 		int i = 0;
-		for(List<Constraint> conflict: conflicts) {
+		for (List<T> conflict : conflicts) {
 			System.out.print(i + ": ");
 			System.out.println(Utilities.printConstraintListOrderedByName(conflict, model));
 			i++;
@@ -133,10 +127,10 @@ public class DiagnosisEvaluation {
 	 * Checks a list of DAGNodes for duplicates. Prints out the number of found duplicates.
 	 * @param nodes   the list to check
 	 */
-	private void checkForDuplicateNodes(List<DAGNode> nodes) {
+	private void checkForDuplicateNodes(List<DAGNode<T>> nodes) {
 		int duplicateNodes = 0;
-		HashSet<DAGNode> testSet = new HashSet<DAGNode>();
-		for (DAGNode node: nodes) {
+		HashSet<DAGNode<T>> testSet = new HashSet<DAGNode<T>>();
+		for (DAGNode<T> node : nodes) {
 			if (testSet.contains(node)) {
 				System.err.println("Duplicate at level: " + node.nodeLevel);
 				duplicateNodes++;
@@ -161,9 +155,9 @@ public class DiagnosisEvaluation {
 	 * Calculates the average tree width of constructed nodes.
 	 * @param nodes   the nodes of the tree
 	 */
-	private void calculateAverageTreeWidth(List<DAGNode> nodes) {
+	private void calculateAverageTreeWidth(List<DAGNode<T>> nodes) {
 		int maxLevel = 0;
-		for (DAGNode node: nodes) {
+		for (DAGNode<T> node : nodes) {
 			if (node.nodeLevel > maxLevel) {
 				maxLevel = node.nodeLevel;
 			}
@@ -212,14 +206,14 @@ public class DiagnosisEvaluation {
 		result.append("Average Conflict Size: " + AvgConflictSize + "\r\n");
 		result.append("Cache reuse QX: " + AvgTotalQXCacheReuse + "\r\n");
 		result.append("Average Tree Width: " + AvgTreeWidth + "\r\n");
-		
+
 		// DJ TEST
 		result.append("Average conflict reuse: " + AvgConflictReuse + "\r\n");
-		
+
 		result.append("Average searches for conflicts: " + AvgSearchesForConflicts + "\r\n");
 		result.append("Average conflicts per search: " + AvgMXPConflicts + "\r\n");
 		result.append("Average conflicts found with splitting technique: " + AvgMXPSplittingTechniqueConflicts + "\r\n");
-		
+
 		return result.toString();
 	}
 }

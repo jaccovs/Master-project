@@ -1,19 +1,5 @@
 package evaluations.plainconstraints;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.models.Example;
-import org.exquisite.tools.Utilities;
-
-import parser.absconparseur.tools.InstanceParser;
-import parser.chocogen.ChocoFactory;
 import choco.Choco;
 import choco.cp.model.CPModel;
 import choco.cp.solver.CPSolver;
@@ -23,6 +9,14 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.solver.Solver;
 import choco.kernel.solver.variables.integer.IntDomainVar;
 import evaluations.tools.modelReader.ModelReader;
+import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.diagnosis.models.Example;
+import org.exquisite.tools.Utilities;
+import parser.absconparseur.tools.InstanceParser;
+import parser.chocogen.ChocoFactory;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * More utilities for test cases
@@ -31,11 +25,10 @@ import evaluations.tools.modelReader.ModelReader;
  * 
  */
 public class PlainConstraintsUtilities {
+	public static int globalSolveCounter = 0;
 	// The internal prefix
 	static String TMP_prefix = "TMP_";
 	static String mutatedFilePostFix = "_mutated";
-
-	public static int globalSolveCounter = 0;
 
 	/**
 	 * Creates a model from the file
@@ -149,9 +142,10 @@ public class PlainConstraintsUtilities {
 	 * A method that creates a diagnosis model object from the given plain
 	 * constraint example
 	 */
-	public static DiagnosisModel createDiagnosisModel(CPModel cpmodel,
-			List<Map<String, Integer>> testCases) throws Exception {
-		DiagnosisModel diagModel = new DiagnosisModel();
+	public static DiagnosisModel<Constraint> createDiagnosisModel(CPModel cpmodel,
+																  List<Map<String, Integer>> testCases)
+			throws Exception {
+		DiagnosisModel<Constraint> diagModel = new DiagnosisModel<Constraint>();
 
 		// Create the variables
 		Iterator<IntegerVariable> var_it = cpmodel.getIntVarIterator();
@@ -173,10 +167,10 @@ public class PlainConstraintsUtilities {
 			diagModel.addPossiblyFaultyConstraint(c, c.getName());
 		}
 
-		Example ex;
-		List<Example> posExamples = new ArrayList<Example>();
+		Example<Constraint> ex;
+		List<Example<Constraint>> posExamples = new ArrayList<>();
 		for (Map<String, Integer> posTestCase : testCases) {
-			ex = new Example();
+			ex = new Example<>();
 			for (String key : posTestCase.keySet()) {
 				Variable v = varByName.get(key);
 				Constraint ct = Choco.eq((IntegerVariable) v,

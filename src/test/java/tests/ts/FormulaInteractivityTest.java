@@ -1,12 +1,6 @@
 package tests.ts;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
@@ -14,8 +8,9 @@ import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.tools.Utilities;
+
+import java.util.*;
 
 /**
  * Class to test the use of user interactivity for querying formula values.
@@ -25,9 +20,9 @@ import org.exquisite.tools.Utilities;
 public class FormulaInteractivityTest {
 	
 	static String inputFileDirectory = "experiments/spreadsheetsindividual/";
-	
-	DiagnosisModel lastCalculatedModel = null;
-	List<Diagnosis> lastCalculatedDiagnoses = null;
+
+	DiagnosisModel<Constraint> lastCalculatedModel = null;
+	List<Diagnosis<Constraint>> lastCalculatedDiagnoses = null;
 	long lastCalculationTime = 0;
 	
 	int calculationsNeeded = 0;
@@ -156,7 +151,7 @@ public class FormulaInteractivityTest {
 		String formula = r1c1.get(formulaCell);
 		Enumeration<String> cells = r1c1.keys();
 		while (cells.hasMoreElements()) {
-			String cell = (String) cells.nextElement();
+			String cell = cells.nextElement();
 			if (formula.equals(r1c1.get(cell)) && !formulaCell.equals(cell)) {
 				r.add(cell);
 			}
@@ -201,7 +196,7 @@ public class FormulaInteractivityTest {
 	 * @param diagnoses
 	 * @return
 	 */
-	private String findFormulaToQuery(List<Diagnosis> diagnoses) {
+	private String findFormulaToQuery(List<Diagnosis<Constraint>> diagnoses) {
 		return lastCalculatedModel.getConstraintName(diagnoses.get(0).getElements().get(0));
 	}
 

@@ -1,49 +1,32 @@
 package evaluations.tools;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.diagnosis.models.Diagnosis;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class DiagnosisCheck {
 
-	/**
-	 * Check for non minimal diagnoses
-	 * @param diagnoses the diagnoses to check
-	 * @return a list of non minimal diagnoses, if some exist
-	 */
-	public List<Diagnosis> checkForNonMinimalDiagnoses(List<Diagnosis> diagnoses)
-	{
-		List<Diagnosis> nonMinimal = new ArrayList<Diagnosis>();
+	private List<Diagnosis<Constraint>> lastDiagnoses = null;
+	private List<Diagnosis<Constraint>> removedDiagnoses = new ArrayList<Diagnosis<Constraint>>();
 
-		List<Diagnosis> copyDiagnoses = new ArrayList<Diagnosis>(diagnoses);
-
-		for (Diagnosis diag: diagnoses)
-		{
-			copyDiagnoses.remove(diag);
-			Diagnosis notMinimalDiagnosis = isConstraintListContainedInDiagnoses(diag.getElements(), copyDiagnoses);
-			if (notMinimalDiagnosis != null)
-				nonMinimal.add(notMinimalDiagnosis);
-			copyDiagnoses.add(diag);
-		}
-
-		return nonMinimal;
-	}
+	// Check for differences between two sets of diagnoses
+	private List<Diagnosis<Constraint>> addedDiagnoses = new ArrayList<Diagnosis<Constraint>>();
 
 	/**
 	 * A method that checks if a given constraint list is part of a list of diagnoses
 	 * (pointer comparison of elements)
 	 * @param constraints a list of constraints to check
-	 * @param diagnoses a list of diagnoses 
+	 * @param diagnoses a list of diagnoses
 	 * @return true, if the constraint list is contained in the diagnoses
 	 */
-	public static Diagnosis isConstraintListContainedInDiagnoses(List<Constraint> constraints, List<Diagnosis> diagnoses)
+	public static Diagnosis<Constraint> isConstraintListContainedInDiagnoses(List<Constraint> constraints,
+																			 List<Diagnosis<Constraint>> diagnoses)
 	{
 		boolean result = false;
-		for (Diagnosis diag : diagnoses)  {
+		for (Diagnosis<Constraint> diag : diagnoses) {
 			if (diag.getElements().size() >= constraints.size()) {
 				if (diag.getElements().containsAll(constraints)) {
 					return diag;
@@ -53,17 +36,34 @@ public class DiagnosisCheck {
 		return null;
 	}
 
-	// Check for differences between two sets of diagnoses
+	/**
+	 * Check for non minimal diagnoses
+	 *
+	 * @param diagnoses the diagnoses to check
+	 * @return a list of non minimal diagnoses, if some exist
+	 */
+	public List<Diagnosis<Constraint>> checkForNonMinimalDiagnoses(List<Diagnosis<Constraint>> diagnoses) {
+		List<Diagnosis<Constraint>> nonMinimal = new ArrayList<Diagnosis<Constraint>>();
 
-	private List<Diagnosis> lastDiagnoses = null;
-	private List<Diagnosis> removedDiagnoses = new ArrayList<Diagnosis>();
-	private List<Diagnosis> addedDiagnoses = new ArrayList<Diagnosis>();
+		List<Diagnosis<Constraint>> copyDiagnoses = new ArrayList<Diagnosis<Constraint>>(diagnoses);
+
+		for (Diagnosis<Constraint> diag : diagnoses) {
+			copyDiagnoses.remove(diag);
+			Diagnosis<Constraint> notMinimalDiagnosis = isConstraintListContainedInDiagnoses(diag.getElements(),
+					copyDiagnoses);
+			if (notMinimalDiagnosis != null)
+				nonMinimal.add(notMinimalDiagnosis);
+			copyDiagnoses.add(diag);
+		}
+
+		return nonMinimal;
+	}
 
 	/**
 	 * Sets the list of last diagnoses to compare to new diagnoses with function calculateDifferences()
 	 * @param diagnoses the list of old diagnoses
 	 */
-	public void setLastDiagnoses(List<Diagnosis> diagnoses)
+	public void setLastDiagnoses(List<Diagnosis<Constraint>> diagnoses)
 	{
 		lastDiagnoses = diagnoses;
 	}
@@ -72,7 +72,7 @@ public class DiagnosisCheck {
 	 * Get the list of removed diagnoses. setLastDiagnoses() and calculateDifferences() have to be called first.
 	 * @return removed diagnoses
 	 */
-	public List<Diagnosis> getRemovedDiagnoses()
+	public List<Diagnosis<Constraint>> getRemovedDiagnoses()
 	{
 		return removedDiagnoses;
 	}
@@ -81,7 +81,7 @@ public class DiagnosisCheck {
 	 * Get the list of added diagnoses. setLastDiagnoses() and calculateDifferences() have to be called first.
 	 * @return removed diagnoses
 	 */
-	public List<Diagnosis> getAddedDiagnoses()
+	public List<Diagnosis<Constraint>> getAddedDiagnoses()
 	{
 		return addedDiagnoses;
 	}
@@ -91,17 +91,15 @@ public class DiagnosisCheck {
 	 * Use getRemovedDiagnoses() and getAddedDiagnoses to get the lists of differences.
 	 * @param newDiagnoses the new diagnoses to compare with the old diagnoses
 	 */
-	public void calculateDifferences(List<Diagnosis> newDiagnoses)
+	public void calculateDifferences(List<Diagnosis<Constraint>> newDiagnoses)
 	{
 		removedDiagnoses.clear();
 		addedDiagnoses.clear();
 
-		if (lastDiagnoses != null && newDiagnoses != null)
-		{
-			List<Diagnosis> copyDiagnoses = new ArrayList<Diagnosis>(newDiagnoses);
-			for (Diagnosis diag: lastDiagnoses)
-			{
-				Diagnosis sameDiag = containsEqualDiagnosis(copyDiagnoses, diag);
+		if (lastDiagnoses != null && newDiagnoses != null) {
+			List<Diagnosis<Constraint>> copyDiagnoses = new ArrayList<Diagnosis<Constraint>>(newDiagnoses);
+			for (Diagnosis<Constraint> diag : lastDiagnoses) {
+				Diagnosis<Constraint> sameDiag = containsEqualDiagnosis(copyDiagnoses, diag);
 				if (sameDiag != null)
 				{
 					copyDiagnoses.remove(sameDiag);
@@ -115,9 +113,9 @@ public class DiagnosisCheck {
 		}
 	}
 
-	private Diagnosis containsEqualDiagnosis(List<Diagnosis> diagnoses, Diagnosis diagnosisToContain)
-	{
-		for (Diagnosis diag: diagnoses)
+	private Diagnosis<Constraint> containsEqualDiagnosis(List<Diagnosis<Constraint>> diagnoses,
+														 Diagnosis<Constraint> diagnosisToContain) {
+		for (Diagnosis<Constraint> diag: diagnoses)
 		{
 			boolean equal = true;
 			if (diag.getElements().size() != diagnosisToContain.getElements().size())
@@ -151,10 +149,10 @@ public class DiagnosisCheck {
 	 * Checks for non minimal diagnoses and prints them
 	 * @param diagnoses the diagnoses to check
 	 */
-	public void printNonMinimalDiagnoses(List<Diagnosis> diagnoses) {
-		List<Diagnosis> nonMinimal = checkForNonMinimalDiagnoses(diagnoses);
-		
-		for (Diagnosis diag: nonMinimal)
+	public void printNonMinimalDiagnoses(List<Diagnosis<Constraint>> diagnoses) {
+		List<Diagnosis<Constraint>> nonMinimal = checkForNonMinimalDiagnoses(diagnoses);
+
+		for (Diagnosis<Constraint> diag: nonMinimal)
 		{
 			System.err.println("Not minimal: " + diag.toString());
 		}
@@ -164,15 +162,15 @@ public class DiagnosisCheck {
 	 * Calculates the differences between given diagnoses and diagnoses of last function call and prints them
 	 * @param diagnoses the list of new diagnoses
 	 */
-	public void printDifferentDiagnoses(List<Diagnosis> diagnoses) {
+	public void printDifferentDiagnoses(List<Diagnosis<Constraint>> diagnoses) {
 		calculateDifferences(diagnoses);
-		
-		for (Diagnosis diag: getAddedDiagnoses())
+
+		for (Diagnosis<Constraint> diag : getAddedDiagnoses())
 		{
 			System.err.println("Added: " + diag.toString());
 		}
-		
-		for (Diagnosis diag: getRemovedDiagnoses())
+
+		for (Diagnosis<Constraint> diag : getRemovedDiagnoses())
 		{
 			System.err.println("Removed: " + diag.toString());
 		}

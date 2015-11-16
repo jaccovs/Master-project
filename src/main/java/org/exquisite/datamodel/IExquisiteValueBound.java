@@ -2,34 +2,34 @@ package org.exquisite.datamodel;
 
 public interface IExquisiteValueBound {
 
-	/**
-	 * @return the lower
-	 */
-	public abstract double getLower();
+    /**
+     * @return the lower
+     */
+    double getLower();
 
-	/**
-	 * @param lower the lower to set
-	 */
-	public abstract void setLower(double lower);
+    /**
+     * @param lower the lower to set
+     */
+    void setLower(double lower);
 
-	/**
-	 * @return the upper
-	 */
-	public abstract double getUpper();
+    /**
+     * @return the upper
+     */
+    double getUpper();
 
-	/**
-	 * @param upper the upper to set
-	 */
-	public abstract void setUpper(double upper);
+    /**
+     * @param upper the upper to set
+     */
+    void setUpper(double upper);
 
-	/**
-	 * @return the step
-	 */
-	public abstract double getStep();
+    /**
+     * @return the step
+     */
+    double getStep();
 
-	/**
-	 * @param step the step to set
-	 */
-	public abstract void setStep(double step);
+    /**
+     * @param step the step to set
+     */
+    void setStep(double step);
 
 }

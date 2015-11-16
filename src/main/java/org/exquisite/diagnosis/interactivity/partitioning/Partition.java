@@ -1,47 +1,40 @@
 package org.exquisite.diagnosis.interactivity.partitioning;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
+import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A partition of constraints that splits the diagnoses into the 3 parts dx, dnx, and dz.
- * 
- * @author Schmitz
  *
+ * @author Schmitz
  */
-public class Partition {
-	DiagnosisModel model;
-	
-	/**
-	 * Diagnoses that are supported by the partition
-	 */
-    public Set<Diagnosis> dx = new LinkedHashSet<Diagnosis>();
-    
+public class Partition<Formula> {
+    /**
+     * Diagnoses that are supported by the partition
+     */
+    public Set<Diagnosis<Formula>> dx = new LinkedHashSet<Diagnosis<Formula>>();
     /**
      * Diagnoses that are not supported by the partition
      */
-    public Set<Diagnosis> dnx = new LinkedHashSet<Diagnosis>();
-    
+    public Set<Diagnosis<Formula>> dnx = new LinkedHashSet<Diagnosis<Formula>>();
     /**
      * Diagnoses that are unaffected by the partition
      */
-    public Set<Diagnosis> dz = new LinkedHashSet<Diagnosis>();
-
-    public Set<Constraint> partition;
+    public Set<Diagnosis<Formula>> dz = new LinkedHashSet<Diagnosis<Formula>>();
+    public Set<Formula> partition;
     public BigDecimal score = BigDecimal.valueOf(Double.MAX_VALUE);
     public BigDecimal difference = new BigDecimal(Double.MAX_VALUE);
     public boolean isVerified = false;
+    DiagnosisModel<Formula> model;
 
-    public Partition(DiagnosisModel model) {
-		this.model = model;
-	}
+    public Partition(DiagnosisModel<Formula> model) {
+        this.model = model;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -66,9 +59,9 @@ public class Partition {
         //result = 31 * result + partition.hashCode();
         return result;
     }
-    
+
     @Override
     public String toString() {
-    	return Utilities.printConstraintListOrderedByName(partition, model);
+        return Utilities.printConstraintListOrderedByName(partition, model);
     }
 }

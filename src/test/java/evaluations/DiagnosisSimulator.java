@@ -1,16 +1,13 @@
 package evaluations;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import evaluations.configuration.AbstractRunConfiguration;
+import evaluations.configuration.AbstractScenario;
+import evaluations.configuration.SimulatorScenario;
+import evaluations.configuration.StdRunConfiguration;
+import evaluations.configuration.StdRunConfiguration.ExecutionMode;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
@@ -21,17 +18,11 @@ import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Utilities;
-
 import tests.dj.qxsim.QXSim;
 import tests.dj.qxsim.RandomGaussian;
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
-import evaluations.configuration.AbstractRunConfiguration;
-import evaluations.configuration.AbstractScenario;
-import evaluations.configuration.SimulatorScenario;
-import evaluations.configuration.StdRunConfiguration;
-import evaluations.configuration.StdRunConfiguration.ExecutionMode;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Simulation tests
@@ -39,76 +30,27 @@ import evaluations.configuration.StdRunConfiguration.ExecutionMode;
  * @author dietmar, Thomas
  *
  */
-public class DiagnosisSimulator extends AbstractEvaluation {
-	
-	// Possible distribution strategies.
-	public enum ConflictGenerationStrategy_Size {uniform, gaussian};
-	public enum ConflictGenerationStrategy_VarDistribution  {uniform, gaussian};
-
-	@Override
-	public String getEvaluationName() {
-		return "DiagnosisSimulator";
-	}
-
-	@Override
-	public String getResultPath() {
-		return logFileDirectory;
-	}
-	
-	@Override
-	public String getConstraintOrderPath() {
-		return conflictDirectory;
-	}
-
-	@Override
-	protected boolean shouldShuffleConstraints() {
-		return false;
-	}
-	
-	@Override
-	public boolean alwaysWriteDiagnoses() {
-		return false;
-	}
-	
-	@Override
-	public boolean usePersistentConstraintOrder() {
-		return false;
-	}
+public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 	
 	// ----------------------------------------------------
 	// Directories
 	static String inputFileDirectory = "experiments/QXSim/";
 	static String logFileDirectory = "logs/QXSim/";
-	public String conflictDirectory = "experiments/QXSim/storedconflicts";
-	// ----------------------------------------------------
-	
 	// Number of runs
 	static int nbInitRuns = 5;
 	static int nbTestRuns = 100;
-	
 	// store to file system
 	static boolean persistent = true;
 	// store different files for each run to have randomization, but better comparability from sequential to parallelized versions
 	static boolean differentModelsForRuns = true;
-	
-	// Cache the constraint names
-	Map<Constraint, String> constraintNames = new HashMap<Constraint, String>();
-	List<List<Constraint>> conflicts = new ArrayList<List<Constraint>>();
-	
 	// how to generate
 	static ConflictGenerationStrategy_Size genStrategySize = ConflictGenerationStrategy_Size.gaussian;
-	
-	// the random gaussian
-	RandomGaussian randomGaussian;
-	// A copy of the constraints
-	List<Constraint> shuffledConstraints = null;
-	
 	// Run configurations
 	static StdRunConfiguration[] runConfigurations = new StdRunConfiguration[] {
 		new StdRunConfiguration(ExecutionMode.singlethreaded, 1, false),
 //		new StdRunConfiguration(ExecutionMode.fullparallel, 2, false),
 //		new StdRunConfiguration(ExecutionMode.levelparallel, 2, false),
-		
+
 //		new StdRunConfiguration(ExecutionMode.heuristic, 2, false),
 //		new StdRunConfiguration(ExecutionMode.hybrid, 2, false),
 		new StdRunConfiguration(ExecutionMode.fullparallel, 4, false),
@@ -123,41 +65,110 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 //		new StdRunConfiguration(ExecutionMode.prdfs, 3, false),
 //		new StdRunConfiguration(ExecutionMode.prdfs, 4, false),
 	};
-	
 	static SimulatorScenario[] scenarios = new SimulatorScenario[] {
 		// Settings for finding 1 diagnosis (All engines except levelparallel)
 //		new SimulatorScenario(100, 12, 9, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10), // Settings, where Hybrid is faster than FP and heuristic
-//		
+//
 //		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 0),
 //		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 1),
 //		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
 //		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 100),
-//		
+//
 //		new SimulatorScenario(50, 5, 6, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
 //		new SimulatorScenario(50, 5, 9, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
 //		new SimulatorScenario(50, 5, 12, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
-//		
+//
 //		new SimulatorScenario(50, 10, 9, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
 //		new SimulatorScenario(75, 10, 9, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
 //		new SimulatorScenario(100, 10, 9, ConflictGenerationStrategy_VarDistribution.uniform, -1, 1, 10),
-		
+
 		// Settings for finding all diagnoses (No Heuristic / Hybrid engines!)
 		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 0),
 		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 1),
 		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 		new SimulatorScenario(50, 5, 4, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 100),
-		
+
 		new SimulatorScenario(50, 5, 6, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 		new SimulatorScenario(50, 5, 9, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 		new SimulatorScenario(50, 5, 12, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
-		
+
 		new SimulatorScenario(50, 10, 9, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 		new SimulatorScenario(75, 10, 9, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 		new SimulatorScenario(100, 10, 9, ConflictGenerationStrategy_VarDistribution.gaussian, 5, -1, 10),
 	};
+	public String conflictDirectory = "experiments/QXSim/storedconflicts";
+	// Cache the constraint names
+	Map<Constraint, String> constraintNames = new HashMap<Constraint, String>();
+	// ----------------------------------------------------
+	List<List<Constraint>> conflicts = new ArrayList<List<Constraint>>();
+	// the random gaussian
+	RandomGaussian randomGaussian;
+	// A copy of the constraints
+	List<Constraint> shuffledConstraints = null;
+
+	/**
+	 * returns a string rep of the conflict
+	 *
+	 * @param constraints
+	 * @return
+	 */
+	public static String conflictToString(Map<Constraint, String> constraintNames, List<Constraint> constraints) {
+		if (constraints == null) {
+			return null;
+		}
+		List<String> names = new ArrayList<String>();
+		for (Constraint c : constraints) {
+			String name = constraintNames.get(c);
+			if (name == null) {
+				System.out.println("Name is null for " + c.getName());
+				System.out.println(
+						"Size of constraints: " + constraints.size() + ", size of constraintNames: " + constraintNames
+								.size());
+			}
+			names.add(name);
+		}
+		Collections.sort(names);
+
+		return names.toString().replace(" ", "");
+	}
+
+	public static void main(String[] args) {
+		DiagnosisSimulator diagnosisSimulator = new DiagnosisSimulator();
+		diagnosisSimulator.runTests(nbInitRuns, nbTestRuns, runConfigurations, scenarios);
+	}
 
 	@Override
-	public IDiagnosisEngine prepareRun(
+	public String getEvaluationName() {
+		return "DiagnosisSimulator";
+	}
+
+	@Override
+	public String getResultPath() {
+		return logFileDirectory;
+	}
+
+	@Override
+	public String getConstraintOrderPath() {
+		return conflictDirectory;
+	}
+
+	@Override
+	protected boolean shouldShuffleConstraints() {
+		return false;
+	}
+
+	@Override
+	public boolean alwaysWriteDiagnoses() {
+		return false;
+	}
+
+	@Override
+	public boolean usePersistentConstraintOrder() {
+		return false;
+	}
+
+	@Override
+	public IDiagnosisEngine<Constraint> prepareRun(
 			AbstractRunConfiguration abstractRunConfiguration,
 			AbstractScenario abstractScenario, int subScenario, int iteration) {
 		
@@ -208,8 +219,8 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 			engineType = EngineType.PRDFS;
 			break;
 		}
-		
-		IDiagnosisEngine engine = EngineFactory.makeEngine(engineType, sessionData, runConfiguration.threads);
+
+		IDiagnosisEngine<Constraint> engine = EngineFactory.makeEngine(engineType, sessionData, runConfiguration.threads);
 		
 
 		((AbstractHSDagBuilder)engine).setSearchDepth(scenario.searchDepth);
@@ -227,9 +238,11 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 	 * @return   the defined model
 	 * @throws Exception
 	 */
-	DiagnosisModel defineModel(int nbConstraints, int nbConflicts, int conflictSize, ConflictGenerationStrategy_VarDistribution varDistribution, int run) throws Exception {
+	DiagnosisModel<Constraint> defineModel(int nbConstraints, int nbConflicts, int conflictSize,
+										   ConflictGenerationStrategy_VarDistribution varDistribution, int run)
+			throws Exception {
 //		System.out.println("" + run);
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 		conflicts = new ArrayList<List<Constraint>>();
 		constraintNames = new HashMap<Constraint, String>();
 		shuffledConstraints = null;
@@ -303,7 +316,7 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 			// Get some distribution of values
 			RandomGaussian randomGaussian = new RandomGaussian(
 													conflictSize, // The mean 
-													(int) (conflictSize/2),  // half of the mean value
+					conflictSize / 2,  // half of the mean value
 													2,  // double conflicts down there
 													(conflictSize-2)+conflictSize); // upper bound at same distance than lower bound
 			for (int i=0;i<nbConflicts;i++) {
@@ -500,29 +513,6 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 	}
 	
 	/**
-	 * returns a string rep of the conflict
-	 * @param constraints
-	 * @return
-	 */
-	public static String conflictToString(Map<Constraint,String> constraintNames, List<Constraint> constraints) {
-		if (constraints == null) {
-			return null;
-		}
-		List<String> names = new ArrayList<String>();
-		for (Constraint c : constraints) {
-			String name = constraintNames.get(c);
-			if (name == null) {
-				System.out.println("Name is null for " + c.getName());
-				System.out.println("Size of constraints: " + constraints.size() + ", size of constraintNames: " + constraintNames.size());
-			}
-			names.add(name);
-		}
-		Collections.sort(names);
-		
-		return names.toString().replace(" ","");
-	}
-	
-	/** 
 	 * Return the constraint name
 	 * @param name
 	 * @return
@@ -535,10 +525,12 @@ public class DiagnosisSimulator extends AbstractEvaluation {
 		}
 		return null;
 	}
-	
-	public static void main(String[] args) {
-		DiagnosisSimulator diagnosisSimulator = new DiagnosisSimulator();
-		diagnosisSimulator.runTests(nbInitRuns, nbTestRuns, runConfigurations, scenarios);
+
+	// Possible distribution strategies.
+	public enum ConflictGenerationStrategy_Size {
+		uniform, gaussian
 	}
+
+	public enum ConflictGenerationStrategy_VarDistribution {uniform, gaussian}
 
 }

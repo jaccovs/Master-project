@@ -1,32 +1,27 @@
 package evaluations.conflictposition;
 
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.diagnosis.IDiagnosisEngine;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.List;
 
 /*+
  * Holds shared code for the simulated QXs
  */
 public class QXKCTools {
 	
-	public enum WaitMode {constant, linear, quadratic};
-	
 	public static WaitMode WAIT_MODE = WaitMode.quadratic;
-	
 	public static double MAX_WAIT_TIME = 100d;
-	
 	// globally known conflicts, will be set on construction
 	public static List<List<Constraint>> knownConflicts = null;
 	
 	// Look in the global list
-	public static boolean isConsistent(List<Constraint> constraints, IDiagnosisEngine diagnosisEngine) {
+	public static boolean isConsistent(List<Constraint> constraints, IDiagnosisEngine<Constraint> diagnosisEngine) {
 //		System.out.println("QX Called with: " + Utilities.printConstraintList(constraints, dagbuilder.model));
-		
+
 		double maxCount = diagnosisEngine.getModel().getPossiblyFaultyStatements().size() + diagnosisEngine.getModel().getCorrectStatements().size();
 //		System.out.println("MaxCount is " + maxCount + " and constraint count is " + constraints.size());
-		
+
 		switch (WAIT_MODE) {
 		case constant:
 			if (MAX_WAIT_TIME > 0) {
@@ -47,8 +42,7 @@ public class QXKCTools {
 			break;
 		}
 
-		
-		
+
 		boolean result = true;
 		// A set of constraints is consistent if it is not a superset of any of the known conflicts
 		// Iterate over all the known conflicts
@@ -67,5 +61,7 @@ public class QXKCTools {
 			// do nothing..
 		}
 	}
+
+	public enum WaitMode {constant, linear, quadratic}
 	
 }

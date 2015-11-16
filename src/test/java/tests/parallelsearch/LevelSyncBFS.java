@@ -1,5 +1,10 @@
 package tests.parallelsearch;
 
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import org.exquisite.diagnosis.models.DAGNode;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -7,12 +12,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.exquisite.diagnosis.models.DAGNode;
-
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
 
 /**
  * Example implementation of Level Synchronous Breadth-First Search.
@@ -52,13 +51,13 @@ public class LevelSyncBFS {
 	public void run(){
 		//create root node with an arbitrary conflict from Mock qx call.
 		MockQxSearch mockQx = new MockQxSearch();
-		List<Constraint> rootConflict = (List<Constraint>)mockQx.getRootConflict();
-		DAGNode root = new DAGNode(rootConflict);
+		List<Constraint> rootConflict = mockQx.getRootConflict();
+		DAGNode<Constraint> root = new DAGNode<Constraint>(rootConflict);
 		root.nodeLevel = 0;
 		root.nodeName = "root";
 		
 		//add root node to list of nodes to expand...
-		List<DAGNode>nodesToExpand = new ArrayList<DAGNode>();
+		List<DAGNode<Constraint>> nodesToExpand = new ArrayList<DAGNode<Constraint>>();
 		nodesToExpand.add(root);		
 		currentLevelEdgeCount = root.conflict.size();
 		
@@ -75,8 +74,8 @@ public class LevelSyncBFS {
 	 * of ExecutorService to manage thread reuse.
 	 * Uses CountDownLatch to block the program continuing until all nodes for a given level
 	 * have been expanded.
-	 */	
-	public void expandNodes(List<DAGNode>nodesToExpand){
+	 */
+	public void expandNodes(List<DAGNode<Constraint>> nodesToExpand) {
 		System.out.println("START NODE EXPANSION...");
 		//pool of available threads for node expansion workers
 		ExecutorService threadPool = Executors.newFixedThreadPool(MAX_THREAD_POOL_SIZE);
@@ -84,11 +83,11 @@ public class LevelSyncBFS {
 			//a barrier to enforce only nodes of a given level are expanded.
 			CountDownLatch barrier = new CountDownLatch(currentLevelEdgeCount);
 			//list caching each node that is expanded.
-			List<DAGNode> expandedNodes = new ArrayList<DAGNode>();
+			List<DAGNode<Constraint>> expandedNodes = new ArrayList<DAGNode<Constraint>>();
 			//do bfs...
 			while (!nodesToExpand.isEmpty()){
 				//remove node from queue
-				DAGNode node = nodesToExpand.remove(0);
+				DAGNode<Constraint> node = nodesToExpand.remove(0);
 				//expand the node
 				if (node.nodeLevel < MAX_SEARCH_DEPTH){
 					//threadPool.execute(new ExpansionWorker(node, barrier));				
@@ -117,11 +116,11 @@ public class LevelSyncBFS {
 		threadPool.shutdown();	
 		System.out.println("END OF NODE EXPANSION.");
 	}
-	
-	private int calculateEdgeLevelCount(List<DAGNode> nodes){
-		int result = 0; 
-		
-		for (DAGNode node : nodes){
+
+	private int calculateEdgeLevelCount(List<DAGNode<Constraint>> nodes) {
+		int result = 0;
+
+		for (DAGNode<Constraint> node : nodes) {
 			result += node.conflict.size();
 		}
 		
@@ -133,10 +132,10 @@ public class LevelSyncBFS {
 	 * @param visitedNodes - nodes which have been expanded and may have new child nodes.
 	 * @param nodesToExpand - the shared list where nodes that are to be expanded are queued.
 	 */
-	private void queueNonVisitedNodes(List<DAGNode>visitedNodes, List<DAGNode>nodesToExpand){
-		for (DAGNode node : visitedNodes){
+	private void queueNonVisitedNodes(List<DAGNode<Constraint>> visitedNodes, List<DAGNode<Constraint>> nodesToExpand) {
+		for (DAGNode<Constraint> node : visitedNodes) {
 			if (!node.children.isEmpty()){
-				Enumeration<DAGNode> enumeration = node.children.elements();
+				Enumeration<DAGNode<Constraint>> enumeration = node.children.elements();
 				while(enumeration.hasMoreElements()){
 					nodesToExpand.add(enumeration.nextElement());
 				}
@@ -148,7 +147,7 @@ public class LevelSyncBFS {
 	 * just a util for printing the resulting node graph to console window.
 	 * @param targetNode
 	 */
-	private void traverseNode(DAGNode targetNode)
+	private void traverseNode(DAGNode<Constraint> targetNode)
 	{
 		final String indent = "    ";
 		String nodeMessage = "";
@@ -164,7 +163,7 @@ public class LevelSyncBFS {
 		{
 			for(Constraint c : targetNode.conflict)
 			{
-				DAGNode child = targetNode.children.get(c);
+				DAGNode<Constraint> child = targetNode.children.get(c);
 				if(child!=null)
 				{
 					traverseNode(child);
@@ -177,11 +176,11 @@ public class LevelSyncBFS {
 
 class EdgeWorker extends Thread{
 	MockQxSearch search = new MockQxSearch();
-	DAGNode parent;
+	DAGNode<Constraint> parent;
 	Constraint edgeLabel;
 	CountDownLatch cdl;
-	
-	public EdgeWorker(DAGNode parent, Constraint edgeLabel, CountDownLatch cdl){
+
+	public EdgeWorker(DAGNode<Constraint> parent, Constraint edgeLabel, CountDownLatch cdl) {
 		this.parent = parent;
 		this.edgeLabel = edgeLabel;
 		this.cdl = cdl;
@@ -192,7 +191,7 @@ class EdgeWorker extends Thread{
 		constraintsToIgnore.add(edgeLabel);
 		List<Constraint> conflict = search.findConflict(constraintsToIgnore);			
 		System.out.println("conflict size = " + conflict.size());
-		DAGNode childNode = new DAGNode(parent, edgeLabel);
+		DAGNode<Constraint> childNode = new DAGNode<Constraint>(parent, edgeLabel);
 		childNode.conflict = conflict;			
 		parent.children.put(edgeLabel, childNode);
 		childNode.nodeLevel = parent.nodeLevel + 1;
@@ -211,11 +210,11 @@ class EdgeWorker extends Thread{
 class ExpansionWorker extends Thread{
 	
 	MockQxSearch search = new MockQxSearch();
-	DAGNode nodeToExpand;
+	DAGNode<Constraint> nodeToExpand;
 	int nodeNamePostfix = 0;
 	CountDownLatch cdl;
-		
-	public ExpansionWorker(DAGNode node, CountDownLatch cdl){
+
+	public ExpansionWorker(DAGNode<Constraint> node, CountDownLatch cdl) {
 		this.nodeToExpand = node;
 		this.cdl = cdl;				
 	}
@@ -226,9 +225,9 @@ class ExpansionWorker extends Thread{
 		for (Constraint label : nodeToExpand.conflict){				
 			List<Constraint> constraintsToIgnore = new ArrayList<Constraint>(nodeToExpand.pathLabels);
 			constraintsToIgnore.add(label);
-			List<Constraint> conflict = search.findConflict(constraintsToIgnore);			
-			
-			DAGNode childNode = new DAGNode(nodeToExpand, label);
+			List<Constraint> conflict = search.findConflict(constraintsToIgnore);
+
+			DAGNode<Constraint> childNode = new DAGNode<Constraint>(nodeToExpand, label);
 			
 			childNode.conflict = conflict;			
 			nodeToExpand.children.put(label, childNode);

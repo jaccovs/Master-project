@@ -1,10 +1,10 @@
 package evaluations.dxc.synthetic.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
+import evaluations.dxc.synthetic.model.DXCComponent;
+import evaluations.dxc.synthetic.model.DXCScenarioData;
+import evaluations.dxc.synthetic.model.DXCSystem;
+import evaluations.dxc.synthetic.model.DXCSystemDescription;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.IDiagnosisEngine;
@@ -12,10 +12,10 @@ import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 
-import evaluations.dxc.synthetic.model.DXCComponent;
-import evaluations.dxc.synthetic.model.DXCScenarioData;
-import evaluations.dxc.synthetic.model.DXCSystem;
-import evaluations.dxc.synthetic.model.DXCSystemDescription;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.List;
 
 public class DXCTools {
 	public static DXCSystemDescription readSystemDescription(String xmlFilePath) {		
@@ -81,20 +81,20 @@ public class DXCTools {
 		try
 		{
 			DXCDiagnosisModelGenerator dmg = new DXCDiagnosisModelGenerator();
-			DiagnosisModel diagModel = dmg.createDiagnosisModel(system, scenario.getCorrectState());
+			DiagnosisModel<Constraint> diagModel = dmg.createDiagnosisModel(system, scenario.getCorrectState());
 			
 			// Create the engine
-			ExquisiteSession sessionData = new ExquisiteSession(null,
-					null, new DiagnosisModel(diagModel));
+			ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(null,
+					null, new DiagnosisModel<>(diagModel));
 			// Do not try to find a better strategy for the moment
 			sessionData.config.searchStrategy = SearchStrategies.Default;
 			sessionData.config.searchDepth = -1;
-			
-			IDiagnosisEngine engine = EngineFactory
+
+			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData);
 			
 //			long start = System.currentTimeMillis();
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
 //			long end = System.currentTimeMillis();
 //			long duration = end - start;
 			return diagnoses.size() == 0;
@@ -103,10 +103,12 @@ public class DXCTools {
 		}
 		return false;
 	}
-	
-	public static Diagnosis checkFaultyComponentsinDiagnoses(DiagnosisModel model, List<Diagnosis> diagnoses, DXCSystem system, DXCScenarioData scenario) {
+
+	public static Diagnosis<Constraint> checkFaultyComponentsinDiagnoses(DiagnosisModel<Constraint> model,
+																		 List<Diagnosis<Constraint>> diagnoses,
+																		 DXCSystem system, DXCScenarioData scenario) {
 		for (int i = 0; i < diagnoses.size(); i++) {
-			Diagnosis diag = diagnoses.get(i);
+			Diagnosis<Constraint> diag = diagnoses.get(i);
 			boolean allIn = true;
 			for (int k = 0; k < diag.getElements().size(); k++) {
 				String constraintName = model.getConstraintName(diag.getElements().get(k));

@@ -1,12 +1,5 @@
 package evaluations.dxc.synthetic.minizinc;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.models.Example;
-
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.constraints.ConstraintType;
 import choco.kernel.model.variables.Operator;
@@ -18,23 +11,29 @@ import choco.kernel.model.variables.real.RealConstantVariable;
 import choco.kernel.model.variables.real.RealVariable;
 import choco.kernel.model.variables.set.SetConstantVariable;
 import choco.kernel.model.variables.set.SetVariable;
+import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.diagnosis.models.Example;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by kostya on 8/17/14.
  */
 public class MZModelGenerator {
 
-    private final ExquisiteSession sessionData;
+    private final ExquisiteSession<Constraint> sessionData;
     private int abCounter = -1;
 
 
-    public MZModelGenerator(ExquisiteSession sessionData) {
+    public MZModelGenerator(ExquisiteSession<Constraint> sessionData) {
         this.sessionData = sessionData;
     }
 
     public List<String> getModel() {
         List<String> model = new LinkedList<>();
-        DiagnosisModel dm = this.sessionData.diagnosisModel;
+        DiagnosisModel<Constraint> dm = this.sessionData.diagnosisModel;
         generateVariables(model, dm.getVariables());
         generateConstraints(model, dm.getCorrectStatements(), Mode.CORRECT);
         generateConstraints(model, dm.getPossiblyFaultyStatements(), Mode.ABNORMAL);
@@ -78,13 +77,11 @@ public class MZModelGenerator {
      * @param examples a set of example
      * @param mode type of constraints that must be generated for examples
      */
-    private void generateExampleConstraints(List<String> model, List<Example> examples, Mode mode) {
+    private void generateExampleConstraints(List<String> model, List<Example<Constraint>> examples, Mode mode) {
         for (Example example : examples) {
             generateConstraints(model, example.constraints, mode);
         }
     }
-
-    enum Mode {CORRECT, ABNORMAL, NEGATIVE}
 
     private void generateConstraints(List<String> model, List<Constraint> constraints, Mode mode) {
         for (Constraint constraint : constraints) {
@@ -183,7 +180,6 @@ public class MZModelGenerator {
                 throw new IllegalArgumentException("Unknown operator type " + operator);
         }
     }
-
 
     private boolean isMiniZincPredicate(Operator operator) {
         switch (operator) {
@@ -293,4 +289,6 @@ public class MZModelGenerator {
     public MZDiagnosisEngine.SearchType getSearchType() {
         return MZDiagnosisEngine.SearchType.AllMinCardinality;
     }
+
+    enum Mode {CORRECT, ABNORMAL, NEGATIVE}
 }

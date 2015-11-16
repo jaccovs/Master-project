@@ -1,7 +1,5 @@
 package tests.ts.interactivity;
 
-import java.util.List;
-
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.IDiagnosisEngine;
@@ -11,23 +9,25 @@ import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
+import java.util.List;
+
 /**
  * A diagnosis engine that will simulate user interactivity to always return the one correct diagnosis.
  * 
  * @author Schmitz
  *
  */
-public class InteractivityDiagnosisEngine extends AbstractHSDagBuilder {
+public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 
 	/**
 	 * Inner engine is used to calculate the diagnosis candidates.
 	 */
-	IDiagnosisEngine innerEngine;
+	IDiagnosisEngine<T> innerEngine;
 
 	/**
 	 * User interaction is used to determine and to simulate the user interaction
 	 */
-	IUserInteraction userInteraction;
+	IUserInteraction<T> userInteraction;
 
 	/**
 	 * Best query finder is used to determine the next query that should be asked to the user
@@ -40,6 +40,19 @@ public class InteractivityDiagnosisEngine extends AbstractHSDagBuilder {
 
 	float diagnosisTime;
 	float userInteractionTime;
+
+	public InteractivityDiagnosisEngine(ExquisiteSession sessionData, IDiagnosisEngine<T> innerEngine,
+										int diagnosesPerQuery,
+										IUserInteraction userInteraction, IBestQueryFinder bestQueryFinder) {
+		super(sessionData);
+
+		this.userInteraction = userInteraction;
+		this.bestQueryFinder = bestQueryFinder;
+
+		sessionData.config.maxDiagnoses = diagnosesPerQuery;
+
+		this.innerEngine = innerEngine;
+	}
 
 	public int getNumberOfQueries() {
 		return numberOfQueries;
@@ -57,23 +70,11 @@ public class InteractivityDiagnosisEngine extends AbstractHSDagBuilder {
 		return userInteractionTime;
 	}
 
-	public InteractivityDiagnosisEngine(ExquisiteSession sessionData, IDiagnosisEngine innerEngine, int diagnosesPerQuery,
-			IUserInteraction userInteraction, IBestQueryFinder bestQueryFinder) {
-		super(sessionData);
-
-		this.userInteraction = userInteraction;
-		this.bestQueryFinder = bestQueryFinder;
-
-		sessionData.config.maxDiagnoses = diagnosesPerQuery;
-
-		this.innerEngine = innerEngine;
-	}
-
 	@Override
-	public List<Diagnosis> calculateDiagnoses() throws DiagnosisException {
+	public List<Diagnosis<T>> calculateDiagnoses() throws DiagnosisException {
 		long startTime = System.nanoTime();
 
-		List<Diagnosis> diagnoses;
+		List<Diagnosis<T>> diagnoses;
 
 		do {
 			innerEngine.resetEngine();
@@ -111,7 +112,7 @@ public class InteractivityDiagnosisEngine extends AbstractHSDagBuilder {
 	 * @param model
 	 * @param diagModelExpansion
 	 */
-	private void expandDiagnosisModel(DiagnosisModel model, DiagnosisModelExpansion diagModelExpansion) {
+	private void expandDiagnosisModel(DiagnosisModel<T> model, DiagnosisModelExpansion diagModelExpansion) {
 
 		model.getPossiblyFaultyStatements().removeAll(diagModelExpansion.getPossiblyFaultyConstraintsToRemove());
 
@@ -121,7 +122,7 @@ public class InteractivityDiagnosisEngine extends AbstractHSDagBuilder {
 	}
 
 	@Override
-	public void expandNodes(List<DAGNode> nodesToExpand) throws DomainSizeException {
+	public void expandNodes(List<DAGNode<T>> nodesToExpand) throws DomainSizeException {
 		// Nothing to do here
 
 	}

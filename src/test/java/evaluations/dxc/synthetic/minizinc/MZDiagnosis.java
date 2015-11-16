@@ -2,7 +2,7 @@ package evaluations.dxc.synthetic.minizinc;
 
 import org.exquisite.diagnosis.models.Diagnosis;
 
-public class MZDiagnosis extends Diagnosis {
+public class MZDiagnosis extends Diagnosis<String> {
 	
 	private String diagnosis;
 	

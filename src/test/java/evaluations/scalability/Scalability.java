@@ -1,14 +1,10 @@
 package evaluations.scalability;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.logging.Logger;
-
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import evaluations.models.JCKBSEModel;
+import evaluations.models.LoggingData;
+import evaluations.mutation.Mutation;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
@@ -24,10 +20,9 @@ import org.exquisite.i8n.CultureInfo;
 import org.exquisite.logging.ExquisiteLogger;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.variables.integer.IntegerExpressionVariable;
-import evaluations.models.JCKBSEModel;
-import evaluations.models.LoggingData;
-import evaluations.mutation.Mutation;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Where the h/f*** are the comments, David?
@@ -37,25 +32,23 @@ import evaluations.mutation.Mutation;
 public class Scalability {
 	
 	/**
+	 * Which type/configuration of diagnosis engine to use for test run.
+	 */
+	//IDiagnosisEngine diagnosisEngine;
+	EngineType engineConfig;
+	/**
 	 * Name of the logfile where test data will be written to.
 	 */
 	private String logfileName;
 	
 	/**
-	 * Simple util class  hold data from test runs and writing data to log file.
-	 */
-	private LoggingData loggingData;
-	
-	/**
 	 * Enables/disables caching of the test cases. 
 	 */
 	//private final boolean CacheTestCases = true;
-	
 	/**
-	 * random generator to use.
+	 * Simple util class  hold data from test runs and writing data to log file.
 	 */
-	@SuppressWarnings("unused")
-	private Random random;
+	private LoggingData loggingData;
 	
 	/**
 	 * Caches the number of input rows to used for the last test run. Can be used
@@ -63,24 +56,55 @@ public class Scalability {
 	 */
 	//private int inputRowCountCache;
 	//private Dictionary<String, TestCase> positiveTestCaseCache;
-	
 	/**
-	 * Which type/configuration of diagnosis engine to use for test run.
+	 * random generator to use.
 	 */
-	//IDiagnosisEngine diagnosisEngine;
-	EngineType engineConfig;
-	
+	@SuppressWarnings("unused")
+	private Random random;
 	private int maxSearchDepth = -1;
 	
 	private String separator = ";";
 	
 	private CultureInfo currentCulture;
 	/**
+	 * Takes the name of the logfile as an input parameter.
+	 * @param logfileName
+	 */
+	public Scalability(String logfileName, int maxSearchDepth, EngineType engineConfig, Random random) {
+		this.currentCulture = Culture.getCurrentCulture();
+		System.out.println("Culture: " + currentCulture);
+		this.separator = currentCulture.CSV_DELIMITER();
+		this.random = random;
+		this.engineConfig = engineConfig;
+
+		try {
+			this.logfileName = logfileName;
+			this.maxSearchDepth = maxSearchDepth;
+			final boolean AppendContent = false;
+			Logger loggerInstance;
+			loggerInstance = ExquisiteLogger.setup(this.logfileName, AppendContent);
+			this.loggingData = new LoggingData(loggerInstance);
+			final String LogfileHeader = "#Prods" + separator +
+					"#Vars" + separator +
+					"#Constraints" + separator +
+					"#CSP props." + separator +
+					"#CSP solved" + separator +
+					"Diag. time (ms)" + separator +
+					"Max Search Depth" + separator +
+					"Mutations" + separator +
+					"Diagnoses";
+			this.loggingData.addRow(LogfileHeader);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Example use of Scalability class.
 	 * @param args
 	 */
-	public static void main(String[] args) 
-	{		
+	public static void main(String[] args) {
 		Culture.setCulture(Locale.GERMAN);
 		final int MaxInputRowCount = 8;
 		final int MinInputRowCount = 8;
@@ -92,41 +116,6 @@ public class Scalability {
 //		scalability.run(MinInputRowCount, MaxInputRowCount, MutationCount, TestCaseCount, IterationCount);
 		scalability.run(MinInputRowCount, MutationCount, TestCaseCount);
 		scalability.onRunComplete();
-	}
-	
-	/**
-	 * Takes the name of the logfile as an input parameter.
-	 * @param logfileName
-	 */
-	public Scalability(String logfileName, int maxSearchDepth, EngineType engineConfig, Random random)
-	{		
-		this.currentCulture = Culture.getCurrentCulture();
-		System.out.println("Culture: " + currentCulture);
-		this.separator = currentCulture.CSV_DELIMITER();
-		this.random = random;
-		this.engineConfig = engineConfig;
-		
-		try {
-			this.logfileName = logfileName;
-			this.maxSearchDepth = maxSearchDepth;
-			final boolean AppendContent = false;
-			Logger loggerInstance;
-			loggerInstance = ExquisiteLogger.setup(this.logfileName, AppendContent);
-			this.loggingData = new LoggingData(loggerInstance);
-			final String LogfileHeader = 	"#Prods" + separator + 
-											"#Vars" + separator + 
-											"#Constraints" + separator + 
-											"#CSP props." + separator + 
-											"#CSP solved" + separator + 
-											"Diag. time (ms)" + separator + 
-											"Max Search Depth" + separator + 
-											"Mutations" + separator + 
-											"Diagnoses";
-			this.loggingData.addRow(LogfileHeader);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
 	}
 	
 	/**
@@ -204,9 +193,9 @@ public class Scalability {
 			Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 			VariablesFactory varFactory = new VariablesFactory(variablesMap);
 			DiagnosisModelLoader modelLoader = new DiagnosisModelLoader(sessionData, varFactory, conFactory);
-			modelLoader.loadDiagnosisModelFromXML();	
-			
-			IDiagnosisEngine diagnosisEngine;			
+			modelLoader.loadDiagnosisModelFromXML();
+
+			IDiagnosisEngine<Constraint> diagnosisEngine;
 			diagnosisEngine = EngineFactory.makeEngine(this.engineConfig, sessionData, 1);
 //			diagnosisEngine.setMaxSearchDepth(this.maxSearchDepth);
 									
@@ -214,7 +203,7 @@ public class Scalability {
 			//start time
 			long startTime = System.currentTimeMillis();
 			System.out.println("startTime: " + startTime);
-			List<Diagnosis> diagnoses = diagnosisEngine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = diagnosisEngine.calculateDiagnoses();
 			System.out.println("diagnoses: " + diagnoses.size());
 			long endTime = System.currentTimeMillis();
 			System.out.println("endTime: " + endTime);

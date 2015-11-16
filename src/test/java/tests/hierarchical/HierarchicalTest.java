@@ -1,10 +1,8 @@
 package tests.hierarchical;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.engines.common.ConstraintComparator;
 import org.exquisite.diagnosis.models.Diagnosis;
@@ -12,9 +10,10 @@ import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Test driver for hierarchical diagnosis
@@ -46,10 +45,10 @@ public class HierarchicalTest {
 	 * @throws Exception
 	 */
 	public void run() throws Exception {
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = new DiagnosisModel();
-		
-		Hierarchy h = defineHierarchyAndProblem(sessionData.diagnosisModel);
+		ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>();
+		sessionData.diagnosisModel = new DiagnosisModel<Constraint>();
+
+		Hierarchy<Constraint> h = defineHierarchyAndProblem(sessionData.diagnosisModel);
 //		h.printHierarchy();
 		runHierarchicalDiagnosis(sessionData, h);
 	}
@@ -60,7 +59,7 @@ public class HierarchicalTest {
 	 * @param model
 	 * @param h
 	 */
-	public void runHierarchicalDiagnosis(ExquisiteSession sessionData, Hierarchy h) {
+	public void runHierarchicalDiagnosis(ExquisiteSession<Constraint> sessionData, Hierarchy<Constraint> h) {
 			
 		HierarchicalHSDagBuilder dagBuilder = new HierarchicalHSDagBuilder(sessionData);
 		dagBuilder.setHierarchy(h);
@@ -69,7 +68,7 @@ public class HierarchicalTest {
 		// Set the set of diagnosable components.
 		// Initially, the set of first level components (after root).
 		List<ExpandableConstraint> diagnosisContext = new ArrayList<ExpandableConstraint>();
-		for (HierarchyNode hnode : h.getRootNode().getNextLevelElements()) {
+		for (HierarchyNode<Constraint> hnode : h.getRootNode().getNextLevelElements()) {
 			diagnosisContext.add(new ExpandableConstraint(hnode));
 		}
 		System.out.println("Found a number of root components.." + diagnosisContext.size());
@@ -80,9 +79,9 @@ public class HierarchicalTest {
 //			System.exit(1);
 //		}
 		try{
-			List<Diagnosis> diagnoses = dagBuilder.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = dagBuilder.calculateDiagnoses();
 			System.out.println("Found a number of diagnoses " + diagnoses.size());
-			for (Diagnosis d: diagnoses) {
+			for (Diagnosis<Constraint> d : diagnoses) {
 				List<Constraint> cts = (d.getElements());
 				System.out.print("[");
 				for (Constraint c : cts) {
@@ -100,7 +99,7 @@ public class HierarchicalTest {
 	 * Defines some test hierarchy
 	 * @return
 	 */
-	public Hierarchy defineHierarchyAndProblem(DiagnosisModel model) {
+	public Hierarchy<Constraint> defineHierarchyAndProblem(DiagnosisModel<Constraint> model) {
 		
 		
 		// Some variables and constraints
@@ -128,16 +127,16 @@ public class HierarchicalTest {
 		
 		
 		// Add some example
-		List<Example> posExamples = new ArrayList<Example>();
-		Example e1 = new Example();
+		List<Example<Constraint>> posExamples = new ArrayList<>();
+		Example<Constraint> e1 = new Example<>();
 		e1.addConstraint(Choco.eq(v1,2), "example1-constraint");
 		posExamples.add(e1);
 		model.setPositiveExamples(posExamples);
 		
 		
 		// Set up the hierarchy
-		Hierarchy h = new Hierarchy(model);
-		HierarchyNode root = h.createNode();
+		Hierarchy<Constraint> h = new Hierarchy<>(model);
+		HierarchyNode<Constraint> root = h.createNode();
 		h.setRootNode(root);
 		
 		Set<Constraint> s1cts= new TreeSet<Constraint>(new ConstraintComparator());
@@ -153,9 +152,9 @@ public class HierarchicalTest {
 		
 		
 		// Some sons.
-		HierarchyNode s1 = h.createNode(s1cts);
-		HierarchyNode s2 = h.createNode(s2cts);
-		HierarchyNode s3 = h.createNode(s3cts);
+		HierarchyNode<Constraint> s1 = h.createNode(s1cts);
+		HierarchyNode<Constraint> s2 = h.createNode(s2cts);
+		HierarchyNode<Constraint> s3 = h.createNode(s3cts);
 		
 		root.addSonNode(s1, "s1");
 		root.addSonNode(s2, "s2");

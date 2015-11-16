@@ -1,11 +1,11 @@
 package org.exquisite.diagnosis.interactivity.partitioning.scoring;
 
+import org.exquisite.diagnosis.DiagnosisException;
+import org.exquisite.diagnosis.interactivity.partitioning.Partition;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.exquisite.diagnosis.DiagnosisException;
-import org.exquisite.diagnosis.interactivity.partitioning.Partition;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,7 +16,7 @@ import org.exquisite.diagnosis.interactivity.partitioning.Partition;
  */
 
 
-public class StaticRiskQSS extends MinScoreQSS {
+public class StaticRiskQSS<T> extends MinScoreQSS<T> {
 
     protected double c;
 
@@ -27,12 +27,13 @@ public class StaticRiskQSS extends MinScoreQSS {
     }
 
 
-    protected Partition selectMinScorePartition(List<Partition> partitions, Partition currentBest) throws DiagnosisException { // throws SolverException, InconsistentTheoryException {
+    protected Partition selectMinScorePartition(List<Partition<T>> partitions, Partition<T> currentBest)
+            throws DiagnosisException { // throws SolverException, InconsistentTheoryException {
         return super.runPostprocessor(partitions, currentBest);
     }
 
     protected int getMaxPossibleNumOfDiagsToEliminate() {
-        return (int) Math.floor((double) (numOfLeadingDiags / 2d));
+        return (int) Math.floor(numOfLeadingDiags / 2d);
     }
 
     protected void preprocessC() {
@@ -51,9 +52,10 @@ public class StaticRiskQSS extends MinScoreQSS {
         return num;
     }
 
-    protected LinkedList<Partition> getLeastCautiousNonHighRiskPartitions(int numOfDiagsToElim, List<Partition> partitions) {
-        LinkedList<Partition> leastCautiousNonHighRiskQueries = new LinkedList<Partition>();
-        for (Partition p : partitions) {
+    protected LinkedList<Partition<T>> getLeastCautiousNonHighRiskPartitions(int numOfDiagsToElim,
+                                                                             List<Partition<T>> partitions) {
+        LinkedList<Partition<T>> leastCautiousNonHighRiskQueries = new LinkedList<>();
+        for (Partition<T> p : partitions) {
             if (getMinNumOfElimDiags(p) == numOfDiagsToElim) {
                 leastCautiousNonHighRiskQueries.add(p);
             }
@@ -67,14 +69,15 @@ public class StaticRiskQSS extends MinScoreQSS {
         preprocessC();
     }
 
-    public Partition runPostprocessor(List<Partition> partitions, Partition currentBest) throws DiagnosisException { // throws SolverException, InconsistentTheoryException {
+    public Partition<T> runPostprocessor(List<Partition<T>> partitions, Partition<T> currentBest)
+            throws DiagnosisException { // throws SolverException, InconsistentTheoryException {
         int count = 0;
 
         int numOfHittingSets = getPartitionSearcher().getNumOfHittingSets();
         preprocessBeforeRun(numOfHittingSets);
         int numOfDiagsToElim = convertCToNumOfDiags(c);
-        for (Partition partition : partitions) {
-            if (count++ > partitions.size()*0.05)
+        for (Partition<T> partition : partitions) {
+            if (count++ > partitions.size() * 0.05)
                 break;
             if (!partition.isVerified && partition.dx.size() <= numOfHittingSets - numOfDiagsToElim)
                 getPartitionSearcher().verifyPartition(partition);
@@ -83,13 +86,15 @@ public class StaticRiskQSS extends MinScoreQSS {
 
         Partition minScorePartition;
 
-        if (getMinNumOfElimDiags((minScorePartition = selectMinScorePartition(partitions, currentBest))) >= numOfDiagsToElim) {
+        if (getMinNumOfElimDiags(
+                (minScorePartition = selectMinScorePartition(partitions, currentBest))) >= numOfDiagsToElim) {
             lastQuery = minScorePartition;
             return lastQuery;
         }
 
         for (; numOfDiagsToElim <= getMaxPossibleNumOfDiagsToEliminate(); numOfDiagsToElim++) {
-            LinkedList<Partition> leastCautiousNonHighRiskPartitions = getLeastCautiousNonHighRiskPartitions(numOfDiagsToElim, partitions);     // candidateQueries = X_min,k
+            LinkedList<Partition<T>> leastCautiousNonHighRiskPartitions = getLeastCautiousNonHighRiskPartitions(
+                    numOfDiagsToElim, partitions);     // candidateQueries = X_min,k
             if (leastCautiousNonHighRiskPartitions.isEmpty()) {
                 continue;
             }

@@ -1,12 +1,6 @@
 package tests.ts.interactivity;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
@@ -14,8 +8,14 @@ import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Utilities;
-
 import tests.ts.interactivity.spreadsheets.SpreadsheetFormulaInteraction;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Test class to test the user interactivity diagnosis engine
@@ -42,6 +42,13 @@ public class InteractivityTest {
 	// new StdScenario("SemUnitEx2_2fault.xml", searchDepth, maxDiags),
 	// new StdScenario("VDEPPreserve_1fault.xml", searchDepth, maxDiags),
 
+    public static void main(String[] args) throws IOException {
+        LogManager.getLogManager().readConfiguration(new FileInputStream("logging.properties"));
+
+        InteractivityTest test = new InteractivityTest();
+        test.runInteractivityTest();
+    }
+
 	public void runInteractivityTest() {
 		log.info("Starting interacitivity test");
 
@@ -55,7 +62,8 @@ public class InteractivityTest {
 
 		int threadPoolSize = 4;
 
-		IDiagnosisEngine innerEngine = EngineFactory.makeEngineFromXMLFile(engineType, fullInputFilename, threadPoolSize);
+        IDiagnosisEngine<Constraint> innerEngine = EngineFactory.makeEngineFromXMLFile(engineType, fullInputFilename,
+                threadPoolSize);
 
 		Collections.shuffle(innerEngine.getModel().getPossiblyFaultyStatements());
 
@@ -65,13 +73,14 @@ public class InteractivityTest {
 		// IBestQueryFinder bestQueryFinder = new FirstQueryFinder();
 		IBestQueryFinder bestQueryFinder = new SplitInHalfQueryFinder(userInteraction);
 
-		InteractivityDiagnosisEngine engine = new InteractivityDiagnosisEngine(innerEngine.getSessionData(), innerEngine, diagnosesPerQuery,
-				userInteraction, bestQueryFinder);
+        InteractivityDiagnosisEngine<Constraint> engine = new InteractivityDiagnosisEngine(innerEngine.getSessionData(),
+                innerEngine, diagnosesPerQuery,
+                userInteraction, bestQueryFinder);
 
 		try {
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
-			log.info("Found " + diagnoses.size() + " diagnosis: " + Utilities.printSortedDiagnoses(diagnoses, ' '));
-			log.info("Needed " + engine.getNumberOfDiagnosisRuns() + " diagnosis runs and " + engine.getNumberOfQueries() + " user interactions.");
+            List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
+            log.info("Found " + diagnoses.size() + " diagnosis: " + Utilities.printSortedDiagnoses(diagnoses, ' '));
+            log.info("Needed " + engine.getNumberOfDiagnosisRuns() + " diagnosis runs and " + engine.getNumberOfQueries() + " user interactions.");
 			log.info(String.format("Diagnoses calculation took %.2f ms.", engine.getDiagnosisTime()).toString());
 			log.info(String.format("User interaction calculation took %.2f ms.", engine.getUserInteractionTime()).toString());
 		} catch (DiagnosisException e) {
@@ -79,12 +88,5 @@ public class InteractivityTest {
 		}
 
 		log.info("Finished interactivity test");
-	}
-
-	public static void main(String[] args) throws IOException {
-		LogManager.getLogManager().readConfiguration(new FileInputStream("logging.properties"));
-
-		InteractivityTest test = new InteractivityTest();
-		test.runInteractivityTest();
 	}
 }

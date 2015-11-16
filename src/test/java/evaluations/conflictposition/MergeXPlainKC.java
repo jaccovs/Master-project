@@ -1,20 +1,19 @@
 package evaluations.conflictposition;
 
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.diagnosis.quickxplain.mergexplain.MergeXplain;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.List;
 
 /**
  * A variant of MXP that uses a set of predefined conflicts
  * @author dietmar
  *
  */
-public class MergeXPlainKC extends MergeXplain {
+public class MergeXPlainKC extends MergeXplain<Constraint> {
 
 	
 	/**
@@ -23,7 +22,7 @@ public class MergeXPlainKC extends MergeXplain {
 	 * @param dagbuilder
 	 */
 	public MergeXPlainKC(ExquisiteSession sessionData,
-			IDiagnosisEngine diagnosisEngine) {
+						 IDiagnosisEngine<Constraint> diagnosisEngine) {
 		super(sessionData, diagnosisEngine);
 //		System.out.println("Created MXP with known conflicts");
 	}

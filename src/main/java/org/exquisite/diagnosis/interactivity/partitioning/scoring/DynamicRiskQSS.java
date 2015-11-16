@@ -21,21 +21,23 @@ public class DynamicRiskQSS extends StaticRiskQSS {
 
     /* IMPORTANT: numOfLeadingDiags in preprocessC() MUST BE EQUAL TO nomOfLeadingDiags in getCAdjust()*/
 
-    protected void preprocessC(){
-	    	double maxPossibleCMax;
-            if ((maxPossibleCMax = (double)this.getMaxPossibleNumOfDiagsToEliminate() / (double)numOfLeadingDiags) < cMax) {
-	            cMax = maxPossibleCMax;
-	        }
-            if (cMin < 0d) cMin = 0d;
-            if (cMin > cMax) cMin = cMax = (cMin + cMax)/2d;
-            if (c < cMin) c = cMin;
-            if (c > cMax) c = cMax;
+    protected void preprocessC() {
+        double maxPossibleCMax;
+        if ((maxPossibleCMax = (double) this
+                .getMaxPossibleNumOfDiagsToEliminate() / (double) numOfLeadingDiags) < cMax) {
+            cMax = maxPossibleCMax;
+        }
+        if (cMin < 0d) cMin = 0d;
+        if (cMin > cMax) cMin = cMax = (cMin + cMax) / 2d;
+        if (c < cMin) c = cMin;
+        if (c > cMax) c = cMax;
     }
 
-    protected double getCAdjust(){
+    protected double getCAdjust() {
         double interval = cMax - cMin;
         double epsilon = 0.01d;
-        double adjust = ((Math.floor( ( (double)numOfLeadingDiags / 2d ) - epsilon ) - (double)numOfEliminatedLeadingDiags) / (double)numOfLeadingDiags);
+        double adjust = ((Math
+                .floor(((double) numOfLeadingDiags / 2d) - epsilon) - (double) numOfEliminatedLeadingDiags) / (double) numOfLeadingDiags);
         return adjust * interval * 2d;
     }
 

@@ -1,9 +1,13 @@
 package evaluations.dxc.synthetic;
 
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
+import evaluations.dxc.synthetic.model.DXCScenarioData;
+import evaluations.dxc.synthetic.model.DXCSystem;
+import evaluations.dxc.synthetic.model.DXCSystemDescription;
+import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
+import evaluations.dxc.synthetic.tools.DXCTools;
+import evaluations.tools.DiagnosisEvaluation;
+import evaluations.tools.ResultsLogger;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.IDiagnosisEngine;
@@ -16,13 +20,9 @@ import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import evaluations.dxc.synthetic.model.DXCScenarioData;
-import evaluations.dxc.synthetic.model.DXCSystem;
-import evaluations.dxc.synthetic.model.DXCSystemDescription;
-import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
-import evaluations.dxc.synthetic.tools.DXCTools;
-import evaluations.tools.DiagnosisEvaluation;
-import evaluations.tools.ResultsLogger;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Benchmark tests for the DXC competition syntetic track
@@ -60,26 +60,19 @@ public class DXCSyntheticBenchmark {
 	static String inputFileDirectory = "experiments/DXCSynthetic/";
 	static String logFileDirectory = "logs/DXCSynthetic/";
 	// ----------------------------------------------------
-
-	ResultsLogger resultsLogger = null;
-
-	
-	String resultsDirectory = "";
-	
-	
 	static DXCTestScenario[] testScenarios = new DXCTestScenario[] {
 		// maxDiagSize = -1
 		new DXCTestScenario("74182.xml", "74182/74182.%03d.scn", 0, 19),
 		new DXCTestScenario("74L85.xml", "74L85/74L85.%03d.scn", 0, 19),
 		new DXCTestScenario("74283.xml", "74283/74283.%03d.scn", 0, 19),
-		
+
 		// maxDiagSize = 6/5
 //		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 0, 7, 6, -1),
 //		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 8, 9, 5, -1),
 //		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 10, 15, 6, -1),
 //		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 16, 16, 6, -1), // Maybe 6 is too slow
 //		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 17, 19, 6, -1),
-		
+
 		// maxDiagSize = faultSize
 		new DXCTestScenario("74182.xml", "74182/74182.%03d.scn", 0, 19, -2, -1),
 		new DXCTestScenario("74L85.xml", "74L85/74L85.%03d.scn", 0, 19, -2, -1),
@@ -87,7 +80,8 @@ public class DXCSyntheticBenchmark {
 		new DXCTestScenario("74181.xml", "74181/74181.%03d.scn", 0, 19, -2, -1), // Takes too long without search depth limitation
 		new DXCTestScenario("c432.xml", "c432/c432.%03d.scn", 0, 19, -2, -1), // Takes too long without search depth limitation
 	};
-	
+	ResultsLogger resultsLogger = null;
+	String resultsDirectory = "";
 	
 	/**
 	 * @param args
@@ -196,12 +190,12 @@ public class DXCSyntheticBenchmark {
 		double totalLevelW = 0;
 		double totalFullP = 0;
 
-		List<Diagnosis> diagnoses = null;
+		List<Diagnosis<Constraint>> diagnoses = null;
 		for (int k = K_lb; k <= K_ub; k++) {
 			System.out.println("===================== k=" + k
 					+ " ===================================");
 
-			DiagnosisEvaluation diagEval = new DiagnosisEvaluation();
+			DiagnosisEvaluation<Constraint> diagEval = new DiagnosisEvaluation<Constraint>();
 
 			boolean initFinished = false;
 			System.out.println("Initialization");
@@ -220,12 +214,13 @@ public class DXCSyntheticBenchmark {
 
 				QuickXPlain.reuseCount = 0;
 
-				IDiagnosisEngine engine = null;
+				IDiagnosisEngine<Constraint> engine = null;
 				// Create the diagnosis model
 				sd = DXCTools.readSystemDescription(inputFileDirectory + systemDescriptionFile);
 				system = sd.getSystems().get(0);
 				scn = DXCTools.readScenario(inputFileDirectory + scenarioFile, system);
-				DiagnosisModel diagModel = new DXCDiagnosisModelGenerator().createDiagnosisModel(system, scn.getFaultyState());
+				DiagnosisModel<Constraint> diagModel = new DXCDiagnosisModelGenerator()
+						.createDiagnosisModel(system, scn.getFaultyState());
 				// System.out.println(diagModel.getVariables());
 				
 				if (!DXCTools.checkCorrectState(system, scn)) {
@@ -237,7 +232,7 @@ public class DXCSyntheticBenchmark {
 
 				// Create the engine
 				ExquisiteSession sessionData = new ExquisiteSession(null,
-						null, new DiagnosisModel(diagModel));
+						null, new DiagnosisModel<Constraint>(diagModel));
 				// Do not try to find a better strategy for the moment
 				sessionData.config.searchStrategy = SearchStrategies.Default;
 				sessionData.config.searchDepth = maxDiagSize;

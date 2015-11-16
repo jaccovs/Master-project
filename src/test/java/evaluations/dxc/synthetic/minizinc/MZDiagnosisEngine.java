@@ -1,42 +1,30 @@
 package evaluations.dxc.synthetic.minizinc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 
+import java.io.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 public class MZDiagnosisEngine implements IDiagnosisEngine {
 
-    private ExquisiteSession sessionData;
-
-    public enum SearchType {FindAll, OneMinCardinality, AllMinCardinality}
-	
+	private final int abCounter;
+	public String lastInput;
+	public String lastOutput;
 	List<String> model;
 	SearchType searchType = SearchType.FindAll;
 	int threads;
-	
 	// Time, where the search for diagnoses was finished
 	long finishedTime = 0;
-
-	private final int abCounter;
+	private ExquisiteSession sessionData;
 	private List<String> diagnoses = new LinkedList<>();
 	private int diagnosesMinCard = 0;
     private int diagnosesMaxCard = 0;
-    
-    public String lastInput;
-    public String lastOutput;
-	
 	public MZDiagnosisEngine(List<String> model, int abnormals, SearchType searchType, int threads) {
         this.abCounter = abnormals;
 		this.model = model;
@@ -48,10 +36,6 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		return model;
 	}
 	
-	public void setModel(List<String> model) {
-		this.model = model;
-	}
-	
 	public int getDiagnosesMinCard() {
 		return diagnosesMinCard;
 	}
@@ -60,16 +44,16 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		return diagnosesMaxCard;
 	}
 
-    public void setDiagnosesMaxCard(int diagnosesMaxCard) {
-        this.diagnosesMaxCard = diagnosesMaxCard;
+	public void setDiagnosesMaxCard(int diagnosesMaxCard) {
+		this.diagnosesMaxCard = diagnosesMaxCard;
     }
 
-    @Override
+	@Override
 	public void resetEngine() {
 		diagnoses.clear();
 		diagnosesMinCard = 0;
 		diagnosesMaxCard = 0;
-		
+
 	}
 
 	@Override
@@ -102,13 +86,13 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		catch (IOException e) {
 			throw new DiagnosisException(e);
 		}
-		List<Diagnosis> diags = new LinkedList<Diagnosis>();
+		List<Diagnosis> diags = new LinkedList<>();
 		for (String s: diagnoses) {
 			diags.add(new MZDiagnosis(s));
 		}
-		
+
 		finishedTime = System.nanoTime();
-		
+
 		return diags;
 	}
 
@@ -155,7 +139,7 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
             //if (foundDiagnoses && (minc || newConstraints.isEmpty())) {break;}
         }
     }
-    
+
     /**
      * Helper methods that converts a command given as an array of strings to a list of strings.
      * @param mzn model file to be provided to the solver
@@ -167,9 +151,9 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
         command.addAll(Arrays.asList(cmd));
         return executeSolver(mzn, command);
     }
-    
-    /**
-     * Writes a set of strings to a file
+
+	/**
+	 * Writes a set of strings to a file
      * @param strings a set of strings to write
      * @param dbg file handler
      * @throws IOException
@@ -205,11 +189,11 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
             Process p = pb.start();
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String ln;
-            
-            String eol = System.getProperty("line.separator");
-            
-            lastInput = "";
-            for (String s: command) {
+
+			String eol = System.getProperty("line.separator");
+
+			lastInput = "";
+			for (String s: command) {
             	lastInput += s + " ";
             }
             lastOutput = "";
@@ -319,52 +303,58 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		return null;
 	}
 
+	public void setModel(List<String> model) {
+		this.model = model;
+	}
+
 	@Override
 	public void incrementSolverCalls() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementSolverTime(long time) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementCSPSolutionCount() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementPropagationCount() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementQXPCalls() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementSearchesForConflicts() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementMXPConflicts(int conflicts) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void incrementMXPSplittingTechniqueConflicts(int conflicts) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+	public enum SearchType {FindAll, OneMinCardinality, AllMinCardinality}
 
 }

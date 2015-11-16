@@ -1,7 +1,8 @@
 package tests.diagnosis;
 
-import java.util.List;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.engines.HSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
@@ -10,8 +11,7 @@ import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.List;
 
 public class HardCodedModelExample {
 
@@ -26,13 +26,13 @@ public class HardCodedModelExample {
 	public void run()
 	{
 		try{
-			ExquisiteSession sessionData = new ExquisiteSession();
+			ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>();
 			sessionData.diagnosisModel = makeModel();
-			HSDagBuilder hsdag = new HSDagBuilder(sessionData);
+			HSDagBuilder<Constraint> hsdag = new HSDagBuilder<>(sessionData);
 //			hsdag.setMaxSearchDepth(-1);			
 //			hsdag.setMaxDiagnoses(-1);
-			
-			List<Diagnosis> diagnoses = hsdag.calculateDiagnoses();
+
+			List<Diagnosis<Constraint>> diagnoses = hsdag.calculateDiagnoses();
 			System.out.println("Found " + diagnoses.size() + " diagnoses");
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
@@ -46,10 +46,10 @@ public class HardCodedModelExample {
 			e.printStackTrace();
 		}
 	}
-	
-	DiagnosisModel makeModel()
+
+	DiagnosisModel<Constraint> makeModel()
 	{
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<>();
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,100));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,100));
 		IntegerVariable b1 = model.addIntegerVariable(Choco.makeIntVar("b1", 1,100));
@@ -60,12 +60,12 @@ public class HardCodedModelExample {
 		model.addPossiblyFaultyConstraint(Choco.eq(b1, Choco.mult(a1, 2)), "b1 = a1 * 2");			
 		model.addPossiblyFaultyConstraint(Choco.eq(c1, Choco.plus(b1, b2)), "c1 = b1 + b2 (should be *)"); // should be *
 
-		Example exTestExample = new Example();
+		Example<Constraint> exTestExample = new Example<>();
 		exTestExample.addConstraint(Choco.eq(a2, 2), "a2=2");
 		exTestExample.addConstraint(Choco.eq(a1, 2), "a1=2");		
 		exTestExample.addConstraint(Choco.eq(c1, 24), "c1=24");
-		
-		Example negTestCase = new Example(true);
+
+		Example<Constraint> negTestCase = new Example<>(true);
 		//negTestCase.addConstraint(Choco.eq(a2, 2), "a2=2");
 		//negTestCase.addConstraint(Choco.eq(a1, 2), "a1=2");		
 		//negTestCase.addConstraint(Choco.eq(c1, 24), "c1=10");

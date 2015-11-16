@@ -21,8 +21,7 @@ public class LogFormatter extends Formatter {
                     + record.getLoggerName() + "."
                     + record.getSourceMethodName() + ": "
                     + record.getMessage() + "\n";
-        }
-        else {
+        } else {
             return millisToTime(record.getMillis()) + " "
                     + record.getLoggerName() + "."
                     + record.getSourceMethodName() + ": "

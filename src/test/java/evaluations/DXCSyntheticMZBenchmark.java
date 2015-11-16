@@ -1,14 +1,6 @@
 package evaluations;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Dictionary;
-import java.util.List;
-
-import org.exquisite.diagnosis.IDiagnosisEngine;
-
+import choco.kernel.model.constraints.Constraint;
 import evaluations.configuration.AbstractRunConfiguration;
 import evaluations.configuration.AbstractScenario;
 import evaluations.dxc.synthetic.minizinc.DXCDiagnosisMZModelGenerator;
@@ -20,6 +12,14 @@ import evaluations.dxc.synthetic.model.DXCComponent;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
 import evaluations.dxc.synthetic.tools.DXCScenarioParser;
 import evaluations.dxc.synthetic.tools.DXCSyntheticXMLParser;
+import org.exquisite.diagnosis.IDiagnosisEngine;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Dictionary;
+import java.util.List;
 
 /**
  * Tests of DXC Synthetic Track using Gecode solver
@@ -27,49 +27,20 @@ import evaluations.dxc.synthetic.tools.DXCSyntheticXMLParser;
  * @author Thomas
  *
  */
-public class DXCSyntheticMZBenchmark extends AbstractEvaluation {
+public class DXCSyntheticMZBenchmark extends AbstractEvaluation<Constraint> {
 
-	@Override
-	public String getEvaluationName() {
-		return "DXCSyntheticMZ";
-	}
-
-	@Override
-	public String getResultPath() {
-		return logFileDirectory;
-	}
-	
-	@Override
-	public String getConstraintOrderPath() {
-		return inputFileDirectory;
-	}
-
-	@Override
-	protected boolean shouldShuffleConstraints() {
-		return false;
-	}
-	
 	// ----------------------------------------------------
 	// Directories
 	static String inputFileDirectory = "experiments/DXCSynthetic/";
 	static String logFileDirectory = "logs/DXCSyntheticMZ/";
-	// ----------------------------------------------------
-
-	
 	// Number of runs
 	static int nbInitRuns = 0;
 	static int nbTestRuns = 1;
-	
-	// Standard scenario settings
-//		static int searchDepth = -1;
-//		static int maxDiags = -1;
-	
 	static MZRunConfiguration[] runConfigurations = new MZRunConfiguration[] {
 		new MZRunConfiguration(1),
 //		new MZRunConfiguration(2),
 //		new MZRunConfiguration(4),
 	};
-	
 	static MZDXCScenario[] scenarios = new MZDXCScenario[] {
 		// Settings for finding 1 diagnosis (All engines except level-wise)
 		// maxDiagSize = -1
@@ -78,7 +49,7 @@ public class DXCSyntheticMZBenchmark extends AbstractEvaluation {
 //		new MZDXCScenario("74283.xml", "74283/74283.%03d.scn", 0, 19, SearchType.OneMinCardinality),
 //		new MZDXCScenario("74181.xml", "74181/74181.%03d.scn", 0, 19, SearchType.OneMinCardinality),
 //		new MZDXCScenario("c432.xml", "c432/c432.%03d.scn", 0, 19, SearchType.OneMinCardinality),
-		
+
 		// Settings for finding all diagnoses (No Heuristic / Hybrid engines!)
 		// maxDiagSize = 6
 //		new MZDXCScenario("74182.xml", "74182/74182.%03d.scn", 0, 19, SearchType.FindAll, 6),
@@ -93,7 +64,37 @@ public class DXCSyntheticMZBenchmark extends AbstractEvaluation {
 //		new MZDXCScenario("74181.xml", "74181/74181.%03d.scn", 0, 19, SearchType.FindAll, -2),
 //		new MZDXCScenario("c432.xml", "c432/c432.%03d.scn", 0, 19, SearchType.FindAll, -2),
 	};
+	// ----------------------------------------------------
+
+	public static void main(String[] args) {
+		DXCSyntheticMZBenchmark dxcSyntheticMZBenchmark = new DXCSyntheticMZBenchmark();
+		dxcSyntheticMZBenchmark.runTests(nbInitRuns, nbTestRuns, runConfigurations, scenarios);
+	}
+
+	@Override
+	public String getEvaluationName() {
+		return "DXCSyntheticMZ";
+	}
+
+	// Standard scenario settings
+//		static int searchDepth = -1;
+//		static int maxDiags = -1;
 	
+	@Override
+	public String getResultPath() {
+		return logFileDirectory;
+	}
+
+	@Override
+	public String getConstraintOrderPath() {
+		return inputFileDirectory;
+	}
+
+	@Override
+	protected boolean shouldShuffleConstraints() {
+		return false;
+	}
+
 	@Override
 	public IDiagnosisEngine prepareRun(
 			AbstractRunConfiguration abstractRunConfiguration,
@@ -148,11 +149,12 @@ public class DXCSyntheticMZBenchmark extends AbstractEvaluation {
             // Now create the diagnosis model
             DXCDiagnosisMZModelGenerator dmg = new DXCDiagnosisMZModelGenerator();
             List<String> model = dmg.createDiagnosisModel(sd.getSystems().get(0), faultyState);
-            
-            MZDiagnosisEngine engine = new MZDiagnosisEngine(model, dmg.getAbnormalCounter(), scenario.searchType, runConfiguration.threads);
-            
-         // With a value of -2 the maxDiagSize is set to the size of the actual error of the scenario
-    		if (scenario.searchDepth == -2) {
+
+			MZDiagnosisEngine engine = new MZDiagnosisEngine(model, dmg.getAbnormalCounter(), scenario.searchType,
+					runConfiguration.threads);
+
+			// With a value of -2 the maxDiagSize is set to the size of the actual error of the scenario
+			if (scenario.searchDepth == -2) {
     			engine.setDiagnosesMaxCard(scnParser.getScenario().getFaultyComponents().size());
     		}
     		else {
@@ -172,11 +174,6 @@ public class DXCSyntheticMZBenchmark extends AbstractEvaluation {
 			List<List<Integer>> constraintOrders, int iteration) {
 		// TODO Auto-generated method stub
 //		super.shuffleConstraints(engine, constraintOrders, iteration);
-	}
-	
-	public static void main(String[] args) {
-		DXCSyntheticMZBenchmark dxcSyntheticMZBenchmark = new DXCSyntheticMZBenchmark();
-		dxcSyntheticMZBenchmark.runTests(nbInitRuns, nbTestRuns, runConfigurations, scenarios);
 	}
 
 }

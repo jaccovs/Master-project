@@ -1,13 +1,12 @@
 package tests.diagnosis;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.logging.Logger;
-
+import choco.Choco;
+import choco.Options;
+import choco.cp.model.CPModel;
+import choco.cp.solver.CPSolver;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import choco.kernel.solver.Solver;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.IDiagnosisEngine;
@@ -16,13 +15,8 @@ import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.logging.ExquisiteLogger;
 
-import choco.Choco;
-import choco.Options;
-import choco.cp.model.CPModel;
-import choco.cp.solver.CPSolver;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
-import choco.kernel.solver.Solver;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * This class implements a variable-size representation of the example problem
@@ -95,7 +89,7 @@ public class JCKBSETest {
 		}
 		else {
 			// prepare and run the diagnosis component
-			DiagnosisModel dmodel = new DiagnosisModel();
+			DiagnosisModel<Constraint> dmodel = new DiagnosisModel<>();
 			// add all the variables
 			for (IntegerVariable var : kb.variables) {
 				dmodel.addIntegerVariable(var);
@@ -105,7 +99,7 @@ public class JCKBSETest {
 				dmodel.addPossiblyFaultyConstraint(c, kb.constraintNames.get(c));
 			}
 			// copy the positive examples
-			List<Example> thePosExamples = new ArrayList<Example>();
+			List<Example<Constraint>> thePosExamples = new ArrayList<>();
 			for (int i=0;i<NB_POS_EXAMPLES;i++) {
 				Map<IntegerVariable, Integer> posExample = posExamples.get(i);
 				Example ex = new Example();
@@ -123,13 +117,13 @@ public class JCKBSETest {
 			
 			
 			// Now diagnose?
-			IDiagnosisEngine diagEngine = EngineFactory.makeDAGEngineStandardQx(sessionData);
+			IDiagnosisEngine<Constraint> diagEngine = EngineFactory.makeDAGEngineStandardQx(sessionData);
 //			diagEngine.setMaxSearchDepth(1);
 			long start = System.currentTimeMillis();
-			List<Diagnosis> diagnoses = diagEngine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = diagEngine.calculateDiagnoses();
 			long diagnosisTime = (System.currentTimeMillis() - start);
 			System.out.println("Found " + diagnoses.size() + " diagnosis in " + diagnosisTime + " milliseconds");
-			for (Diagnosis d : diagnoses) {
+			for (Diagnosis<Constraint> d : diagnoses) {
 				System.out.println("Diagnosis: ");
 				List<Constraint> constraints = (d.getElements());
 				for (Constraint c : constraints) {
@@ -180,30 +174,23 @@ public class JCKBSETest {
 		public IntegerVariable[] productionCosts;
 		// row D
 		public IntegerVariable[] salesPrizes;
-		// matrix E3 to Q
-		IntegerVariable [][] salesPerMonth;
-		
-		// Intermediate calculations
-		IntegerVariable [] r_values;
-		IntegerVariable [] s_values;
-		IntegerVariable [] t_values;
-
 		// Output variables
 		public IntegerVariable sales;
 		public IntegerVariable revenue;
 		public IntegerVariable productionCost;
 		public IntegerVariable profit;
-		
 		// The constraints
 		public List<Constraint> constraints;
-		
 		// names for the constraints
 		public HashMap<Constraint, String> constraintNames;
-		
 		// collecting all the vairables
 		public List<IntegerVariable> variables;
-		
-		
+		// matrix E3 to Q
+		IntegerVariable[][] salesPerMonth;
+		// Intermediate calculations
+		IntegerVariable[] r_values;
+		IntegerVariable[] s_values;
+		IntegerVariable[] t_values;
 		// the list of constraints to be mutated
 		List<Constraint> mutationConstraints = new ArrayList<Constraint>();
 

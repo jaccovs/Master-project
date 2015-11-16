@@ -13888,7 +13888,7 @@
     <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte -->
 
     <Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte">
-        <equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte"/>
+        <equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte"/>
     </Class>
     
 
@@ -25627,9 +25627,9 @@
     
 
 
-    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte -->
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte -->
 
-    <Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#T-Lymphocyte"/>
+    <Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte"/>
     
 
 

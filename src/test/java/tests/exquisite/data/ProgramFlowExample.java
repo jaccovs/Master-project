@@ -1,9 +1,6 @@
 package tests.exquisite.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
@@ -12,7 +9,9 @@ import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ProgramFlowExample {
 	
@@ -28,8 +27,8 @@ public class ProgramFlowExample {
 		
 		Debug.msg("Load ExquisiteAppXML from client.");
 		String xmlFilePath = "src\\tests\\exquisite\\data\\exquisite_10_sf_if_b.xml";
-		
-		IDiagnosisEngine diagnosisEngine = null;
+
+		IDiagnosisEngine<Constraint> diagnosisEngine = null;
 //		diagnosisEngine = EngineFactory.makeParaDagEngineStandardQx(sessionData, 6);
 		try {
 			diagnosisEngine = EngineFactory.makeEngineFromXMLFile(EngineType.HSDagStandardQX, xmlFilePath, -1);
@@ -40,8 +39,8 @@ public class ProgramFlowExample {
 		Debug.msg("    diagnosisEngine.calculateDiagnoses()\n");
 		try{
 			Debug.DEBUGGING_ON = false;
-			long startTime = System.currentTimeMillis();		
-			List<Diagnosis>result = diagnosisEngine.calculateDiagnoses();
+			long startTime = System.currentTimeMillis();
+			List<Diagnosis<Constraint>> result = diagnosisEngine.calculateDiagnoses();
 			long endTime = System.currentTimeMillis();		
 			
 			long duration = endTime - startTime;
@@ -50,10 +49,10 @@ public class ProgramFlowExample {
 			int cnt = 1;
 			
 			//Sort diagnosis elements into alphabetical order.
-			ArrayList<String> prettyResults = new ArrayList<String>();			
-			for(Diagnosis diagnosis : result){				
+			ArrayList<String> prettyResults = new ArrayList<String>();
+			for (Diagnosis<Constraint> diagnosis : result) {
 				String list = Utilities.printConstraintListOrderedByName(
-							new ArrayList<Constraint>(
+						new ArrayList<>(
 									diagnosis.getElements()), diagnosisEngine.getSessionData().diagnosisModel);
 				prettyResults.add(list);				
 			}

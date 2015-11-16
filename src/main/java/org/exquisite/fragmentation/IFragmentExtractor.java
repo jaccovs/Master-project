@@ -1,11 +1,13 @@
 package org.exquisite.fragmentation;
 
-import java.util.List;
-
 import org.exquisite.datamodel.Fragment;
 
+import java.util.List;
+
 public interface IFragmentExtractor {
-	List<Fragment> calculateFragmentation();
-	Fragment buildFragment(List<String> cells);
-	void printComplexity(Fragment fragment);
+    List<Fragment> calculateFragmentation();
+
+    Fragment buildFragment(List<String> cells);
+
+    void printComplexity(Fragment fragment);
 }

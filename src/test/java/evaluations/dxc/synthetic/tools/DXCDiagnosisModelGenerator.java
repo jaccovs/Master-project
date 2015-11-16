@@ -1,18 +1,5 @@
 package evaluations.dxc.synthetic.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
-import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.models.Example;
-
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
@@ -20,6 +7,13 @@ import evaluations.dxc.synthetic.model.DXCComponent;
 import evaluations.dxc.synthetic.model.DXCConnection;
 import evaluations.dxc.synthetic.model.DXCSystem;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
+import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.diagnosis.models.Example;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.*;
 
 /**
  * Class to create a DiagnosisModel of a DXCSystem and a DXC scenario.
@@ -34,15 +28,76 @@ public class DXCDiagnosisModelGenerator {
 	public DXCDiagnosisModelGenerator() {
 		Initialize();
 	}
-	
+
+	public static void main(String[] args) {
+		// Parse a system description first
+		String xmlFilePath = "experiments/DXCSynthetic/74182.xml";
+
+		DXCSyntheticXMLParser parser = new DXCSyntheticXMLParser();
+
+		try {
+			System.out.println("Trying to load xml file: " + xmlFilePath);
+
+			BufferedReader br = new BufferedReader(new FileReader(new File(xmlFilePath)));
+			String line;
+			StringBuilder sb = new StringBuilder();
+
+			while ((line = br.readLine()) != null) {
+				sb.append(line.trim());
+			}
+			br.close();
+			parser.parse(sb.toString());
+
+			DXCSystemDescription sd = parser.getSystemDescription();
+
+			System.out.println("System name: " + sd.getSystems().get(0).getSystemName());
+
+			System.out.println("FINISH");
+
+			// Parse the scenario
+			String scnFilePath = "experiments/DXCSynthetic/74182/74182.000.scn";
+
+
+			DXCScenarioParser scnParser = new DXCScenarioParser();
+
+			System.out.println("Trying to load scn file: " + scnFilePath);
+
+			br = new BufferedReader(new FileReader(new File(scnFilePath)));
+			sb = new StringBuilder();
+
+			while ((line = br.readLine()) != null) {
+				sb.append(line.trim() + "\n");
+			}
+			br.close();
+			scnParser.parse(sb.toString(), sd.getSystems().get(0));
+
+			Dictionary<DXCComponent, Boolean> scenario = scnParser.getScenario().getFaultyState();
+
+			System.out.println("Scenario size: " + scenario.size());
+
+			System.out.println("FINISH");
+
+
+			// Now create the diagnosis model
+			DXCDiagnosisModelGenerator dmg = new DXCDiagnosisModelGenerator();
+			DiagnosisModel<Constraint> model = dmg.createDiagnosisModel(sd.getSystems().get(0), scenario);
+			System.out.println("Model variables: " + model.getVariables().size());
+			System.out.println("Model PF constraints: " + model.getPossiblyFaultyStatements().size());
+			System.out.println("Model true constraints: " + model.getCorrectStatements().size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private void Initialize() {
 		componentTypesToVariables.add("port");
 		componentTypesToVariables.add("probe");
-		
+
 		componentTypesToIgnore.add("port");
 		componentTypesToIgnore.add("probe");
 		componentTypesToIgnore.add("wire");
-		
+
 //		componentTypesToConstraints.add("inverter");
 //		componentTypesToConstraints.add("or");
 //		componentTypesToConstraints.add("and");
@@ -58,26 +113,28 @@ public class DXCDiagnosisModelGenerator {
 	 * @return
 	 * @throws Exception
 	 */
-	public DiagnosisModel createDiagnosisModel(DXCSystem system, Dictionary<DXCComponent, Boolean> faultyScenario) throws Exception {
-		DiagnosisModel model = new DiagnosisModel();
-		
+	public DiagnosisModel<Constraint> createDiagnosisModel(DXCSystem system,
+														   Dictionary<DXCComponent, Boolean> faultyScenario)
+			throws Exception {
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
+
 		// create variables
 		Enumeration<DXCComponent> components = system.getComponents().elements();
 		while (components.hasMoreElements()) {
-			DXCComponent component = (DXCComponent) components.nextElement();
+			DXCComponent component = components.nextElement();
 			if (componentTypesToVariables.contains(component.getComponentType().getName())) {
 				IntegerVariable var = makeBoolVar(component.getName());
 				model.addIntegerVariable(var);
 			}
 		}
-		
+
 //		System.out.println("Variables created: " + variables.size());
-		
+
 		// create constraints
 		components = system.getComponents().elements();
 		while (components.hasMoreElements()) {
-			DXCComponent component = (DXCComponent) components.nextElement();
-			
+			DXCComponent component = components.nextElement();
+
 //			if (!component.getName().contains(".")) {
 				// split type name and number of inputs
 			String typeWoNr;
@@ -89,7 +146,7 @@ public class DXCDiagnosisModelGenerator {
 				nr = Integer.parseInt(typeArr[1]);
 			}
 			typeWoNr = typeArr[0];
-			
+
 			if (!componentTypesToIgnore.contains(typeWoNr)) {
 //				System.out.println("Type: " + typeWoNr + " Nr: " + nr + " Name: " + component.getName());
 				String outputConnection = component.getName() + ".o";
@@ -108,28 +165,28 @@ public class DXCDiagnosisModelGenerator {
 					}
 					model.addPossiblyFaultyConstraint(not(output, inputs[0]), component.getName());
 					break;
-					
-				case "or":
+
+					case "or":
 					model.addPossiblyFaultyConstraint(or(output, inputs), component.getName());
 					break;
-					
-				case "and":
+
+					case "and":
 					model.addPossiblyFaultyConstraint(and(output, inputs), component.getName());
 					break;
-					
-				case "nor":
+
+					case "nor":
 					model.addPossiblyFaultyConstraint(nor(output, inputs), component.getName());
 					break;
-					
-				case "buffer":
+
+					case "buffer":
 					model.addPossiblyFaultyConstraint(eq(output, inputs[0]), component.getName());
 					break;
-					
-				case "nand":
+
+					case "nand":
 					model.addPossiblyFaultyConstraint(nand(output, inputs), component.getName());
 					break;
-					
-				case "xor":
+
+					case "xor":
 					if (nr != 2) {
 						throw new Exception("Found xor with more or less than 2 inputs!");
 					}
@@ -144,11 +201,11 @@ public class DXCDiagnosisModelGenerator {
 				}
 			}
 		}
-		
+
 		// Add scenario to correctConstraints (TODO: Better make an example out of it?)
 		List<IntegerVariable> trueVars = new ArrayList<IntegerVariable>();
 		List<IntegerVariable> falseVars = new ArrayList<IntegerVariable>();
-		
+
 		Enumeration<DXCComponent> scenarioComps = faultyScenario.keys();
 		while (scenarioComps.hasMoreElements()) {
 			DXCComponent scenarioComp = scenarioComps.nextElement();
@@ -166,26 +223,26 @@ public class DXCDiagnosisModelGenerator {
 		for (int i = 0; i < falseVars.size(); i++) {
 			falseVarsArr[i] = falseVars.get(i);
 		}
-		
+
 		model.addCorrectConstraint(Choco.and(trueVarsArr), "true");
 		model.addCorrectConstraint(Choco.nor(falseVarsArr), "false");
-		
+
 		// add an empty example, because it is needed for diagnosis
-		Example ex = new Example();
-		List<Example> posExamples = new ArrayList<Example>();
+		Example<Constraint> ex = new Example<>();
+		List<Example<Constraint>> posExamples = new ArrayList<>();
 		posExamples.add(ex);
 		model.setPositiveExamples(posExamples);
-		
+
 		return model;
 	}
-	
+
 	private DXCComponent SearchConnections(DXCComponent searchConnection, List<DXCConnection> connections) throws Exception {
 		DXCComponent connected = null;
 		for (Iterator<DXCConnection> it = connections.iterator(); it.hasNext();) {
 			DXCConnection connection = it.next();
 			if (connection.getC1() == searchConnection) {
 				if (connected == null) {
-					connected = connection.getC2();					
+					connected = connection.getC2();
 				} else {
 					throw new Exception("Duplicate connection found!");
 				}
@@ -250,70 +307,5 @@ public class DXCDiagnosisModelGenerator {
 		IntegerVariable var = Choco.makeBooleanVar(name);
 		variables.put(name, var);
 		return var;
-	}
-	
-	public static void main(String[] args) {
-		// Parse a system description first
-		String xmlFilePath = "experiments/DXCSynthetic/74182.xml";
-		
-		DXCSyntheticXMLParser parser = new DXCSyntheticXMLParser();
-		
-		try{
-			System.out.println("Trying to load xml file: " + xmlFilePath);
-			
-			BufferedReader br = new BufferedReader(new FileReader(new File(xmlFilePath)));
-			String line;
-			StringBuilder sb = new StringBuilder();
-	
-			while((line=br.readLine())!= null){
-			    sb.append(line.trim());
-			}
-			br.close();
-			parser.parse(sb.toString());
-			
-			DXCSystemDescription sd = parser.getSystemDescription();
-			
-			System.out.println("System name: " + sd.getSystems().get(0).getSystemName());
-
-			System.out.println("FINISH");
-		
-			// Parse the scenario
-			String scnFilePath = "experiments/DXCSynthetic/74182/74182.000.scn";
-			
-			
-			
-			DXCScenarioParser scnParser = new DXCScenarioParser();
-		
-			System.out.println("Trying to load scn file: " + scnFilePath);
-			
-			br = new BufferedReader(new FileReader(new File(scnFilePath)));
-			sb = new StringBuilder();
-	
-			while((line=br.readLine())!= null){
-			    sb.append(line.trim() + "\n");
-			}
-			br.close();
-			scnParser.parse(sb.toString(), sd.getSystems().get(0));
-			
-			Dictionary<DXCComponent, Boolean> scenario = scnParser.getScenario().getFaultyState();
-			
-			System.out.println("Scenario size: " + scenario.size());
-
-			System.out.println("FINISH");
-			
-			
-			
-			// Now create the diagnosis model
-			DXCDiagnosisModelGenerator dmg = new DXCDiagnosisModelGenerator();
-			DiagnosisModel model = dmg.createDiagnosisModel(sd.getSystems().get(0), scenario);
-			System.out.println("Model variables: " + model.getVariables().size());
-			System.out.println("Model PF constraints: " + model.getPossiblyFaultyStatements().size());
-			System.out.println("Model true constraints: " + model.getCorrectStatements().size());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
 	}
 }

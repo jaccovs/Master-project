@@ -1,7 +1,12 @@
 package evaluations;
 
-import javax.swing.JTable.PrintMode;
-
+import choco.kernel.model.constraints.Constraint;
+import evaluations.configuration.AbstractRunConfiguration;
+import evaluations.configuration.AbstractScenario;
+import evaluations.configuration.SIRunConfiguration;
+import evaluations.configuration.SIRunConfiguration.PruningMode;
+import evaluations.configuration.StdRunConfiguration.ExecutionMode;
+import evaluations.configuration.StdScenario;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.EngineFactory;
@@ -10,55 +15,25 @@ import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
 
-import evaluations.configuration.AbstractRunConfiguration;
-import evaluations.configuration.AbstractScenario;
-import evaluations.configuration.SIRunConfiguration;
-import evaluations.configuration.SIRunConfiguration.PruningMode;
-import evaluations.configuration.StdRunConfiguration.ExecutionMode;
-import evaluations.configuration.StdScenario;
-
 /**
  * Evaluation for the individual spreadsheet files.
  * For documentation of overridden methods, see AbstractEvaluation
  * @author Thomas
  */
-public class SpreadsheetsIndividual extends AbstractEvaluation {
+public class SpreadsheetsIndividual extends AbstractEvaluation<Constraint> {
 
-
-    @Override
-    public String getEvaluationName() {
-        return "SpreadsheetsIndividual";
-    }
-
-    @Override
-    public String getResultPath() {
-        return logFileDirectory;
-    }
-    
-    @Override
-    public String getConstraintOrderPath() {
-    	return inputFileDirectory;
-    }
-
-    @Override
-    protected boolean shouldShuffleConstraints() {
-        return true;
-    }
 
     // ----------------------------------------------------
     // Directories
     static String inputFileDirectory = "src/test/resources/experiments/spreadsheetsindividual/";
     static String logFileDirectory = "src/test/resources/logs/spreadsheetsindividual/";
-    // ----------------------------------------------------
-
     // Number of runs
     static int nbInitRuns = 1;
     static int nbTestRuns = 2;
-
     // Standard scenario settings
     static int searchDepth = -1;
     static int maxDiags = -1;
-
+    // ----------------------------------------------------
     // Run configurations
     static SIRunConfiguration[] runConfigurations = new SIRunConfiguration[]{
 //            new SIRunConfiguration(ExecutionMode.minizinc, 2, PruningMode.on, true),
@@ -102,7 +77,6 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
 //            new SIRunConfiguration(ExecutionMode.prdfs, 4, PruningMode.on, false),
 //            new SIRunConfiguration(ExecutionMode.hybrid, 4, PruningMode.on, false),
     };
-
     // Scenarios
     StdScenario[] scenarios = new StdScenario[]{
 //    	new StdScenario("SemUnitEx2_SFL2Fault.xml", searchDepth, maxDiags),
@@ -113,20 +87,20 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
 //		new StdScenario("new/xxen.xml", searchDepth, maxDiags),
 //		new StdScenario("SemUnitEx2_2fault.xml", searchDepth, maxDiags),
 //		new StdScenario("VDEPPreserve_1fault.xml", searchDepth, maxDiags),
-    		
+
 //		new StdScenario("new/benchmark-5faults.xml", searchDepth, 1),
 //		new StdScenario("new/Hospital_Payment_Calculation.xml", searchDepth, 1),
 //		new StdScenario("new/xxen.xml", searchDepth, 1),
 //		new StdScenario("SemUnitEx2_2fault.xml", searchDepth, 1),
 //		new StdScenario("VDEPPreserve_1fault.xml", searchDepth, 1),
-		
+
 //		new StdScenario("new/benchmark-5faults.xml", searchDepth, 5),
 //		new StdScenario("new/Hospital_Payment_Calculation.xml", searchDepth, 5),
 //		new StdScenario("new/xxen.xml", searchDepth, 5),
 //		new StdScenario("SemUnitEx2_2fault.xml", searchDepth, 5),
 //		new StdScenario("VDEPPreserve_1fault.xml", searchDepth, 5),
-    		
-    		
+
+
 //		new StdScenario("new/benchmark-5faults.xml", searchDepth, maxDiags),
 //		new StdScenario("new/Hospital_Payment_Calculation.xml", searchDepth, maxDiags),
 ////		new StdScenario("new/salesforecast_TC2.xml", searchDepth, maxDiags),
@@ -163,7 +137,7 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
 //    		maxDiags = 1;
 	        SpreadsheetsIndividual spreadsheetsIndividual = new SpreadsheetsIndividual();
 	        spreadsheetsIndividual.runTests(nbInitRuns, nbTestRuns, runConfigurations, spreadsheetsIndividual.scenarios);
-	        
+
 //	        maxDiags = 5;
 //	        spreadsheetsIndividual = new SpreadsheetsIndividual();
 //	        spreadsheetsIndividual.runTests(nbInitRuns, nbTestRuns, runConfigurations, spreadsheetsIndividual.scenarios);
@@ -171,7 +145,27 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
     }
 
     @Override
-    public IDiagnosisEngine prepareRun(
+    public String getEvaluationName() {
+        return "SpreadsheetsIndividual";
+    }
+
+    @Override
+    public String getResultPath() {
+        return logFileDirectory;
+    }
+
+    @Override
+    public String getConstraintOrderPath() {
+        return inputFileDirectory;
+    }
+
+    @Override
+    protected boolean shouldShuffleConstraints() {
+        return true;
+    }
+
+    @Override
+    public IDiagnosisEngine<Constraint> prepareRun(
             AbstractRunConfiguration abstractRunConfiguration,
             AbstractScenario abstractScenario, int subScenario, int iteration) {
 
@@ -183,15 +177,12 @@ public class SpreadsheetsIndividual extends AbstractEvaluation {
         EngineType engineType = chooseEngineType(scenario, runConfiguration);
 
         // Set the pruning mode
-        ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = true;
-        if (runConfiguration.pruningMode == PruningMode.off) {
-            ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = false;
-        }
+        ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = runConfiguration.pruningMode != PruningMode.off;
 
         // Create the engine
         String fullInputFilename = inputFileDirectory + scenario.inputFileName;
 
-        IDiagnosisEngine iDiagnosisEngine = EngineFactory.makeEngineFromXMLFile(
+        IDiagnosisEngine<Constraint> iDiagnosisEngine = EngineFactory.makeEngineFromXMLFile(
                 engineType,
                 fullInputFilename,
                 runConfiguration.threads);

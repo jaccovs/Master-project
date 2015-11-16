@@ -1,8 +1,8 @@
 package tests.diagnosis;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.engines.HSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
@@ -10,9 +10,8 @@ import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test the HS-DAG algorithm
@@ -43,8 +42,8 @@ public class HSDagTest {
 			HSDagBuilder hsdag = new HSDagBuilder(sessionData);
 //			hsdag.setMaxSearchDepth(-1);			
 //			hsdag.setMaxDiagnoses(-1);
-			
-			List<Diagnosis> diagnoses = hsdag.calculateDiagnoses();
+
+			List<Diagnosis<Constraint>> diagnoses = hsdag.calculateDiagnoses();
 			System.out.println("Found " + diagnoses.size() + " diagnoses");
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
@@ -57,10 +56,10 @@ public class HSDagTest {
 			e.printStackTrace();
 		}
 	}
-	
-	DiagnosisModel defineMiniModel()
+
+	DiagnosisModel<Constraint> defineMiniModel()
 	{
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,100));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,100));
 		IntegerVariable b1 = model.addIntegerVariable(Choco.makeIntVar("b1", 1,100));
@@ -71,7 +70,7 @@ public class HSDagTest {
 		
 		model.addPossiblyFaultyConstraint(Choco.eq(b1, Choco.mult(a1, a2)), "B1 = a1 * a2"); // should be +
 
-		Example exTestExample = new Example();
+		Example<Constraint> exTestExample = new Example<>();
 //		exTestExample.addConstraint(Choco.eq(a1, 3), "a1=3");
 //		exTestExample.addConstraint(Choco.eq(a2, 5), "a2=5");
 		exTestExample.addConstraint(Choco.eq(b1, 8), "b1=8");
@@ -81,11 +80,11 @@ public class HSDagTest {
 
 		
 		return model;
-	}	
-	
-	DiagnosisModel notSoMiniModel()
+	}
+
+	DiagnosisModel<Constraint> notSoMiniModel()
 	{
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<>();
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,100));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,100));
 		IntegerVariable b1 = model.addIntegerVariable(Choco.makeIntVar("b1", 1,100));
@@ -96,7 +95,7 @@ public class HSDagTest {
 		model.addPossiblyFaultyConstraint(Choco.eq(b1, Choco.plus(a1, 2)), "B1 = a1 + 2");			
 		model.addPossiblyFaultyConstraint(Choco.eq(c1, Choco.mult(b1, b2)), "C1 = b1 * b2"); // should be +
 
-		Example exTestExample = new Example();
+		Example<Constraint> exTestExample = new Example<>();
 		exTestExample.addConstraint(Choco.eq(a2, 2), "a2=2");
 		exTestExample.addConstraint(Choco.eq(a1, 1), "a1=1");		
 		exTestExample.addConstraint(Choco.eq(c1, 8), "c1=8");
@@ -114,10 +113,10 @@ public class HSDagTest {
 	 * Representing the small example from the paper.
 	 * 
 	 */
-	DiagnosisModel defineModelForSmallExampleInPaper()
+	DiagnosisModel<Constraint> defineModelForSmallExampleInPaper()
 	{
 		System.out.println("Defining model for small example from paper.");
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 		
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,100));//max value from test examples
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,100));//max value from test examples
@@ -138,21 +137,21 @@ public class HSDagTest {
 //		Constraint exTest = Choco.and(Choco.and(Choco.and(Choco.and(Choco.eq(a1, 4), Choco.eq(a2, 5), Choco.eq(d1, 230)))));
 		// WHY THREE ANDS???
 		Constraint exTest = Choco.and(Choco.eq(a1, 4), Choco.eq(a2, 5), Choco.eq(d1, 230));
-		Example exTestExample = new Example();
+		Example<Constraint> exTestExample = new Example<>();
 		exTestExample.addConstraint(Choco.eq(a1, 4), "a1=4");
 		exTestExample.addConstraint(Choco.eq(a2, 5), "a2=5");
 		exTestExample.addConstraint(Choco.eq(d1, 230), "d1=230");
 		exTestExample.addConstraint(exTest, "exTest");
-		
-		Example exPositive = new Example();
+
+		Example<Constraint> exPositive = new Example<>();
 //		exPositive.addConstraint(Choco.and(Choco.gt(c1, 100), Choco.lt(c1, 200), Choco.gt(d1, 1000)), "c1>100&c1<200&d1>1000");
 		exPositive.addConstraint(Choco.gt(c1, 10), "c1>100");
 		exPositive.addConstraint(Choco.lt(c1, 20), "c1<200");
 		exPositive.addConstraint(Choco.gt(d1, 100), "d1>1000");
 		
 		//model.addCorrectConstraint(Choco.and(Choco.gt(c1, 100), Choco.lt(c1, 200), Choco.gt(d1, 1000)), "c1>100&c1<200&d1>1000");
-		
-		Example exNegative = new Example();
+
+		Example<Constraint> exNegative = new Example<>();
 		exNegative.addConstraint(Choco.gt(c1, 100), "c1>100");
 		exNegative.addConstraint(Choco.lt(d1, 1000), "d1<1000");
 		
@@ -198,12 +197,11 @@ public class HSDagTest {
 		
 		return model;
 	}
-	
-	
-	
-	DiagnosisModel defineExampleFromPaper5Vars()
+
+
+	DiagnosisModel<Constraint> defineExampleFromPaper5Vars()
 	{
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<>();
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 0,15));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 0,15));
 		IntegerVariable b1 = model.addIntegerVariable(Choco.makeIntVar("b1", 0,30));
@@ -214,27 +212,27 @@ public class HSDagTest {
 		model.addPossiblyFaultyConstraint(Choco.eq(b2, Choco.mult(a2, 3)), "b2=a2*3");		
 		model.addPossiblyFaultyConstraint(Choco.eq(c1, Choco.mult(b1, b2)), "c1=b1*b2"); // should be +
 
-		Example posEx1 = new Example();
+		Example<Constraint> posEx1 = new Example<>();
 		posEx1.addConstraint(Choco.eq(a1, 1), "a1=1");
 		posEx1.addConstraint(Choco.eq(a2, 6), "a2=6");
 		posEx1.addConstraint(Choco.eq(c1, 20), "c1=20");
-		
-		Example posEx2 = new Example();
+
+		Example<Constraint> posEx2 = new Example<>();
 		posEx2.addConstraint(Choco.eq(a1, 4), "a1=4");
 		posEx2.addConstraint(Choco.eq(a2, 5), "a2=5");
 		posEx2.addConstraint(Choco.eq(c1,23), "c1=23");
-		
-		Example posEx3 = new Example();
+
+		Example<Constraint> posEx3 = new Example<>();
 		posEx3.addConstraint(Choco.eq(a1, 15), "a1=15");
 		posEx3.addConstraint(Choco.eq(a2, 10), "a2=10");
 		posEx3.addConstraint(Choco.eq(c1,60), "c1=60");
-		
-		Example posEx4 = new Example();
+
+		Example<Constraint> posEx4 = new Example<>();
 		posEx4.addConstraint(Choco.eq(a1, 6), "a1=6");
 		posEx4.addConstraint(Choco.eq(a2, 1), "a2=1");
 		posEx4.addConstraint(Choco.eq(c1, 15), "c1=15");
-		
-		List<Example> positiveExamples = new ArrayList<Example>();
+
+		List<Example<Constraint>> positiveExamples = new ArrayList<>();
 		positiveExamples.add(posEx1);
 		positiveExamples.add(posEx2);
 		positiveExamples.add(posEx3);
@@ -250,9 +248,9 @@ public class HSDagTest {
 	 * A method to define model
 	 * @return
 	 */
-	DiagnosisModel defineModelAndInputs() {
+	DiagnosisModel<Constraint> defineModelAndInputs() {
 		System.out.println("Defining model");
-		DiagnosisModel model = new DiagnosisModel();		
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 		
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,1000));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,1000));
@@ -282,7 +280,7 @@ public class HSDagTest {
 		//model.addCorrectConstraint(Choco.eq(b2,Choco.mult(a2, 3)), "C2");
 		
 		// One example
-		Example pExample1 = new Example();
+		Example<Constraint> pExample1 = new Example<>();
 		pExample1.addConstraint(Choco.eq(a1, 1), "a1=1");
 		pExample1.addConstraint(Choco.eq(a2, 6), "a2=6");
 		pExample1.addConstraint(Choco.eq(c1, 20), "c1=20");
@@ -301,7 +299,7 @@ public class HSDagTest {
 		//model.getPositiveExamples().add(pExample2);
 		//model.getPositiveExamples().add(pExample3);
 
-		Example nExample1 = new Example(true);
+		Example<Constraint> nExample1 = new Example<>(true);
 		nExample1.addConstraint(Choco.eq(a1, 1), "a1=1");
 		nExample1.addConstraint(Choco.gt(a2, 6), "a2=6");
 		nExample1.addConstraint(Choco.gt(c1, 36), "c1=36");

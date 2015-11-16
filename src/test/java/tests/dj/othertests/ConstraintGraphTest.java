@@ -1,15 +1,9 @@
 package tests.dj.othertests;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import choco.cp.model.CPModel;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.Variable;
+import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
@@ -22,10 +16,7 @@ import org.exquisite.i8n.Culture;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.cp.model.CPModel;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.Variable;
-import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import java.util.*;
 
 /**
  * A firs test for the constraint graphs...
@@ -38,7 +29,7 @@ public class ConstraintGraphTest {
 	String xmlFilePath = ".\\experiments\\enase-2013\\singleFault\\exquisite_20.xml";
 //	String xmlFilePath = ".\\experiments\\enase-2013\\doubleFault\\ex20.xml";
 
-	ExquisiteSession sessionData;
+	ExquisiteSession<Constraint> sessionData;
 	
 	/**
 	 * Main entry point
@@ -67,7 +58,7 @@ public class ConstraintGraphTest {
 		Culture.setCulture(Locale.GERMAN);
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
 		//transform the model into a CSP model...
-		this.sessionData = new ExquisiteSession(appXML);
+		this.sessionData = new ExquisiteSession<>(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -214,16 +205,16 @@ public class ConstraintGraphTest {
 //		}
 		
 		// single test
-		Example example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-		DiagnosisModel copiedModel = new DiagnosisModel(this.sessionData.diagnosisModel);
+		Example<Constraint> example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
+		DiagnosisModel<Constraint> copiedModel = new DiagnosisModel<>(this.sessionData.diagnosisModel);
 		
 		// add the example to the set of correct constraints
 		for(Constraint constraint : example.constraints)
 		{
 			copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
 		}
-		
-		copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
+
+		copiedModel.removeConstraintsToIgnore(new ArrayList<>());
 		
 //		QuickXPlain qx = new QuickXPlain();
 //		qx.setConstraintModel(copiedModel);
@@ -270,18 +261,18 @@ public class ConstraintGraphTest {
 		int iterations = 1;
 		for (int i=0;i<=iterations;i++) {
 			// Skip the first run, ramp up ..
-			QuickXPlain qx = new QuickXPlain(sessionData, null);
+			QuickXPlain<Constraint> qx = new QuickXPlain<>(sessionData, null);
 									
 			// Get the first example
 			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel(this.sessionData.diagnosisModel);
+			copiedModel = new DiagnosisModel<>(this.sessionData.diagnosisModel);
 			
 			// add the example to the set of correct constraints
 			for(Constraint constraint : example.constraints){
 				copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
 			}
-			
-			copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
+
+			copiedModel.removeConstraintsToIgnore(new ArrayList<>());
 			qx.setDiagnosisModel(copiedModel);
 
 			System.out.println(" -------------- ");
@@ -300,7 +291,7 @@ public class ConstraintGraphTest {
 			}
 			// Get the first example
 			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel(this.sessionData.diagnosisModel);
+			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.diagnosisModel);
 			
 			// add the example to the set of correct constraints
 			for(Constraint constraint : example.constraints)
@@ -310,13 +301,13 @@ public class ConstraintGraphTest {
 			
 			copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
 			qx.setDiagnosisModel(copiedModel);
-		
-			
-			qx = new QuickXPlain(sessionData, null);
+
+
+			qx = new QuickXPlain<Constraint>(sessionData, null);
 									
 			// Get the first example
 			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel(this.sessionData.diagnosisModel);
+			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.diagnosisModel);
 			copiedModel.setPossiblyFaultyStatements(sortedConstraints);
 
 			// add the example to the set of correct constraints

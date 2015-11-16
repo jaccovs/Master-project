@@ -1,15 +1,14 @@
 package tests.diagnosis;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.diagnosis.engines.common.NodeUtilities;
 import org.exquisite.diagnosis.models.DAGNode;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * For testing the various methods of the NodeUtilities class.
@@ -47,10 +46,10 @@ public class NodeUtilitiesTests {
 	{
 		Debug.msg("\napplyNodeClosingRulesTest");
 		Debug.msg("---------------------");
-		MockNodeData mockNodeData = MockNodeData.greinerExample();	
-		List<DAGNode> testGraph = mockNodeData.graph;
-		DAGNode n6 = testGraph.get(6);
-		List<DAGNode> diagnosisNodes = new ArrayList<DAGNode>();
+		MockNodeData mockNodeData = MockNodeData.greinerExample();
+		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
+		DAGNode<Constraint> n6 = testGraph.get(6);
+		List<DAGNode<Constraint>> diagnosisNodes = new ArrayList<>();
 		diagnosisNodes.add(testGraph.get(3));
 		diagnosisNodes.add(testGraph.get(5));
 		Debug.msg("Node " + n6.nodeName + " should be closed after node closing rules are applied:");
@@ -69,9 +68,9 @@ public class NodeUtilitiesTests {
 		//new conflict  { b } is a subset of root nodes set {a , b} so the root node should have its 
 		//conflict set replaced and any subsequent redundant edges pruned.
 		List<Constraint> newConflict = new ArrayList<Constraint>();
-		newConflict.add(mockNodeData.constraints.get("b"));	
-		
-		List<DAGNode> testGraph = mockNodeData.graph;
+		newConflict.add(mockNodeData.constraints.get("b"));
+
+		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
 		Debug.msg("");
 		Debug.msg("BEFORE PRUNE:");		
 		NodeUtilities.traverseNode(testGraph.get(0), mockNodeData.constraints);
@@ -89,8 +88,8 @@ public class NodeUtilitiesTests {
 		Debug.msg("\ncheckForExistingNodeTest");
 		Debug.msg("---------------------");
 		MockNodeData mockNodeData = MockNodeData.nodeReuseExample();
-		List<DAGNode> testGraph = mockNodeData.graph;
-		DAGNode n2 = testGraph.get(2);
+		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
+		DAGNode<Constraint> n2 = testGraph.get(2);
 		
 		Debug.msg("Source graph to use:");
 		NodeUtilities.traverseNode(testGraph.get(0), mockNodeData.constraints);
@@ -109,8 +108,8 @@ public class NodeUtilitiesTests {
 				System.out.print(Utilities.getKeyByValue(mockNodeData.constraints, iterator.next()) + " ");
 			}
 			System.out.println("]");
-			
-			DAGNode node = NodeUtilities.checkForExistingNode(newPathLabelSet, testGraph);
+
+			DAGNode<Constraint> node = NodeUtilities.checkForExistingNode(newPathLabelSet, testGraph);
 			String result = (node == null) ? "    No existing node found, will need to make a new one." : "    Node with name of " + node.nodeName + " can be reused.";
 			Debug.msg(result);
 		}	
@@ -123,11 +122,11 @@ public class NodeUtilitiesTests {
 	{
 		Debug.msg("\ncheckIsLastLevelTest");
 		Debug.msg("---------------------");
-		MockNodeData mockNodeData = MockNodeData.greinerExample();	
-				
-		DAGNode testNode1 = new DAGNode(new ArrayList<Constraint>());
+		MockNodeData mockNodeData = MockNodeData.greinerExample();
+
+		DAGNode<Constraint> testNode1 = new DAGNode<>(new ArrayList<>());
 		testNode1.nodeName = "testNode1";
-		testNode1.pathLabels = new ArrayList<Constraint>();
+		testNode1.pathLabels = new ArrayList<>();
 		testNode1.pathLabels.addAll(mockNodeData.constraints.values());
 		testNode1.nodeLevel = testNode1.pathLabels.size();
 		Debug.msg("Max path label size = " + testNode1.pathLabels.size());
@@ -136,28 +135,32 @@ public class NodeUtilitiesTests {
 		Debug.msg("test #1:");
 		Debug.msg("    max search depth = " + maxSearchDepth);
 		Debug.msg("    test node path labels size: " + testNode1.pathLabels.size());
-		boolean result = NodeUtilities.checkIsLastLevel(testNode1,  new ArrayList<Constraint>(mockNodeData.constraints.values()), maxSearchDepth);
+		boolean result = NodeUtilities
+				.checkIsLastLevel(testNode1, new ArrayList<>(mockNodeData.constraints.values()), maxSearchDepth);
 		Debug.msg("\n");
 		
 		testNode1.pathLabels.remove(mockNodeData.constraints.get("b"));		
 		Debug.msg("test #2:");
 		Debug.msg("    max search depth = " + maxSearchDepth);
 		Debug.msg("    test node path labels size: " + testNode1.pathLabels.size());
-		result = NodeUtilities.checkIsLastLevel(testNode1,   new ArrayList<Constraint>(mockNodeData.constraints.values()), maxSearchDepth);		
+		result = NodeUtilities
+				.checkIsLastLevel(testNode1, new ArrayList<>(mockNodeData.constraints.values()), maxSearchDepth);
 		Debug.msg("\n");
 		
 		maxSearchDepth = 2;
 		Debug.msg("test #3:");
 		Debug.msg("    max search depth = " + maxSearchDepth);
 		Debug.msg("    test node path labels size: " + testNode1.pathLabels.size());
-		result = NodeUtilities.checkIsLastLevel(testNode1,   new ArrayList<Constraint>(mockNodeData.constraints.values()), maxSearchDepth);
+		result = NodeUtilities
+				.checkIsLastLevel(testNode1, new ArrayList<>(mockNodeData.constraints.values()), maxSearchDepth);
 		Debug.msg("\n");
 		
 		maxSearchDepth = 3;
 		Debug.msg("test #4:");
 		Debug.msg("    max search depth = " + maxSearchDepth);
 		Debug.msg("    test node path labels size: " + testNode1.pathLabels.size());
-		result = NodeUtilities.checkIsLastLevel(testNode1,   new ArrayList<Constraint>(mockNodeData.constraints.values()), maxSearchDepth);	
+		result = NodeUtilities
+				.checkIsLastLevel(testNode1, new ArrayList<>(mockNodeData.constraints.values()), maxSearchDepth);
 		Debug.msg("\n");
 	
 	}	

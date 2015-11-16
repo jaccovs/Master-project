@@ -1,7 +1,9 @@
 package tests.exquisite.data;
 
-import java.util.List;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.Variable;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteGraph;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
@@ -13,10 +15,7 @@ import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.Variable;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.List;
 
 public class ProgramFlowExampleJavaAPI {
 
@@ -31,7 +30,7 @@ public class ProgramFlowExampleJavaAPI {
 		Debug.msg("Program flow (Java API) example... START\n");
 				
 		Debug.msg("    Instantiate a DiagnosisModel object to populate.");
-		DiagnosisModel model = makeDiagnosisModel();		
+		DiagnosisModel<Constraint> model = makeDiagnosisModel();
 		
 		Debug.msg("    Instantiate a ExquisiteGraph object to populate.");
 		ExquisiteGraph<String> graph = new ExquisiteGraph<String>();
@@ -44,19 +43,19 @@ public class ProgramFlowExampleJavaAPI {
 		Debug.msg("\nPrepare to perform diagnosis...");
 		
 		Debug.msg("    Instantiate diagnosisEngine.");
-		IDiagnosisEngine diagnosisEngine = EngineFactory.makeDAGEngineStandardQx(sessionData);
+		IDiagnosisEngine<Constraint> diagnosisEngine = EngineFactory.makeDAGEngineStandardQx(sessionData);
 		
 		Debug.msg("    diagnosisEngine.setModel(model)");
 		diagnosisEngine.setSessionData(sessionData);
 		
 		Debug.msg("    diagnosisEngine.calculateDiagnoses()\n");
 		try{
-			List<Diagnosis>result = diagnosisEngine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> result = diagnosisEngine.calculateDiagnoses();
 			Debug.msg("Diagnosis result:\n");
-			for(Diagnosis diagnosis : result)
+			for (Diagnosis<Constraint> diagnosis : result)
 			{
 				Debug.msg("-- Diagnosis --\n");
-				String list = Utilities.printConstraintList((List<Constraint>)diagnosis.getElements(), model);
+				String list = Utilities.printConstraintList(diagnosis.getElements(), model);
 				Debug.msg("    " + list);
 				Debug.msg("---------------\n");
 			}
@@ -70,9 +69,8 @@ public class ProgramFlowExampleJavaAPI {
 	 * Load appXML from source xml file.
 	 * @param data.xmlFilePath - the full path to the xml file to be read.
 	 */
-	private DiagnosisModel makeDiagnosisModel()
-	{			
-		DiagnosisModel model = new DiagnosisModel();
+	private DiagnosisModel<Constraint> makeDiagnosisModel() {
+		DiagnosisModel<Constraint> model = new DiagnosisModel<>();
 		
 		Debug.msg("\nMake any variables first that have had a user specified (i.e. global) value bound associated with them.");			
 		Debug.msg("Number of variables with global value bounds to make: 10");
@@ -182,7 +180,7 @@ public class ProgramFlowExampleJavaAPI {
 		
 		Debug.msg("\nTransform ExquisiteAppXML test cases into Example objects.");
 		Debug.msg("No. of test cases to transform: 1");
-		Example positiveExample = new Example();
+		Example<Constraint> positiveExample = new Example();
 		
 		//Faulty values
 		//G5 expected value 340		
@@ -210,7 +208,7 @@ public class ProgramFlowExampleJavaAPI {
 		//Negative example
 		//!(d2=2 & e2=4 & b2=10 & c2=5 & d3=6 & e3=8 & b3=20 & c3=15 & g5=16800)
 		Constraint negativeConstraint = Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.and(Choco.eq(d2, 2), Choco.eq(e2, 4)), Choco.eq(b2, 10), Choco.eq(c2, 5)), Choco.eq(d3, 6), Choco.eq(e3, 8)), Choco.eq(b3, 20), Choco.eq(c3, 15),Choco.eq(g5, 16800))))))));
-		Example negativeExample = new Example(true);
+		Example<Constraint> negativeExample = new Example<>(true);
 		negativeExample.addConstraint(negativeConstraint, "negative constraint derived from positive example constraints.");
 				
 		model.getNegativeExamples().add(negativeExample);

@@ -1,15 +1,7 @@
 package evaluations.mutation;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
@@ -23,7 +15,10 @@ import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 import org.exquisite.xml.XMLParser;
 
-import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.*;
 
 /**
  * Where are the comments, David?
@@ -65,19 +60,18 @@ public class Mutation {
 		//mutant = mutation.mutateFormula(testFormula, 3, supportedArithmeticOperators);		
 	}
 	
-	public void run()
-	{		
-		ExquisiteSession sessionData = new ExquisiteSession(this.exquisiteAppXML);
+	public void run() {
+		ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(this.exquisiteAppXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
 		DiagnosisModelLoader modelLoader = new DiagnosisModelLoader(sessionData, varFactory, conFactory);
-		modelLoader.loadDiagnosisModelFromXML();	
-		
-		IDiagnosisEngine engine = EngineFactory.makeDAGEngineStandardQx(sessionData);
-		
-		try{		
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
+		modelLoader.loadDiagnosisModelFromXML();
+
+		IDiagnosisEngine<Constraint> engine = EngineFactory.makeDAGEngineStandardQx(sessionData);
+
+		try {
+			List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
 			System.out.println("Found " + diagnoses.size() + " diagnoses");
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{

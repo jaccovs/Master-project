@@ -1,13 +1,5 @@
 package org.exquisite.diagnosis.interactivity.partitioning.costestimators;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
 import org.exquisite.diagnosis.interactivity.partitioning.scoring.BigFunctions;
 import org.exquisite.diagnosis.interactivity.partitioning.scoring.Rounding;
@@ -15,9 +7,11 @@ import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.quickxplain.ontologies.AxiomConstraint;
 import org.semanticweb.owlapi.model.OWLAxiom;
-
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
-import choco.kernel.model.constraints.Constraint;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,8 +20,8 @@ import choco.kernel.model.constraints.Constraint;
  * Time: 14:14
  * To change this template use File | Settings | File Templates.
  */
-public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
-        implements CostsEstimator {
+public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
+        implements CostsEstimator<OWLLogicalAxiom> {
 
     public final static ManchesterOWLSyntax[] keywords = {ManchesterOWLSyntax.SOME,
             ManchesterOWLSyntax.ONLY,
@@ -54,7 +48,18 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
             ManchesterOWLSyntax.TRANSITIVE,
             ManchesterOWLSyntax.SYMMETRIC
     };
+    private Map<OWLLogicalAxiom, BigDecimal> axiomsProbabilities = null;
+    private Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities;
 
+    public OWLAxiomKeywordCostsEstimator(Set<OWLLogicalAxiom> t) {
+        super(t);
+        this.keywordProbabilities = createKeywordProbs();
+        updateAxiomProbabilities();
+    }
+
+    public OWLAxiomKeywordCostsEstimator(DiagnosisModel<OWLLogicalAxiom> model) {
+        this(new LinkedHashSet<>(model.getPossiblyFaultyStatements()));
+    }
 
     public static int getMaxLengthKeyword() {
         int max = 0;
@@ -65,15 +70,21 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
         return max;
     }
 
-    public OWLAxiomKeywordCostsEstimator(Set<Constraint> t) {
-        super(t);
-        this.keywordProbabilities = createKeywordProbs();
-        updateAxiomProbabilities();
+    /*
+    public BigDecimal getFormulaSetCosts(Set<OWLLogicalAxiom> formulas) {
+        BigDecimal probability = BigDecimal.ONE;
+        if (formulas != null)
+            for (OWLLogicalAxiom axiom : formulas) {
+                probability = probability.multiply(getFormulaCosts(axiom));
+            }
+        Collection<OWLLogicalAxiom> activeFormulas = new ArrayList<OWLLogicalAxiom>(searchable.getKnowledgeBase().getFaultyFormulas());
+        activeFormulas.removeAll(formulas);
+        for (OWLLogicalAxiom axiom : activeFormulas) {
+            probability = probability.multiply(BigDecimal.ONE.subtract(getFormulaCosts(axiom)));
+        }
+        return probability;
     }
-
-    public OWLAxiomKeywordCostsEstimator(DiagnosisModel model) {
-        this(new LinkedHashSet<Constraint>(model.getPossiblyFaultyStatements()));
-    }
+    */
 
     public void updateKeywordProb(Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities) {
         this.keywordProbabilities = keywordProbabilities;
@@ -94,34 +105,18 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
         return map;
     }
 
-    /*
-    public BigDecimal getFormulaSetCosts(Set<OWLLogicalAxiom> formulas) {
-        BigDecimal probability = BigDecimal.ONE;
-        if (formulas != null)
-            for (OWLLogicalAxiom axiom : formulas) {
-                probability = probability.multiply(getFormulaCosts(axiom));
-            }
-        Collection<OWLLogicalAxiom> activeFormulas = new ArrayList<OWLLogicalAxiom>(searchable.getKnowledgeBase().getFaultyFormulas());
-        activeFormulas.removeAll(formulas);
-        for (OWLLogicalAxiom axiom : activeFormulas) {
-            probability = probability.multiply(BigDecimal.ONE.subtract(getFormulaCosts(axiom)));
-        }
-        return probability;
-    }
-    */
-
-    public BigDecimal getFormulaCosts(Constraint constraint) {
+    public BigDecimal getFormulaCosts(OWLLogicalAxiom constraint) {
 
         //NEU bei null wird 1 zurückgegeben
-        if(constraint==null)
+        if (constraint == null)
             return new BigDecimal(0.5);
 
         BigDecimal p = axiomsProbabilities.get(constraint);
         if (p != null)
             return p;
 
-        OWLAxiom axiom = ((AxiomConstraint)constraint).getAxiom();
-        
+        OWLAxiom axiom = ((AxiomConstraint) constraint).getAxiom();
+
         ManchesterOWLSyntaxOWLObjectRendererImpl impl = new ManchesterOWLSyntaxOWLObjectRendererImpl();
         String renderedAxiom = impl.render(axiom); // String renderedAxiom = modelManager.getRendering(axiom);
         BigDecimal result = BigDecimal.ONE;
@@ -142,11 +137,8 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
         return result;
     }
 
-    private Map<Constraint, BigDecimal> axiomsProbabilities = null;
-    private Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities;
-
     public void setKeywordProbabilities(Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities,
-                                        Set<Diagnosis> formulaSets) {
+                                        Set<Diagnosis<OWLLogicalAxiom>> formulaSets) {
 
 
         this.keywordProbabilities = keywordProbabilities;
@@ -159,12 +151,12 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
         return keywordProbabilities;
     }
 
-    private void updateDiagnosisProbabilities(Set<Diagnosis> formulaSets) {
+    private void updateDiagnosisProbabilities(Set<Diagnosis<OWLLogicalAxiom>> formulaSets) {
 
         if (formulaSets == null)
             return;
         if (!formulaSets.isEmpty()) {
-            for (Diagnosis formulaSet : formulaSets) {
+            for (Diagnosis<OWLLogicalAxiom> formulaSet : formulaSets) {
                 BigDecimal probability = getFormulaSetCosts(formulaSet.getElements());
 
                 formulaSet.setMeasure(probability);
@@ -172,22 +164,22 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
             }
             BigDecimal sum = BigDecimal.ZERO;
 
-            for (Diagnosis formulaSet : formulaSets) {
+            for (Diagnosis<OWLLogicalAxiom> formulaSet : formulaSets) {
                 sum = sum.add(formulaSet.getMeasure());
             }
-            for (Diagnosis formulaSet : formulaSets) {
+            for (Diagnosis<OWLLogicalAxiom> formulaSet : formulaSets) {
                 formulaSet.setMeasure(formulaSet.getMeasure().divide(sum, Rounding.PRECISION, Rounding.ROUNDING_MODE));
             }
         }
     }
 
     private void updateAxiomProbabilities() {
-        Map<Constraint, BigDecimal> axiomsProbs = new HashMap<Constraint, BigDecimal>();
+        Map<OWLLogicalAxiom, BigDecimal> axiomsProbs = new HashMap<>();
         ManchesterOWLSyntaxOWLObjectRendererImpl impl = new ManchesterOWLSyntaxOWLObjectRendererImpl();
-        Collection<Constraint> activeFormulas = getFaultyFormulas();
+        Collection<OWLLogicalAxiom> activeFormulas = getFaultyFormulas();
         BigDecimal sum = BigDecimal.ZERO;
-        for (Constraint constraint : activeFormulas) {
-        	OWLAxiom axiom = ((AxiomConstraint)constraint).getAxiom();
+        for (OWLLogicalAxiom constraint : activeFormulas) {
+            OWLAxiom axiom = ((AxiomConstraint) constraint).getAxiom();
             String renderedAxiom = impl.render(axiom); // String renderedAxiom = modelManager.getRendering(axiom);
             BigDecimal result = BigDecimal.ONE;
 
@@ -226,6 +218,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator
         if (keyword == null) {
             System.out.println();
         }
+        assert keyword != null;
         last = str.indexOf(keyword.toString());
         while (last > -1) {
             cnt++;

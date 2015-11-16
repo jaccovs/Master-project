@@ -1,12 +1,12 @@
 package evaluations.conflictposition;
-import java.util.List;
 
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 
-import choco.kernel.model.constraints.Constraint;
+import java.util.List;
 
 
 /**
@@ -15,7 +15,7 @@ import choco.kernel.model.constraints.Constraint;
  * @author dietmar
  *
  */
-public class QuickExplainKC extends QuickXPlain {
+public class QuickExplainKC extends QuickXPlain<Constraint> {
 
 	/**
 	 * Construct QX from the data

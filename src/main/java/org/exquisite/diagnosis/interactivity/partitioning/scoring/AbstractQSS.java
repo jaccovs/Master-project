@@ -1,12 +1,12 @@
 package org.exquisite.diagnosis.interactivity.partitioning.scoring;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.Set;
-
 import org.exquisite.diagnosis.interactivity.partitioning.Partition;
 import org.exquisite.diagnosis.interactivity.partitioning.Partitioning;
 import org.exquisite.diagnosis.models.Diagnosis;
+
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,20 +15,20 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractQSS implements QSS {
+public abstract class AbstractQSS<Formula> implements QSS<Formula> {
 
     protected int numOfLeadingDiags;
     protected Partition lastQuery = null;
     protected boolean answerToLastQuery;
     protected int numOfEliminatedLeadingDiags = 0;
-    private Partitioning partitionSearcher;
+    private Partitioning<Formula> partitionSearcher;
 
 
     protected BigDecimal log(BigDecimal value, BigDecimal base) {
         if (value.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
 
-        return BigFunctions.ln(value,value.scale()).
+        return BigFunctions.ln(value, value.scale()).
                 divide(BigFunctions.ln(base, value.scale()), value.scale(), BigDecimal.ROUND_HALF_EVEN);
     }
 
@@ -44,12 +44,12 @@ public abstract class AbstractQSS implements QSS {
         answerToLastQuery = answer;
     }
 
-    protected void updateNumOfEliminatedLeadingDiags(boolean answer){
-        if(lastQuery != null)
+    protected void updateNumOfEliminatedLeadingDiags(boolean answer) {
+        if (lastQuery != null)
             numOfEliminatedLeadingDiags = getNumOfEliminatedLeadingDiags(answer);
     }
 
-    protected void preprocessBeforeUpdate(boolean answer){
+    protected void preprocessBeforeUpdate(boolean answer) {
         updateAnswerToLastQuery(answer);
         updateNumOfEliminatedLeadingDiags(answer);
     }
@@ -58,11 +58,11 @@ public abstract class AbstractQSS implements QSS {
         updateNumOfLeadingDiags(numOfLeadingDiags);
     }
 
-    protected int getNumOfLeadingDiags(Partition partition){
+    protected int getNumOfLeadingDiags(Partition partition) {
         return partition.dx.size() + partition.dnx.size() + partition.dz.size();
     }
 
-    protected int getNumOfEliminatedLeadingDiags(boolean answer){
+    protected int getNumOfEliminatedLeadingDiags(boolean answer) {
         if (answer)
             return lastQuery.dnx.size();
         else
@@ -73,22 +73,7 @@ public abstract class AbstractQSS implements QSS {
         preprocessBeforeUpdate(answer);
     }
 
-
-    public class MinNumOfElimDiagsComparator implements Comparator<Partition> {
-        public int compare(Partition o1, Partition o2) {
-            if (getMinNumOfElimDiags(o1) < getMinNumOfElimDiags(o2))
-                return -1;
-            else if (getMinNumOfElimDiags(o1) > getMinNumOfElimDiags(o2))
-                return 1;
-            else
-                return 0;
-
-        }
-    }
-
-
-
-    protected BigDecimal getPartitionScore(Partition partition) {
+    protected BigDecimal getPartitionScore(Partition<Formula> partition) {
         BigDecimal sumDx = getSumProb(partition.dx);
         BigDecimal sumDnx = getSumProb(partition.dnx);
         BigDecimal sumD0 = getSumProb(partition.dz);
@@ -102,20 +87,32 @@ public abstract class AbstractQSS implements QSS {
 
     }
 
-    protected BigDecimal getSumProb(Set<Diagnosis> set) {
+    protected BigDecimal getSumProb(Set<Diagnosis<Formula>> set) {
         BigDecimal pr = new BigDecimal("0");
-        for (Diagnosis diagnosis : set)
+        for (Diagnosis<Formula> diagnosis : set)
             pr = pr.add(diagnosis.getMeasure());
 
         return pr;
     }
 
-    protected Partitioning getPartitionSearcher() {
+    protected Partitioning<Formula> getPartitionSearcher() {
         return partitionSearcher;
     }
 
-    public void setPartitionSearcher(Partitioning partitioning) {
+    public void setPartitionSearcher(Partitioning<Formula> partitioning) {
         this.partitionSearcher = partitioning;
+    }
+
+    public class MinNumOfElimDiagsComparator implements Comparator<Partition> {
+        public int compare(Partition o1, Partition o2) {
+            if (getMinNumOfElimDiags(o1) < getMinNumOfElimDiags(o2))
+                return -1;
+            else if (getMinNumOfElimDiags(o1) > getMinNumOfElimDiags(o2))
+                return 1;
+            else
+                return 0;
+
+        }
     }
 
     public class ScoreComparator implements Comparator<Partition> {
@@ -125,9 +122,9 @@ public abstract class AbstractQSS implements QSS {
             else if (getPartitionScore(o1).compareTo(getPartitionScore(o2)) > 0)
                 return 1;
             else
-                return -1*((Integer)o1.dx.size()).compareTo(o2.dx.size());
+                return -1 * ((Integer) o1.dx.size()).compareTo(o2.dx.size());
 
         }
     }
-    
+
 }

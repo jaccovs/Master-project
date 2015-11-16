@@ -1,7 +1,8 @@
 package tests.dj.heuristicsearch;
 
-import java.util.List;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.HeuristicDiagnosisEngine;
@@ -12,9 +13,7 @@ import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.List;
 
 /**
  * Test driver for heuristic search
@@ -40,72 +39,12 @@ public class TestHeuristicSearch {
 	}
 
 	/**
-	 * Running a simple test - use the problem
-	 */
-	void run() {
-		DiagnosisModel model = createSimpleDiagnosisModel();
-		
-		// Create a session
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
-		sessionData.config.searchStrategy = SearchStrategies.Default;
-		sessionData.config.searchDepth = 3;
-		sessionData.config.maxDiagnoses = 1;
-
-		// Create the engine and run
-		Debug.DEBUGGING_ON = false;
-		
-		IDiagnosisEngine engine = new HeuristicDiagnosisEngine(sessionData, 1);
-		
-		// To compare with the original results: 
-//		engine = EngineFactory.makeDAGEngineStandardQx(sessionData);
-		// engine = EngineFactory.makeParaDagEngineStandardQx(sessionData, 2);
-	
-		List<Diagnosis> diagnoses = null;
-
-		long stop = 0;
-		long start = System.currentTimeMillis();
-		try {
-			diagnoses = engine.calculateDiagnoses();
-			stop = System.currentTimeMillis();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("Found " + diagnoses.size() + " diagnoses in "
-				+ (stop - start) + " millisecs");
-		
-		
-		
-		// System.out.println("Constructed nodes: " + ((AbstractHSDagBuilder)
-		// engine).allConstructedNodes.getCollection().size());
-		// // TEST ONLY
-		
-		if (diagnoses != null && diagnoses.size() > 0)
-		{		
-			Diagnosis d = diagnoses.get(0);
-			System.out.println("The diagn: " + d + " , elements: " + d.getElements().size());
-			
-			 System.out.println(Utilities.printSortedDiagnoses(diagnoses, '\n'));
-			 System.out.println("Nb of solves : " + engine.getCspSolvedCount());
-			 System.out.println("Nb of s calls: " + engine.getSolverCalls());
-			 System.out.println("Nb of props  : " + engine.getPropagationCount());
-		}
-		else {
-			System.out.println("No diagnosis found");
-		}
-		
-		
-		//NodeUtilities.traverseNode(engine.getRootNode(), sessionData.diagnosisModel.getConstraintNames());
-
-	}
-	/**
 	 * Create a small test model
-	 * 
+	 *
 	 * @return the diagnosis model
 	 */
-	static DiagnosisModel createSimpleDiagnosisModel() {
-		DiagnosisModel model = new DiagnosisModel();
+	static DiagnosisModel<Constraint> createSimpleDiagnosisModel() {
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 
 		int domainSize = 10;
 
@@ -225,6 +164,64 @@ public class TestHeuristicSearch {
 		// model.getPositiveExamples().add(pos2);
 
 		return model;
+
+	}
+
+	/**
+	 * Running a simple test - use the problem
+	 */
+	void run() {
+		DiagnosisModel<Constraint> model = createSimpleDiagnosisModel();
+
+		// Create a session
+		ExquisiteSession sessionData = new ExquisiteSession();
+		sessionData.diagnosisModel = model;
+		sessionData.config.searchStrategy = SearchStrategies.Default;
+		sessionData.config.searchDepth = 3;
+		sessionData.config.maxDiagnoses = 1;
+
+		// Create the engine and run
+		Debug.DEBUGGING_ON = false;
+
+		IDiagnosisEngine<Constraint> engine = new HeuristicDiagnosisEngine(sessionData, 1);
+
+		// To compare with the original results:
+//		engine = EngineFactory.makeDAGEngineStandardQx(sessionData);
+		// engine = EngineFactory.makeParaDagEngineStandardQx(sessionData, 2);
+
+		List<Diagnosis<Constraint>> diagnoses = null;
+
+		long stop = 0;
+		long start = System.currentTimeMillis();
+		try {
+			diagnoses = engine.calculateDiagnoses();
+			stop = System.currentTimeMillis();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Found " + diagnoses.size() + " diagnoses in "
+				+ (stop - start) + " millisecs");
+
+
+		// System.out.println("Constructed nodes: " + ((AbstractHSDagBuilder)
+		// engine).allConstructedNodes.getCollection().size());
+		// // TEST ONLY
+
+		if (diagnoses != null && diagnoses.size() > 0) {
+			Diagnosis<Constraint> d = diagnoses.get(0);
+			System.out.println("The diagn: " + d + " , elements: " + d.getElements().size());
+
+			System.out.println(Utilities.printSortedDiagnoses(diagnoses, '\n'));
+			System.out.println("Nb of solves : " + engine.getCspSolvedCount());
+			System.out.println("Nb of s calls: " + engine.getSolverCalls());
+			System.out.println("Nb of props  : " + engine.getPropagationCount());
+		} else {
+			System.out.println("No diagnosis found");
+		}
+
+
+		//NodeUtilities.traverseNode(engine.getRootNode(), sessionData.diagnosisModel.getConstraintNames());
 
 	}
 }

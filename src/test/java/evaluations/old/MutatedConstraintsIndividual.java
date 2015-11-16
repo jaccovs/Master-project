@@ -1,16 +1,13 @@
 package evaluations.old;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import choco.Choco;
+import choco.cp.model.CPModel;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import evaluations.plainconstraints.PlainConstraintsUtilities;
+import evaluations.plainconstraints.TestCaseGenerator;
+import evaluations.tools.DiagnosisEvaluation;
+import evaluations.tools.ResultsLogger;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
@@ -26,16 +23,14 @@ import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 import org.exquisite.diagnosis.quickxplain.choco3.C3Runner;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
-
 import solver.constraints.IntConstraintFactory;
-import choco.Choco;
-import choco.cp.model.CPModel;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
-import evaluations.plainconstraints.PlainConstraintsUtilities;
-import evaluations.plainconstraints.TestCaseGenerator;
-import evaluations.tools.DiagnosisEvaluation;
-import evaluations.tools.ResultsLogger;
+
+import java.io.*;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Doing tests with plain constraints.
@@ -44,18 +39,59 @@ import evaluations.tools.ResultsLogger;
  * 
  */
 public class MutatedConstraintsIndividual {
-	static enum ExecutionMode {fullparallel, levelparallel, singlethreaded, heuristic, hybrid};
-
 	static String directory = "experiments/mutatedconstraints/";
-	
-	class RunConfiguration {
-		public int threads;
-		public ExecutionMode executionMode;
-		public RunConfiguration(int threads, ExecutionMode executionMode) {
-			this.threads = threads;
-			this.executionMode = executionMode;
-		}
-	}
+	static TestScenario[] testScenarios = new TestScenario[]{
+			// paper
+//		new TestScenario("normalized-aim-50-1-6-3.xml", 3, -1),
+//		new TestScenario("normalized-c8.xml", -1, 10),
+//		new TestScenario("normalized-costasArray-13.xml", 3, -1),
+//		new TestScenario("normalized-domino-100-100.xml", 3, -1),
+//		new TestScenario("normalized-e0ddr1-10-by-5-8.xml", -1, -1),
+//		new TestScenario("normalized-graceful--K3-P2.xml", 3, -1),	// INCONSISTENT RESULTS IN SEQUENTIAL MODE!!!!!!!!!!!!
+//		new TestScenario("normalized-mknap-1-5.xml", 3, 10),
+//		new TestScenario("normalized-primes-15-20-3-1.xml", -1, 10),
+//		new TestScenario("normalized-ruler-34-8-a3.xml", 3, -1),
+//		new TestScenario("normalized-series-13.xml", 3, -1),
+//
+//		// other
+//		new TestScenario("normalized-mknap-1-5.xml", -1, 10),
+//		new TestScenario("normalized-c8.xml", -1, -1),
+//		new TestScenario("normalized-c8.xml", -1, 10),
+//		new TestScenario("normalized-e0ddr1-10-by-5-8.xml", 3, -1),
+//		new TestScenario("normalized-ex5-pi.xml", 3, -1),
+			new TestScenario("normalized-queens-8.xml", -1, -1),
+//		new TestScenario("normalized-queens-8.xml", -1, 10),
+//		new TestScenario("normalized-protein.xml", -1, -1),
+//		new TestScenario("normalized-renault-mod-13_ext.xml", -1, -1),
+//		new TestScenario("normalized-domino-100-100.xml", -1, -1),
+//		new TestScenario("normalized-primes-10-20-2-3.xml", -1, 10),
+//		new TestScenario("normalized-prom2-pi.xml", 3, -1),
+//		new TestScenario("normalized-prom2-pi.xml", -1, -1),
+//
+//		// long paper
+//		new TestScenario("normalized-graph2.xml", 3, -1), // takes very long
+//		new TestScenario("normalized-fischer-1-1-fair.xml", 3, -1), // takes very long
+
+			// to test
+//		new TestScenario("normalized-e0ddr1-10-by-5-6.xml", 3, -1),
+//		new TestScenario("normalized-ruler-34-8-a3.xml", 3, 10),
+
+			// tested
+//		new TestScenario("normalized-aim-50-1-6-3.xml", 3, 10),
+//		new TestScenario("normalized-mknap-1-5.xml", -1, -1),
+//		new TestScenario("normalized-protein.xml", -1, 10),
+//		new TestScenario("normalized-domino-100-100.xml", 3, 10),
+//		new TestScenario("normalized-primes-15-20-3-1.xml", -1, -1),
+//		new TestScenario("normalized-primes-10-20-2-3.xml", -1, -1),
+
+			// long other
+//		new TestScenario("normalized-graceful--K3-P2.xml", 4, -1), // takes very long
+//		new TestScenario("normalized-e0ddr1-10-by-5-1.xml", 3, -1), // takes very long
+//		new TestScenario("normalized-ruler-34-8-a3.xml", 4, -1), // takes too long
+//		new TestScenario("normalized-patat-02-small-2.xml", 1, -1), // takes too long
+//		new TestScenario("normalized-bibd-10-30-9-3-2_glb.xml", 3, -1), // takes forever at 10% of runs, should be last one
+	};
+	static int maxDiagSize = -1;
 	// MEASUREMENTS DONE AND IN PAPER (4 threads)
 	// String filename = "normalized-graceful--K3-P2.xml"; // 3 inputs,
 	// superfast. TS: seq: 3.5 lwpara: 2.0 fpara: 1.8
@@ -117,58 +153,8 @@ public class MutatedConstraintsIndividual {
 //		"normalized-bibd-8-14-7-4-3_glb.xml",
 //		"normalized-series-13.xml",
 //	};
-	
-	static TestScenario[] testScenarios = new TestScenario[] {
-		// paper
-//		new TestScenario("normalized-aim-50-1-6-3.xml", 3, -1),
-//		new TestScenario("normalized-c8.xml", -1, 10),
-//		new TestScenario("normalized-costasArray-13.xml", 3, -1),
-//		new TestScenario("normalized-domino-100-100.xml", 3, -1),
-//		new TestScenario("normalized-e0ddr1-10-by-5-8.xml", -1, -1),
-//		new TestScenario("normalized-graceful--K3-P2.xml", 3, -1),	// INCONSISTENT RESULTS IN SEQUENTIAL MODE!!!!!!!!!!!!
-//		new TestScenario("normalized-mknap-1-5.xml", 3, 10),
-//		new TestScenario("normalized-primes-15-20-3-1.xml", -1, 10),
-//		new TestScenario("normalized-ruler-34-8-a3.xml", 3, -1),
-//		new TestScenario("normalized-series-13.xml", 3, -1),
-//		
-//		// other
-//		new TestScenario("normalized-mknap-1-5.xml", -1, 10),
-//		new TestScenario("normalized-c8.xml", -1, -1),
-//		new TestScenario("normalized-c8.xml", -1, 10),
-//		new TestScenario("normalized-e0ddr1-10-by-5-8.xml", 3, -1),
-//		new TestScenario("normalized-ex5-pi.xml", 3, -1),
-		new TestScenario("normalized-queens-8.xml", -1, -1),
-//		new TestScenario("normalized-queens-8.xml", -1, 10),
-//		new TestScenario("normalized-protein.xml", -1, -1),
-//		new TestScenario("normalized-renault-mod-13_ext.xml", -1, -1),
-//		new TestScenario("normalized-domino-100-100.xml", -1, -1),
-//		new TestScenario("normalized-primes-10-20-2-3.xml", -1, 10),
-//		new TestScenario("normalized-prom2-pi.xml", 3, -1),
-//		new TestScenario("normalized-prom2-pi.xml", -1, -1),
-//		
-//		// long paper
-//		new TestScenario("normalized-graph2.xml", 3, -1), // takes very long
-//		new TestScenario("normalized-fischer-1-1-fair.xml", 3, -1), // takes very long
-		
-		// to test		
-//		new TestScenario("normalized-e0ddr1-10-by-5-6.xml", 3, -1),
-//		new TestScenario("normalized-ruler-34-8-a3.xml", 3, 10),
-
-		// tested
-//		new TestScenario("normalized-aim-50-1-6-3.xml", 3, 10),
-//		new TestScenario("normalized-mknap-1-5.xml", -1, -1),
-//		new TestScenario("normalized-protein.xml", -1, 10),
-//		new TestScenario("normalized-domino-100-100.xml", 3, 10),
-//		new TestScenario("normalized-primes-15-20-3-1.xml", -1, -1),
-//		new TestScenario("normalized-primes-10-20-2-3.xml", -1, -1),
-		
-		// long other
-//		new TestScenario("normalized-graceful--K3-P2.xml", 4, -1), // takes very long
-//		new TestScenario("normalized-e0ddr1-10-by-5-1.xml", 3, -1), // takes very long
-//		new TestScenario("normalized-ruler-34-8-a3.xml", 4, -1), // takes too long
-//		new TestScenario("normalized-patat-02-small-2.xml", 1, -1), // takes too long
-//		new TestScenario("normalized-bibd-10-30-9-3-2_glb.xml", 3, -1), // takes forever at 10% of runs, should be last one
-	};
+// Runs will be added for initialization
+static int nbInitizializationRuns = 20;
 
 
 
@@ -179,66 +165,52 @@ public class MutatedConstraintsIndividual {
 	// String filename = ""; //
 
 	// String filename = "normalized-aim-50-1-6-3.xml"; // dj: no
-
-	static int maxDiagSize = -1;
-
-	// Runs will be added for initialization
-	static int nbInitizializationRuns = 20;
 	static int nbTestRuns = 100;
 	static int K_lb = 0;
 	static int K_ub = 2;
-	
 	static int T_cases = 10;
 	static int T_input_vars = 5;
 	static double T_pct_store = 5;
 	static int T_maxtries = 5000;
 	static int waittime;
-
 	static int threadPoolSize = 4;
-
 	static String separator = ";";
-
-	ResultsLogger resultsLogger = null;
-
 	static boolean storeTestCases = true;
-	
 	static boolean shuffleConstraints = true;
-	
 	static boolean useLastLevelCheck = true;
-	
 	static boolean useResultsDirectory = true;
+	ResultsLogger resultsLogger = null;
 	String resultsDirectory = "";
-
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		
+
+
 //		MutatedConstraintsIndividual t = new MutatedConstraintsIndividual();
 //		t.runSimpleExample();
-//		
+//
 //		if (true) {
 //			return;
 //		}
-		
+
 		// Overwrite this
 		QuickXPlain.PRINT_SOLUTION_TIME = false;
-		
+
 
 		NodeExpander.USE_LAST_LEVEL_CHECK = useLastLevelCheck;
 
 		MutatedConstraintsIndividual test = new MutatedConstraintsIndividual();
-		
+
 		if (useResultsDirectory) {
 			Timestamp tstamp = new Timestamp(System.currentTimeMillis());
 			String time = tstamp.toString();
 			time = time.replace(':', '-').substring(0, time.length() - 4);
-					
+
 			test.resultsDirectory = time + "/";
 		}
-		
+
 		System.out.println("Starting tests");
 		try {
 
@@ -247,13 +219,13 @@ public class MutatedConstraintsIndividual {
 
 //			for (String filename : inputfiles)
 //				test.runExampleFromFile(filename);
-			
+
 			for (TestScenario testScenario: testScenarios) {
 				maxDiagSize = testScenario.MaxDiagSize;
 				waittime = testScenario.Waittime;
-				
+
 				QuickXPlain.ARTIFICIAL_WAIT_TIME = waittime;
-				
+
 				test.runExampleFromFile(testScenario.Filename);
 			}
 			// test.runSimpleExample();
@@ -270,7 +242,7 @@ public class MutatedConstraintsIndividual {
 	 * A "manual" example..
 	 */
 	void runSimpleExample() {
-		DiagnosisModel model = createSimpleDiagnosisModel();
+		DiagnosisModel<Constraint> model = createSimpleDiagnosisModel();
 
 		ExquisiteSession sessionData = new ExquisiteSession();
 
@@ -280,13 +252,13 @@ public class MutatedConstraintsIndividual {
 
 		Debug.DEBUGGING_ON = true;
 
-		List<Diagnosis> diagnoses = null;
-		IDiagnosisEngine engine = EngineFactory
+		List<Diagnosis<Constraint>> diagnoses = null;
+		IDiagnosisEngine<Constraint> engine = EngineFactory
 				.makeDAGEngineStandardQx(sessionData);
 		// IDiagnosisEngine engine =
 		// EngineFactory.makeParaDagEngineStandardQx(sessionData, 2);
 
-		long stop = 0; 
+		long stop = 0;
 		long start = System.currentTimeMillis();
 		try {
 			diagnoses = engine.calculateDiagnoses();
@@ -294,7 +266,7 @@ public class MutatedConstraintsIndividual {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		 System.out.println("Found " + diagnoses.size() + " diagnoses in " + (stop-start) + " millisecs");
 		// System.out.println("Constructed nodes: " + ((AbstractHSDagBuilder)
 		// engine).allConstructedNodes.getCollection().size());
@@ -313,7 +285,7 @@ public class MutatedConstraintsIndividual {
 	/**
 	 * Runs a number of tests using a specified xml file (ignoring the first
 	 * run) Both types of engines are used
-	 * 
+	 *
 	 * @param xmlFile
 	 * @param nbRuns
 	 * @param threadPoolSize
@@ -324,12 +296,12 @@ public class MutatedConstraintsIndividual {
 		double avgParallel = 0;
 
 		long total = 0;
-		List<Diagnosis> diagnoses = null;
+		List<Diagnosis<Constraint>> diagnoses = null;
 		for (int k = 0; k <= 1; k++) {
 			total = 0;
 			// Give it an extra run (first one will not be counted
 			for (int i = 0; i < nbRuns; i++) {
-				IDiagnosisEngine engine = null;
+				IDiagnosisEngine<Constraint> engine = null;
 				// Create the diagnosis model
 				if (k == 0) {
 					engine = EngineFactory
@@ -366,7 +338,7 @@ public class MutatedConstraintsIndividual {
 					//
 					//
 					float diagSize = 0;
-					for (Diagnosis d : diagnoses) {
+					for (Diagnosis<Constraint> d : diagnoses) {
 						if (d.getElements() != null) {
 							diagSize += d.getElements().size();
 						}
@@ -390,16 +362,13 @@ public class MutatedConstraintsIndividual {
 
 	}
 
-
-	
-	
 	/**
 	 * Create a small test model
-	 * 
+	 *
 	 * @return the diagnosis model
 	 */
-	DiagnosisModel createSimpleDiagnosisModel() {
-		DiagnosisModel model = new DiagnosisModel();
+	DiagnosisModel<Constraint> createSimpleDiagnosisModel() {
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 
 		int domainSize = 10;
 
@@ -421,7 +390,7 @@ public class MutatedConstraintsIndividual {
 		Constraint c2 = Choco.times(v1, v2, v3);
 		Constraint c3 = Choco.eq(v4, v5);
 		Constraint c4 = Choco.times(v4, v5, v6);
-		
+
 		model.addPossiblyFaultyConstraint(c1, "c1");
 		model.addPossiblyFaultyConstraint(c2, "c2"); // should
 																			// be
@@ -431,16 +400,16 @@ public class MutatedConstraintsIndividual {
 																			// be
 																			// plus
 		Map<Constraint,C3Runner> c3runners = new HashMap<Constraint, C3Runner>();
-		
+
 		C3Runner c3runner = new C3Runner() {
 			public void postConstraint() {
 				solver.constraints.Constraint ct = IntConstraintFactory.arithm(var("v1"), "=",var("v2"));
 				solver.post(ct);
 			}
 		};
-		
+
 		c3runners.put(c1,c3runner);
-		
+
 		c3runner = new C3Runner() {
 			public void postConstraint() {
 				solver.constraints.Constraint ct = IntConstraintFactory.times(var("v1"),var("v2"),var("v3"));
@@ -448,14 +417,14 @@ public class MutatedConstraintsIndividual {
 			}
 		};
 		c3runners.put(c2,c3runner);
-		
+
 		c3runner = new C3Runner() {
 			public void postConstraint() {
 				solver.constraints.Constraint ct = IntConstraintFactory.arithm(var("v4"), "=", var("v5"));
 				solver.post(ct);
 			}
 		};
-		
+
 		c3runners.put(c3,c3runner);
 
 		c3runner = new C3Runner() {
@@ -465,13 +434,13 @@ public class MutatedConstraintsIndividual {
 
 			}
 		};
-		
+
 		c3runners.put(c4,c3runner);
 
 		// Set in the model
 		model.c3runners = new HashMap<Constraint, C3Runner>(c3runners);
-		
-		
+
+
 		// model.addPossiblyFaultyConstraint(c2, "c2");
 		// model.addPossiblyFaultyConstraint(c3, "c3");
 		// model.addPossiblyFaultyConstraint(c4, "c4");
@@ -502,9 +471,9 @@ public class MutatedConstraintsIndividual {
 				solver.post(ct);
 			}
 		};
-		
+
 		model.c3examplerunners.put(pos1, c3runner);
-		
+
 		// Example pos2 = new Example();
 		// pos2.addConstraint(Choco.eq(v1, 3), "v1=3");
 		// pos1.addConstraint(Choco.eq(v6, 6), "v6=6");
@@ -517,7 +486,7 @@ public class MutatedConstraintsIndividual {
 
 	/**
 	 * Worker, does the main work.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -548,7 +517,7 @@ public class MutatedConstraintsIndividual {
 				oos.close();
 			}
 		}
-		
+
 		System.out.println("----------- ENDED WITH TEST CASE GENERATION ------------------------");
 
 		// Now look at the mutated model
@@ -588,7 +557,7 @@ public class MutatedConstraintsIndividual {
 			resultsLogger = new ResultsLogger(separator, directory + resultsDirectory, "", filename + maxDiagSize + "_" + waittime
 					+ ".csv");
 			StringBuilder summary = new StringBuilder();
-			
+
 			summary.append("\r\n");
 			summary.append("File: " + filename + "\r\n");
 			summary.append("MaxDiagSize: " + maxDiagSize + "\r\n");
@@ -597,7 +566,7 @@ public class MutatedConstraintsIndividual {
 			summary.append("Test Runs: " + nbTestRuns + "\r\n");
 			summary.append("Shuffle Constraints: " + shuffleConstraints + "\r\n");
 			summary.append("Use LastLevelCheck: " + useLastLevelCheck + "\r\n");
-			
+
 			System.out.println("------------------------");
 			System.out.println("Starting to diagnose");
 
@@ -621,18 +590,18 @@ public class MutatedConstraintsIndividual {
 
 			// Debug.DEBUGGING_ON = true;
 			// Debug.QX_DEBUGGING = true;
-			
+
 			// Remember the total times
 			double totalSeq = 0;
 			double totalLevelW = 0;
 			double totalFullP = 0;
 
-			List<Diagnosis> diagnoses = null;
+			List<Diagnosis<Constraint>> diagnoses = null;
 			for (int k = K_lb; k <= K_ub; k++) {
 				System.out.println("===================== k=" + k
 						+ " ===================================");
 
-				DiagnosisEvaluation diagEval = new DiagnosisEvaluation();
+				DiagnosisEvaluation<Constraint> diagEval = new DiagnosisEvaluation<Constraint>();
 
 				boolean initFinished = false;
 				System.out.println("Initialization");
@@ -651,32 +620,32 @@ public class MutatedConstraintsIndividual {
 
 					QuickXPlain.reuseCount = 0;
 
-					IDiagnosisEngine engine = null;
+					IDiagnosisEngine<Constraint> engine = null;
 					// Create the diagnosis model
 					mutatedModel = PlainConstraintsUtilities
 							.loadModel(directory + mutatedFile);
-					DiagnosisModel diagModel = PlainConstraintsUtilities
+					DiagnosisModel<Constraint> diagModel = PlainConstraintsUtilities
 							.createDiagnosisModel(mutatedModel, posTestCases);
 					// System.out.println(diagModel.getVariables());
-					
+
 					if (shuffleConstraints)
 						diagModel.shufflePossiblyFaulyConstraints();
 
 					// Create the engine
 					ExquisiteSession sessionData = new ExquisiteSession(null,
-							null, new DiagnosisModel(diagModel));
+							null, new DiagnosisModel<Constraint>(diagModel));
 					// Do not try to find a better strategy for the moment
 					sessionData.config.searchStrategy = SearchStrategies.Default;
 					sessionData.config.searchDepth = maxDiagSize;
 					// sessionData.config.maxDiagnoses = 1;
-					
+
 					// DJ: Remove all but one of the inconsistent test cases for the moment (not mentioned in paper)
 					// 23.12.2013
 //					Example ex = sessionData.diagnosisModel.getPositiveExamples().get(0);
 //					sessionData.diagnosisModel.getPositiveExamples().clear();
 //					sessionData.diagnosisModel.getPositiveExamples().add(ex);
 //					sessionData.diagnosisModel.getNegativeExamples().clear();
-				
+
 
 					if (k == 0) {
 						// System.out.println("Creating sequential engine");
@@ -757,7 +726,7 @@ public class MutatedConstraintsIndividual {
 				}
 
 				diagEval.finishCalculation();
-				
+
 				summary.append("\r\n");
 				switch (k) {
 				case 0:
@@ -785,7 +754,7 @@ public class MutatedConstraintsIndividual {
 				summary.append("Average Conflict Size: " + diagEval.AvgConflictSize + "\r\n");
 				summary.append("Cache reuse QX: " + diagEval.AvgTotalQXCacheReuse + "\r\n");
 				summary.append("Average Tree Width: " + diagEval.AvgTreeWidth + "\r\n");
-				
+
 				// DJ TEST
 				summary.append("Average conflict reuse: " + diagEval.AvgConflictReuse + "\r\n");
 
@@ -795,15 +764,15 @@ public class MutatedConstraintsIndividual {
 			// Calculate average improvements
 			double winLWP = 1 - (totalLevelW / totalSeq);
 			double winFullP = 1 - (totalFullP / totalSeq);
-			
+
 			DecimalFormat f = new DecimalFormat("#");
-			
+
 			// The most important thing  repeated
 			summary.append("\r\n\r\nTotal Seq: " + f.format(totalSeq) +"\r\n");
 			summary.append("Total Lev: " + f.format(totalLevelW) + " (" + f.format(winLWP * 100) + "%)" + "\r\n");
 			summary.append("Total Full:" + f.format(totalFullP)  + " (" + f.format(winFullP * 100) + "%)" + "\r\n");
-			
-			
+
+
 			/**
 			 * Write the file
 			 */
@@ -832,6 +801,19 @@ public class MutatedConstraintsIndividual {
 		//
 		//
 		// }
+	}
+
+
+	enum ExecutionMode {fullparallel, levelparallel, singlethreaded, heuristic, hybrid}
+
+	class RunConfiguration {
+		public int threads;
+		public ExecutionMode executionMode;
+
+		public RunConfiguration(int threads, ExecutionMode executionMode) {
+			this.threads = threads;
+			this.executionMode = executionMode;
+		}
 	}
 
 }

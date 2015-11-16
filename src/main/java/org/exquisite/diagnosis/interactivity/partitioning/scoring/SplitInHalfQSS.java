@@ -1,9 +1,9 @@
 package org.exquisite.diagnosis.interactivity.partitioning.scoring;
 
+import org.exquisite.diagnosis.models.Diagnosis;
+
 import java.math.BigDecimal;
 import java.util.Set;
-
-import org.exquisite.diagnosis.models.Diagnosis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,17 +12,17 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * Time: 11:50
  * To change this template use File | Settings | File Templates.
  */
-public class SplitInHalfQSS extends MinScoreQSS {
+public class SplitInHalfQSS<Formula> extends MinScoreQSS<Formula> {
 
     public String toString() {
         return "Split";
     }
 
-    public void normalize(Set<Diagnosis> hittingSets) {
+    public void normalize(Set<Diagnosis<Formula>> hittingSets) {
         BigDecimal size = new BigDecimal(Integer.toString(hittingSets.size()));
-        if (size.compareTo(BigDecimal.ONE)>0)
-            for (Diagnosis hs : hittingSets) {
-                hs.setMeasure(BigDecimal.ONE.divide(size, Rounding.PRECISION,Rounding.ROUNDING_MODE));
+        if (size.compareTo(BigDecimal.ONE) > 0)
+            for (Diagnosis<Formula> hs : hittingSets) {
+                hs.setMeasure(BigDecimal.ONE.divide(size, Rounding.PRECISION, Rounding.ROUNDING_MODE));
             }
     }
 }

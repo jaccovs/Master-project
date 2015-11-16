@@ -1,6 +1,8 @@
 package tests.diagnosis;
-import java.util.List;
 
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.ExquisiteGraph;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
@@ -11,8 +13,7 @@ import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.variables.integer.IntegerVariable;
+import java.util.List;
 
 public class ParallelDAGTest {
 
@@ -57,10 +58,10 @@ public class ParallelDAGTest {
 			e.printStackTrace();
 		}
 	}
-	
-	DiagnosisModel defineMiniModel()
+
+	DiagnosisModel<Constraint> defineMiniModel()
 	{
-		DiagnosisModel model = new DiagnosisModel();
+		DiagnosisModel<Constraint> model = new DiagnosisModel<>();
 		IntegerVariable a1 = model.addIntegerVariable(Choco.makeIntVar("a1", 1,100));
 		IntegerVariable a2 = model.addIntegerVariable(Choco.makeIntVar("a2", 1,100));
 		IntegerVariable b1 = model.addIntegerVariable(Choco.makeIntVar("b1", 1,100));
@@ -69,7 +70,7 @@ public class ParallelDAGTest {
 		model.addPossiblyFaultyConstraint(Choco.eq(a2,5), "a2 = 5");		
 		model.addPossiblyFaultyConstraint(Choco.eq(b1, Choco.mult(a1, a2)), "B1 = a1 * a2"); // should be +
 
-		Example exTestExample = new Example();
+		Example<Constraint> exTestExample = new Example<>();
 		exTestExample.addConstraint(Choco.eq(a1, 3), "a1=3");
 		exTestExample.addConstraint(Choco.eq(a2, 5), "a2=5");
 		exTestExample.addConstraint(Choco.eq(b1, 8), "b1=8");

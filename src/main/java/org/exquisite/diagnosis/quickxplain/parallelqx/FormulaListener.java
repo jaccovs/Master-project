@@ -3,31 +3,38 @@ package org.exquisite.diagnosis.quickxplain.parallelqx;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import choco.kernel.model.constraints.Constraint;
-
 /**
  * Listens for new constraints that arrived..
  */
-public class ConstraintListener {
-	// The constraint 
-	private Constraint constraint = null;
-
-	// The lock
+public class FormulaListener<T> {
+    // The lock
     protected ReentrantLock lock = null;
     // The condition
     protected Condition addedConstraint = null;
+    // The constraint
+    private T constraint = null;
     // released?
     private boolean released = false;
-	 
+
     /**
      * Create the listener
+     *
      * @param fairLock
      */
-    public ConstraintListener(boolean fairLock) {
+    public FormulaListener(boolean fairLock) {
         this.lock = new ReentrantLock(fairLock);
         this.addedConstraint = lock.newCondition();
     }
-    
+
+    /**
+     * Create a new listener instance
+     *
+     * @return
+     */
+    static <T> FormulaListener<T> newInstance() {
+        return new FormulaListener<>(true);
+    }
+
     /**
      * Release the lock and signal that something happens
      */
@@ -44,10 +51,11 @@ public class ConstraintListener {
 
     /**
      * Get a copy of the constraint and remove the local pointer
+     *
      * @return
      * @throws InterruptedException
      */
-    public Constraint getFoundConstraint() throws InterruptedException {
+    public T getFoundConstraint() throws InterruptedException {
         final ReentrantLock lock = this.lock;
         lock.lockInterruptibly();
 
@@ -59,16 +67,17 @@ public class ConstraintListener {
             lock.unlock();
         }
         release();
-        Constraint localConstraint = this.constraint;
+        T localConstraint = this.constraint;
         this.constraint = null;
         return localConstraint;
     }
 
     /**
      * Set a new constraint
+     *
      * @param constraint
      */
-    public void setFoundConstraint(Constraint constraint) {
+    public void setFoundConstraint(T constraint) {
         if (isReleased() || this.constraint != null) {
             return;
         }
@@ -82,15 +91,8 @@ public class ConstraintListener {
     }
 
     /**
-     * Create a new listener instance
-     * @return
-     */
-    static ConstraintListener newInstance() {
-    	return new ConstraintListener(true);
-    }
-
-    /**
      * Return true if released
+     *
      * @return
      */
     public boolean isReleased() {
@@ -99,11 +101,12 @@ public class ConstraintListener {
 
     /**
      * Check if there is a constraint
+     *
      * @return
      */
     public boolean hasConstraints() {
-    	return this.constraint != null;
+        return this.constraint != null;
     }
-    
-    
+
+
 }

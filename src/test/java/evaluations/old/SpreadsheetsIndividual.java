@@ -1,15 +1,9 @@
 package evaluations.old;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import choco.kernel.model.constraints.Constraint;
+import evaluations.tools.DiagnosisCheck;
+import evaluations.tools.DiagnosisEvaluation;
+import evaluations.tools.ResultsLogger;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.EngineFactory;
@@ -20,10 +14,7 @@ import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
-import evaluations.tools.DiagnosisCheck;
-import evaluations.tools.DiagnosisEvaluation;
-import evaluations.tools.ResultsLogger;
+import java.util.*;
 
 /**
  * A class to run individual tests in different configurations
@@ -32,11 +23,7 @@ import evaluations.tools.ResultsLogger;
  */
 public class SpreadsheetsIndividual {
 	
-	// Running modes
-	static enum pruningMode {on, off};
-	static enum executionMode {fullparallel, levelparallel, singlethreaded, heuristic, hybrid};
 	static String separator = ";";
-	
 	// Some constants and global settings
 	// ----------------------------------------------------
 	static int PARALLEL_THREADS = 4;
@@ -46,10 +33,8 @@ public class SpreadsheetsIndividual {
 	static int SEARCH_DEPTH = -1;
 	static int MAX_DIAGS = 1;
 	static int ARTIFICIAL_WAIT_TIME = -1;
-	
 //	static boolean useFullParallelMode = false;
 	static boolean SHUFFLE_CONSTRAINTS = false;
-	
 	// ----------------------------------------------------
 	// Directories
 	static String inputFileDirectory = "experiments/spreadsheetsindividual/";
@@ -58,62 +43,50 @@ public class SpreadsheetsIndividual {
 	// Handle to the logger
 //	private LoggingData loggingData;
 	ResultsLogger resultsLogger = null;
-	
-	// A cache for the shuffled constraints 
+	// A cache for the shuffled constraints
 	// ensure everMap<K, V>e solves the same set of problems
 	Map<Integer, Map<String,Integer>> shuffledConstraintsPerIteration = new HashMap<Integer, Map<String,Integer>>();
+	// The list of scenarios
+	List<Scenario> scenarios = new ArrayList<Scenario>();
 	
 	/**
 	 * Main entry point
 	 * @param args
 	 */
-	public static void main(String[]args)
-	{		
+	public static void main(String[] args) {
 		QuickXPlain.ARTIFICIAL_WAIT_TIME = ARTIFICIAL_WAIT_TIME;
-		
+
 		Debug.DEBUGGING_ON = false;
 		Debug.QX_DEBUGGING = false;
-				
+
 		System.out.println("Starting Individual Spreadsheet tests.");
 		new SpreadsheetsIndividual().runIndividualSpreadsheetTests();
  	    System.out.println("Tests finished.");
 	}
 
-	
-	/**
-	 * A scenario wrapper
-	 * @author dietmar
-	 *
-	 */
-	class Scenario {
-		public int threads;
-		public executionMode executionMode;
-		public pruningMode pruningMode;
-		public boolean choco3;
-		public Scenario(
-				evaluations.old.SpreadsheetsIndividual.executionMode executionMode,
-				evaluations.old.SpreadsheetsIndividual.pruningMode pruningMode,
-				int threads,
-				boolean choco3) {
-			super();
-			this.threads = threads;
-			this.executionMode = executionMode;
-			this.pruningMode = pruningMode;
-			this.choco3 = choco3;
+	public static <K, V extends Comparable<? super V>> Map<K, V>
+	sortByValue(Map<K, V> map) {
+		List<Map.Entry<K, V>> list =
+				new LinkedList<>(map.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+			@Override
+			public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+				return (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+
+		Map<K, V> result = new LinkedHashMap<>();
+		for (Map.Entry<K, V> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
 		}
-		
-		
+		return result;
 	}
-	
-	// The list of scenarios
-	List<Scenario> scenarios = new ArrayList<Scenario>();
-	
-	
+
 	/**
 	 * runs additional tests for a number of mutated real-world spreadsheets.
 	 */
 	public void runIndividualSpreadsheetTests() {
-		
+
 		// Make a list of files to be analyzed
 		String[] inputFiles = new String[] {
 //				"salesforecast_TC_IBB.xml",
@@ -135,7 +108,7 @@ public class SpreadsheetsIndividual {
 //				"Paper2.xml",
 //				"Test_If.xml",
 //				"Test_If2.xml",
-				
+
 		};
 
 		scenarios.add(new Scenario(executionMode.singlethreaded, pruningMode.on, PARALLEL_THREADS, CHOCO3));
@@ -155,39 +128,38 @@ public class SpreadsheetsIndividual {
 //		scenarios.add(new Scenario(executionMode.fullparallel, pruningMode.on, PARALLEL_THREADS, false));
 //		scenarios.add(new Scenario(executionMode.heuristic,pruningMode.on,PARALLEL_THREADS*2));
 //		scenarios.add(new Scenario(executionMode.heuristic,pruningMode.on,0));
-		
+
 //		inputFiles = new String[]{"VDEPPreserve_3fault.xml"};
 
-		
+
 		// Go through the files and run them in different scenarios
 		for (String inputfilename : inputFiles) {
 			runScenarios(inputFileDirectory, inputfilename, logFileDirectory, scenarios);
 		}
 	}
 	
-	
 	/**
 	 * Runs a scenario and writes the output
 	 * @param inputFile
 	 */
-	public void runScenarios (	String inputFileDirectory, 
-										String inputFilename, 
-										String logDirectory,
-										List<Scenario> scenarios
+	public void runScenarios(String inputFileDirectory,
+							 String inputFilename,
+							 String logDirectory,
+							 List<Scenario> scenarios
 										) {
-		
+
 		// , executionMode.heuristic, pruningMode.on, NB_ITERATIONS, 0
-		
+
 
 		shuffledConstraintsPerIteration.clear();
-		
+
 		double[] scenarioTimes = new double[scenarios.size()];
 		Map<Scenario, Double> scenarioTimesMap = new LinkedHashMap<Scenario, Double>();
-		
+
 		for (int k = 0; k < scenarios.size(); k++) {
 			Scenario scenario = scenarios.get(k);
 
-			// Let's create an output directory first. We will place the output files for one test case 
+			// Let's create an output directory first. We will place the output files for one test case
 			// in this directory using some naming conventions
 			/*
 			File outputDirectory = new File(logDirectory + inputFilename);
@@ -208,21 +180,21 @@ public class SpreadsheetsIndividual {
 			String logFileName = inputFilename.substring(0,inputFilename.lastIndexOf('.'));
 			// Append some stuff
 			logFileName += getScenarioDescription(scenario);
-			
+
 			if (scenario.choco3) {
     			QuickXPlain.SOLVERTYPE = SolverType.Choco3;
     		} else {
     			QuickXPlain.SOLVERTYPE = SolverType.Choco2;
     		}
-			
+
 //			if (threads == 0) threads = 1;
-			
+
 			logFileName += ".csv";
-			
+
 			resultsLogger = new ResultsLogger(separator, logFileDirectory, "", logFileName);
-			
+
 			StringBuilder summary = new StringBuilder();
-			
+
 			summary.append("\r\n");
 			summary.append("File: " + inputFilename + "\r\n");
 			summary.append("MaxDiagSize: " + MAX_DIAGS + "\r\n");
@@ -231,14 +203,14 @@ public class SpreadsheetsIndividual {
 			summary.append("Test Runs: " + nbTestRuns + "\r\n");
 			summary.append("Shuffle Constraints: " + SHUFFLE_CONSTRAINTS + "\r\n");
 			summary.append("Use LastLevelCheck: " + true + "\r\n");
-			
+
 			System.out.println("Setup log file with name " + logFileName);
-			
+
 			resultsLogger.writeSeparatorLine("");
 			resultsLogger.writeSeparatorLine("Version:" + scenario.executionMode);
-			
+
 			DiagnosisCheck check = new DiagnosisCheck();
-			
+
 			// Run the test with the specified mode
 			// Set the XML file name
 			String fullInputFilename = inputFileDirectory + inputFilename;
@@ -258,52 +230,49 @@ public class SpreadsheetsIndividual {
 			}
 
 			// Set the pruning mode
-			ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = true;
-			if (scenario.pruningMode == pruningMode.off) {
-				ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = false;
-			}
-			
+			ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = scenario.pruningMode != pruningMode.off;
+
 			// Allow us to pass 0 as a parameter and test dependencies of execution orders (file suffix will be 0)
 			if (scenario.threads == 0) {
 				scenario.threads = 1;
 			}
-			
+
 			// directly print some stuff
 //			long totalTime = 0;
 //			int counter = 0;
-			
+
 			int nbRuns = nbInitizializationRuns + nbTestRuns;
 			boolean initFinished = false;
-			
-			DiagnosisEvaluation diagEval = new DiagnosisEvaluation();
-			
+
+			DiagnosisEvaluation<Constraint> diagEval = new DiagnosisEvaluation<Constraint>();
+
 			// Do an appropriate number of iterations
 			for (int i=0;i<nbRuns;i++) {
-				
+
 				if (i == nbInitizializationRuns) {
 					initFinished = true;
 					System.out.println();
 					System.out.println("Initialization finished");
 				}
-				
+
 //				System.out.println("Diagnosis iteration: " + (i+1));
 				// Create the engine
-				AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder) 
+				AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder)
 												  EngineFactory.makeEngineFromXMLFile(
-															engineType, 
-															fullInputFilename, 
+														  engineType,
+														  fullInputFilename,
 															scenario.threads);
 //				System.out.println("Created an engine for " + fullInputFilename);
 				// Set the search depth
 				diagnosisEngine.setSearchDepth(SpreadsheetsIndividual.SEARCH_DEPTH);
 				diagnosisEngine.getSessionData().config.searchDepth = SpreadsheetsIndividual.SEARCH_DEPTH;
 				diagnosisEngine.getSessionData().config.maxDiagnoses = SpreadsheetsIndividual.MAX_DIAGS;
-				
+
 //				System.out.println("Max diags: " + diagnosisEngine.getSessionData().config.maxDiagnoses);
-				
+
 //				System.out.println(diagnosisEngine.getSessionData().appXML.getFormulas());
 //				System.err.println("Loaded - ending");
-				
+
 				// ===================================================================================================
 				// Trying to have the same problem all the time
 				// ===================================================================================================
@@ -319,7 +288,7 @@ public class SpreadsheetsIndividual {
 						// Put them into a list by constraint expression (as text to reuse the order across engines)
 						// If two are the same this should not be a problem ... as they have the same semantics
 	//					System.out.println("First element in iteration " + i + ": "  + diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements().get(0));
-	
+
 						positions = new HashMap<String, Integer>();
 						int cnt = 0;
 						for (Constraint c : theConstraints) {
@@ -333,8 +302,8 @@ public class SpreadsheetsIndividual {
 							System.err.println("Encoding of constraints was not unique ..");
 							System.exit(1);
 						}
-						
-	//					System.out.println("map size: " + positions.keySet().size() + ", constraints were " + theConstraints.size());
+
+						//					System.out.println("map size: " + positions.keySet().size() + ", constraints were " + theConstraints.size());
 					}
 					else {
 	//					System.out.println("Will reuse a sequence for iteration " + i );
@@ -354,28 +323,28 @@ public class SpreadsheetsIndividual {
 						List<Constraint> finalConstraints = Arrays.asList(constrArray);
 						diagnosisEngine.sessionData.diagnosisModel.setPossiblyFaultyStatements(finalConstraints);
 	//					System.out.println("First element: " + diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements().get(0));
-						
-						
+
+
 					}
 				}
 				// ===================================================================================================
-				
+
 
 				// Shuffle the constraints
 //				diagnosisEngine.sessionData.diagnosisModel.setPossiblyFaultyStatements(shuffledConstraints);
 				//Make a call to the diagnosis engine.
 				long startTime = 0;
-				List<Diagnosis> diagnoses = null;
+				List<Diagnosis<Constraint>> diagnoses = null;
 				long endTime;
 				try {
 					startTime = System.currentTimeMillis();
 					diagnoses = diagnosisEngine.calculateDiagnoses();
 					endTime = System.currentTimeMillis();
 //					System.err.println("Number of diagnoses this run: " + diagnoses.size());
-					
+
 //					System.out.println("Constructed nodes: " + diagnosisEngine.allConstructedNodes.getCollection().size());
 //					System.out.println("Number of conflicts: " + diagnosisEngine.knownConflicts.getCollection().size());
-					
+
 				}
 				catch (Exception e) {
 					System.err.println("Error when calculating diagnosis for " + fullInputFilename + " : " + e.getMessage());
@@ -394,15 +363,15 @@ public class SpreadsheetsIndividual {
 //					e.printStackTrace();
 //				}
 				// Ende
-				
+
 //				long duration = endTime - startTime;
 //				System.out.println("Number of diagnoses on run " + (i + 1) + ": " + diagnoses.size());
 //				System.out.println("Found in " + duration + "ms.");
 //				System.out.println(Utilities.printSortedDiagnoses(diagnoses, ' '));
-				
+
 
 				if (initFinished) {
-					diagEval.analyzeRun((AbstractHSDagBuilder)diagnosisEngine, endTime - startTime);
+					diagEval.analyzeRun(diagnosisEngine, endTime - startTime);
 
 					// record data for this run.
 					String loggingResult = "";
@@ -436,19 +405,19 @@ public class SpreadsheetsIndividual {
 //					System.out.println(endTime - startTime);
 					System.out.print(".");
 				}
-				
+
 //				appendResultToLog(diagnosisEngine, duration, diagnoses, scenario.threads);
-				
+
 				check.printNonMinimalDiagnoses(diagnoses);
 				if (MAX_DIAGS < 0 || !SHUFFLE_CONSTRAINTS)
 				{
 					check.printDifferentDiagnoses(diagnoses);
 				}
-				
+
 			}
-			
+
 			diagEval.finishCalculation();
-			
+
 			summary.append("\r\n");
 			switch (scenario.executionMode) {
 			case singlethreaded:
@@ -484,77 +453,54 @@ public class SpreadsheetsIndividual {
 			summary.append("Average Conflict Size: " + diagEval.AvgConflictSize + "\r\n");
 			summary.append("Cache reuse QX: " + diagEval.AvgTotalQXCacheReuse + "\r\n");
 			summary.append("Average Tree Width: " + diagEval.AvgTreeWidth + "\r\n");
-			
+
 			// DJ TEST
 			summary.append("Average conflict reuse: " + diagEval.AvgConflictReuse + "\r\n");
-			
+
 			// Calculate average improvements
 //			double winLWP = 1 - (totalLevelW / totalSeq);
 //			double winFullP = 1 - (totalFullP / totalSeq);
-			
+
 //			DecimalFormat f = new DecimalFormat("#");
-			
+
 			// The most important thing  repeated
 //			summary.append("\r\n\r\nTotal Seq: " + f.format(totalSeq) +"\r\n");
 //			summary.append("Total Lev: " + f.format(totalLevelW) + " (" + f.format(winLWP * 100) + "%)" + "\r\n");
 //			summary.append("Total Full:" + f.format(totalFullP)  + " (" + f.format(winFullP * 100) + "%)" + "\r\n");
-			
+
 			scenarioTimes[k] = diagEval.AvgTime;
 			scenarioTimesMap.put(scenario, diagEval.AvgTime);
-			
+
 			/**
 			 * Write the file
 			 */
 			resultsLogger.addRow(summary.toString());
 			resultsLogger.writeFile();
 		}
-		
+
 		System.out.println("Overall results for " + inputFilename);
-		
+
 //		for (int i = 0; i < scenarios.size(); i++) {
 //			for (int k = i + 1; k < scenarios.size(); k++) {
 //				Scenario scn1 = scenarios.get(i);
 //				Scenario scn2 = scenarios.get(k);
 //				String scn1Name = getScenarioDescription(scn1);
 //				String scn2Name = getScenarioDescription(scn2);
-//				
+//
 //				System.out.println("Speedup from " + scn1Name + " to " + scn2Name + ": " + (scenarioTimes[i] / scenarioTimes[k]));
 //				System.out.println("Speedup from " + scn2Name + " to " + scn1Name + ": " + (scenarioTimes[k] / scenarioTimes[i]));
 //				System.out.println();
 //			}
 //		}
-		
+
 		scenarioTimesMap = sortByValue(scenarioTimesMap);
 		for (Scenario scn: scenarioTimesMap.keySet()) {
 			double time = scenarioTimesMap.get(scn);
 			System.out.println(getScenarioDescription(scn) + ": " + time);
 		}
-		
+
 	}
 	
-	public static <K, V extends Comparable<? super V>> Map<K, V> 
-    sortByValue( Map<K, V> map )
-	{
-	    List<Map.Entry<K, V>> list =
-	        new LinkedList<>( map.entrySet() );
-	    Collections.sort( list, new Comparator<Map.Entry<K, V>>()
-	    {
-	        @Override
-	        public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
-	        {
-	            return (o1.getValue()).compareTo( o2.getValue() );
-	        }
-	    } );
-	
-	    Map<K, V> result = new LinkedHashMap<>();
-	    for (Map.Entry<K, V> entry : list)
-	    {
-	        result.put( entry.getKey(), entry.getValue() );
-	    }
-	    return result;
-	}
-
-
 	private String getScenarioDescription(Scenario scenario) {
 		StringBuilder sb = new StringBuilder();
 		if (scenario.pruningMode == pruningMode.on) {
@@ -589,6 +535,40 @@ public class SpreadsheetsIndividual {
 			sb.append("_CHOCO2");
 		}
 		return sb.toString();
+	}
+
+
+	// Running modes
+	enum pruningMode {
+		on, off
+	}
+
+	enum executionMode {fullparallel, levelparallel, singlethreaded, heuristic, hybrid}
+
+	/**
+	 * A scenario wrapper
+	 *
+	 * @author dietmar
+	 */
+	class Scenario {
+		public int threads;
+		public executionMode executionMode;
+		public pruningMode pruningMode;
+		public boolean choco3;
+
+		public Scenario(
+				evaluations.old.SpreadsheetsIndividual.executionMode executionMode,
+				evaluations.old.SpreadsheetsIndividual.pruningMode pruningMode,
+				int threads,
+				boolean choco3) {
+			super();
+			this.threads = threads;
+			this.executionMode = executionMode;
+			this.pruningMode = pruningMode;
+			this.choco3 = choco3;
+		}
+
+
 	}
 
 	/**

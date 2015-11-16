@@ -1,9 +1,9 @@
 package org.exquisite.diagnosis.interactivity.partitioning;
 
-import java.util.Set;
-
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.models.Diagnosis;
+
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,16 +12,19 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * Time: 16:19
  * To change this template use File | Settings | File Templates.
  */
-public interface Partitioning {
-    Partition generatePartition(Set<Diagnosis> hittingSets) throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
+public interface Partitioning<Formula> {
+    Partition<Formula> generatePartition(Set<Diagnosis<Formula>> hittingSets)
+            throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
 
-    Partition nextPartition(Partition partition) throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
+    Partition<Formula> nextPartition(Partition<Formula> partition)
+            throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
 
-    public double getThreshold();
+    double getThreshold();
 
-    public void setThreshold(double threshold);
+    void setThreshold(double threshold);
 
-    public int getNumOfHittingSets();
+    int getNumOfHittingSets();
 
-    boolean verifyPartition(Partition partition) throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
+    boolean verifyPartition(Partition<Formula> partition)
+            throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
 }

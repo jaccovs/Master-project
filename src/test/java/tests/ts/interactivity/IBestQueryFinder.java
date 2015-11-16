@@ -1,8 +1,8 @@
 package tests.ts.interactivity;
 
-import java.util.List;
-
 import org.exquisite.diagnosis.models.Diagnosis;
+
+import java.util.List;
 
 /**
  * Interface for a best query finder. Best query finders are used to select the query, that should be asked next to narrow down the set of diagnoses.
@@ -10,7 +10,7 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * @author Schmitz
  *
  */
-public interface IBestQueryFinder {
+public interface IBestQueryFinder<T> {
 
 	/**
 	 * Should return the next query to use.
@@ -19,5 +19,5 @@ public interface IBestQueryFinder {
 	 * @param diagnoses
 	 * @return
 	 */
-	IUserQuery findBestQuery(List<IUserQuery> possibleQueries, List<Diagnosis> diagnoses);
+	IUserQuery findBestQuery(List<IUserQuery> possibleQueries, List<Diagnosis<T>> diagnoses);
 }

@@ -1,13 +1,13 @@
 package org.exquisite.diagnosis.interactivity.partitioning.scoring;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.interactivity.partitioning.Partition;
 import org.exquisite.diagnosis.interactivity.partitioning.Partitioning;
 import org.exquisite.diagnosis.models.Diagnosis;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,12 +16,13 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * Time: 08:44
  * To change this template use File | Settings | File Templates.
  */
-public interface Scoring {
-    Partition runPostprocessor(List<Partition> partitions, Partition currentBest) throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
+public interface Scoring<Formula> {
+    Partition runPostprocessor(List<Partition<Formula>> partitions, Partition<Formula> currentBest)
+            throws DiagnosisException; // throws SolverException, InconsistentTheoryException;
 
-    void setPartitionSearcher(Partitioning partitioning);
+    void setPartitionSearcher(Partitioning<Formula> partitioning);
 
-    BigDecimal getScore(Partition part);
+    BigDecimal getScore(Partition<Formula> part);
 
-    void normalize(Set<Diagnosis> hittingSets);
+    void normalize(Set<Diagnosis<Formula>> hittingSets);
 }

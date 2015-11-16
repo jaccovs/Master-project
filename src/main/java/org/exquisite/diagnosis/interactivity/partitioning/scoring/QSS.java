@@ -7,6 +7,6 @@ package org.exquisite.diagnosis.interactivity.partitioning.scoring;
  * Time: 19:19
  * To change this template use File | Settings | File Templates.
  */
-public interface QSS extends Scoring {
+public interface QSS<Formula> extends Scoring<Formula> {
     void updateParameters(boolean answerToLastQuery);
 }

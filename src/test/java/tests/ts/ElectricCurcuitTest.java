@@ -1,11 +1,12 @@
 package tests.ts;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
+import choco.Choco;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import evaluations.dxc.synthetic.model.DXCScenarioData;
+import evaluations.dxc.synthetic.model.DXCSystemDescription;
+import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
+import evaluations.dxc.synthetic.tools.DXCTools;
 import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.diagnosis.IDiagnosisEngine;
@@ -15,13 +16,7 @@ import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Utilities;
 
-import choco.Choco;
-import choco.kernel.model.constraints.Constraint;
-import choco.kernel.model.variables.integer.IntegerVariable;
-import evaluations.dxc.synthetic.model.DXCScenarioData;
-import evaluations.dxc.synthetic.model.DXCSystemDescription;
-import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
-import evaluations.dxc.synthetic.tools.DXCTools;
+import java.util.*;
 
 /**
  * Class to test the diagnosis of an electric curcuit
@@ -30,11 +25,9 @@ import evaluations.dxc.synthetic.tools.DXCTools;
  */
 public class ElectricCurcuitTest {
 	
-	private Dictionary<String, IntegerVariable> variables = new Hashtable<String, IntegerVariable>();
-	
 	static boolean shuffleConstraints = false;
-
 	static int maxDiagSize = -1;
+	private Dictionary<String, IntegerVariable> variables = new Hashtable<String, IntegerVariable>();
 
 	/**
 	 * @param args
@@ -50,8 +43,9 @@ public class ElectricCurcuitTest {
 	 * @param correctConstraints
 	 * @return
 	 */
-	private DiagnosisModel createDiagnosisModel(Dictionary<String, Constraint> possiblyFaultyConstraints, Dictionary<String, Constraint> correctConstraints) {
-		DiagnosisModel model = new DiagnosisModel();
+	private DiagnosisModel<Constraint> createDiagnosisModel(Dictionary<String, Constraint> possiblyFaultyConstraints,
+															Dictionary<String, Constraint> correctConstraints) {
+		DiagnosisModel<Constraint> model = new DiagnosisModel<Constraint>();
 		
 		// add variables
 		Enumeration<String> vars = variables.keys();
@@ -76,8 +70,8 @@ public class ElectricCurcuitTest {
 		}
 
 		// add an empty example, because it is needed for diagnosis
-		Example ex = new Example();
-		List<Example> posExamples = new ArrayList<Example>();
+		Example<Constraint> ex = new Example();
+		List<Example<Constraint>> posExamples = new ArrayList<>();
 		posExamples.add(ex);
 		model.setPositiveExamples(posExamples);
 		
@@ -92,27 +86,27 @@ public class ElectricCurcuitTest {
 			System.out.println("Building model...");
 			Dictionary<String, Constraint> formulaConstraints = buildModel74182();
 			Dictionary<String, Constraint> correctConstraints = getDataScn000Faulty();
-			
-			DiagnosisModel diagModel = createDiagnosisModel(formulaConstraints, correctConstraints);
+
+			DiagnosisModel<Constraint> diagModel = createDiagnosisModel(formulaConstraints, correctConstraints);
 			
 			if (shuffleConstraints)
 				diagModel.shufflePossiblyFaulyConstraints();
 	
 			// Create the engine
 			ExquisiteSession sessionData = new ExquisiteSession(null,
-					null, new DiagnosisModel(diagModel));
+					null, new DiagnosisModel<Constraint>(diagModel));
 			// Do not try to find a better strategy for the moment
 			sessionData.config.searchStrategy = SearchStrategies.Default;
 			sessionData.config.searchDepth = maxDiagSize;
-			
-			IDiagnosisEngine engine = EngineFactory
+
+			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData);
 			
 			System.out.println(" Done.");
 			System.out.println("Calulating Diagnoses...");
 			
 			long start = System.currentTimeMillis();
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
 			System.out.println(" Done.");
 			long end = System.currentTimeMillis();
 			long duration = end - start;
@@ -171,7 +165,8 @@ public class ElectricCurcuitTest {
 			
 			// Now create the diagnosis model
 			DXCDiagnosisModelGenerator dmg = new DXCDiagnosisModelGenerator();
-			DiagnosisModel diagModel = dmg.createDiagnosisModel(sd.getSystems().get(0), scenario.getFaultyState());
+			DiagnosisModel<Constraint> diagModel = dmg
+					.createDiagnosisModel(sd.getSystems().get(0), scenario.getFaultyState());
 			
 			System.out.println("Model has " + diagModel.getPossiblyFaultyStatements().size() + " constraints.");
 			
@@ -180,19 +175,19 @@ public class ElectricCurcuitTest {
 	
 			// Create the engine
 			ExquisiteSession sessionData = new ExquisiteSession(null,
-					null, new DiagnosisModel(diagModel));
+					null, new DiagnosisModel<Constraint>(diagModel));
 			// Do not try to find a better strategy for the moment
 			sessionData.config.searchStrategy = SearchStrategies.Default;
 			sessionData.config.searchDepth = -1;
 			sessionData.config.maxDiagnoses = -1;
-			
-			IDiagnosisEngine engine = EngineFactory
+
+			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData); //, 4);
 			
 			System.out.println("Calulating Diagnoses...");
 			
 			long start = System.currentTimeMillis();
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
+			List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
 			System.out.println(" Done.");
 			long end = System.currentTimeMillis();
 			long duration = end - start;
@@ -201,8 +196,9 @@ public class ElectricCurcuitTest {
 			System.out.println(Utilities.printSortedDiagnoses(diagnoses, ';'));
 
 			System.out.println("Solved in " + duration + "ms.");
-			
-			Diagnosis correctDiag = DXCTools.checkFaultyComponentsinDiagnoses(diagModel, diagnoses, sd.getSystems().get(0), scenario);
+
+			Diagnosis<Constraint> correctDiag = DXCTools
+					.checkFaultyComponentsinDiagnoses(diagModel, diagnoses, sd.getSystems().get(0), scenario);
 			if (correctDiag != null) {
 				System.out.println("Correct diagnosis found: " + correctDiag.toString());
 			} else {

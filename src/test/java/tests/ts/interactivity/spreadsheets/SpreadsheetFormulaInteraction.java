@@ -1,18 +1,17 @@
 package tests.ts.interactivity.spreadsheets;
 
+import choco.kernel.model.constraints.Constraint;
+import org.exquisite.datamodel.ExquisiteAppXML;
+import org.exquisite.diagnosis.models.Diagnosis;
+import org.exquisite.diagnosis.models.DiagnosisModel;
+import tests.ts.interactivity.DiagnosisModelExpansion;
+import tests.ts.interactivity.IUserInteraction;
+import tests.ts.interactivity.IUserQuery;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.exquisite.datamodel.ExquisiteAppXML;
-import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
-
-import tests.ts.interactivity.DiagnosisModelExpansion;
-import tests.ts.interactivity.IUserInteraction;
-import tests.ts.interactivity.IUserQuery;
-import choco.kernel.model.constraints.Constraint;
 
 /**
  * User Interaction for spreadsheet formulas. The possible queries are given by all formulas that are contained in the diagnoses. The simulated user
@@ -21,19 +20,21 @@ import choco.kernel.model.constraints.Constraint;
  * @author Schmitz
  *
  */
-public class SpreadsheetFormulaInteraction implements IUserInteraction {
+public class SpreadsheetFormulaInteraction implements IUserInteraction<Constraint> {
 
 	// private static final Logger log = Logger.getLogger(SpreadsheetFormulaInteraction.class.getSimpleName());
 
 	ExquisiteAppXML correctXML;
 	ExquisiteAppXML mutatedXML;
-	DiagnosisModel diagModel;
+    DiagnosisModel<Constraint> diagModel;
 
 	Set<Constraint> alreadyUsedQueries = new HashSet<Constraint>();
 
-	public SpreadsheetFormulaInteraction(String correctXMLFilename, ExquisiteAppXML mutatedXML, DiagnosisModel diagModel) {
-		this.correctXML = ExquisiteAppXML.parseToAppXML(correctXMLFilename);
-		this.mutatedXML = mutatedXML;
+    public SpreadsheetFormulaInteraction(String correctXMLFilename, ExquisiteAppXML mutatedXML,
+                                         DiagnosisModel<Constraint>
+                                                 diagModel) {
+        this.correctXML = ExquisiteAppXML.parseToAppXML(correctXMLFilename);
+        this.mutatedXML = mutatedXML;
 		this.diagModel = diagModel;
 	}
 
@@ -50,14 +51,10 @@ public class SpreadsheetFormulaInteraction implements IUserInteraction {
 		String mutatedFormula = mutatedXML.getFormulas().get(formulaCell);
 		String correctFormula = correctXML.getFormulas().get(formulaCell);
 		// System.out.println("Is the formula " + mutatedFormula + " in cell " + formulaCell + " correct?");
-		if (mutatedFormula.equals(correctFormula)) {
-			// System.out.println("Yes!");
-			return true;
-		} else {
-			// System.out.println("No!");
-			return false;
-		}
-	}
+        // System.out.println("Yes!");
+// System.out.println("No!");
+        return mutatedFormula.equals(correctFormula);
+    }
 
 	/**
 	 * Simulates the user interaction by verifying the correctness of a formula with a comparison between the debugged and the correct version of a
@@ -88,9 +85,9 @@ public class SpreadsheetFormulaInteraction implements IUserInteraction {
 	 * The possible queries are given by all formulas that are contained in the diagnoses.
 	 */
 	@Override
-	public List<IUserQuery> calculatePossibleQueries(List<Diagnosis> diagnoses) {
-		// Old Code: Because of the iteration over a hashset, the order of the result is not deterministic
-		// Set<Constraint> constraints = new HashSet<Constraint>();
+    public List<IUserQuery> calculatePossibleQueries(List<Diagnosis<Constraint>> diagnoses) {
+        // Old Code: Because of the iteration over a hashset, the order of the result is not deterministic
+        // Set<Constraint> constraints = new HashSet<Constraint>();
 		// for (Diagnosis diag: diagnoses) {
 		// for (Constraint c: diag.getElements()) {
 		// if (!alreadyUsedQueries.contains(c)) {
@@ -109,9 +106,9 @@ public class SpreadsheetFormulaInteraction implements IUserInteraction {
 
 		Set<Constraint> constraints = new HashSet<Constraint>();
 		List<IUserQuery> queries = new ArrayList<IUserQuery>();
-		for (Diagnosis diag : diagnoses) {
-			for (Constraint c : diag.getElements()) {
-				if (!alreadyUsedQueries.contains(c)) {
+        for (Diagnosis<Constraint> diag : diagnoses) {
+            for (Constraint c : diag.getElements()) {
+                if (!alreadyUsedQueries.contains(c)) {
 					if (constraints.add(c)) {
 						FormulaQuery query = new FormulaQuery(c);
 
@@ -125,14 +122,14 @@ public class SpreadsheetFormulaInteraction implements IUserInteraction {
 	}
 
 	@Override
-	public List<Diagnosis> getSupportedDiagnoses(IUserQuery query, List<Diagnosis> diagnoses) {
-		FormulaQuery q = (FormulaQuery) query;
+    public List<Diagnosis<Constraint>> getSupportedDiagnoses(IUserQuery query, List<Diagnosis<Constraint>> diagnoses) {
+        FormulaQuery q = (FormulaQuery) query;
 
-		List<Diagnosis> supportedDiagnoses = new ArrayList<Diagnosis>();
+        List<Diagnosis<Constraint>> supportedDiagnoses = new ArrayList<>();
 
-		for (Diagnosis diag : diagnoses) {
-			if (diag.getElements().contains(q.getConstraint())) {
-				supportedDiagnoses.add(diag);
+        for (Diagnosis<Constraint> diag : diagnoses) {
+            if (diag.getElements().contains(q.getConstraint())) {
+                supportedDiagnoses.add(diag);
 			}
 		}
 

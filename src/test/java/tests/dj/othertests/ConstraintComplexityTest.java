@@ -1,9 +1,7 @@
 package tests.dj.othertests;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
-
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
@@ -17,7 +15,9 @@ import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.diagnosis.ranking.ConstraintComplexityEstimator;
 import org.exquisite.diagnosis.ranking.DiagnosisRanker;
 
-import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * A class to assess the complexity of a constraint
@@ -49,19 +49,19 @@ public class ConstraintComplexityTest {
 	// Do a test here 
    void runRankingTest() throws Exception {
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
-		ExquisiteSession sessionData = new ExquisiteSession(appXML);
+	   ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
 		DiagnosisModelLoader modelLoader = new DiagnosisModelLoader(sessionData, varFactory, conFactory);
-		modelLoader.loadDiagnosisModelFromXML();				
-		
-		IDiagnosisEngine diagnosisEngine;
+	   modelLoader.loadDiagnosisModelFromXML();
+
+	   IDiagnosisEngine<Constraint> diagnosisEngine;
 		sessionData.config.searchStrategy = SearchStrategies.Default;
 		
 		diagnosisEngine = EngineFactory.makeEngine(EngineType.HSDagStandardQX, sessionData,1);
-		List<Diagnosis> diags = diagnosisEngine.calculateDiagnoses();
-		List<Diagnosis> reranked = DiagnosisRanker.rankDiagnoses(diags, sessionData);
+	   List<Diagnosis<Constraint>> diags = diagnosisEngine.calculateDiagnoses();
+	   List<Diagnosis<Constraint>> reranked = DiagnosisRanker.rankDiagnoses(diags, sessionData);
 		System.out.println("Reranked: " + reranked);
 		
 

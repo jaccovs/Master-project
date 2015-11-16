@@ -1,13 +1,6 @@
 package org.exquisite.diagnosis.interactivity;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
+import choco.kernel.model.constraints.Constraint;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
@@ -21,102 +14,113 @@ import org.exquisite.diagnosis.interactivity.partitioning.scoring.Scoring;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Utilities;
 
-import choco.kernel.model.constraints.Constraint;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Test class to test the user interactivity tests.diagnosis engine with spreadsheets
- * 
- * @author Schmitz
  *
+ * @author Schmitz
  */
 public class InteractivityTest {
 
-	private static final Logger log = Logger.getLogger(InteractivityTest.class.getSimpleName());
+    private static final Logger log = Logger.getLogger(InteractivityTest.class.getSimpleName());
 
-	static String inputFileDirectory = "experiments/spreadsheetsindividual/";
+    static String inputFileDirectory = "experiments/spreadsheetsindividual/";
 
-	// static String scenario = "formula_query_example";
-	// static String scenario = "Hospital_Payment_Calculation_TS";
-	static String scenario = "salesforecast_TC_2Faults";
+    // static String scenario = "formula_query_example";
+    // static String scenario = "Hospital_Payment_Calculation_TS";
+    static String scenario = "salesforecast_TC_2Faults";
 
-	static String correctExtension = "_correct";
-	static String fileEnding = ".xml";
+    static String correctExtension = "_correct";
+    static String fileEnding = ".xml";
 
-	// new StdScenario("new/benchmark-5faults.xml", searchDepth, maxDiags),
-	// new StdScenario("new/Hospital_Payment_Calculation.xml", searchDepth, maxDiags),
-	// new StdScenario("new/xxen.xml", searchDepth, maxDiags),
-	// new StdScenario("SemUnitEx2_2fault.xml", searchDepth, maxDiags),
-	// new StdScenario("VDEPPreserve_1fault.xml", searchDepth, maxDiags),
+    // new StdScenario("new/benchmark-5faults.xml", searchDepth, maxDiags),
+    // new StdScenario("new/Hospital_Payment_Calculation.xml", searchDepth, maxDiags),
+    // new StdScenario("new/xxen.xml", searchDepth, maxDiags),
+    // new StdScenario("SemUnitEx2_2fault.xml", searchDepth, maxDiags),
+    // new StdScenario("VDEPPreserve_1fault.xml", searchDepth, maxDiags),
 
-	public void runInteractivityTest() {
-		log.info("Starting interacitivity test");
+    public static void main(String[] args) throws IOException {
+        LogManager.getLogManager().readConfiguration(new FileInputStream("logging.properties"));
 
-		ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = true;
+        InteractivityTest test = new InteractivityTest();
+        test.runInteractivityTest();
+    }
 
-		String fullInputFilename = inputFileDirectory + scenario + fileEnding;
-		String fullCorrectFilename = inputFileDirectory + scenario + correctExtension + fileEnding;
+    public void runInteractivityTest() {
+        log.info("Starting interacitivity test");
 
-		EngineType engineType = EngineType.HSDagStandardQX;
-		// EngineType engineType = EngineType.HeuristicSearch;
+        ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = true;
 
-		int threadPoolSize = 4;
+        String fullInputFilename = inputFileDirectory + scenario + fileEnding;
+        String fullCorrectFilename = inputFileDirectory + scenario + correctExtension + fileEnding;
 
-		IDiagnosisEngine innerEngine = EngineFactory.makeEngineFromXMLFile(engineType, fullInputFilename, threadPoolSize);
+        EngineType engineType = EngineType.HSDagStandardQX;
+        // EngineType engineType = EngineType.HeuristicSearch;
 
-		Collections.shuffle(innerEngine.getModel().getPossiblyFaultyStatements());
+        int threadPoolSize = 4;
 
-		int diagnosesPerQuery = 9;
+        IDiagnosisEngine<Constraint> innerEngine = EngineFactory
+                .makeEngineFromXMLFile(engineType, fullInputFilename, threadPoolSize);
 
-		Scoring scoring = QSSFactory.createMinScoreQSS();
+        Collections.shuffle(innerEngine.getModel().getPossiblyFaultyStatements());
 
-		Partitioning partitioning = new CKK(innerEngine, scoring);
+        int diagnosesPerQuery = 9;
 
-		Diagnosis correctDiagnosis = getCorrectDiagnosis(innerEngine, fullCorrectFilename);
+        Scoring scoring = QSSFactory.createMinScoreQSS();
 
-		InteractivityDiagnosisEngine engine = new InteractivityDiagnosisEngine(innerEngine.getSessionData(), innerEngine, diagnosesPerQuery,
-				partitioning, correctDiagnosis);
+        Partitioning<Constraint> partitioning = new CKK<>(innerEngine, scoring);
 
-		try {
-			List<Diagnosis> diagnoses = engine.calculateDiagnoses();
-			log.info("Found " + diagnoses.size() + " tests.diagnosis:  " + Utilities.printSortedDiagnoses(diagnoses, ' '));
-			log.info("Real tests.diagnosis was: " + correctDiagnosis.toString());
-			log.info("Needed " + engine.getNumberOfDiagnosisRuns() + " tests.diagnosis runs and " + engine.getNumberOfQueries() + " user interactions with a total of " + engine.getNumberOfQueriedStatements() + " queried statements.");
-			log.info(String.format("Diagnoses calculation took %.2f s.", engine.getDiagnosisTime() / 1000f).toString());
-			log.info(String.format("User interaction calculation took %.2f s.", engine.getUserInteractionTime() / 1000f).toString());
-		} catch (DiagnosisException e) {
-			e.printStackTrace();
-		}
+        Diagnosis<Constraint> correctDiagnosis = getCorrectDiagnosis(innerEngine, fullCorrectFilename);
 
-		log.info("Finished interactivity test");
-	}
+        InteractivityDiagnosisEngine engine = new InteractivityDiagnosisEngine(innerEngine.getSessionData(),
+                innerEngine, diagnosesPerQuery,
+                partitioning, correctDiagnosis);
 
-	/**
-	 * Returns the correct tests.diagnosis based on the differences between the mutated and the correct spreadsheet xmls. Diagnosis might not be minimal.
-	 * 
-	 * @param engine
-	 * @param correctFilename
-	 * @return
-	 */
-	private Diagnosis getCorrectDiagnosis(IDiagnosisEngine engine, String correctFilename) {
-		ExquisiteAppXML mutatedXML = engine.getSessionData().appXML;
-		ExquisiteAppXML correctXML = ExquisiteAppXML.parseToAppXML(correctFilename);
+        try {
+            List<Diagnosis<Constraint>> diagnoses = engine.calculateDiagnoses();
+            log.info("Found " + diagnoses.size() + " tests.diagnosis:  " + Utilities
+                    .printSortedDiagnoses(diagnoses, ' '));
+            log.info("Real tests.diagnosis was: " + correctDiagnosis.toString());
+            log.info("Needed " + engine.getNumberOfDiagnosisRuns() + " tests.diagnosis runs and " + engine
+                    .getNumberOfQueries() + " user interactions with a total of " + engine
+                    .getNumberOfQueriedStatements() + " queried statements.");
+            log.info(String.format("Diagnoses calculation took %.2f s.", engine.getDiagnosisTime() / 1000f).toString());
+            log.info(String.format("User interaction calculation took %.2f s.", engine.getUserInteractionTime() / 1000f)
+                    .toString());
+        } catch (DiagnosisException e) {
+            e.printStackTrace();
+        }
 
-		Diagnosis diag = new Diagnosis(new ArrayList<Constraint>(), engine.getModel());
+        log.info("Finished interactivity test");
+    }
 
-		for (Constraint c : engine.getModel().getPossiblyFaultyStatements()) {
-			String cell = engine.getModel().getConstraintName(c);
-			if (!mutatedXML.getFormulas().get(cell).equals(correctXML.getFormulas().get(cell))) {
-				diag.getElements().add(c);
-			}
-		}
+    /**
+     * Returns the correct tests.diagnosis based on the differences between the mutated and the correct spreadsheet xmls. Diagnosis might not be minimal.
+     *
+     * @param engine
+     * @param correctFilename
+     * @return
+     */
+    private Diagnosis<Constraint> getCorrectDiagnosis(IDiagnosisEngine<Constraint> engine, String correctFilename) {
+        ExquisiteAppXML mutatedXML = engine.getSessionData().appXML;
+        ExquisiteAppXML correctXML = ExquisiteAppXML.parseToAppXML(correctFilename);
 
-		return diag;
-	}
+        Diagnosis<Constraint> diag = new Diagnosis<>(new ArrayList<>(), engine.getModel());
 
-	public static void main(String[] args) throws IOException {
-		LogManager.getLogManager().readConfiguration(new FileInputStream("logging.properties"));
+        for (Constraint c : engine.getModel().getPossiblyFaultyStatements()) {
+            String cell = engine.getModel().getConstraintName(c);
+            if (!mutatedXML.getFormulas().get(cell).equals(correctXML.getFormulas().get(cell))) {
+                diag.getElements().add(c);
+            }
+        }
 
-		InteractivityTest test = new InteractivityTest();
-		test.runInteractivityTest();
-	}
+        return diag;
+    }
 }

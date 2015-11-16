@@ -1,6 +1,7 @@
 package tests.hierarchical;
 
 import choco.kernel.model.constraints.AbstractConstraint;
+import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.constraints.ConstraintType;
 import choco.kernel.model.variables.Variable;
 
@@ -12,7 +13,9 @@ import choco.kernel.model.variables.Variable;
  */
 public class ExpandableConstraint extends AbstractConstraint {
 
-	/** 
+	HierarchyNode<Constraint> hierarchyNode;
+
+	/**
 	 * Should never be called..
 	 * @param type
 	 * @param variables
@@ -21,13 +24,11 @@ public class ExpandableConstraint extends AbstractConstraint {
 		super(type, variables);
 	}
 	
-	HierarchyNode hierarchyNode;
-	
 	/**
 	 * A constructor that helps us construct things
 	 * @param node
 	 */
-	public ExpandableConstraint(HierarchyNode node) {
+	public ExpandableConstraint(HierarchyNode<Constraint> node) {
 		super(ConstraintType.TRUE,new Variable[1]);
 		this.hierarchyNode = node;
 	}

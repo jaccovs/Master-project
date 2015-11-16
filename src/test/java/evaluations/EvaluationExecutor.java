@@ -1,5 +1,6 @@
 package evaluations;
 
+import choco.kernel.model.constraints.Constraint;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.ExampleMode;
@@ -21,15 +22,9 @@ public class EvaluationExecutor {
 	
 	@Option(name = "-c3", usage="Use Choco 3 instead of Choco 2")
 	private boolean choco3 = false;
-	
-	enum EvaluationType {Sim, DXC, DXCMZ, CSPs, XLS};
-	
 	@Option(name = "-t", required = true, usage="The evaluation type")
 //	@Argument(index=0, required = true, usage="The evaluation type", metaVar="EvaluationType")
 	private EvaluationType evaluationType;
-	
-	enum Evaluation {AllDiags, OneDiag, PRDFSThreads};
-	
 	@Option(name = "-e", required = true, usage = "The evaluation")
 	private Evaluation evaluation;
 	
@@ -39,9 +34,9 @@ public class EvaluationExecutor {
 
 	private void start(String[] args) {
 		CmdLineParser parser = new CmdLineParser(this);
-		
+
 		parser.setUsageWidth(80);
-		
+
 		try {
 			parser.parseArgument(args);
 		}
@@ -58,9 +53,9 @@ public class EvaluationExecutor {
 			System.err.println(" Example: java Evaluation"+parser.printExample(ExampleMode.ALL));
 			return;
 		}
-		
-		AbstractEvaluation eval = null;
-		
+
+		AbstractEvaluation<Constraint> eval = null;
+
 		switch (evaluationType) {
 		case Sim:
 			eval = new DiagnosisSimulator();
@@ -78,11 +73,15 @@ public class EvaluationExecutor {
 			eval = new SpreadsheetsIndividual();
 			break;
 		}
-		
+
 		eval.runTests(initRun, evaluationRuns, null, null);
-		
+
 //		DXCSyntheticBenchmark dxc = new DXCSyntheticBenchmark();
 //		dxc.runTests(20, 100, DXCSyntheticBenchmark.runConfigurations, DXCSyntheticBenchmark.scenarios);
 	}
+
+	enum EvaluationType {Sim, DXC, DXCMZ, CSPs, XLS}
+
+	enum Evaluation {AllDiags, OneDiag, PRDFSThreads}
 
 }

@@ -1,10 +1,10 @@
 package org.exquisite.diagnosis.interactivity.partitioning.scoring;
 
+import org.exquisite.diagnosis.interactivity.partitioning.Partition;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.exquisite.diagnosis.interactivity.partitioning.Partition;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,11 +13,10 @@ import org.exquisite.diagnosis.interactivity.partitioning.Partition;
  * Time: 17:52
  * To change this template use File | Settings | File Templates.
  */
-public class PenaltyQSS extends MinScoreQSS {
+public class PenaltyQSS<T> extends MinScoreQSS<T> {
 
     double maxPenalty;
     double penalty;
-
 
 
     public PenaltyQSS(double maxPenalty) {
@@ -31,32 +30,33 @@ public class PenaltyQSS extends MinScoreQSS {
     }
 
 
-    protected int getMaxPenaltyOfQuery(Partition partition){
-        return (int)Math.floor((double) numOfLeadingDiags/(double)2) - getMinNumOfElimDiags(partition);
+    protected int getMaxPenaltyOfQuery(Partition partition) {
+        return (int) Math.floor((double) numOfLeadingDiags / (double) 2) - getMinNumOfElimDiags(partition);
     }
 
 
-    public void updateParameters(boolean answerToLastQuery){
+    public void updateParameters(boolean answerToLastQuery) {
 
         preprocessBeforeUpdate(answerToLastQuery);
 
-        penalty += (int)Math.floor((double) numOfLeadingDiags/(double)2) - numOfEliminatedLeadingDiags;
+        penalty += (int) Math.floor((double) numOfLeadingDiags / (double) 2) - numOfEliminatedLeadingDiags;
     }
 
 
-    private Partition bestNonCandidate(List<Partition> nonCandidates){
+    private Partition<T> bestNonCandidate(List<Partition<T>> nonCandidates) {
 
-        List<Partition> nonCandidatesFiltered = new LinkedList<Partition>();
+        List<Partition<T>> nonCandidatesFiltered = new LinkedList<>();
 
-        for(Partition partition : nonCandidates){
-            if(partition.dx.size() != partition.dnx.size())
+        for (Partition<T> partition : nonCandidates) {
+            if (partition.dx.size() != partition.dnx.size())
                 nonCandidatesFiltered.add(partition);
         }
 
-        Partition bestNonCandidate = Collections.max(nonCandidatesFiltered, new MinNumOfElimDiagsComparator());
+        Partition<T> bestNonCandidate = Collections.max(nonCandidatesFiltered, new MinNumOfElimDiagsComparator());
 
-        for(Partition partition : nonCandidatesFiltered){
-            if(getMinNumOfElimDiags(partition) == getMinNumOfElimDiags(bestNonCandidate) && partition.score.compareTo(bestNonCandidate.score) < 0)
+        for (Partition<T> partition : nonCandidatesFiltered) {
+            if (getMinNumOfElimDiags(partition) == getMinNumOfElimDiags(bestNonCandidate) && partition.score
+                    .compareTo(bestNonCandidate.score) < 0)
                 bestNonCandidate = partition;
         }
 
@@ -64,38 +64,37 @@ public class PenaltyQSS extends MinScoreQSS {
     }
 
 
-    private Partition bestCandidate(List<Partition> candidates){
-        Partition bestCandidate = Collections.min(candidates,new ScoreComparator());
-        return bestCandidate;
+    private Partition<T> bestCandidate(List<Partition<T>> candidates) {
+        return Collections.min(candidates, new ScoreComparator());
     }
 
 
-    public Partition runPostprocessor(List<Partition> partitions, Partition currentBest) {
+    public Partition<T> runPostprocessor(List<Partition<T>> partitions, Partition<T> currentBest) {
         preprocessBeforeRun(getPartitionSearcher().getNumOfHittingSets());
 
-        List<Partition> candidates = new LinkedList<Partition>();
-        List<Partition> nonCandidates = new LinkedList<Partition>();
+        List<Partition<T>> candidates = new LinkedList<>();
+        List<Partition<T>> nonCandidates = new LinkedList<>();
 
 
-        for (Partition partition : partitions) {
+        for (Partition<T> partition : partitions) {
             if (!canExceedMaxPenalty(partition))
                 candidates.add(partition);
             else
                 nonCandidates.add(partition);
         }
-        
 
-        Partition result;
 
-        if (candidates.isEmpty()){
+        Partition<T> result;
+
+        if (candidates.isEmpty()) {
             result = bestNonCandidate(nonCandidates);
-        }else{
+        } else {
             result = bestCandidate(candidates);
         }
 
         lastQuery = result;
         return result;
-        
+
     }
 
 }

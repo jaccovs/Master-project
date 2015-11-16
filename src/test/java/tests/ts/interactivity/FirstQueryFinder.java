@@ -1,8 +1,8 @@
 package tests.ts.interactivity;
 
-import java.util.List;
-
 import org.exquisite.diagnosis.models.Diagnosis;
+
+import java.util.List;
 
 /**
  * A query finder that simply returns the first query as the best one.
@@ -10,10 +10,10 @@ import org.exquisite.diagnosis.models.Diagnosis;
  * @author Schmitz
  *
  */
-public class FirstQueryFinder implements IBestQueryFinder {
+public class FirstQueryFinder<T> implements IBestQueryFinder<T> {
 
 	@Override
-	public IUserQuery findBestQuery(List<IUserQuery> possibleQueries, List<Diagnosis> diagnoses) {
+	public IUserQuery findBestQuery(List<IUserQuery> possibleQueries, List<Diagnosis<T>> diagnoses) {
 		return possibleQueries.get(0);
 	}
 

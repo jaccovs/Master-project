@@ -1,57 +1,42 @@
 package org.exquisite.diagnosis.quickxplain.ontologies;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
 import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-
-import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
-import choco.kernel.model.constraints.Constraint;
+
+import java.util.*;
 
 /**
  * Class for static ontology tool functions.
- * @author Schmitz
  *
+ * @author Schmitz
  */
 public class OntologyTools {
-	
-	protected static OWLOntology createCopyForExtraction(OWLOntology ontology) {
+
+    protected static OWLOntology createCopyForExtraction(OWLOntology ontology) {
 
         OWLOntology result = null;
         try {
-            result = OWLManager.createOWLOntologyManager().createOntology(IRI.create("http://ainf.at/TempExtractionOntology"));
+            result = OWLManager.createOWLOntologyManager()
+                    .createOntology(IRI.create("http://ainf.at/TempExtractionOntology"));
         } catch (OWLOntologyCreationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        result.getOWLOntologyManager().addAxioms(result,ontology.getLogicalAxioms());
+        result.getOWLOntologyManager().addAxioms(result, ontology.getLogicalAxioms());
         return result;
     }
-	
-	public static OWLOntology getIncoherentPartAsOntology(OWLOntology ontology) {
-        return extract(ontology,false, false).iterator().next();
+
+    public static OWLOntology getIncoherentPartAsOntology(OWLOntology ontology) {
+        return extract(ontology, false, false).iterator().next();
     }
-	
-	protected static Set<OWLOntology> extract(OWLOntology ont, boolean multiple, boolean useMultiple) {
+
+    protected static Set<OWLOntology> extract(OWLOntology ont, boolean multiple, boolean useMultiple) {
 
         Set<OWLEntity> signature = new LinkedHashSet<OWLEntity>();
         OWLOntology ontology = createCopyForExtraction(ont);
@@ -79,7 +64,8 @@ public class OntologyTools {
 
         Set<OWLOntology> result;
 
-        SyntacticLocalityModuleExtractor sme = new SyntacticLocalityModuleExtractor(OWLManager.createOWLOntologyManager(), ontology, ModuleType.STAR);
+        SyntacticLocalityModuleExtractor sme = new SyntacticLocalityModuleExtractor(
+                OWLManager.createOWLOntologyManager(), ontology, ModuleType.STAR);
 
 
         String iriString = "http://ainf.at/IncoherencyModule";
@@ -92,29 +78,30 @@ public class OntologyTools {
                         result.add(sme.extractAsOntology(Collections.singleton(i), IRI.create(iriString + "_" + cnt)));
                         cnt++;
                     }
-                }
-                else {
+                } else {
                     if (!useMultiple) {
                         result = Collections.singleton(sme.extractAsOntology(signature, IRI.create(iriString)));
-                    }
-                    else {
+                    } else {
                         result = new LinkedHashSet<OWLOntology>();
                         int cnt = 0;
                         for (OWLEntity i : signature) {
-                            result.add(sme.extractAsOntology(Collections.singleton(i), IRI.create(iriString + "_" + cnt)));
+                            result.add(
+                                    sme.extractAsOntology(Collections.singleton(i), IRI.create(iriString + "_" + cnt)));
                             cnt++;
                         }
                         Set<OWLLogicalAxiom> axioms = new HashSet<OWLLogicalAxiom>();
                         for (OWLOntology on : result)
                             axioms.addAll(on.getLogicalAxioms());
-                        result = Collections.singleton(OWLManager.createOWLOntologyManager().createOntology(IRI.create(iriString)));
+                        result = Collections
+                                .singleton(OWLManager.createOWLOntologyManager().createOntology(IRI.create(iriString)));
                         OWLOntology on = result.iterator().next();
-                        on.getOWLOntologyManager().addAxioms(on,axioms);
+                        on.getOWLOntologyManager().addAxioms(on, axioms);
                     }
                 }
 
             } else
-                result = Collections.singleton(OWLManager.createOWLOntologyManager().createOntology(IRI.create(iriString)));
+                result = Collections
+                        .singleton(OWLManager.createOWLOntologyManager().createOntology(IRI.create(iriString)));
         } catch (OWLOntologyCreationException e) {
             result = null;
         }
@@ -125,17 +112,18 @@ public class OntologyTools {
         return result;
 
     }
-	
-	/**
-	 * Adds individuals for all unsatisfiable classes to make the ontology inconsistent instead of only incoherent.
-	 * @param model
-	 */
-	public static void reduceToUnsatisfiability(DiagnosisModel model) {
+
+    /**
+     * Adds individuals for all unsatisfiable classes to make the ontology inconsistent instead of only incoherent.
+     *
+     * @param model
+     */
+    public static void reduceToUnsatisfiability(DiagnosisModel<OWLLogicalAxiom> model) {
 //        LinkedHashSet<OWLLogicalAxiom> backupCachedFormulars = new LinkedHashSet<OWLLogicalAxiom>(getReasoner().getFormulasCache());
 //        getReasoner().clearFormulasCache();
 //        getReasoner().addFormulasToCache(getOriginalOntology().getLogicalAxioms());
         OntologySolver solver = new OntologySolver();
-        List<Constraint> allConstraints = new ArrayList<Constraint>(model.getCorrectStatements());
+        List<OWLLogicalAxiom> allConstraints = new ArrayList<>(model.getCorrectStatements());
         allConstraints.addAll(model.getPossiblyFaultyStatements());
         solver.createModel(null, allConstraints);
         if (solver.isFeasible(null)) {
@@ -146,10 +134,11 @@ public class OntologyTools {
                 OWLDataFactory fac = solver.getOntology().getOWLOntologyManager().getOWLDataFactory();
                 // TODO module d extraction machen
                 for (OWLClass cl : entities) {
-                    OWLIndividual test_individual = fac.getOWLNamedIndividual(IRI.create(iri + "d_" + cl.getIRI().getFragment()));
+                    OWLIndividual test_individual = fac
+                            .getOWLNamedIndividual(IRI.create(iri + "d_" + cl.getIRI().getFragment()));
 //                    getKnowledgeBase().addBackgroundFormulas(Collections.<OWLLogicalAxiom>singleton(fac.getOWLClassAssertionAxiom(cl, test_individual)));
-                    AxiomConstraint ax = new AxiomConstraint(fac.getOWLClassAssertionAxiom(cl, test_individual));
-                    model.addCorrectConstraint(ax, ax.getName());
+                    OWLLogicalAxiom ax = fac.getOWLClassAssertionAxiom(cl, test_individual);
+                    model.addCorrectConstraint(ax, ax.toString());
                 }
             }
         }
@@ -159,21 +148,21 @@ public class OntologyTools {
 
     }
 
-	public static DiagnosisModel createDiagnosisModel(OWLOntology ontology, boolean setAssertionsCorrect) {
-		DiagnosisModel diagModel = new DiagnosisModel();
-		
-		for (OWLAxiom axiom: ontology.getLogicalAxioms()) {
-			AxiomConstraint c = new AxiomConstraint(axiom);
-			if (setAssertionsCorrect && c.getAxiom().toString().contains("Assertion")) {
-				diagModel.addCorrectConstraint(c, c.getName());
-			} else {
-				diagModel.addPossiblyFaultyConstraint(c, c.getName());
-			}
-		}
-		
-		diagModel.getPositiveExamples().add(new Example());
-		
-		return diagModel;
-	}
+    public static DiagnosisModel<OWLLogicalAxiom> createDiagnosisModel(OWLOntology ontology,
+                                                                       boolean setAssertionsCorrect) {
+        DiagnosisModel<OWLLogicalAxiom> diagModel = new DiagnosisModel<>();
+
+        for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
+            if (setAssertionsCorrect && axiom.toString().contains("Assertion")) {
+                diagModel.addCorrectConstraint(axiom, axiom.toString());
+            } else {
+                diagModel.addPossiblyFaultyConstraint(axiom, axiom.toString());
+            }
+        }
+
+        diagModel.getPositiveExamples().add(new Example());
+
+        return diagModel;
+    }
 
 }

@@ -1,54 +1,61 @@
 package tests.hierarchical;
 
+import choco.kernel.model.constraints.Constraint;
+import org.exquisite.diagnosis.models.DiagnosisModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import org.exquisite.diagnosis.models.DiagnosisModel;
-
-import choco.kernel.model.constraints.Constraint;
 
 /**
  * Contains a hierarchy of nodes
  * @author dietmar
  *
  */
-public class Hierarchy {
-	HierarchyNode rootNode;
-
-	/**
-	 * returns the root note
-	 * @return the root node of the hierarchy
-	 */
-	public HierarchyNode getRootNode() {
-		return rootNode;
-	}
-
+public class Hierarchy<T> {
 	/**
 	 * My diagnosis model
 	 */
-	public DiagnosisModel diagnosisModel;
+	public DiagnosisModel<T> diagnosisModel;
+	/**
+	 * The list of leaf components
+	 */
+	public List<HierarchyNode<T>> leafNodes;
+	HierarchyNode<T> rootNode;
+	// Let's not do the work twice.
+	boolean levelsFixed = false;
 	
+
 	/**
 	 * Create a new hierarchy for a model
 	 * @param model
 	 */
-	public Hierarchy(DiagnosisModel model) {
+	public Hierarchy(DiagnosisModel<T> model) {
 		this.diagnosisModel = model;
 	}
 	
-
 	/**
-	 * The list of leaf components
+	 * returns the root note
+	 * @return the root node of the hierarchy
 	 */
-	public List<HierarchyNode> leafNodes;
+	public HierarchyNode<T> getRootNode() {
+		return rootNode;
+	}
 	
+	/**
+	 * sets the root note
+	 * @param rootNode
+	 */
+	public void setRootNode(HierarchyNode<T> rootNode) {
+		this.rootNode = rootNode;
+	}
+
 	/**
 	 * Creates a new empty node
 	 * @return
 	 */
-	HierarchyNode createNode() {
-		HierarchyNode node = new HierarchyNode(this.diagnosisModel);
+	HierarchyNode<T> createNode() {
+		HierarchyNode<T> node = new HierarchyNode<T>(this.diagnosisModel);
 		return node;
 	}
 	
@@ -57,37 +64,28 @@ public class Hierarchy {
 	 * @param constraints
 	 * @return
 	 */
-	HierarchyNode createNode(Set<Constraint> constraints) {
-		HierarchyNode node = new HierarchyNode(constraints, this.diagnosisModel);
+	HierarchyNode<T> createNode(Set<Constraint> constraints) {
+		HierarchyNode<T> node = new HierarchyNode<T>(constraints, this.diagnosisModel);
 		return node;
-		
+
 	}
-	
-	/**
-	 * sets the root note
-	 * @param rootNode
-	 */
-	public void setRootNode(HierarchyNode rootNode) {
-		this.rootNode = rootNode;
-	}
-	
 	
 	/**
 	 * Get all leaf components for a given node
-	 *  
+	 *
 	 */
-	List<Constraint> getLeafConstraints(HierarchyNode node) {
+	List<Constraint> getLeafConstraints(HierarchyNode<T> node) {
 		List<Constraint> result = new ArrayList<Constraint>();
 		getLeafConstraintsRecursively(node, result);
 		return result;
 	}
-	
+
 	/**
 	 * Get the leaf components
 	 */
-	List<HierarchyNode> getLeafNodes() {
+	List<HierarchyNode<T>> getLeafNodes() {
 		if (leafNodes == null) {
-			leafNodes = new ArrayList<HierarchyNode>();
+			leafNodes = new ArrayList<HierarchyNode<T>>();
 			getLeafNodesRecursively(this.rootNode, leafNodes);
 		}
 		return leafNodes;
@@ -98,12 +96,12 @@ public class Hierarchy {
 	 * @param node
 	 * @param result - a set of nodes
 	 */
-	private void getLeafNodesRecursively(HierarchyNode node, List<HierarchyNode> result) {
+	private void getLeafNodesRecursively(HierarchyNode<T> node, List<HierarchyNode<T>> result) {
 		if (node.constraint != null) {
 			result.add(node);
 		}
 		else {
-			for (HierarchyNode n : node.nextLevelElements) {
+			for (HierarchyNode<T> n : node.nextLevelElements) {
 				getLeafNodesRecursively(n, result);
 			}
 		}
@@ -114,12 +112,12 @@ public class Hierarchy {
 	 * @param node
 	 * @param result - a set of constraints
 	 */
-	private void getLeafConstraintsRecursively(HierarchyNode node, List<Constraint> result) {
+	private void getLeafConstraintsRecursively(HierarchyNode<T> node, List<Constraint> result) {
 		if (node.constraint != null) {
 			result.add(node.constraint);
 		}
 		else {
-			for (HierarchyNode n : node.nextLevelElements) {
+			for (HierarchyNode<T> n : node.nextLevelElements) {
 				getLeafConstraintsRecursively(n, result);
 			}
 		}
@@ -145,9 +143,8 @@ public class Hierarchy {
 			}
 		}
 		return result;
-		
+
 	}
-	
 	
 	/**
 	 * Maps a constraint to an expandable component
@@ -159,8 +156,8 @@ public class Hierarchy {
 		Constraint result = null;
 		// We know that we don't have to look in the leaf nodes here
 		// Look for the leaf-level component with the constraint
-		HierarchyNode correspondingLeafNode = null;
-		for (HierarchyNode node : this.getLeafNodes()) {
+		HierarchyNode<T> correspondingLeafNode = null;
+		for (HierarchyNode<T> node : this.getLeafNodes()) {
 			  if (node.constraint != null && node.constraint == conflictElement) {
 				  correspondingLeafNode = node;
 //				  System.out.println("Found the leaf node - looking for parent of " + correspondingLeafNode + " " + correspondingLeafNode.getConstraint());
@@ -170,7 +167,7 @@ public class Hierarchy {
 		// Look for the parent
 		if (correspondingLeafNode != null) {
 			boolean foundNode = false;
-			HierarchyNode parent = correspondingLeafNode.parent;
+			HierarchyNode<T> parent = correspondingLeafNode.parent;
 //			System.out.println("The parent in the hierarchy " + parent);
 			while (foundNode == false && parent != null) {
 				// Go through the expandable constraints and look if this corresponds to the node here
@@ -184,14 +181,10 @@ public class Hierarchy {
 			}
 			System.err.println("FATAL: Could not map constraint to expandable constraint");
 		}
-		
-		
+
+
 		return result;
 	}
-	
-	
-	// Let's not do the work twice.
-	boolean levelsFixed = false;
 	
 	/**
 	 * Prints out the hierarchy.
@@ -203,8 +196,8 @@ public class Hierarchy {
 			fixLevelNumbering();
 		}
 		// The remaining list to print - wil do things in breadth first form
-		List<HierarchyNode> nodesToPrint = new ArrayList<HierarchyNode>();
-		HierarchyNode currentNode = rootNode;
+		List<HierarchyNode<T>> nodesToPrint = new ArrayList<HierarchyNode<T>>();
+		HierarchyNode<T> currentNode = rootNode;
 		// fill in the elements of the first level
 		nodesToPrint.addAll(rootNode.nextLevelElements);
 		// While there is some work
@@ -229,7 +222,7 @@ public class Hierarchy {
 	}
 	
 	// recursive work to be done
-	public void fixLevelsForPrintingRecursive(HierarchyNode node, int level) {
+	public void fixLevelsForPrintingRecursive(HierarchyNode<T> node, int level) {
 		node.level = level;
 		if (node.constraint != null) {
 			// last level - return;
@@ -237,7 +230,7 @@ public class Hierarchy {
 		}
 		
 		if (node.nextLevelElements.size() > 0) {
-			for (HierarchyNode nextNode: node.nextLevelElements) {
+			for (HierarchyNode<T> nextNode : node.nextLevelElements) {
 				fixLevelsForPrintingRecursive(nextNode, level + 1);
 			}
 		}

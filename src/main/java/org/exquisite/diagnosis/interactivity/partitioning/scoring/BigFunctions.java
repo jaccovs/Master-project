@@ -5,25 +5,24 @@ package org.exquisite.diagnosis.interactivity.partitioning.scoring;
  * http://authors.phptr.com/mak/downloads.html
  */
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Several useful BigDecimal mathematical functions.
  */
-public final class BigFunctions
-{
+public final class BigFunctions {
     /**
      * Compute x^exponent to a given scale.  Uses the same
      * algorithm as class numbercruncher.mathutils.IntPower.
-     * @param x the value x
+     *
+     * @param x        the value x
      * @param exponent the exponent value
-     * @param scale the desired scale of the result
+     * @param scale    the desired scale of the result
      * @return the result value
      */
     public static BigDecimal intPower(BigDecimal x, long exponent,
-                                      int scale)
-    {
+                                      int scale) {
         // If the exponent is negative, compute 1/(x^-exponent).
         if (exponent < 0) {
             return BigDecimal.valueOf(1)
@@ -56,23 +55,23 @@ public final class BigFunctions
     /**
      * Compute the integral root of x to a given scale, x >= 0.
      * Use Newton's algorithm.
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param index the integral root value
      * @param scale the desired scale of the result
      * @return the result value
      */
     public static BigDecimal intRoot(BigDecimal x, long index,
-                                     int scale)
-    {
+                                     int scale) {
         // Check that x >= 0.
         if (x.signum() < 0) {
             throw new IllegalArgumentException("x < 0");
         }
 
-        int        sp1 = scale + 1;
-        BigDecimal n   = x;
-        BigDecimal i   = BigDecimal.valueOf(index);
-        BigDecimal im1 = BigDecimal.valueOf(index-1);
+        int sp1 = scale + 1;
+        BigDecimal n = x;
+        BigDecimal i = BigDecimal.valueOf(index);
+        BigDecimal im1 = BigDecimal.valueOf(index - 1);
         BigDecimal tolerance = BigDecimal.valueOf(5)
                 .movePointLeft(sp1);
         BigDecimal xPrev;
@@ -84,7 +83,7 @@ public final class BigFunctions
         // (two successive approximations are equal after rounding).
         do {
             // x^(index-1)
-            BigDecimal xToIm1 = intPower(x, index-1, sp1);
+            BigDecimal xToIm1 = intPower(x, index - 1, sp1);
 
             // x^index
             BigDecimal xToI =
@@ -116,12 +115,12 @@ public final class BigFunctions
      * Compute e^x to a given scale.
      * Break x into its whole and fraction parts and
      * compute (e^(1 + fraction/whole))^whole using Taylor's formula.
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param scale the desired scale of the result
      * @return the result value
      */
-    public static BigDecimal exp(BigDecimal x, int scale)
-    {
+    public static BigDecimal exp(BigDecimal x, int scale) {
         // e^0 = 1
         if (x.signum() == 0) {
             return BigDecimal.valueOf(1);
@@ -153,7 +152,7 @@ public final class BigFunctions
         BigDecimal t = expTaylor(z, scale);
 
         BigDecimal maxLong = BigDecimal.valueOf(Long.MAX_VALUE);
-        BigDecimal result  = BigDecimal.valueOf(1);
+        BigDecimal result = BigDecimal.valueOf(1);
 
         // Compute and return t^whole using intPower().
         // If whole > Long.MAX_VALUE, then first compute products
@@ -172,18 +171,18 @@ public final class BigFunctions
 
     /**
      * Compute e^x to a given scale by the Taylor series.
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param scale the desired scale of the result
      * @return the result value
      */
-    private static BigDecimal expTaylor(BigDecimal x, int scale)
-    {
+    private static BigDecimal expTaylor(BigDecimal x, int scale) {
         BigDecimal factorial = BigDecimal.valueOf(1);
-        BigDecimal xPower    = x;
+        BigDecimal xPower = x;
         BigDecimal sumPrev;
 
         // 1 + x
-        BigDecimal sum  = x.add(BigDecimal.valueOf(1));
+        BigDecimal sum = x.add(BigDecimal.valueOf(1));
 
         // Loop until the sums converge
         // (two successive sums are equal after rounding).
@@ -215,8 +214,7 @@ public final class BigFunctions
     /**
      * Compute the natural logarithm of x to a given scale, x > 0.
      */
-    public static BigDecimal ln(BigDecimal x, int scale)
-    {
+    public static BigDecimal ln(BigDecimal x, int scale) {
         // Check that x > 0.
         if (x.signum() <= 0) {
             throw new IllegalArgumentException("x <= 0");
@@ -248,10 +246,9 @@ public final class BigFunctions
      * Compute the natural logarithm of x to a given scale, x > 0.
      * Use Newton's algorithm.
      */
-    private static BigDecimal lnNewton(BigDecimal x, int scale)
-    {
-        int        sp1 = scale + 1;
-        BigDecimal n   = x;
+    private static BigDecimal lnNewton(BigDecimal x, int scale) {
+        int sp1 = scale + 1;
+        BigDecimal n = x;
         BigDecimal term;
 
         // Convergence tolerance = 5*(10^-(scale+1))
@@ -280,12 +277,12 @@ public final class BigFunctions
 
     /**
      * Compute the arctangent of x to a given scale, |x| < 1
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param scale the desired scale of the result
      * @return the result value
      */
-    public static BigDecimal arctan(BigDecimal x, int scale)
-    {
+    public static BigDecimal arctan(BigDecimal x, int scale) {
         // Check that |x| < 1.
         if (x.abs().compareTo(BigDecimal.valueOf(1)) >= 0) {
             throw new IllegalArgumentException("|x| >= 1");
@@ -294,8 +291,7 @@ public final class BigFunctions
         // If x is negative, return -arctan(-x).
         if (x.signum() == -1) {
             return arctan(x.negate(), scale).negate();
-        }
-        else {
+        } else {
             return arctanTaylor(x, scale);
         }
     }
@@ -303,18 +299,18 @@ public final class BigFunctions
     /**
      * Compute the arctangent of x to a given scale
      * by the Taylor series, |x| < 1
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param scale the desired scale of the result
      * @return the result value
      */
-    private static BigDecimal arctanTaylor(BigDecimal x, int scale)
-    {
-        int     sp1     = scale + 1;
-        int     i       = 3;
+    private static BigDecimal arctanTaylor(BigDecimal x, int scale) {
+        int sp1 = scale + 1;
+        int i = 3;
         boolean addFlag = false;
 
         BigDecimal power = x;
-        BigDecimal sum   = x;
+        BigDecimal sum = x;
         BigDecimal term;
 
         // Convergence tolerance = 5*(10^-(scale+1))
@@ -348,12 +344,12 @@ public final class BigFunctions
     /**
      * Compute the square root of x to a given scale, x >= 0.
      * Use Newton's algorithm.
-     * @param x the value of x
+     *
+     * @param x     the value of x
      * @param scale the desired scale of the result
      * @return the result value
      */
-    public static BigDecimal sqrt(BigDecimal x, int scale)
-    {
+    public static BigDecimal sqrt(BigDecimal x, int scale) {
         // Check that x >= 0.
         if (x.signum() < 0) {
             throw new IllegalArgumentException("x < 0");
