@@ -5,9 +5,8 @@ import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.tools.Utilities;
 
 import java.util.*;
@@ -224,7 +223,7 @@ public class FormulaInteractivityTest {
 		// TODO: Remove faulty formulas from csp. Add faulty formulas to all diagnoses later or add a diagnosis with faulty formulas, if no diagnosis was found.
 		replaceFormulasInDictionary(formulasToCorrect, newXml.getFormulas());
 		
-		AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder) EngineFactory.makeEngineFromAppXML(EngineType.HSDagStandardQX, newXml, 4);
+		AbstractHSDagEngine diagnosisEngine = (AbstractHSDagEngine) EngineFactory.makeEngineFromAppXML(EngineType.HSDagStandardQX, newXml, 4);
 		
 		// Remove faulty formulas from csp. They will be added to diagnoses later
 //		List<Constraint> constraintsToIgnore = new ArrayList<Constraint>(formulasToSetFaulty.size());

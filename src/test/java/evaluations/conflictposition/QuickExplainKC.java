@@ -1,30 +1,30 @@
 package evaluations.conflictposition;
 
 import choco.kernel.model.constraints.Constraint;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 
 import java.util.List;
 
 
 /**
  * A method that overrides the isConsistent method of QX and uses a
- * set of known conflicts to determine if a set of statements is conflict
+ * set of known conflicts to determine if a set of statements is nodeLabel
  * @author dietmar
  *
  */
-public class QuickExplainKC extends QuickXPlain<Constraint> {
+public class QuickExplainKC extends ConstraintsQuickXPlain<Constraint> {
 
+	private int numberOfConstraints = 0;
 	/**
 	 * Construct QX from the data
 	 * @param sessionData
 	 * @param dagbuilder
 	 */
-	public QuickExplainKC(ExquisiteSession sessionData,
-			AbstractHSDagBuilder dagbuilder) {
-		super(sessionData, dagbuilder);
+	public QuickExplainKC(ExcelExquisiteSession sessionData,
+			int numberOfConstraints) {
+		super(sessionData);
 //		System.out.println("Created QXP with known conflicts");
 	}
 
@@ -33,7 +33,7 @@ public class QuickExplainKC extends QuickXPlain<Constraint> {
 	public boolean isConsistent(List<Constraint> constraints)
 			throws DomainSizeException {
 		
-		return QXKCTools.isConsistent(constraints, this.diagnosisEngine);
+		return QXKCTools.isConsistent(constraints, this.numberOfConstraints);
 	}
 	
 }

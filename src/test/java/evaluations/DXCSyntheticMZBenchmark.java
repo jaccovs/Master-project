@@ -12,7 +12,7 @@ import evaluations.dxc.synthetic.model.DXCComponent;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
 import evaluations.dxc.synthetic.tools.DXCScenarioParser;
 import evaluations.dxc.synthetic.tools.DXCSyntheticXMLParser;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 
 import java.io.BufferedReader;
 import java.io.File;

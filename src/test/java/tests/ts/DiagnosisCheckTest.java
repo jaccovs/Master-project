@@ -5,7 +5,7 @@ import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import evaluations.tools.DiagnosisCheck;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.ArrayList;
 import java.util.List;

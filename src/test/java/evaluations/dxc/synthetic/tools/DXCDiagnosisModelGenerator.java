@@ -7,7 +7,7 @@ import evaluations.dxc.synthetic.model.DXCComponent;
 import evaluations.dxc.synthetic.model.DXCConnection;
 import evaluations.dxc.synthetic.model.DXCSystem;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 
 import java.io.BufferedReader;
@@ -224,14 +224,14 @@ public class DXCDiagnosisModelGenerator {
 			falseVarsArr[i] = falseVars.get(i);
 		}
 
-		model.addCorrectConstraint(Choco.and(trueVarsArr), "true");
-		model.addCorrectConstraint(Choco.nor(falseVarsArr), "false");
+		model.addCorrectFormula(Choco.and(trueVarsArr), "true");
+		model.addCorrectFormula(Choco.nor(falseVarsArr), "false");
 
 		// add an empty example, because it is needed for diagnosis
 		Example<Constraint> ex = new Example<>();
 		List<Example<Constraint>> posExamples = new ArrayList<>();
 		posExamples.add(ex);
-		model.setPositiveExamples(posExamples);
+		model.setConsistentExamples(posExamples);
 
 		return model;
 	}

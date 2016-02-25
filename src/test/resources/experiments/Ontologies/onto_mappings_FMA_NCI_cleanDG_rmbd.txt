@@ -902,7 +902,7 @@ http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Sympathetic
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Synapse|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Synapse
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Synovial_fluid|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Synovial_Fluid
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Synovial_membrane|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Synovial_Membrane
-http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte
+http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_cytotoxic_cell|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cytotoxic_T-Lymphocyte
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Talus|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Talus
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Talus|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Astragalus
@@ -2726,7 +2726,7 @@ http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Renal_inter
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Striated_muscle_cell|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Striated_Muscle_Tissue_Cell
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Surface_ectoderm|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Surface_Ectoderm
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Syncytiotrophoblast_cell|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Syncytiotrophoblastic_Cell
-http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphoblast|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphoblast
+http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphoblast|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphoblast
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Alveolus|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Alveolus
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#B_lymphoblast|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#B-Lymphoblast
 http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Chief_cell|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Chief_Cell

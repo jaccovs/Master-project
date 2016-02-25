@@ -6,10 +6,10 @@ import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
 import org.exquisite.datamodel.ExquisiteAppXML;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -61,7 +61,7 @@ public class Mutation {
 	}
 	
 	public void run() {
-		ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(this.exquisiteAppXML);
+		ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>(this.exquisiteAppXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -76,7 +76,7 @@ public class Mutation {
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
 				System.out.println("-- Diagnosis #" + i);
-				System.out.println("    " + Utilities.printConstraintList(diagnoses.get(i).getElements(), sessionData.diagnosisModel));
+				System.out.println("    " + Utilities.printConstraintList(diagnoses.get(i).getElements(), sessionData.getDiagnosisModel()));
 				System.out.println("--");
 			}
 		} catch (NegativeArraySizeException e){

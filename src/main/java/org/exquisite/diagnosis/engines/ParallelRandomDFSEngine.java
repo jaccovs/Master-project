@@ -1,6 +1,7 @@
 package org.exquisite.diagnosis.engines;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.core.engines.AbstractHSDagEngine;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.engines.common.NodeExpander;
 import org.exquisite.diagnosis.engines.common.SharedCollection;
 import org.exquisite.diagnosis.engines.heuristic.ExtendedDAGNode;
@@ -8,10 +9,10 @@ import org.exquisite.diagnosis.engines.prdfs.NodeSelector;
 import org.exquisite.diagnosis.engines.prdfs.NodeWithConstraint;
 import org.exquisite.diagnosis.engines.prdfs.PRDFSNodeExpander;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.models.Diagnosis;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 import org.exquisite.tools.Debug;
 
 import java.util.*;
@@ -19,10 +20,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CONSTRUCTED_NODES;
+import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
+
 /**
  * @author Thomas
  */
-public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
+public class ParallelRandomDFSEngine<T> extends AbstractHSDagEngine<T> {
 
     public static boolean MINIMIZE_DIAGNOSES = true;
     public boolean doMinimizationInThreads = true;
@@ -52,7 +56,7 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
      *
      * @param sessionData
      */
-    public ParallelRandomDFSEngine(ExquisiteSession sessionData, int threads) {
+    public ParallelRandomDFSEngine(ExcelExquisiteSession sessionData, int threads) {
         super(sessionData);
 //		System.out.println("Heuristic engine of size: " + threads);
         Debug.QX_DEBUGGING = false;
@@ -73,7 +77,7 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
         // Do an initial check
         if (this.rootNode == null) {
             // Initialize the quick explain object
-            QuickXPlain<T> qxplain = NodeExpander.createQX(this.sessionData, this);
+            ConstraintsQuickXPlain<T> qxplain = NodeExpander.createQX(this.sessionData);
             ConflictCheckingResult<T> checkingResult = qxplain.checkExamples(
                     model.getPositiveExamples(), new ArrayList<>(),
                     true);
@@ -84,14 +88,14 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
 
             // In fact, we can run parallelqx here and start with new search
             // threads whenever a new
-            // conflict is available
+            // nodeLabel is available
 
             if (checkingResult.conflictFound()) {
 //				System.out.println("Have to do a tests.diagnosis");
                 // Create the rootnode
                 List<T> tempSet = new ArrayList<T>();
                 tempSet.addAll(checkingResult.conflicts.get(0));
-                incrementConstructedNodes();
+                incrementCounter(COUNTER_CONSTRUCTED_NODES);
                 this.rootNode = new ExtendedDAGNode<T>(tempSet);
                 this.rootNode.examplesToCheck = new ArrayList<>(
                         checkingResult.failedExamples);
@@ -118,8 +122,8 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
                     threadPool = Executors.newFixedThreadPool(nbThreads);
                     // Find out if we should stop early
                     int maxDiags = DIAG_LIMIT;
-                    if (sessionData.config.maxDiagnoses > 0) {
-                        maxDiags = sessionData.config.maxDiagnoses;
+                    if (sessionData.getConfiguration().maxDiagnoses > 0) {
+                        maxDiags = sessionData.getConfiguration().maxDiagnoses;
                     }
 
                     // TS: If we search for only a single tests.diagnosis, the main thread does the tests.diagnosis minimization
@@ -172,7 +176,7 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
                         }
                     }
 
-                    finishedTime = System.nanoTime();
+                    //finishedTime = System.nanoTime();
 
 //					System.out.println("Diags found: " + knownDiags.getCollection().size());
 //					System.out.println("MaxDiags was: " + maxDiags);
@@ -244,10 +248,10 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
             List<T> shrinkedDiagnosis = new ArrayList<T>(diagnosisToCheck);
             shrinkedDiagnosis.remove(c);
 
-            QuickXPlain<T> qx = NodeExpander.createQX(sessionData, null);
+            ConstraintsQuickXPlain<T> qx = NodeExpander.createQX(sessionData);
             ConflictCheckingResult result;
             try {
-                result = qx.checkExamples(sessionData.diagnosisModel.getPositiveExamples(), shrinkedDiagnosis, false);
+                result = qx.checkExamples(sessionData.getDiagnosisModel().getPositiveExamples(), shrinkedDiagnosis, false);
 
                 if (Thread.currentThread().isInterrupted()) {
                     return null;
@@ -273,7 +277,7 @@ public class ParallelRandomDFSEngine<T> extends AbstractHSDagBuilder<T> {
     // Not needed here - remains empty for the moment.
     // Not sure it should be in the superclass anyway.
     @Override
-    public void expandNodes(List<DAGNode<T>> nodesToExpand)
+    public void expandNodes(List<Node<T>> nodesToExpand)
             throws DomainSizeException {
     }
 }

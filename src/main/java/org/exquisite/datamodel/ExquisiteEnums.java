@@ -26,8 +26,8 @@ public class ExquisiteEnums {
      * An enum for tests.diagnosis engine configuration descriptions.
      */
     public enum EngineType {
-        HSDagStandardQX,    //HSDagBuilder with standard QX implementation.
-        ParaHSDagStandardQX, //ParallelHSDagBuilder with standard QX implementation.
+        HSDagStandardQX,    //HSDagEngine with standard QX implementation.
+        ParaHSDagStandardQX, //ParallelHSDagEngine with standard QX implementation.
         FullParaHSDagStandardQX, // full parallelization
         HeuristicSearch, // depth first
         Hybrid, // Hybrid dfs + bfs

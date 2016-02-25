@@ -3,17 +3,19 @@ package tests.dj.heuristicsearch;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.datamodel.ExcelExquisiteSession;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.HeuristicDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.*;
 
 /**
  * Test driver for heuristic search
@@ -137,7 +139,7 @@ public class TestHeuristicSearch {
 		pos1.addConstraint(Choco.eq(v4, 3), "v4=3");
 		pos1.addConstraint(Choco.eq(v6, 6), "v6=6");
 
-		model.getPositiveExamples().add(pos1);
+		model.getConsistentExamples().add(pos1);
 
 		// Create a runner for the example
 		// c3runner = new C3Runner() {
@@ -161,7 +163,7 @@ public class TestHeuristicSearch {
 		// pos2.addConstraint(Choco.eq(v1, 3), "v1=3");
 		// pos1.addConstraint(Choco.eq(v6, 6), "v6=6");
 
-		// model.getPositiveExamples().add(pos2);
+		// model.getConsistentExamples().add(pos2);
 
 		return model;
 
@@ -174,11 +176,11 @@ public class TestHeuristicSearch {
 		DiagnosisModel<Constraint> model = createSimpleDiagnosisModel();
 
 		// Create a session
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
-		sessionData.config.searchStrategy = SearchStrategies.Default;
-		sessionData.config.searchDepth = 3;
-		sessionData.config.maxDiagnoses = 1;
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+		sessionData.getDiagnosisModel() = model;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().searchDepth = 3;
+		sessionData.getConfiguration().maxDiagnoses = 1;
 
 		// Create the engine and run
 		Debug.DEBUGGING_ON = false;
@@ -204,7 +206,7 @@ public class TestHeuristicSearch {
 				+ (stop - start) + " millisecs");
 
 
-		// System.out.println("Constructed nodes: " + ((AbstractHSDagBuilder)
+		// System.out.println("Constructed nodes: " + ((AbstractHSDagEngine)
 		// engine).allConstructedNodes.getCollection().size());
 		// // TEST ONLY
 
@@ -213,15 +215,15 @@ public class TestHeuristicSearch {
 			System.out.println("The diagn: " + d + " , elements: " + d.getElements().size());
 
 			System.out.println(Utilities.printSortedDiagnoses(diagnoses, '\n'));
-			System.out.println("Nb of solves : " + engine.getCspSolvedCount());
-			System.out.println("Nb of s calls: " + engine.getSolverCalls());
-			System.out.println("Nb of props  : " + engine.getPropagationCount());
+			System.out.println("Nb of solves : " + getCounter(COUNTER_CSP_SOLUTIONS));
+			System.out.println("Nb of s calls: " + getCounter(COUNTER_SOLVER_CALLS).value());
+			System.out.println("Nb of props  : " + getCounter(COUNTER_PROPAGATION).value());
 		} else {
 			System.out.println("No diagnosis found");
 		}
 
 
-		//NodeUtilities.traverseNode(engine.getRootNode(), sessionData.diagnosisModel.getConstraintNames());
+		//NodeUtilities.traverseNode(engine.getRootNode(), sessionData.getDiagnosisModel().getConstraintNames());
 
 	}
 }

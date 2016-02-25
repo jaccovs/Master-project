@@ -1,9 +1,8 @@
 package org.exquisite.diagnosis.quickxplain.ontologies;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.core.ISolver;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.core.ISolver;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -42,7 +41,7 @@ public class OntologySolver implements ISolver<OWLLogicalAxiom> {
     }
 
     @Override
-    public void createModel(QuickXPlain<OWLLogicalAxiom> qx, List<OWLLogicalAxiom> constraints) {
+    public void createModel(ConstraintsQuickXPlain<OWLLogicalAxiom> qx, List<OWLLogicalAxiom> constraints) {
         try {
 //			_mutex.lock();
             // We need to use a custom IRI, because the automatic generation of IRIs can result in endless loops in multithreaded environments.
@@ -72,7 +71,7 @@ public class OntologySolver implements ISolver<OWLLogicalAxiom> {
     }
 
     @Override
-    public boolean isFeasible(IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine) {
+    public boolean isFeasible() {
 //		_mutex.lock();
 
         reasoner = createReasoner(ontology);
@@ -97,7 +96,7 @@ public class OntologySolver implements ISolver<OWLLogicalAxiom> {
     }
 
     @Override
-    public boolean isEntailed(IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine, Set<OWLLogicalAxiom> entailments) {
+    public boolean isEntailed(Set<OWLLogicalAxiom> entailments) {
         reasoner = createReasoner(ontology);
 
         Set<OWLAxiom> axioms = new HashSet<OWLAxiom>();
@@ -105,8 +104,7 @@ public class OntologySolver implements ISolver<OWLLogicalAxiom> {
             // OWLAxiom axiom = ((AxiomConstraint) c).getAxiom();
             axioms.add(axiom);
         }
-        boolean isEntailed = reasoner.isEntailed(axioms);
-        return isEntailed;
+        return reasoner.isEntailed(axioms);
     }
 
     @Override

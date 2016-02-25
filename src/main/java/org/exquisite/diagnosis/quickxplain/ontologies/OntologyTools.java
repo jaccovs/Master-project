@@ -1,7 +1,7 @@
 package org.exquisite.diagnosis.quickxplain.ontologies;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -126,7 +126,7 @@ public class OntologyTools {
         List<OWLLogicalAxiom> allConstraints = new ArrayList<>(model.getCorrectStatements());
         allConstraints.addAll(model.getPossiblyFaultyStatements());
         solver.createModel(null, allConstraints);
-        if (solver.isFeasible(null)) {
+        if (solver.isFeasible()) {
             Set<OWLClass> entities = solver.getReasoner().getUnsatisfiableClasses().getEntities();
             entities.remove(OWLManager.getOWLDataFactory().getOWLNothing());
             if (!entities.isEmpty()) {
@@ -138,7 +138,7 @@ public class OntologyTools {
                             .getOWLNamedIndividual(IRI.create(iri + "d_" + cl.getIRI().getFragment()));
 //                    getKnowledgeBase().addBackgroundFormulas(Collections.<OWLLogicalAxiom>singleton(fac.getOWLClassAssertionAxiom(cl, test_individual)));
                     OWLLogicalAxiom ax = fac.getOWLClassAssertionAxiom(cl, test_individual);
-                    model.addCorrectConstraint(ax, ax.toString());
+                    model.addCorrectFormula(ax, ax.toString());
                 }
             }
         }
@@ -154,13 +154,13 @@ public class OntologyTools {
 
         for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
             if (setAssertionsCorrect && axiom.toString().contains("Assertion")) {
-                diagModel.addCorrectConstraint(axiom, axiom.toString());
+                diagModel.addCorrectFormula(axiom, axiom.toString());
             } else {
                 diagModel.addPossiblyFaultyConstraint(axiom, axiom.toString());
             }
         }
 
-        diagModel.getPositiveExamples().add(new Example());
+        diagModel.getPositiveExamples().add(new Example<>());
 
         return diagModel;
     }

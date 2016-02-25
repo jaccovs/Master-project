@@ -7,11 +7,11 @@ import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.i8n.Culture;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -29,7 +29,7 @@ public class ConstraintGraphTest {
 	String xmlFilePath = ".\\experiments\\enase-2013\\singleFault\\exquisite_20.xml";
 //	String xmlFilePath = ".\\experiments\\enase-2013\\doubleFault\\ex20.xml";
 
-	ExquisiteSession<Constraint> sessionData;
+	ExcelExquisiteSession<Constraint> sessionData;
 	
 	/**
 	 * Main entry point
@@ -58,7 +58,7 @@ public class ConstraintGraphTest {
 		Culture.setCulture(Locale.GERMAN);
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
 		//transform the model into a CSP model...
-		this.sessionData = new ExquisiteSession<>(appXML);
+		this.sessionData = new ExcelExquisiteSession<>(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -71,7 +71,7 @@ public class ConstraintGraphTest {
 		CPModel cpmodel = new CPModel();
 		// Copy stuff there.
 		// copy the variables
-		for (Variable v : sessionData.diagnosisModel.getVariables()) {
+		for (Variable v : sessionData.getDiagnosisModel().getVariables()) {
 			cpmodel.addVariable(v);
 		}
 		// Let's get the input variables
@@ -81,7 +81,7 @@ public class ConstraintGraphTest {
 //		System.out.println("nb of correct ones: " + model.getCorrectStatements().size());
 		
 		// add the other constraints from the model
-		for(Constraint constraint : this.sessionData.diagnosisModel.getPossiblyFaultyStatements()) 
+		for(Constraint constraint : this.sessionData.getDiagnosisModel().getPossiblyFaultyStatements())
 		{
 			cpmodel.addConstraint(constraint);
 		}
@@ -91,8 +91,8 @@ public class ConstraintGraphTest {
 
 		//  Lets get some better sorting
 		List<Constraint> sortedConstraints = 
-				QuickXPlain.sortConstraintsByArityAndCalculuateSplittingPoints(
-						this.sessionData.diagnosisModel, inputs, splitPoints);
+				ConstraintsQuickXPlain.sortConstraintsByArityAndCalculuateSplittingPoints(
+						this.sessionData.getDiagnosisModel(), inputs, splitPoints);
 //		
 //		
 //		// Get a reverse map
@@ -205,24 +205,24 @@ public class ConstraintGraphTest {
 //		}
 		
 		// single test
-		Example<Constraint> example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-		DiagnosisModel<Constraint> copiedModel = new DiagnosisModel<>(this.sessionData.diagnosisModel);
+		Example<Constraint> example = this.sessionData.getDiagnosisModel().getConsistentExamples().get(0);
+		DiagnosisModel<Constraint> copiedModel = new DiagnosisModel<>(this.sessionData.getDiagnosisModel());
 		
 		// add the example to the set of correct constraints
 		for(Constraint constraint : example.constraints)
 		{
-			copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
+			copiedModel.addCorrectFormula(constraint, example.constraintNames.get(constraint));
 		}
 
 		copiedModel.removeConstraintsToIgnore(new ArrayList<>());
 		
-//		QuickXPlain qx = new QuickXPlain();
+//		ConstraintsQuickXPlain qx = new ConstraintsQuickXPlain();
 //		qx.setConstraintModel(copiedModel);
 //		ExampleChecker exChecker = new ExampleChecker(qx);
 //		exChecker.setModel(model);
 //		
 //		// Get the first example
-//		example = model.getPositiveExamples().get(0);
+//		example = model.getConsistentExamples().get(0);
 //		copiedModel = new DiagnosisModel(model);
 //		copiedModel.setPossiblyFaultyStatements(orderedPossiblyFaultyConstraints);
 //		// Set the splitpoints
@@ -231,18 +231,18 @@ public class ConstraintGraphTest {
 //		// add the example to the set of correct constraints
 //		for(Constraint constraint : example.constraints)
 //		{
-//			copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
+//			copiedModel.addCorrectFormula(constraint, example.constraintNames.get(constraint));
 //		}
 //		
 //		copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
 //		qx.setConstraintModel(copiedModel);
 //		
 //		long start = System.currentTimeMillis();
-//		List<Constraint> conflict = qx.findConflict();
+//		List<Constraint> nodeLabel = qx.findConflict();
 //		long stop = System.currentTimeMillis();
 //		long duration = stop - start;
 //
-//		System.out.println("Found a conflict: " + Utilities.printConstraintList(conflict, model));
+//		System.out.println("Found a nodeLabel: " + Utilities.printConstraintList(nodeLabel, model));
 //		System.out.println("Solves: " + qx.getSolverCalls());
 //		System.out.println("Time: " + duration);
 //		
@@ -253,7 +253,7 @@ public class ConstraintGraphTest {
 //		
 //		
 //	
-		// Try to find one first conflict.
+		// Try to find one first nodeLabel.
 		Debug.DEBUGGING_ON = true;
 
 		long totalTimeOrig = 0;
@@ -261,15 +261,15 @@ public class ConstraintGraphTest {
 		int iterations = 1;
 		for (int i=0;i<=iterations;i++) {
 			// Skip the first run, ramp up ..
-			QuickXPlain<Constraint> qx = new QuickXPlain<>(sessionData, null);
+			ConstraintsQuickXPlain<Constraint> qx = new ConstraintsQuickXPlain<>(sessionData);
 									
 			// Get the first example
-			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel<>(this.sessionData.diagnosisModel);
+			example = this.sessionData.getDiagnosisModel().getConsistentExamples().get(0);
+			copiedModel = new DiagnosisModel<>(this.sessionData.getDiagnosisModel());
 			
 			// add the example to the set of correct constraints
 			for(Constraint constraint : example.constraints){
-				copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
+				copiedModel.addCorrectFormula(constraint, example.constraintNames.get(constraint));
 			}
 
 			copiedModel.removeConstraintsToIgnore(new ArrayList<>());
@@ -283,37 +283,37 @@ public class ConstraintGraphTest {
 			long duration1 = stop - start;
 		
 			if (i>0) {
-				System.out.println("Found a conflict: " + Utilities.printConstraintList(conflict, this.sessionData.diagnosisModel));
+				System.out.println("Found a nodeLabel: " + Utilities.printConstraintList(conflict, this.sessionData.getDiagnosisModel()));
 //				System.out.println("Solves: " + qx.getSolverCalls());
 				System.out.println("Time: " + duration1);
 				System.out.println();
 				totalTimeOrig+= duration1;
 			}
 			// Get the first example
-			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.diagnosisModel);
+			example = this.sessionData.getDiagnosisModel().getConsistentExamples().get(0);
+			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.getDiagnosisModel());
 			
 			// add the example to the set of correct constraints
 			for(Constraint constraint : example.constraints)
 			{
-				copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
+				copiedModel.addCorrectFormula(constraint, example.constraintNames.get(constraint));
 			}
 			
-			copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
+			copiedModel.removeConstraintsToIgnore(new ArrayList<>());
 			qx.setDiagnosisModel(copiedModel);
 
 
-			qx = new QuickXPlain<Constraint>(sessionData, null);
+			qx = new ConstraintsQuickXPlain<>(sessionData);
 									
 			// Get the first example
-			example = this.sessionData.diagnosisModel.getPositiveExamples().get(0);
-			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.diagnosisModel);
+			example = this.sessionData.getDiagnosisModel().getConsistentExamples().get(0);
+			copiedModel = new DiagnosisModel<Constraint>(this.sessionData.getDiagnosisModel());
 			copiedModel.setPossiblyFaultyStatements(sortedConstraints);
 
 			// add the example to the set of correct constraints
 			for(Constraint constraint : example.constraints)
 			{
-				copiedModel.addCorrectConstraint(constraint, example.constraintNames.get(constraint));
+				copiedModel.addCorrectFormula(constraint, example.constraintNames.get(constraint));
 			}
 			
 			copiedModel.removeConstraintsToIgnore(new ArrayList<Constraint>());
@@ -325,7 +325,7 @@ public class ConstraintGraphTest {
 			long duration2 = stop - start;
 
 			if (i>0) {
-				System.out.println("Found a conflict: " + Utilities.printConstraintList(conflict, this.sessionData.diagnosisModel));
+				System.out.println("Found a nodeLabel: " + Utilities.printConstraintList(conflict, this.sessionData.getDiagnosisModel()));
 //				System.out.println("Solves: " + qx.getSolverCalls());
 				System.out.println("Time: " + duration2);
 				totalTimeSorted+= duration2;

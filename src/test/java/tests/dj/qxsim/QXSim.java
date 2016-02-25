@@ -1,21 +1,23 @@
 package tests.dj.qxsim;
 
 import choco.kernel.model.constraints.Constraint;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
 import org.exquisite.diagnosis.models.Example;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 
 import java.util.*;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_QXP_CALLS;
+import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
 
 /**
  * This class acts like quickxplain but works on a predefined set of known and artificial conflicts
  * @author dietmar
  *
  */
-public class QXSim extends QuickXPlain<Constraint> {
+public class QXSim extends ConstraintsQuickXPlain<Constraint> {
 
 	// Information about the reasoning..
 	public static Map<Constraint, String> constraintNames = new HashMap<Constraint, String>();
@@ -29,10 +31,9 @@ public class QXSim extends QuickXPlain<Constraint> {
 	/**
 	 * Constructor
 	 * @param sessionData
-	 * @param dagbuilder
 	 */
-	public 	QXSim (ExquisiteSession sessionData, AbstractHSDagBuilder dagbuilder) {
-		super(sessionData, dagbuilder);
+	public 	QXSim(ExcelExquisiteSession sessionData) {
+		super(sessionData);
 	}
 
 	/**
@@ -52,16 +53,16 @@ public class QXSim extends QuickXPlain<Constraint> {
 	public ConflictCheckingResult<Constraint> checkExamples(List<Example<Constraint>> examples,
 			List<Constraint> constraintsToIgnore, boolean createConflicts)
 			throws DomainSizeException {
-		if (diagnosisEngine != null) {
-			diagnosisEngine.incrementQXPCalls();
-		}
+
+		incrementCounter(COUNTER_QXP_CALLS);
+
 		//Ignore the examples;
-//		DiagnosisModel model = dagBuilder.getSessionData().diagnosisModel;
+//		DiagnosisModel model = dagBuilder.getDiagnosisModel().getDiagnosisModel();
 		// Simply look into the conflicts.
 		// getConflict only uses waitingTime, if we want to create conflicts
 		List<Constraint> conflict = getConflict(constraintsToIgnore, createConflicts);
 //		System.out.println("Constraints to ignore: " + DiagnosisSimulation.conflictToString(constraintNames, constraintsToIgnore));
-//		System.out.println("Found conflict in QYSIM: " + DiagnosisSimulation.conflictToString(constraintNames, conflict));
+//		System.out.println("Found nodeLabel in QYSIM: " + DiagnosisSimulation.conflictToString(constraintNames, nodeLabel));
 		ConflictCheckingResult<Constraint> result = new ConflictCheckingResult<>();
 
 		if (createConflicts && conflict.size() > 0) {
@@ -82,7 +83,7 @@ public class QXSim extends QuickXPlain<Constraint> {
 	public boolean isConsistent(List<Constraint> constraints) {
 //		System.out.println("Checking consistency of " + Utilities.printConstraintList(constraints, this.currentDiagnosisModel));
 		// Go through the list of known conflicts and return false
-		// if there's a conflict without an overlap
+		// if there's a nodeLabel without an overlap
 		for (List<Constraint> conflict : QXSim.conflicts) {
 			Set<Constraint> toTest = new HashSet<Constraint>(constraints);
 			Set<Constraint> conflictSet = new HashSet<Constraint>(conflict);
@@ -97,14 +98,14 @@ public class QXSim extends QuickXPlain<Constraint> {
 	}
 	
 	/**
-	 * Returns a random conflict from the set of conflicts which contain none of the ignorable constraints
+	 * Returns a random nodeLabel from the set of conflicts which contain none of the ignorable constraints
 	 * @param constraintsToIgnore
 	 * @param useWaitingTime
 	 * @return
 	 */
 	List<Constraint> getConflict(List<Constraint> constraintsToIgnore, boolean useWaitingTime) {
 
-		// Simulate some more computation time, before we return the conflict
+		// Simulate some more computation time, before we return the nodeLabel
 //		if (useWaitingTime) {
 			long start = System.currentTimeMillis();
 			if (ARTIFICIAL_WAIT_TIME > 0) {
@@ -130,7 +131,7 @@ public class QXSim extends QuickXPlain<Constraint> {
 			copiedConflict.removeAll(constraintsToIgnore);
 			if (copiedConflict.size() == conflict.size()) {
 
-				// Found a conflict
+				// Found a nodeLabel
 
 				return conflict;
 			}

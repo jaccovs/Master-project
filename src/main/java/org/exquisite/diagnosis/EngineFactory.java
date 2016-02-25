@@ -2,12 +2,15 @@ package org.exquisite.diagnosis;
 
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.HSDagEngine;
+import org.exquisite.core.engines.SpectrumBasedDiagnosisEngine;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.engines.*;
 import org.exquisite.diagnosis.invquickxplain.InvQXDiagnosisEngine;
 import org.exquisite.diagnosis.invquickxplain.MXPandInvQXP;
@@ -19,7 +22,7 @@ import java.util.Hashtable;
 //import evaluations.dxc.synthetic.minizinc.MZModelGenerator;
 
 /**
- * Just a helper class to build HSDagBuilder (or any other class that implements
+ * Just a helper class to build HSDagEngine (or any other class that implements
  * IDiagnosisEngine) instances in different configurations.
  *
  * @author David
@@ -35,7 +38,7 @@ public class EngineFactory {
     // * could be found that matches the configuration description.
     // */
     // public static IDiagnosisEngine makeEngine(EngineType config,
-    // ExquisiteSession sessionData) throws UnsupportedEngineException{
+    // ExcelExquisiteSession sessionData) throws UnsupportedEngineException{
     // switch (config){
     // case HSDagStandardQX:
     // return makeDAGEngineStandardQx(sessionData);
@@ -63,7 +66,7 @@ public class EngineFactory {
 
     public static IDiagnosisEngine<Constraint> makeEngineFromAppXML(EngineType engineType, ExquisiteAppXML appXML,
                                                                     int threadPoolSize) {
-        ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(appXML);
+        ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>(appXML);
 
         // Prepare all the internal things to load the xml file
         ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
@@ -73,7 +76,7 @@ public class EngineFactory {
         modelLoader.loadDiagnosisModelFromXML();
 
         // Use a default strategy
-        sessionData.config.searchStrategy = SearchStrategies.Default;
+        sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 
         return makeEngine(engineType, sessionData, threadPoolSize);
     }
@@ -89,7 +92,7 @@ public class EngineFactory {
      * @return
      */
     public static <T> IDiagnosisEngine<T> makeEngine(EngineType engineType,
-                                                     ExquisiteSession<T> sessionData, int threadPoolSize) {
+                                                     ExcelExquisiteSession<T> sessionData, int threadPoolSize) {
         switch (engineType) {
             case HSDagStandardQX:
                 return makeDAGEngineStandardQx(sessionData);
@@ -118,11 +121,11 @@ public class EngineFactory {
     }
 
 
-    private static <T> IDiagnosisEngine<T> makeMZDiagnosisEngine(ExquisiteSession sessionData, int threadPoolSize) {
+    private static <T> IDiagnosisEngine<T> makeMZDiagnosisEngine(ExcelExquisiteSession sessionData, int threadPoolSize) {
         /*
         MZModelGenerator mz = new MZModelGenerator(sessionData);
-        MZDiagnosisEngine mzDiagnosisEngine = new MZDiagnosisEngine(mz.getModel(), mz.getAbnormalsCount(), mz.getSearchType(), threadPoolSize);
-        mzDiagnosisEngine.setSessionData(sessionData);
+        MZDiagnosisEngine mzDiagnosisEngine = new MZDiagnosisEngine(mz.getDiagnosisModel(), mz.getAbnormalsCount(), mz.getSearchType(), threadPoolSize);
+        mzDiagnosisEngine.setDiagnosisModel(sessionData);
         return mzDiagnosisEngine;
         */
         throw new RuntimeException("Removed dependency on the expriments");
@@ -133,32 +136,32 @@ public class EngineFactory {
      * * @return
      */
     public static <T> IDiagnosisEngine<T> makeHeuristicSearchEngine(
-            ExquisiteSession sessionData, int threads) {
+            ExcelExquisiteSession sessionData, int threads) {
         IDiagnosisEngine<T> engine = new HeuristicDiagnosisEngine<>(sessionData, threads);
         return engine;
     }
 
     /**
-     * Returns an instance of HSDagBuilder using the standard QuickXPlain
+     * Returns an instance of HSDagEngine using the standard ConstraintsQuickXPlain
      * implementation.
      *
      * @return
      */
     public static <T> IDiagnosisEngine<T> makeDAGEngineStandardQx(
-            ExquisiteSession sessionData) {
-        IDiagnosisEngine<T> engine = new HSDagBuilder<>(sessionData);
+            ExcelExquisiteSession sessionData) {
+        IDiagnosisEngine<T> engine = new HSDagEngine<>(sessionData);
         return engine;
     }
 
     /**
-     * Returns an instance of ParallelHSDagBuilder using standard QX
+     * Returns an instance of ParallelHSDagEngine using standard QX
      * implementation.
      *
      * @return
      */
     public static <T> IDiagnosisEngine<T> makeParaDagEngineStandardQx(
-            ExquisiteSession sessionData, int threadPoolSize) {
-        IDiagnosisEngine<T> engine = new ParallelHSDagBuilder<>(sessionData, threadPoolSize);
+            ExcelExquisiteSession sessionData, int threadPoolSize) {
+        IDiagnosisEngine<T> engine = new ParallelHSDagEngine<>(sessionData, threadPoolSize);
         return engine;
     }
 
@@ -169,8 +172,8 @@ public class EngineFactory {
      * @return
      */
     public static <T> IDiagnosisEngine<T> makeFullParaDagEngineStandardQx(
-            ExquisiteSession sessionData, int threadPoolSize) {
-        IDiagnosisEngine<T> engine = new FullParallelHSDagBuilder<>(sessionData, threadPoolSize);
+            ExcelExquisiteSession sessionData, int threadPoolSize) {
+        IDiagnosisEngine<T> engine = new FullParallelHSDagEngine<>(sessionData, threadPoolSize);
         return engine;
     }
 

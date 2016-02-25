@@ -1,17 +1,16 @@
 package org.exquisite.diagnosis.quickxplain;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
 import org.exquisite.diagnosis.models.Example;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class KlagenfurtQx<T> extends QuickXPlain<T> {
+public class KlagenfurtQx<T> extends ConstraintsQuickXPlain<T> {
 
-    public KlagenfurtQx(ExquisiteSession<T> sessionData, AbstractHSDagBuilder<T> dagbuilder) {
-        super(sessionData, dagbuilder);
+    public KlagenfurtQx(ExcelExquisiteSession<T> sessionData) {
+        super(sessionData);
     }
 
 
@@ -42,7 +41,7 @@ public class KlagenfurtQx<T> extends QuickXPlain<T> {
     public ConflictCheckingResult<T> checkExamples(List<Example<T>> examples, List<T> constraintsToIgnore,
                                                    boolean createConflicts) throws DomainSizeException {
         // TODO Auto-generated method stub
-        List<Example<T>> allExamples = new ArrayList<>(this.sessionData.diagnosisModel.getPositiveExamples());
+        List<Example<T>> allExamples = new ArrayList<>(this.sessionData.getDiagnosisModel().getPositiveExamples());
         return super.checkExamples(allExamples, constraintsToIgnore, createConflicts);
     }
 }

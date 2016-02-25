@@ -5,11 +5,11 @@ import evaluations.dxc.synthetic.model.DXCComponent;
 import evaluations.dxc.synthetic.model.DXCScenarioData;
 import evaluations.dxc.synthetic.model.DXCSystem;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 
 import java.io.BufferedReader;
@@ -84,11 +84,11 @@ public class DXCTools {
 			DiagnosisModel<Constraint> diagModel = dmg.createDiagnosisModel(system, scenario.getCorrectState());
 			
 			// Create the engine
-			ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(null,
+			ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>(null,
 					null, new DiagnosisModel<>(diagModel));
 			// Do not try to find a better strategy for the moment
-			sessionData.config.searchStrategy = SearchStrategies.Default;
-			sessionData.config.searchDepth = -1;
+			sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+			sessionData.getConfiguration().searchDepth = -1;
 
 			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData);

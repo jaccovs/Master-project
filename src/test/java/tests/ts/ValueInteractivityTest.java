@@ -6,17 +6,16 @@ import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.common.NodeExpander;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.tools.Utilities;
 
 import java.util.*;
@@ -94,14 +93,14 @@ public class ValueInteractivityTest {
         ExquisiteAppXML correctXML = ExquisiteAppXML.parseToAppXML(inputFileDirectory + correctXMLFilename);
         ExquisiteAppXML mutatedXML = ExquisiteAppXML.parseToAppXML(inputFileDirectory + mutatedXMLFilename);
 
-        AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder)
+        AbstractHSDagEngine diagnosisEngine = (AbstractHSDagEngine)
                 EngineFactory.makeEngineFromAppXML(EngineType.HSDagStandardQX, mutatedXML, 4);
         //System.out.println("Created an engine for " + fullInputFilename);
         // Set the search depth
         diagnosisEngine.setSearchDepth(-1);
-        diagnosisEngine.getSessionData().config.searchDepth = -1;
+        diagnosisEngine.getDiagnosisModel().getConfiguration().searchDepth = -1;
         // Shuffle the constraints
-        //diagnosisEngine.sessionData.diagnosisModel.shufflePossiblyFaulyConstraints();
+        //diagnosisEngine.sessionData.getDiagnosisModel().shufflePossiblyFaulyConstraints();
 
         System.out.println(
                 "Running test for " + mutatedXMLFilename + " with " + diagnosisEngine.model.getConstraintNames()
@@ -159,7 +158,7 @@ public class ValueInteractivityTest {
      * @param model
      */
     private void removeCellsTreeAnalysis(List<String> interimsToCheck, DiagnosisModel<Constraint> model) {
-        Map<String, Constraint> irrelevantConstraints = model.getPositiveExamples().get(0).irrelevantConstraints;
+        Map<String, Constraint> irrelevantConstraints = model.getConsistentExamples().get(0).irrelevantConstraints;
         for (int i = 0; i < interimsToCheck.size(); i++) {
             String cell = interimsToCheck.get(i);
             if (irrelevantConstraints.get(cell) != null) {
@@ -435,7 +434,7 @@ public class ValueInteractivityTest {
         IDiagnosisEngine<Constraint> diagnosisEngine = EngineFactory.makeEngineFromAppXML
                 (EngineType.HSDagStandardQX, newXml, 4);
 
-        lastCalculatedModel = diagnosisEngine.getModel();
+        lastCalculatedModel = diagnosisEngine.getDiagnosisModel();
 
         long startTime = System.currentTimeMillis();
         try {
@@ -466,14 +465,14 @@ public class ValueInteractivityTest {
         DiagnosisModel<Constraint> startModel = new DiagnosisModel<>(oldModel);
         // Build CSP
 //		ExquisiteAppXML newXml = ExquisiteAppXML.parseToAppXML(inputFileDirectory + mutatedXMLFilename);
-//		AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder) EngineFactory.makeEngineFromAppXML(EngineType.HSDagStandardQX, newXml, 4);
+//		AbstractHSDagEngine diagnosisEngine = (AbstractHSDagEngine) EngineFactory.makeEngineFromAppXML(EngineType.HSDagStandardQX, newXml, 4);
 
-//		DiagnosisModel model = diagnosisEngine.sessionData.diagnosisModel;
+//		DiagnosisModel model = diagnosisEngine.sessionData.getDiagnosisModel();
 
-        Example<Constraint> example = startModel.getPositiveExamples().get(0);
+        Example<Constraint> example = startModel.getConsistentExamples().get(0);
 
         for (Constraint constraint : example.constraints) {
-            startModel.addCorrectConstraint(constraint,
+            startModel.addCorrectFormula(constraint,
                     example.constraintNames.get(constraint));
         }
         startModel.removeConstraintsToIgnore(new ArrayList<>(example.irrelevantConstraints.values()));
@@ -506,22 +505,22 @@ public class ValueInteractivityTest {
                     if (v.getName().equals(additionalCorrectCell)) {
                         Constraint c = Choco
                                 .eq((IntegerExpressionVariable) v, Integer.parseInt(additionalCorrectCellsValue));
-                        newModel.addCorrectConstraint(c, additionalCorrectCell);
+                        newModel.addCorrectFormula(c, additionalCorrectCell);
 //					System.out.println(additionalCorrectCell);
                         break;
                     } else {
 //					System.out.println(v.getName() + " != " + additionalCorrectCell);
                     }
                 }
-                ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>();
-                sessionData.diagnosisModel = newModel;
+                ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>();
+                sessionData.getDiagnosisModel() = newModel;
 
                 // Check for consistency
-                QuickXPlain<Constraint> qxplain = NodeExpander.createQX(sessionData, null);
+                ConstraintsQuickXPlain<Constraint> qxplain = NodeExpander.createQX(sessionData);
 
                 boolean consistent = qxplain.checkConsistency();
 
-//			ConflictCheckingResult checkingResult =	qxplain.checkExamples(diagnosisEngine.model.getPositiveExamples(), new ArrayList<Constraint>(), true);
+//			ConflictCheckingResult checkingResult =	qxplain.checkExamples(diagnosisEngine.model.getConsistentExamples(), new ArrayList<Constraint>(), true);
 
                 // Count consistent diagnoses
 //			if (!checkingResult.conflictFound()) {

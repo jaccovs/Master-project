@@ -5,14 +5,14 @@ import evaluations.configuration.AbstractScenario;
 import evaluations.configuration.OntologyScenario;
 import evaluations.configuration.StdRunConfiguration;
 import evaluations.configuration.StdRunConfiguration.ExecutionMode;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain.SolverType;
 import org.exquisite.diagnosis.quickxplain.ontologies.OntologyTools;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -98,7 +98,7 @@ public class OntologiesBenchmark extends AbstractEvaluation<OWLLogicalAxiom> {
 //		new OntologyScenario("Jws-example2.owl", -1, -1),
 //		new OntologyScenario("negativeAboxT.owl", -1, -1),
 //		new OntologyScenario("onediag.owl", -1, -1),
-//		new OntologyScenario("partition.owl", -1, -1),
+//		new OntologyScenario("query.owl", -1, -1),
 //		new OntologyScenario("test.owl", -1, -1),
 //		new OntologyScenario("test1.owl", -1, -1),
 //		new OntologyScenario("testoptquery.owl", -1, -1),
@@ -206,26 +206,26 @@ public class OntologiesBenchmark extends AbstractEvaluation<OWLLogicalAxiom> {
 
 
 			// Create the engine
-			ExquisiteSession<OWLLogicalAxiom> sessionData = new ExquisiteSession<>(null,
+			ExcelExquisiteSession<OWLLogicalAxiom> sessionData = new ExcelExquisiteSession<>(null,
 					null, new DiagnosisModel<>(diagModel));
 		// Do not try to find a better strategy for the moment
-		sessionData.config.searchStrategy = SearchStrategies.Default;
-		sessionData.config.maxDiagnoses = scenario.maxDiags;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().maxDiagnoses = scenario.maxDiags;
 
 
 			// With a value of -2 the maxDiagSize is set to the size of the actual error of the scenario
 //		if (scenario.searchDepth == -2) {
-//			sessionData.config.searchDepth = scn.getFaultyComponents().size();
+//			sessionData.getConfiguration().searchDepth = scn.getFaultyComponents().size();
 //		}
 //		else {
-			sessionData.config.searchDepth = scenario.searchDepth;
+			sessionData.getConfiguration().searchDepth = scenario.searchDepth;
 //		}
 
 			IDiagnosisEngine<OWLLogicalAxiom> engine = EngineFactory
 					.makeEngine(engineType, sessionData, runConfiguration.threads);
 
-		QuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
-		QuickXPlain.SOLVERTYPE = SolverType.OWLAPI;
+		ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
+		ConstraintsQuickXPlain.SOLVERTYPE = SolverType.OWLAPI;
 
 //		System.out.println(diagModel.getCorrectStatements().size() + "," + diagModel.getPossiblyFaultyStatements().size() + "; ");
 

@@ -3,7 +3,7 @@ package tests.ts.interactivity.spreadsheets;
 import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import tests.ts.interactivity.DiagnosisModelExpansion;
 import tests.ts.interactivity.IUserInteraction;
 import tests.ts.interactivity.IUserQuery;

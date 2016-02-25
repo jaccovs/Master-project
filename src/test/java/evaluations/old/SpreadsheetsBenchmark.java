@@ -6,13 +6,12 @@ import evaluations.models.LoggingData;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.i8n.Culture;
@@ -27,6 +26,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 /**
  * For generating data for the AppInt2013 paper.
@@ -44,7 +47,7 @@ public class SpreadsheetsBenchmark {
 	
 	private static String pruningPath = "";
 	private static EngineType engineConfig = EngineType.HSDagStandardQX;//default setting.
-	private static int threadPoolSize = 1; //default threadpool size (for parallel dag engine).
+	private static int threadPoolSize = 1; //default threadpool size (for parallel tree engine).
 	/**
 	 * Name of the logfile where test data will be written to.
 	 */
@@ -75,7 +78,7 @@ public class SpreadsheetsBenchmark {
 	
 	
 	/**
-	 * Optional constructor to specify different dag engine configuration.
+	 * Optional constructor to specify different tree engine configuration.
 	 * @param logfileName
 	 * @param maxSearchDepth
 	 * @param config
@@ -100,7 +103,7 @@ public class SpreadsheetsBenchmark {
 	{
 
 		// DJ: Check multiple QX
-		//AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.ParallelQuickXplain;
+		//AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.ParallelQuickXplain;
 
 		Debug.DEBUGGING_ON = false;
 //		Debug.QX_DEBUGGING = true;
@@ -415,7 +418,7 @@ public class SpreadsheetsBenchmark {
 			try {
 				ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = PRUNE_IRRELEVANT_CELLS;
 				ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
-				ExquisiteSession sessionData = new ExquisiteSession(appXML);
+				ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
 				ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 				Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 				VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -423,10 +426,10 @@ public class SpreadsheetsBenchmark {
 				modelLoader.loadDiagnosisModelFromXML();
 
 				IDiagnosisEngine<Constraint> diagnosisEngine;
-				sessionData.config.searchStrategy = SearchStrategies.Default;
+				sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 
 //				if (SHUFFLE_POSSIBLY_FAULTY_CONSTRAINTS) {
-//					sessionData.diagnosisModel.shufflePossiblyFaulyConstraints();
+//					sessionData.getDiagnosisModel().shufflePossiblyFaulyConstraints();
 //				}
 
 				diagnosisEngine = EngineFactory.makeEngine(engineConfig, sessionData, threadPoolSize);
@@ -483,26 +486,26 @@ public class SpreadsheetsBenchmark {
 				loggingResult += products + separator;
 				int varCount = appXML.getInputs().size() + appXML.getInterims().size() + appXML.getOutputs().size();
 				loggingResult += varCount + separator;
-				loggingResult += sessionData.diagnosisModel.getConstraintNames().size() + separator;
-				loggingResult += diagnosisEngine.getPropagationCount() + separator;
-				loggingResult += diagnosisEngine.getCspSolvedCount() + separator;
+				loggingResult += sessionData.getDiagnosisModel().getConstraintNames().size() + separator;
+				loggingResult += getCounter(COUNTER_PROPAGATION).value() + separator;
+				loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 				loggingResult += duration + separator;
 				loggingResult += this.maxSearchDepth + separator;
 				loggingResult += mutations + separator;
 
 				for (int j = 0; j < diagnoses.size(); j++) {
-//					loggingResult+="(Diag # " + j + ": " + Utilities.printConstraintList(diagnoses.get(j).getElements(), sessionData.diagnosisModel) + ") ";
+//					loggingResult+="(Diag # " + j + ": " + Utilities.printConstraintList(diagnoses.get(j).getElements(), sessionData.getDiagnosisModel()) + ") ";
 				}
 				loggingResult += Utilities.printSortedDiagnoses(diagnoses, ' ') + separator;
 
 				System.out.println(
-						"Number of known conflicts: " + ((AbstractHSDagBuilder) diagnosisEngine).knownConflicts
+						"Number of known conflicts: " + ((AbstractHSDagEngine) diagnosisEngine).knownConflicts
 								.getCollection().size());
-				List<List<Constraint>> theknown = ((AbstractHSDagBuilder) diagnosisEngine).knownConflicts
+				List<List<Constraint>> theknown = ((AbstractHSDagEngine) diagnosisEngine).knownConflicts
 						.getCollection();
 				for (List<Constraint> conflict : theknown) {
 					System.out
-							.println(Utilities.printConstraintListOrderedByName(conflict, sessionData.diagnosisModel));
+							.println(Utilities.printConstraintListOrderedByName(conflict, sessionData.getDiagnosisModel()));
 				}
 
 

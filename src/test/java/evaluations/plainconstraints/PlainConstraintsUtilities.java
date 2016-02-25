@@ -9,7 +9,7 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.solver.Solver;
 import choco.kernel.solver.variables.integer.IntDomainVar;
 import evaluations.tools.modelReader.ModelReader;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Utilities;
 import parser.absconparseur.tools.InstanceParser;
@@ -181,7 +181,7 @@ public class PlainConstraintsUtilities {
 			}
 			posExamples.add(ex);
 		}
-		diagModel.setPositiveExamples(posExamples);
+		diagModel.setConsistentExamples(posExamples);
 		return diagModel;
 	}
 

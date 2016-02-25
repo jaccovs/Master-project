@@ -11,11 +11,8 @@ import java.util.Random;
 
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.VariablesFactory;
-import org.exquisite.datamodel.ExquisiteAppXML;
-import org.exquisite.datamodel.ExquisiteGraph;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.datamodel.ExquisiteValueBound;
-import org.exquisite.datamodel.TestCase;
+import org.exquisite.datamodel.*;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.parser.FormulaParser;
 import org.exquisite.tools.FileUtilities;
 import org.exquisite.tools.Utilities;
@@ -85,7 +82,7 @@ public class PositiveTestCaseGenerator
 		this.exquisiteAppXML = exquisiteAppXML;
 		
 		
-		ExquisiteSession sessionData = new ExquisiteSession(this.exquisiteAppXML);
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession(this.exquisiteAppXML);
 		this.conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		this.varFactory = new VariablesFactory(variablesMap);
@@ -290,7 +287,7 @@ public class PositiveTestCaseGenerator
 //		System.out.println("----- Finish solving...");
 		boolean isFeasible = solver.isFeasible();
 		
-//		System.out.println("IS FEASIBLE? " + isFeasible);
+//		System.out.println("IS FEASIBLE? " + isConsistent);
 		//System.out.println(solver.pretty());
 		
 		Iterator<IntDomainVar> it = solver.getIntVarIterator();

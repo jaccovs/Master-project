@@ -10,19 +10,21 @@ import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.solver.Solver;
+import org.exquisite.core.engines.AbstractHSDagEngine;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.*;
 
 /**
  * Parallel search for solutions
@@ -36,7 +38,7 @@ public class ParallelSolver {
     // or an interrupt message is received by the main thread
     public static volatile boolean STOP_SEARCH = false;
     // A pointer to the DiagnosisEngine
-    public AbstractHSDagBuilder dagBuilder = null;
+    public AbstractHSDagEngine dagBuilder = null;
     //
     public boolean isFeasible = false;
 
@@ -54,12 +56,12 @@ public class ParallelSolver {
 
     public CPModel model;
 
-    public ExquisiteSession sessionData;
+    public ExcelExquisiteSession sessionData;
 
 //	/**
 //	 * 
 //	 */
-//	public ParallelSolver(ExquisiteSession sessionData){
+//	public ParallelSolver(ExcelExquisiteSession sessionData){
 //		this.sessionData = sessionData;
 //		this.workers = new ArrayList<SolverThread>();
 //		this.model = new CPModel();		
@@ -73,7 +75,7 @@ public class ParallelSolver {
      * @param sessionData the session data
      * @param dagbuilder  a pointer to the dagbuilder
      */
-    public ParallelSolver(CPModel model, ExquisiteSession sessionData, AbstractHSDagBuilder dagbuilder) {
+    public ParallelSolver(CPModel model, ExcelExquisiteSession sessionData, AbstractHSDagEngine dagbuilder) {
         this.dagBuilder = dagbuilder;
         this.sessionData = sessionData;
         this.model = model;
@@ -89,7 +91,7 @@ public class ParallelSolver {
         final String appXMLFile = ".\\experiments\\enase-2013\\karinscorpus_VDEPPreserve_TC_no_division.xml";
         ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(appXMLFile);
 
-        ExquisiteSession sessionData = new ExquisiteSession(appXML);
+        ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
         ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
         Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
         VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -97,7 +99,7 @@ public class ParallelSolver {
         modelLoader.loadDiagnosisModelFromXML();
 
         ParallelSolver test = new ParallelSolver(null, sessionData, null);
-        test.model = makeCPModel(sessionData.diagnosisModel);
+        test.model = makeCPModel(sessionData.getDiagnosisModel());
         long start = System.currentTimeMillis();
 
 
@@ -169,7 +171,7 @@ public class ParallelSolver {
     }
 
     public void run() throws Exception {
-        int timeOut = this.sessionData.config.timeOut;
+        int timeOut = this.sessionData.getConfiguration().timeOut;
         this.isFeasible = false;
         this.solvingFinished = false;
 
@@ -221,18 +223,18 @@ public class ParallelSolver {
             // if we know what to do, no need for parallel solvers
             // otherwise run() parallel strategies until we know the fastest one
             // DJ: Switch that off for the moment
-            if (false && sessionData.config.searchStrategy == null) {
+            if (false && sessionData.getConfiguration().searchStrategy == null) {
 //				System.out.println("using parallel search");
                 run();
             } else {
                 // Do what has to be done locally and fast.
-//				System.out.println("Non-parallel solver used: " + sessionData.config.searchStrategy.Default);
+//				System.out.println("Non-parallel solver used: " + sessionData.getConfiguration().searchStrategy.Default);
                 Solver solver = new CPSolver();
                 solver.read(this.model);
                 try {
                     //this.exquisiteParallelSearch.nbSolves++;
                     if (this.dagBuilder != null) {
-                        this.dagBuilder.incrementPropagationCount();
+                        incrementCounter(COUNTER_PROPAGATION);
                     }
                     solver.propagate();
                     // Catch a contradiction exception
@@ -242,15 +244,14 @@ public class ParallelSolver {
                 }
                 // Call solve()
                 try {
-                    if (this.dagBuilder != null) {
-                        this.dagBuilder.incrementSolverCalls();
-                    }
+                    incrementCounter(COUNTER_SOLVER_CALLS);
 
                     solver.solve();
                     boolean isFeasible = solver.isFeasible();
-                    if (this.dagBuilder != null && isFeasible) {
-                        this.dagBuilder.incrementCSPSolutionCount();
-                    }
+                    if (isFeasible) {incrementCounter(COUNTER_CSP_SOLUTIONS);}
+//                    if (this.dagBuilder != null && isFeasible) {
+//                        this.dagBuilder.incrementCSPSolutionCount();
+//                    }
 //					System.out.println("Feasible: " + isFeasible);
                     return solver.isFeasible();
                 } catch (Exception e) {

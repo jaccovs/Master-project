@@ -39,7 +39,7 @@ public class ExquisiteSolverThread extends Thread {
         // daemon status is set to true
         cGroup.setDaemon(true);
 
-        if (this.exquisiteParallelSearch.sessionData.config.searchStrategy == null) {
+        if (this.exquisiteParallelSearch.sessionData.getConfiguration().searchStrategy == null) {
             // Default choco set
             workers.add(
                     new SolverThread(cGroup, new CPSolver(), model, SearchStrategies.Default, exquisiteParallelSearch));
@@ -71,9 +71,9 @@ public class ExquisiteSolverThread extends Thread {
             // Shuffle the collection to minimize the order influence
             Collections.shuffle(workers);
         } else {
-//        	System.out.println("--------- STRATEGY TO USE: " + this.exquisiteParallelSearch.sessionData.config.searchStrategy);
+//        	System.out.println("--------- STRATEGY TO USE: " + this.exquisiteParallelSearch.sessionData.getConfiguration().searchStrategy);
             SolverThread worker = new SolverThread(cGroup, new CPSolver(), model,
-                    this.exquisiteParallelSearch.sessionData.config.searchStrategy, exquisiteParallelSearch);
+                    this.exquisiteParallelSearch.sessionData.getConfiguration().searchStrategy, exquisiteParallelSearch);
             workers.add(worker);
         }
 

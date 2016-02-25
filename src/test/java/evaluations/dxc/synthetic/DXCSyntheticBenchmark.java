@@ -8,21 +8,24 @@ import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
 import evaluations.dxc.synthetic.tools.DXCTools;
 import evaluations.tools.DiagnosisEvaluation;
 import evaluations.tools.ResultsLogger;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.common.NodeExpander;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 /**
  * Benchmark tests for the DXC competition syntetic track
@@ -88,7 +91,7 @@ public class DXCSyntheticBenchmark {
 	 */
 	public static void main(String[] args) {
 		// Overwrite this
-		QuickXPlain.PRINT_SOLUTION_TIME = false;
+		ConstraintsQuickXPlain.PRINT_SOLUTION_TIME = false;
 		
 
 		NodeExpander.USE_LAST_LEVEL_CHECK = useLastLevelCheck;
@@ -117,7 +120,7 @@ public class DXCSyntheticBenchmark {
 					maxDiagnoses = testScenario.MaxDiagnoses;
 					waittime = -1;
 					
-					QuickXPlain.ARTIFICIAL_WAIT_TIME = -1;
+					ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = -1;
 						
 					test.runExampleFromFile(testScenario.SystemDescriptionFile, String.format(testScenario.ScenarioFile, i));
 				} catch (Exception e) {
@@ -165,21 +168,21 @@ public class DXCSyntheticBenchmark {
 		System.out.println("Starting to diagnose");
 
 		// Create the engine
-		// ExquisiteSession sessionData = new ExquisiteSession(null, null,
+		// ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null, null,
 		// diagModel);
 		// Do not try to find a better strategy for the moment
-		// sessionData.config.searchStrategy = SearchStrategies.Default;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.ImpactBasedBranching;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.AssignOrForbidIntVarVal_DomWDegBin;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.AssignVar_MinDomIncDom;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.AssignOrForbidIntVarVal_RandomIntBinSearch;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.AssignVar_MinDomIncDom;
-		// sessionData.config.searchStrategy =
+		// sessionData.getConfiguration().searchStrategy =
 		// SearchStrategies.AssignVar_MinDomDecDom;
 
 		// Debug.DEBUGGING_ON = true;
@@ -212,7 +215,7 @@ public class DXCSyntheticBenchmark {
 					System.out.println("Initialization finished");
 				}
 
-				QuickXPlain.reuseCount = 0;
+				ConstraintsQuickXPlain.reuseCount = 0;
 
 				IDiagnosisEngine<Constraint> engine = null;
 				// Create the diagnosis model
@@ -231,13 +234,13 @@ public class DXCSyntheticBenchmark {
 					diagModel.shufflePossiblyFaulyConstraints();
 
 				// Create the engine
-				ExquisiteSession sessionData = new ExquisiteSession(null,
-						null, new DiagnosisModel<Constraint>(diagModel));
+				ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null,
+						null, new DiagnosisModel<>(diagModel));
 				// Do not try to find a better strategy for the moment
-				sessionData.config.searchStrategy = SearchStrategies.Default;
-				sessionData.config.searchDepth = maxDiagSize;
-				sessionData.config.maxDiagnoses = maxDiagnoses;
-				// sessionData.config.maxDiagnoses = 1;
+				sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+				sessionData.getConfiguration().searchDepth = maxDiagSize;
+				sessionData.getConfiguration().maxDiagnoses = maxDiagnoses;
+				// sessionData.getConfiguration().maxDiagnoses = 1;
 				
 
 				if (k == 0) {
@@ -275,31 +278,32 @@ public class DXCSyntheticBenchmark {
 				// (float) diagnoses.size()));
 
 				// System.out.println("SIZE OF known solutions: " +
-				// QuickXPlain.knownSolutions.size());
+				// ConstraintsQuickXPlain.knownSolutions.size());
 				// System.out.println("Reuse count:   " +
-				// QuickXPlain.reuseCount);
+				// ConstraintsQuickXPlain.reuseCount);
 
 				// //////////////////////////////////////////////////////////////
 
 				if (initFinished) {
-					diagEval.analyzeRun((AbstractHSDagBuilder)engine, end - start);
+					diagEval.analyzeRun(end - start);
+					diagEval.engineTest((AbstractHSDagEngine<Constraint>)engine);
+
 
 					// record data for this run.
 					String loggingResult = "";
-					loggingResult += sessionData.diagnosisModel.getVariables().size() + separator;
-					loggingResult += sessionData.diagnosisModel
+					loggingResult += sessionData.getDiagnosisModel().getVariables().size() + separator;
+					loggingResult += sessionData.getDiagnosisModel()
 							.getConstraintNames().size() + separator;
-					loggingResult += engine.getPropagationCount()
-							+ separator;
-					loggingResult += engine.getCspSolvedCount() + separator;
+					loggingResult += getCounter(COUNTER_PROPAGATION).value() + separator;
+					loggingResult += getCounter(COUNTER_CSP_SOLUTIONS) + separator;
 					loggingResult += (end - start) + separator;
-					loggingResult += sessionData.config.searchDepth
+					loggingResult += sessionData.getConfiguration().searchDepth
 							+ separator;
 
 //					for (int j = 0; j < diagnoses.size(); j++) {
 						// loggingResult+="(Diag # " + j + ": " +
 						// Utilities.printConstraintList(diagnoses.get(j).getElements(),
-						// sessionData.diagnosisModel) + ") ";
+						// sessionData.getDiagnosisModel()) + ") ";
 //					}
 					if (i == nbInitizializationRuns)
 					{
@@ -359,7 +363,7 @@ public class DXCSyntheticBenchmark {
 			summary.append("Average Tree Width: " + diagEval.AvgTreeWidth + "\r\n");
 			
 			// DJ TEST
-			summary.append("Average conflict reuse: " + diagEval.AvgConflictReuse + "\r\n");
+			summary.append("Average nodeLabel reuse: " + diagEval.AvgConflictReuse + "\r\n");
 
 
 		}

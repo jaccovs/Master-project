@@ -139,14 +139,19 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/exquisite/tests.diagnosis/IDiagnosisEngine.html" title="interface in org.exquisite.tests.diagnosis">IDiagnosisEngine</a></code></td>
-<td class="colLast"><code><strong><a href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeDAGEngineStandardQx(org.exquisite.datamodel.ExquisiteSession)">makeDAGEngineStandardQx</a></strong>(<a href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData)</code>
+    <td class="colLast"><code><strong><a
+            href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeDAGEngineStandardQx(org.exquisite.datamodel.ExcelExquisiteSession)">makeDAGEngineStandardQx</a></strong>(<a
+            href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData)</code>
 <div class="block">Returns an instance of HSDagBuilder using the standard QuickXPlain
  implementation.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/exquisite/tests.diagnosis/IDiagnosisEngine.html" title="interface in org.exquisite.tests.diagnosis">IDiagnosisEngine</a></code></td>
-<td class="colLast"><code><strong><a href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeEngine(org.exquisite.datamodel.ExquisiteEnums.EngineType, org.exquisite.datamodel.ExquisiteSession, int)">makeEngine</a></strong>(<a href="../../../org/exquisite/datamodel/ExquisiteEnums.EngineType.html" title="enum in org.exquisite.datamodel">ExquisiteEnums.EngineType</a>&nbsp;config,
+    <td class="colLast"><code><strong><a
+            href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeEngine(org.exquisite.datamodel.ExquisiteEnums.EngineType, org.exquisite.datamodel.ExcelExquisiteSession, int)">makeEngine</a></strong>(<a
+            href="../../../org/exquisite/datamodel/ExquisiteEnums.EngineType.html"
+            title="enum in org.exquisite.datamodel">ExquisiteEnums.EngineType</a>&nbsp;configuration,
           <a href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData,
           int&nbsp;threadPoolSize)</code>
 <div class="block">Provides an option to specify the size of the thread pool to be available
@@ -163,7 +168,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/exquisite/tests.diagnosis/IDiagnosisEngine.html" title="interface in org.exquisite.tests.diagnosis">IDiagnosisEngine</a></code></td>
-<td class="colLast"><code><strong><a href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeParaDagEngineStandardQx(org.exquisite.datamodel.ExquisiteSession, int)">makeParaDagEngineStandardQx</a></strong>(<a href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData,
+    <td class="colLast"><code><strong><a
+            href="../../../org/exquisite/tests.diagnosis/EngineFactory.html#makeParaDagEngineStandardQx(org.exquisite.datamodel.ExcelExquisiteSession, int)">makeParaDagEngineStandardQx</a></strong>(<a
+            href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData,
                            int&nbsp;threadPoolSize)</code>
 <div class="block">Returns an instance of ParallelHSDagBuilder using standard QX
  implementation.</div>
@@ -208,20 +215,26 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="makeEngine(org.exquisite.datamodel.ExquisiteEnums.EngineType, org.exquisite.datamodel.ExquisiteSession, int)">
+    <a name="makeEngine(org.exquisite.datamodel.ExquisiteEnums.EngineType, org.exquisite.datamodel.ExcelExquisiteSession, int)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>makeEngine</h4>
-<pre>public static&nbsp;<a href="../../../org/exquisite/tests.diagnosis/IDiagnosisEngine.html" title="interface in org.exquisite.tests.diagnosis">IDiagnosisEngine</a>&nbsp;makeEngine(<a href="../../../org/exquisite/datamodel/ExquisiteEnums.EngineType.html" title="enum in org.exquisite.datamodel">ExquisiteEnums.EngineType</a>&nbsp;config,
+<pre>public static&nbsp;<a href="../../../org/exquisite/tests.diagnosis/IDiagnosisEngine.html"
+                           title="interface in org.exquisite.tests.diagnosis">IDiagnosisEngine</a>&nbsp;makeEngine(<a
+        href="../../../org/exquisite/datamodel/ExquisiteEnums.EngineType.html" title="enum in org.exquisite.datamodel">ExquisiteEnums.EngineType</a>&nbsp;configuration,
                           <a href="../../../org/exquisite/datamodel/ExquisiteSession.html" title="class in org.exquisite.datamodel">ExquisiteSession</a>&nbsp;sessionData,
                           int&nbsp;threadPoolSize)
                                    throws <a href="../../../org/exquisite/tests.diagnosis/UnsupportedEngineException.html" title="class in org.exquisite.tests.diagnosis">UnsupportedEngineException</a></pre>
 <div class="block">Provides an option to specify the size of the thread pool to be available
  to a threaded tests.diagnosis engine. Note, not all engine implementations use
  parallelism.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>config</code> - </dd><dd><code>sessionData</code> - </dd><dd><code>threadPoolSize</code> - </dd>
+    <dl>
+        <dt><span class="strong">Parameters:</span></dt>
+        <dd><code>configuration</code> -</dd>
+        <dd><code>sessionData</code> -</dd>
+        <dd><code>threadPoolSize</code> -</dd>
 <dt><span class="strong">Returns:</span></dt><dd></dd>
 <dt><span class="strong">Throws:</span></dt>
 <dd><code><a href="../../../org/exquisite/tests.diagnosis/UnsupportedEngineException.html" title="class in org.exquisite.tests.diagnosis">UnsupportedEngineException</a></code></dd></dl>
@@ -253,7 +266,7 @@ extends java.lang.Object</pre>
 <dl><dt><span class="strong">Returns:</span></dt><dd></dd></dl>
 </li>
 </ul>
-<a name="makeParaDagEngineStandardQx(org.exquisite.datamodel.ExquisiteSession, int)">
+    <a name="makeParaDagEngineStandardQx(org.exquisite.datamodel.ExcelExquisiteSession, int)">
 <!--   -->
 </a>
 <ul class="blockListLast">

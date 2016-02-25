@@ -5,10 +5,10 @@ import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.antlr.runtime.tree.CommonTree;
 import org.exquisite.datamodel.ExquisiteEnums.ExampleConstraintValueTypes;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteValueBound;
 import org.exquisite.datamodel.TestCase;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.diagnosis.models.ConstraintsDiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.choco3.Choco3ConstraintFactory;
 import org.exquisite.diagnosis.quickxplain.choco3.FormulaInfo;
@@ -42,7 +42,7 @@ public class ConstraintsFactory {
     private Example<Constraint> positiveExample;
 
 
-    private ExquisiteSession<Constraint> sessionData;
+    private ExcelExquisiteSession<Constraint> sessionData;
 
     // -- Following variables are used for collecting metrics about the constraints being constructed.
     /**
@@ -66,13 +66,13 @@ public class ConstraintsFactory {
      * @param globalPositiveExample
      */
     public ConstraintsFactory(Example<Constraint> globalNegativeExample, Example<Constraint> globalPositiveExample,
-                              ExquisiteSession<Constraint> sessionData) {
+                              ExcelExquisiteSession<Constraint> sessionData) {
         this.negativeExample = globalNegativeExample;
         this.positiveExample = globalPositiveExample;
         this.sessionData = sessionData;
     }
 
-    public ConstraintsFactory(ExquisiteSession<Constraint> sessionData) {
+    public ConstraintsFactory(ExcelExquisiteSession<Constraint> sessionData) {
         this();
         this.sessionData = sessionData;
     }
@@ -110,7 +110,7 @@ public class ConstraintsFactory {
     public Dictionary<String, Constraint> makeFormulae(Dictionary<String, String> formulae,
                                                        FormulaParser formulaParser,
                                                        Dictionary<String, IntegerExpressionVariable> variablesMap,
-                                                       DiagnosisModel<Constraint> diagnosisModel) {
+                                                       ConstraintsDiagnosisModel<Constraint> diagnosisModel) {
         Dictionary<String, Constraint> result = new Hashtable<String, Constraint>();
 
         for (Enumeration<String> keys = formulae.keys(); keys.hasMoreElements(); ) {
@@ -378,8 +378,10 @@ public class ConstraintsFactory {
             for (Enumeration<String> keys = this.sessionData.appXML.getFormulas().keys(); keys.hasMoreElements(); ) {
                 String cellReference = keys.nextElement();
                 if (!allParents.contains(cellReference)) {
+                    ConstraintsDiagnosisModel<Constraint> diagnosisModel = (ConstraintsDiagnosisModel<Constraint>)
+                            this.sessionData.getDiagnosisModel();
                     result.irrelevantConstraints.put(cellReference, Utilities
-                            .getKeyByValue(this.sessionData.diagnosisModel.getConstraintNames(), cellReference));
+                            .getKeyByValue(diagnosisModel.getConstraintNames(), cellReference));
                 }
             }
         }
@@ -412,7 +414,7 @@ public class ConstraintsFactory {
     }
 
     /**
-     * //NB we do not need to add the ! as this is done in QuickXPlain.generateConstraintFromNegExample()
+     * //NB we do not need to add the ! as this is done in ConstraintsQuickXPlain.generateConstraintFromNegExample()
      * Constructs a constraint of the form !(varA=x AND varB=y AND ...)
      * this constraint is then added to the negativeExample class member.
      *
@@ -460,7 +462,7 @@ public class ConstraintsFactory {
             constraints.add(Choco.eq(variable, intValue));
         }
 
-        //NB we do not need to add the ! as this is done in QuickXPlain.generateConstraintFromNegExample()
+        //NB we do not need to add the ! as this is done in ConstraintsQuickXPlain.generateConstraintFromNegExample()
         //return a constraint of the form !(x=n AND y=n1 AND ...)
         result = makeChocoAndConstraint(constraints);
         return result;

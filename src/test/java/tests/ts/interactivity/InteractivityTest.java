@@ -5,7 +5,7 @@ import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Utilities;
 import tests.ts.interactivity.spreadsheets.SpreadsheetFormulaInteraction;
@@ -65,15 +65,15 @@ public class InteractivityTest {
         IDiagnosisEngine<Constraint> innerEngine = EngineFactory.makeEngineFromXMLFile(engineType, fullInputFilename,
                 threadPoolSize);
 
-		Collections.shuffle(innerEngine.getModel().getPossiblyFaultyStatements());
+		Collections.shuffle(innerEngine.getDiagnosisModel().getPossiblyFaultyStatements());
 
 		int diagnosesPerQuery = 2;
-		SpreadsheetFormulaInteraction userInteraction = new SpreadsheetFormulaInteraction(fullCorrectFilename, innerEngine.getSessionData().appXML,
-				innerEngine.getSessionData().diagnosisModel);
+		SpreadsheetFormulaInteraction userInteraction = new SpreadsheetFormulaInteraction(fullCorrectFilename, innerEngine.getDiagnosisModel().appXML,
+				innerEngine.getDiagnosisModel().getDiagnosisModel());
 		// IBestQueryFinder bestQueryFinder = new FirstQueryFinder();
 		IBestQueryFinder bestQueryFinder = new SplitInHalfQueryFinder(userInteraction);
 
-        InteractivityDiagnosisEngine<Constraint> engine = new InteractivityDiagnosisEngine(innerEngine.getSessionData(),
+        InteractivityDiagnosisEngine<Constraint> engine = new InteractivityDiagnosisEngine(innerEngine.getDiagnosisModel(),
                 innerEngine, diagnosesPerQuery,
                 userInteraction, bestQueryFinder);
 

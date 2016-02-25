@@ -10,15 +10,14 @@ import evaluations.configuration.StdScenario;
 import evaluations.plainconstraints.PlainConstraintsUtilities;
 import evaluations.plainconstraints.TestCaseGenerator;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder.QuickXplainType;
-import org.exquisite.diagnosis.engines.HSDagBuilder;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.AbstractHSDagEngine.QuickXplainType;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain.SolverType;
 
 import java.io.*;
 import java.util.List;
@@ -422,7 +421,7 @@ public class MutatedConstraintsIndividual extends AbstractEvaluation<Constraint>
 		try {
 			String mutatedFile = PlainConstraintsUtilities.getMutatedFileName(scenario.inputFileName);
 
-			HSDagBuilder.USE_QXTYPE = QuickXplainType.QuickXplain;
+			HSDagEngine.USE_QXTYPE = QuickXplainType.QuickXplain;
 
 			mutatedModel = PlainConstraintsUtilities
 					.loadModel(new File(inputFileDirectory, mutatedFile).getAbsolutePath());
@@ -430,22 +429,22 @@ public class MutatedConstraintsIndividual extends AbstractEvaluation<Constraint>
 					.createDiagnosisModel(mutatedModel, posTestCases);
 
 			// Create the engine
-			ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(null,
+			ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>(null,
 					null, new DiagnosisModel<>(diagModel));
 			// Do not try to find a better strategy for the moment
-			sessionData.config.searchStrategy = SearchStrategies.Default;
-			sessionData.config.searchDepth = scenario.searchDepth;
-			sessionData.config.maxDiagnoses = scenario.maxDiags;
+			sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+			sessionData.getConfiguration().searchDepth = scenario.searchDepth;
+			sessionData.getConfiguration().maxDiagnoses = scenario.maxDiags;
 
 			EngineType engineType = chooseEngineType(scenario, runConfiguration);
 
 			engine = EngineFactory.makeEngine(engineType, sessionData, runConfiguration.threads);
 
-			QuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
+			ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
 			if (runConfiguration.choco3) {
-				QuickXPlain.SOLVERTYPE = SolverType.Choco3;
+				ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco3;
 			} else {
-				QuickXPlain.SOLVERTYPE = SolverType.Choco2;
+				ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco2;
 			}
 
 			return engine;

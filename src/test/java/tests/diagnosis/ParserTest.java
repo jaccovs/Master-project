@@ -14,7 +14,7 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeAdaptor;
 import org.antlr.runtime.tree.Tree;
 import org.exquisite.datamodel.ExquisiteGraph;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.i8n.Culture;
 import org.exquisite.parser.ExcelLexer;
 import org.exquisite.parser.ExcelParser;
@@ -406,9 +406,9 @@ public class ParserTest
 		pExample3.addConstraint(parsedexample3Test2, example3Test2);
 		pExample3.addConstraint(parsedexample3Test3, example3Test3);
 
-		model.getPositiveExamples().add(pExample1);
-		model.getPositiveExamples().add(pExample2);
-		model.getPositiveExamples().add(pExample3);
+		model.getConsistentExamples().add(pExample1);
+		model.getConsistentExamples().add(pExample2);
+		model.getConsistentExamples().add(pExample3);
 
 		return model;*/
 		return null;

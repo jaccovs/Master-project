@@ -11,8 +11,8 @@ import choco.kernel.model.variables.real.RealConstantVariable;
 import choco.kernel.model.variables.real.RealVariable;
 import choco.kernel.model.variables.set.SetConstantVariable;
 import choco.kernel.model.variables.set.SetVariable;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.datamodel.ExcelExquisiteSession;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 
 import java.util.LinkedList;
@@ -23,25 +23,25 @@ import java.util.List;
  */
 public class MZModelGenerator {
 
-    private final ExquisiteSession<Constraint> sessionData;
+    private final ExcelExquisiteSession<Constraint> sessionData;
     private int abCounter = -1;
 
 
-    public MZModelGenerator(ExquisiteSession<Constraint> sessionData) {
+    public MZModelGenerator(ExcelExquisiteSession<Constraint> sessionData) {
         this.sessionData = sessionData;
     }
 
     public List<String> getModel() {
         List<String> model = new LinkedList<>();
-        DiagnosisModel<Constraint> dm = this.sessionData.diagnosisModel;
+        DiagnosisModel<Constraint> dm = this.sessionData.getDiagnosisModel();
         generateVariables(model, dm.getVariables());
         generateConstraints(model, dm.getCorrectStatements(), Mode.CORRECT);
         generateConstraints(model, dm.getPossiblyFaultyStatements(), Mode.ABNORMAL);
 
-        generateExampleConstraints(model, dm.getNegativeExamples(), Mode.NEGATIVE);
+        generateExampleConstraints(model, dm.getInconsistentExamples(), Mode.NEGATIVE);
 
         // positive examples are the same as correct constraints that are just not a part of the mode
-        generateExampleConstraints(model, dm.getPositiveExamples(), Mode.CORRECT);
+        generateExampleConstraints(model, dm.getConsistentExamples(), Mode.CORRECT);
 
         //include prerequisites
         String pre = "% minizinc encoding \n" +

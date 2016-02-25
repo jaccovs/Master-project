@@ -9,11 +9,10 @@ import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerConstantVariable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.core.ISolver;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.ISolver;
+import org.exquisite.diagnosis.models.ConstraintsDiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import solver.constraints.IntConstraintFactory;
 import solver.constraints.LogicalConstraintFactory;
 import solver.exception.ContradictionException;
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
+
 /**
  * A Choco3 solver that translates the choco2 constraints directly to choco3 constraints
  *
@@ -40,7 +41,7 @@ public class Choco2ToChoco3Solver implements ISolver<Constraint> {
     // counter for temp variable names
     static int tmpID = 0;
     // store the model
-    public DiagnosisModel<Constraint> diagnosisModel;
+    public ConstraintsDiagnosisModel<Constraint> diagnosisModel;
     // the current example
     public Example currentExample;
 
@@ -54,8 +55,8 @@ public class Choco2ToChoco3Solver implements ISolver<Constraint> {
 
     // create the model
     @Override
-    public void createModel(QuickXPlain<Constraint> qx, List<Constraint> constraints) {
-        this.diagnosisModel = qx.currentDiagnosisModel;
+    public void createModel(ConstraintsQuickXPlain<Constraint> qx, List<Constraint> constraints) {
+        this.diagnosisModel = (ConstraintsDiagnosisModel<Constraint>) qx.currentDiagnosisModel;
         this.currentExample = qx.currentExample;
         this.solver = new solver.Solver();
         this.createVariables();
@@ -81,27 +82,21 @@ public class Choco2ToChoco3Solver implements ISolver<Constraint> {
 
     // check feasibility
     @Override
-    public boolean isFeasible(IDiagnosisEngine<Constraint> diagnosisEngine) {
-        if (diagnosisEngine != null) {
-            // System.out.println("Propagating..");
-            diagnosisEngine.incrementPropagationCount();
-        }
-
+    public boolean isFeasible() {
         try {
+            incrementCounter("propagation.count");
             this.solver.propagate();
         } catch (ContradictionException e) {
             return false;
         }
 
-        if (diagnosisEngine != null) {
-            diagnosisEngine.incrementSolverCalls();
-        }
+        incrementCounter("solver.calls");
 
         return this.solver.findSolution();
     }
 
     @Override
-    public boolean isEntailed(IDiagnosisEngine<Constraint> diagnosisEngine, Set<Constraint> entailments) {
+    public boolean isEntailed(Set<Constraint> entailments) {
         // Add negated entailments
         Constraint entailment = Choco.not(Choco.and(entailments.toArray(new Constraint[entailments.size()])));
         try {
@@ -111,7 +106,7 @@ public class Choco2ToChoco3Solver implements ISolver<Constraint> {
             e.printStackTrace();
         }
 
-        return !isFeasible(diagnosisEngine);
+        return !isFeasible();
     }
 
 //	@Override

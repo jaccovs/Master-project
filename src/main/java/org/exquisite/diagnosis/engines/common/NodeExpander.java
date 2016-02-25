@@ -1,13 +1,12 @@
 package org.exquisite.diagnosis.engines.common;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.engines.AbstractHSDagEngine;
+import org.exquisite.core.engines.tree.Node;
+import org.exquisite.datamodel.DiagnosisModel;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
-import org.exquisite.diagnosis.models.DAGNode;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.mergexplain.MergeXplain;
 import org.exquisite.diagnosis.quickxplain.mergexplain.ParallelMergeXplain;
 import org.exquisite.diagnosis.quickxplain.parallelqx.ParallelQXPlain;
@@ -16,6 +15,8 @@ import org.exquisite.tools.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.*;
 
 //import tests.tests.dj.qxsim.QXSim;
 
@@ -35,15 +36,15 @@ public class NodeExpander<T> {
 
     public static boolean USE_LAST_LEVEL_CHECK = true;
     //	private List<HashSet<T>> knownConflicts;
-//	private Map<HashSet<T>, DAGNode> conflictNodeLookup;
-//	private List<DAGNode> diagnosesNodes;
-//	private SharedCollection<DAGNode> constructedNodes;
-//	private List<DAGNode> nodesToExpand = new ArrayList<DAGNode>();
-    public DiagnosisModel<T> model;
+//	private Map<HashSet<T>, Node> conflictNodeLookup;
+//	private List<Node> diagnosesNodes;
+//	private SharedCollection<Node> constructedNodes;
+//	private List<Node> nodesToExpand = new ArrayList<Node>();
+    public org.exquisite.core.model.DiagnosisModel model;
     //	private List<Diagnosis> results = new ArrayList<Diagnosis>();
-    public QuickXPlain<T> qx;
-    AbstractHSDagBuilder<T> dagBuilder = null;
-    SharedCollection<DAGNode<T>> newNodesToExpand = null;
+    public ConstraintsQuickXPlain<T> qx;
+    AbstractHSDagEngine<T> dagBuilder = null;
+    SharedCollection<Node<T>> newNodesToExpand = null;
     // Remember how we work
     boolean inParallelMode = false;
 
@@ -53,9 +54,9 @@ public class NodeExpander<T> {
      *
      * @param dagBuilder
      */
-    public NodeExpander(AbstractHSDagBuilder<T> dagBuilder) {
+    public NodeExpander(AbstractHSDagEngine<T> dagBuilder) {
         this.dagBuilder = dagBuilder;
-        this.qx = createQX(dagBuilder.getSessionData(), dagBuilder);
+        this.qx = createQX(dagBuilder.getDiagnosisModel());
     }
 
     /**
@@ -64,34 +65,32 @@ public class NodeExpander<T> {
      * @param dagBuilder
      * @param newNodesToExpand
      */
-    public NodeExpander(AbstractHSDagBuilder<T> dagBuilder, SharedCollection<DAGNode<T>> newNodesToExpand) {
+    public NodeExpander(AbstractHSDagEngine<T> dagBuilder, SharedCollection<Node<T>> newNodesToExpand) {
         this.newNodesToExpand = newNodesToExpand;
         this.inParallelMode = true;
         this.dagBuilder = dagBuilder;
-        this.qx = createQX(dagBuilder.getSessionData(), dagBuilder);
+        this.qx = createQX(dagBuilder.getDiagnosisModel());
     }
 
     /**
      * Create a qx instance
      *
      * @param sessionData
-     * @param dagbuilder
      * @return a new instance
      */
-    public static <T> QuickXPlain<T> createQX(ExquisiteSession<T> sessionData,
-                                              AbstractHSDagBuilder<T> dagbuilder) {
-        switch (AbstractHSDagBuilder.USE_QXTYPE) {
+    public static <T> ConstraintsQuickXPlain<T> createQX(DiagnosisModel<T> sessionData) {
+        switch (AbstractHSDagEngine.USE_QXTYPE) {
             case QuickXplain:
-                return new QuickXPlain<T>(sessionData, dagbuilder);
+                return new ConstraintsQuickXPlain<>(sessionData);
             case SimulatedQuickXplain:
                 throw new RuntimeException("Removed dependency on the expriments");
                 //return new QXSim(sessionData, dagbuilder);
             case ParallelQuickXplain:
-                return new ParallelQXPlain<>(sessionData, dagbuilder);
+                return new ParallelQXPlain<>(sessionData);
             case MergeXplain:
-                return new MergeXplain<>(sessionData, dagbuilder);
+                return new MergeXplain<>(sessionData);
             case ParallelMergeXplain:
-                return new ParallelMergeXplain<>(sessionData, dagbuilder);
+                return new ParallelMergeXplain<>(sessionData);
             case QX_KC:
                 throw new RuntimeException("Removed dependency on the expriments");
                 //return new QuickExplainKC(sessionData, dagbuilder);
@@ -112,8 +111,8 @@ public class NodeExpander<T> {
      *
      * @param value
      */
-    public void setDiagnosisModel(DiagnosisModel<T> value) {
-        this.model = new DiagnosisModel<T>(value);
+    public void setDiagnosisModel(org.exquisite.core.model.DiagnosisModel value) {
+        this.model = new org.exquisite.core.model.DiagnosisModel(value);
         this.qx.setDiagnosisModel(this.model);
     }
 
@@ -131,7 +130,7 @@ public class NodeExpander<T> {
      * @param edgeLabel
      * @throws DomainSizeException
      */
-    public void expandNode(DAGNode<T> targetNode, T edgeLabel) throws DomainSizeException {
+    public void expandNode(Node<T> targetNode, T edgeLabel) throws DomainSizeException {
         //generate path labels for new child node.
         List<T> newPathLabels = new ArrayList<>();
         newPathLabels.addAll(targetNode.pathLabels);
@@ -142,10 +141,10 @@ public class NodeExpander<T> {
         //checks if path is a superset of an existing tests.diagnosis.
         boolean isSuperset = false;
         // Get a snapshot
-        List<DAGNode<T>> diagnosesCopy = null;
-        diagnosesCopy = new ArrayList<DAGNode<T>>(this.dagBuilder.diagnosisNodes.getCollection());
+        List<Node<T>> diagnosesCopy = null;
+        diagnosesCopy = new ArrayList<Node<T>>(this.dagBuilder.diagnosisNodes.getCollection());
 
-        for (DAGNode<T> diagnosisNode : diagnosesCopy) {
+        for (Node<T> diagnosisNode : diagnosesCopy) {
             isSuperset = NodeUtilities.isPathLabelSupersetOfDiagnosis(newPathLabels, diagnosisNode.pathLabels);
             if (isSuperset) {
 //				System.err.println("Found superset - skipping node");
@@ -159,14 +158,14 @@ public class NodeExpander<T> {
             //Greiner extension - look for existing nodes to reuse.
 
 			/*
-		    DAGNode newNode = NodeUtilities.checkForExistingNode(newPathLabels, this.dagBuilder.allConstructedNodes.getCollection());
+		    Node newNode = NodeUtilities.checkForExistingNode(newPathLabels, this.dagBuilder.allConstructedNodes.getCollection());
 		    
 			//if none found then make one
 			if (newNode == null){					
 				Debug.msg("Creating  new node with edge label: " + model.getConstraintName(edgeLabel));
 //				System.err.println("Creating  new node with edge label: " + model.getConstraintName(edgeLabel));
 				//Construct a new node and do any initial setup...
-				newNode = new DAGNode(targetNode, edgeLabel);
+				newNode = new Node(targetNode, edgeLabel);
 				this.dagBuilder.allConstructedNodes.addItem(newNode);
 				
 				newNode.nodeLevel = targetNode.nodeLevel + 1;
@@ -178,10 +177,9 @@ public class NodeExpander<T> {
             if (NodeUtilities.checkAndAddNode(newPathLabels, this.dagBuilder.allConstructedNodes, targetNode, edgeLabel,
                     nodeContainer)) {
 //				System.out.println("Proceeding ..");
-                if (dagBuilder != null) {
-                    dagBuilder.incrementConstructedNodes();
-                }
-                DAGNode<T> newNode = nodeContainer.node;
+                incrementCounter(COUNTER_CONSTRUCTED_NODES);
+
+                Node<T> newNode = nodeContainer.node;
 
 
                 Debug.msg("    newNode with pathLabel of: " + Utilities.printConstraintList(newNode.pathLabels, model));
@@ -199,14 +197,14 @@ public class NodeExpander<T> {
 
                 if (conflictToReuse != null) {
                     Debug.msg("	Conflict to reuse: " + Utilities.printConstraintList(conflictToReuse, this.model));
-                    this.dagBuilder.reuseCount++;
+                    incrementCounter(COUNTER_REUSE);
                 }
                 //check if this is the last node of this branch...
-                boolean isLastLevel = AbstractHSDagBuilder.SINGLE_CONFLICT_SEARCH || (USE_LAST_LEVEL_CHECK && NodeUtilities
+                boolean isLastLevel = AbstractHSDagEngine.SINGLE_CONFLICT_SEARCH || (USE_LAST_LEVEL_CHECK && NodeUtilities
                         .checkIsLastLevel(
                                 newNode,
                                 this.model.getPossiblyFaultyStatements(),
-                                dagBuilder.getSessionData().config.searchDepth));
+                                dagBuilder.getDiagnosisModel().getConfiguration().searchDepth));
 
 //				System.out.println("	lastLevel? : " + isLastLevel);
 
@@ -215,12 +213,12 @@ public class NodeExpander<T> {
                 if (conflictToReuse == null) {
                     try {
                         ConflictCheckingResult<T> checkingResult;
-                        if (!QuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
+                        if (!ConstraintsQuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
 
                             checkingResult = this.qx.checkExamples(targetNode.examplesToCheck,
                                     new ArrayList<>(newNode.pathLabels), !isLastLevel);
                         } else {
-                            synchronized (QuickXPlain.ContinuingSync) {
+                            synchronized (ConstraintsQuickXPlain.ContinuingSync) {
                                 checkingResult = new ConflictCheckingResult<>();
 //								Debug.syncMsg("Start checkExamplesParallel()");
                                 this.qx.checkExamplesParallel(targetNode.examplesToCheck,
@@ -230,7 +228,7 @@ public class NodeExpander<T> {
                                 while (!checkingResult.conflictFound() && !qx.finished) {
                                     //								Debug.syncMsg("Main thread sleeping.");
                                     try {
-                                        QuickXPlain.ContinuingSync.wait();
+                                        ConstraintsQuickXPlain.ContinuingSync.wait();
                                     } catch (InterruptedException e) {
                                         return;
                                     }
@@ -257,10 +255,10 @@ public class NodeExpander<T> {
 //							System.out.println("Conflict FOUND for node [" + targetNode.nodeName + 
 //												"] (node depth = " + targetNode.nodeLevel + 
 //												")  with path label of: " + Utilities.printConstraintList(targetNode.pathLabels, this.model) +
-//												"    node conflict = {" + Utilities.printConstraintList(targetNode.conflict, model) + "}");
-                            //Conflict reported, therefore add conflict elements to node.
+//												"    node nodeLabel = {" + Utilities.printConstraintList(targetNode.nodeLabel, model) + "}");
+                            //Conflict reported, therefore add nodeLabel elements to node.
 //							int index = checkingResult.conflicts.size() - 1;
-                            newNode.conflict = new ArrayList<T>();
+                            newNode.nodeLabel = new ArrayList<T>();
                             List<T> newConflict = checkingResult.conflicts.get(0);
 //							boolean pruningRequired = Utilities.isSubsetOfKnownConflict(newConflict,dagBuilder.knownConflicts);
 //							if (pruningRequired) {
@@ -268,16 +266,16 @@ public class NodeExpander<T> {
 //							}
 //							System.out.println("NEW CONFLICT OF SIZE: " + newConflict.size());
 
-                            newNode.conflict.addAll(newConflict);
+                            newNode.nodeLabel.addAll(newConflict);
                             List<T> handleOfKnown = dagBuilder.knownConflicts
-                                    .addItemListNoDups(newNode.conflict);
+                                    .addItemListNoDups(newNode.nodeLabel);
                             // Reuse this one
                             if (handleOfKnown != null) {
-//								System.out.println("Reusing a known conflict here ..");
-                                newNode.conflict = handleOfKnown;
+//								System.out.println("Reusing a known nodeLabel here ..");
+                                newNode.nodeLabel = handleOfKnown;
                             }
-                            // We have already added the first conflict, so lets add the other ones.
-                            if (!QuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
+                            // We have already added the first nodeLabel, so lets add the other ones.
+                            if (!ConstraintsQuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
                                 for (int i = 1; i < checkingResult.conflicts.size(); i++) {
                                     List<T> c = checkingResult.conflicts.get(i);
                                     //								System.out.println("Adding a known conflit");
@@ -285,17 +283,17 @@ public class NodeExpander<T> {
                                 }
                             }
 
-                            // Remember where this conflict was used (Pruning later on)
-                            List<DAGNode<T>> nodesForConflict = dagBuilder.conflictNodeLookup.get(newNode.conflict);
+                            // Remember where this nodeLabel was used (Pruning later on)
+                            List<Node<T>> nodesForConflict = dagBuilder.conflictNodeLookup.get(newNode.nodeLabel);
                             if (nodesForConflict == null) {
-                                nodesForConflict = new ArrayList<DAGNode<T>>();
+                                nodesForConflict = new ArrayList<Node<T>>();
                             }
                             if (!nodesForConflict.contains(newNode)) {
                                 nodesForConflict.add(newNode);
                             }
 
-                            this.dagBuilder.conflictNodeLookup.put(newNode.conflict, nodesForConflict);
-                            if (!QuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
+                            this.dagBuilder.conflictNodeLookup.put(newNode.nodeLabel, nodesForConflict);
+                            if (!ConstraintsQuickXPlain.CONTINUE_AFTER_FIRST_CONFLICT) {
                                 newNode.examplesToCheck = new ArrayList<>(checkingResult.failedExamples);
                             } else {
                                 newNode.examplesToCheck = new ArrayList<>(targetNode.examplesToCheck);
@@ -307,7 +305,7 @@ public class NodeExpander<T> {
                                 this.newNodesToExpand.add(newNode);
                             }
                         } else {
-                            //No conflict reported, therefore add new tests.diagnosis
+                            //No nodeLabel reported, therefore add new tests.diagnosis
                             //Check if there are any failed examples left (could be, if we did not calculate conflicts on the last level)
                             if (checkingResult.failedExamples.size() == 0) {
                                 newNode.diagnosis = newNode.pathLabels;
@@ -317,9 +315,9 @@ public class NodeExpander<T> {
 //								System.out.println(" --> GOT A DIAGNOSIS: " + Utilities.printConstraintList(newNode.tests.diagnosis, model));
 
 
-                                if (dagBuilder.getSessionData().config.maxDiagnoses != -1) {
+                                if (dagBuilder.getDiagnosisModel().getConfiguration().maxDiagnoses != -1) {
                                     if (this.dagBuilder.diagnoses.size() >= dagBuilder
-                                            .getSessionData().config.maxDiagnoses) {
+                                            .getDiagnosisModel().getConfiguration().maxDiagnoses) {
                                         this.dagBuilder.nodesToExpand.clear();
                                         if (inParallelMode) {
                                             // DJ: TODO - what should we do here? Perhaps simply return from the work
@@ -347,9 +345,9 @@ public class NodeExpander<T> {
                     }
                 } else {
                     // DJ: If we are re-using stuff, we still need to create the new node...
-//					System.out.println(" Adding node with reused conflict: "  + Utilities.printConstraintList(conflictToReuse, model));
-                    newNode.conflict = new ArrayList<T>();
-                    newNode.conflict.addAll(conflictToReuse);
+//					System.out.println(" Adding node with reused nodeLabel: "  + Utilities.printConstraintList(conflictToReuse, model));
+                    newNode.nodeLabel = new ArrayList<T>();
+                    newNode.nodeLabel.addAll(conflictToReuse);
                     newNode.examplesToCheck = new ArrayList<>(targetNode.examplesToCheck);
                     if (!inParallelMode) {
                         this.dagBuilder.nodesToExpand.add(newNode);

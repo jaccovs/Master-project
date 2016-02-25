@@ -698,7 +698,7 @@
     <!-- http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte -->
 
     <owl:Class rdf:about="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#T_lymphocyte">
-        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte"/>
+        <owl:equivalentClass rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte"/>
         <rdfs:subClassOf rdf:resource="http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Lymphocyte"/>
     </owl:Class>
     
@@ -1292,7 +1292,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Gene_Product_Plays_Role_In_Biological_Process"/>
-                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Cell_Proliferation"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Cell_Proliferation"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1872,9 +1872,9 @@
     
 
 
-    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Cell_Proliferation -->
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Cell_Proliferation -->
 
-    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Cell_Proliferation">
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Cell_Proliferation">
         <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Cell_Proliferation"/>
         <rdfs:subClassOf>
             <owl:Restriction>
@@ -1885,24 +1885,24 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Biological_Process_Has_Result_Anatomy"/>
-                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte"/>
+                <owl:someValuesFrom rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
     
 
 
-    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte -->
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte -->
 
-    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte">
-        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte_and_Natural_Killer_Cell"/>
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte">
+        <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte_and_Natural_Killer_Cell"/>
     </owl:Class>
     
 
 
-    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte_and_Natural_Killer_Cell -->
+    <!-- http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte_and_Natural_Killer_Cell -->
 
-    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Formula-Lymphocyte_and_Natural_Killer_Cell">
+    <owl:Class rdf:about="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#F-Lymphocyte_and_Natural_Killer_Cell">
         <rdfs:subClassOf rdf:resource="http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Lymphocyte"/>
     </owl:Class>
     

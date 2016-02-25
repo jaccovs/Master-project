@@ -1,9 +1,8 @@
 package org.exquisite.diagnosis.quickxplain.mergexplain;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.datamodel.DiagnosisModel;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.ListComparator;
 
@@ -14,12 +13,14 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static org.exquisite.core.measurements.MeasurementManager.*;
+
 /**
  * Parallel version of MergeXplain
  *
  * @author Schmitz
  */
-public class ParallelMergeXplain<T> extends QuickXPlain<T> {
+public class ParallelMergeXplain<T> extends ConstraintsQuickXPlain<T> {
 
     /**
      * maximum number of threads to initialize the thread pool with.
@@ -28,16 +29,14 @@ public class ParallelMergeXplain<T> extends QuickXPlain<T> {
     public PriorityBlockingQueue<Runnable> queue = new PriorityBlockingQueue<Runnable>();
     ListComparator<T> listComparator = new ListComparator<T>();
     ExecutorService threadPool;
-    private int splittingConflicts;
-    private int conflicts;
 
     /**
      * set currentDiagnosisModel as a copy of SessionData tests.diagnosis model.
      *
      * @param sessionData
      */
-    public ParallelMergeXplain(ExquisiteSession<T> sessionData, AbstractHSDagBuilder<T> dagbuilder) {
-        super(sessionData, dagbuilder);
+    public ParallelMergeXplain(DiagnosisModel<T> sessionData) {
+        super(sessionData);//, dagbuilder);
         threadPool = new ThreadPoolExecutor(maxThreadPoolSize, maxThreadPoolSize, 1, TimeUnit.SECONDS,
                 queue); //Executors.newFixedThreadPool(maxThreadPoolSize);
     }
@@ -51,8 +50,6 @@ public class ParallelMergeXplain<T> extends QuickXPlain<T> {
      */
     @Override
     public List<List<T>> findConflicts() throws DomainSizeException {
-        splittingConflicts = 0;
-        conflicts = 0;
 
         List<List<T>> result = new ArrayList<List<T>>();
 
@@ -62,7 +59,7 @@ public class ParallelMergeXplain<T> extends QuickXPlain<T> {
             Debug.msg("checkConsistency = true.");
             return result;
         } else {
-            MergeXplainTreeWorker mxp = new MergeXplainTreeWorker(this,
+            MergeXplainTreeWorker<T> mxp = new MergeXplainTreeWorker<>(this,
                     this.currentDiagnosisModel.getPossiblyFaultyStatements(), 0); //, countDownLatch);
             threadPool.execute(mxp);
 //			mxp.run();
@@ -78,7 +75,7 @@ public class ParallelMergeXplain<T> extends QuickXPlain<T> {
 //					this.currentDiagnosisModel.getCorrectStatements());
 //			
             result.addAll(mxp.getResult().Conflicts);
-//			System.out.println("Found " + result.size() + " conflict(s).");
+//			System.out.println("Found " + result.size() + " nodeLabel(s).");
         }
 
         // Release this guy
@@ -87,12 +84,7 @@ public class ParallelMergeXplain<T> extends QuickXPlain<T> {
             this.constraintListener.release();
         }
 
-        if (diagnosisEngine != null) {
-            diagnosisEngine.incrementSearchesForConflicts();
-            diagnosisEngine.incrementMXPConflicts(conflicts);
-            diagnosisEngine.incrementMXPSplittingTechniqueConflicts(splittingConflicts);
-        }
-
+        incrementCounter(COUNTER_SEARCH_CONFLICTS);
         return result;
     }
 }

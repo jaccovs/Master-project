@@ -6,10 +6,10 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import evaluations.conflictposition.MergeXPlainKC;
 import evaluations.conflictposition.QXKCTools;
 import evaluations.conflictposition.QuickExplainKC;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.datamodel.ExcelExquisiteSession;
+import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 import org.exquisite.diagnosis.quickxplain.mergexplain.MergeXplain;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -57,12 +57,12 @@ public class QuickXPlainTest {
 	 * @param model
 	 */
 	public static void runQxTest(DiagnosisModel<Constraint> model) {
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
-//		QuickXPlain qxp = new QuickXPlain(sessionData, null);
-		QuickXPlain<Constraint> qxp = new MergeXplain(sessionData, null);
+		ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>();
+		sessionData.getDiagnosisModel() = model;
+//		ConstraintsQuickXPlain qxp = new ConstraintsQuickXPlain(sessionData, null);
+		ConstraintsQuickXPlain<Constraint> qxp = new MergeXplain<>(sessionData);
 //		ParallelMergeXplain.maxThreadPoolSize = 1;
-//		QuickXPlain qxp = new ParallelMergeXplain(sessionData, null);
+//		ConstraintsQuickXPlain qxp = new ParallelMergeXplain(sessionData, null);
 
 		List<List<Constraint>> conflicts;
 		try {
@@ -70,8 +70,8 @@ public class QuickXPlainTest {
 			if (conflicts != null) {
 				System.out.println("Found " + conflicts.size() + " conflicts.");
 				for(List<Constraint> conflict: conflicts) {
-					System.out.println("Found conflict of size " + conflict.size());
-					System.out.println("Candidates: " + Utilities.printConstraintList(conflict, sessionData.diagnosisModel));
+					System.out.println("Found nodeLabel of size " + conflict.size());
+					System.out.println("Candidates: " + Utilities.printConstraintList(conflict, sessionData.getDiagnosisModel()));
 				}
 			}
 			else {
@@ -90,19 +90,21 @@ public class QuickXPlainTest {
 	 * @param knownConflicts the list of known conflicts
 	 */
 	public static void runQxTest(DiagnosisModel<Constraint> model, QXType type, List<List<Constraint>> knownConflicts) {
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
-//		QuickXPlain qxp = new QuickXPlain(sessionData, null);
-//		QuickXPlain qxp = new MergeXplain(sessionData, null);
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+		sessionData.getDiagnosisModel() = model;
+//		ConstraintsQuickXPlain qxp = new ConstraintsQuickXPlain(sessionData, null);
+//		ConstraintsQuickXPlain qxp = new MergeXplain(sessionData, null);
 
-		QuickXPlain<Constraint> qxp = null;
+		ConstraintsQuickXPlain<Constraint> qxp = null;
+		int numberOfConstraints = model.getPossiblyFaultyStatements().size() + model
+				.getCorrectStatements().size();
 		if (type == QXType.MXP) {
-			qxp = new MergeXPlainKC(sessionData, null);
+			qxp = new MergeXPlainKC(sessionData, numberOfConstraints);
 			QXKCTools.knownConflicts = knownConflicts;
 			System.out.println("using mergexplain");
 		}
 		else if (type == QXType.QXP) {
-			qxp = new QuickExplainKC(sessionData, null);
+			qxp = new QuickExplainKC(sessionData, numberOfConstraints);
 			QXKCTools.knownConflicts = knownConflicts;
 			System.out.println("using qxp w known conflits");
 		}
@@ -114,8 +116,8 @@ public class QuickXPlainTest {
 			if (conflicts != null) {
 				System.out.println("Found " + conflicts.size() + " conflicts.");
 				for(List<Constraint> conflict: conflicts) {
-					System.out.println("Found conflict of size " + conflict.size());
-					System.out.println("Candidates: " + Utilities.printConstraintList(conflict, sessionData.diagnosisModel));
+					System.out.println("Found nodeLabel of size " + conflict.size());
+					System.out.println("Candidates: " + Utilities.printConstraintList(conflict, sessionData.getDiagnosisModel()));
 				}
 			}
 			else {
@@ -127,7 +129,7 @@ public class QuickXPlainTest {
 		}
 	}
 
-	private void setQXVariant(QuickXPlain<Constraint> quickXPlain) {
+	private void setQXVariant(ConstraintsQuickXPlain<Constraint> quickXPlain) {
 		// TODO Auto-generated method stub
 
 	}
@@ -148,7 +150,7 @@ public class QuickXPlainTest {
 		model.addPossiblyFaultyConstraint(Choco.eq(b1, Choco.mult(a1, a2)), "B1 = a1 * a2"); // should be +
 
 		//test case input
-		model.addCorrectConstraint(Choco.eq(b1, 8), "b1=8");
+		model.addCorrectFormula(Choco.eq(b1, 8), "b1=8");
 		System.out.println("Expected candidates are: { A1, B1 = a1 * a2 } or { A2, B1 = a1 * a2 }");
 		return model;
 	}
@@ -179,27 +181,27 @@ public class QuickXPlainTest {
 		//Add/remove //'s next to examples to show diagnosis result per example.
 		//Example 1 //returns {B2}, {C1}
 //		System.out.println("Expected candidates are { B2, C1 }");
-//		model.addCorrectConstraint(Choco.eq(a1, 1), "a1 = 1");
-//		model.addCorrectConstraint(Choco.eq(a2, 6), "a2 = 6");
-//		model.addCorrectConstraint(Choco.eq(c1, 20), "c1 = 20");
+//		model.addCorrectFormula(Choco.eq(a1, 1), "a1 = 1");
+//		model.addCorrectFormula(Choco.eq(a2, 6), "a2 = 6");
+//		model.addCorrectFormula(Choco.eq(c1, 20), "c1 = 20");
 
 		//Example 2 //returns {B1}, {C1}  - this is different to the paper where b1 & b2 are returned as one diagnosis.
 //		System.out.println("Expected candidates are {B1, C1}");
-//		model.addCorrectConstraint(Choco.eq(a1, 4), "a1 = 4");
-//		model.addCorrectConstraint(Choco.eq(a2, 5), "a2 = 5");
-//		model.addCorrectConstraint(Choco.eq(c1, 23), "c1 = 23");
+//		model.addCorrectFormula(Choco.eq(a1, 4), "a1 = 4");
+//		model.addCorrectFormula(Choco.eq(a2, 5), "a2 = 5");
+//		model.addCorrectFormula(Choco.eq(c1, 23), "c1 = 23");
 
 		//Example 3 //returns {B1}, {B2}, {C1}
 		System.out.println("Expected candidates are {B1, B2, C1}");
-		model.addCorrectConstraint(Choco.eq(a1, 15), "a1 = 15");
-		model.addCorrectConstraint(Choco.eq(a2, 10), "a2 = 10");
-		model.addCorrectConstraint(Choco.eq(c1, 60), "c1 = 60");
+		model.addCorrectFormula(Choco.eq(a1, 15), "a1 = 15");
+		model.addCorrectFormula(Choco.eq(a2, 10), "a2 = 10");
+		model.addCorrectFormula(Choco.eq(c1, 60), "c1 = 60");
 
 		//Example 4 //returns {B1}, {C1}
 //		System.out.println("Expected candidates are {B1, C1}");
-//		model.addCorrectConstraint(Choco.eq(a1, 6), "a1 = 6");
-//		model.addCorrectConstraint(Choco.eq(a2, 1), "a2 = 1");
-//		model.addCorrectConstraint(Choco.eq(c1, 15), "c1 = 15");
+//		model.addCorrectFormula(Choco.eq(a1, 6), "a1 = 6");
+//		model.addCorrectFormula(Choco.eq(a2, 1), "a2 = 1");
+//		model.addCorrectFormula(Choco.eq(c1, 15), "c1 = 15");
 
 		return model;
 	}
@@ -219,12 +221,12 @@ public class QuickXPlainTest {
 		model.addPossiblyFaultyConstraint(Choco.eq(d, e), "C3 d==e");
 
 		// Something assumed to be correct
-		model.addCorrectConstraint(Choco.eq(d,e), "C4 d==e");
+		model.addCorrectFormula(Choco.eq(d,e), "C4 d==e");
 
 		// An input value
-		model.addCorrectConstraint(Choco.eq(a,1), "a=1");
-		model.addCorrectConstraint(Choco.eq(b,1), "b=1");
-		model.addCorrectConstraint(Choco.eq(e,1), "e=1");
+		model.addCorrectFormula(Choco.eq(a,1), "a=1");
+		model.addCorrectFormula(Choco.eq(b,1), "b=1");
+		model.addCorrectFormula(Choco.eq(e,1), "e=1");
 
 		System.out.println("Expected candidates to include in result: { C1 a>6 }");
 		return model;

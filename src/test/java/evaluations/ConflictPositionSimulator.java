@@ -11,12 +11,10 @@ import evaluations.configuration.StdRunConfiguration;
 import evaluations.configuration.StdRunConfiguration.ExecutionMode;
 import evaluations.conflictposition.QXKCTools;
 import evaluations.conflictposition.QXKCTools.WaitMode;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder.QuickXplainType;
-import org.exquisite.diagnosis.engines.HSDagBuilder;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.datamodel.ExcelExquisiteSession;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.AbstractHSDagEngine.QuickXplainType;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import tests.dj.qxsim.SimUtilities;
 
@@ -25,7 +23,7 @@ import java.util.*;
 
 public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 	
-	// The gaussian to create the conflict sizes
+	// The gaussian to create the nodeLabel sizes
 	public static Random random = new Random();
 	
 	// ----------------------------------------------------
@@ -130,7 +128,7 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 	boolean differentModelsForRuns = true;
 
 	/**
-	 * Create a conflict from a given list
+	 * Create a nodeLabel from a given list
 	 *
 	 * @param avgConflictSize the expected size
 	 * @param whereToPickFrom the list to chose from
@@ -158,7 +156,7 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 	}
 
 	/**
-	 * Add a conflict to the list of it is not already there
+	 * Add a nodeLabel to the list of it is not already there
 	 *
 	 * @param generatedConflicts the existing conflicts
 	 * @param newConflict        the new conflicts
@@ -302,25 +300,25 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 
 
 		// do a diagnosis
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+		sessionData.getDiagnosisModel() = model;
 		// create a dummy example
 		// Add a dummy example
 		Example exTestExample = new Example();
 		exTestExample.addConstraint(SimUtilities.createDummyConstraint(), "dummyexample");
-		model.getPositiveExamples().add(exTestExample);
+		model.getConsistentExamples().add(exTestExample);
 
 		chooseEngineType(scenario, runConfiguration);
 
-		switch (AbstractHSDagBuilder.USE_QXTYPE) {
+		switch (AbstractHSDagEngine.USE_QXTYPE) {
 		case QuickXplain:
-			AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.QX_KC;
+			AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.QX_KC;
 			break;
 		case MergeXplain:
-			AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.MX_KC;
+			AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.MX_KC;
 			break;
 		case ParallelMergeXplain:
-			AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.PMX_KC;
+			AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.PMX_KC;
 			break;
 
 
@@ -329,13 +327,13 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 		}
 
 		// create an engine and register the known conflicts to qx
-		AbstractHSDagBuilder engine = new HSDagBuilder(sessionData);
-//		AbstractHSDagBuilder.USE_QXTYPE = qxtype;
+		AbstractHSDagEngine engine = new HSDagEngine(sessionData);
+//		AbstractHSDagEngine.USE_QXTYPE = qxtype;
 		QXKCTools.MAX_WAIT_TIME = scenario.maxWaitTime;
 		QXKCTools.WAIT_MODE = scenario.waitMode;
 
 		// Limit the number of diags to search for
-		sessionData.config.maxDiagnoses = scenario.maxDiags;
+		sessionData.getConfiguration().maxDiagnoses = scenario.maxDiags;
 
 		return engine;
 	}
@@ -391,8 +389,8 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 			theConstraints.add(c);
 		}
 //		System.out.println(Utilities.printConstraintList(theConstraints, model));
-//		for (List<Constraint> conflict : knownConflicts)  {
-//			System.out.println("Known Conflict: " + Utilities.printConstraintList(conflict, model));
+//		for (List<Constraint> nodeLabel : knownConflicts)  {
+//			System.out.println("Known Conflict: " + Utilities.printConstraintList(nodeLabel, model));
 //		}
 		if (persistent && !f.exists()) {
 			SimUtilities.writeConstraintsToFile(f.getAbsolutePath(), model.getConstraintNames(), knownConflicts);
@@ -406,7 +404,7 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 	/**
 	 * Create a list of conflicts
 	 * @param nbConflicts nb of conflicts to be created
-	 * @param avgConflictSize avg size of the conflict
+	 * @param avgConflictSize avg size of the nodeLabel
 	 * @param position position of the conflicts
 	 * @return the list of conflicts
 	 */
@@ -453,9 +451,9 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 						int num = r.nextInt(rightPart.size() - avgConflictSize);
 						newConflict = rightPart.subList(num, num + avgConflictSize);
 					}
-					// check if the generated conflict is not already there
+					// check if the generated nodeLabel is not already there
 					if (addConflictNoDups(generatedConflicts, newConflict)) {
-//						System.out.println("Added right part conflict");
+//						System.out.println("Added right part nodeLabel");
 						lastWasLeft = false;
 					}
 					else {
@@ -471,9 +469,9 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 						int num = r.nextInt(leftPart.size() - avgConflictSize);
 						newConflict = leftPart.subList(num, num + avgConflictSize);
 					}
-					// check if the generated conflict is not already there
+					// check if the generated nodeLabel is not already there
 					if (addConflictNoDups(generatedConflicts, newConflict)) {
-//						System.out.println("Added left part conflict");
+//						System.out.println("Added left part nodeLabel");
 						lastWasLeft = true;
 					}
 					else {
@@ -491,9 +489,9 @@ public class ConflictPositionSimulator extends AbstractEvaluation<Constraint> {
 			}
 			else {
 				// use the list we have created
-				// create a new conflict
+				// create a new nodeLabel
 				List<Constraint> newConflict = createConflictFromList(avgConflictSize, whereToPickFrom);
-				// check if the generated conflict is not already there
+				// check if the generated nodeLabel is not already there
 				addConflictNoDups(generatedConflicts, newConflict);
 			}
 		}

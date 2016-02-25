@@ -49,7 +49,7 @@ public class FormulaSelector<T> {
     }
 
     /**
-     * Returns the next node (conflict element) to explore
+     * Returns the next node (nodeLabel element) to explore
      *
      * @param node   the current node
      * @param engine the handle to the engine

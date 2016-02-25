@@ -1,9 +1,7 @@
 package org.exquisite.diagnosis.quickxplain.parallelqx;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.datamodel.DiagnosisModel;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -18,7 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author dietmar
  */
 
-public class ParallelQXPlain<T> extends QuickXPlain<T> {
+public class ParallelQXPlain<T> extends ConstraintsQuickXPlain<T> {
 
     // The set of already known conflicts
     private final List<List<T>> results = new ArrayList<>();
@@ -38,9 +36,8 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
     private ThreadPoolExecutor pool;
 
     // Superclass constructor
-    public ParallelQXPlain(ExquisiteSession<T> sessionData,
-                           AbstractHSDagBuilder<T> dagbuilder) {
-        super(sessionData, dagbuilder);
+    public ParallelQXPlain(DiagnosisModel<T> sessionData) {
+        super(sessionData);
 //    	System.out.println(" -- Creating parallel QX");
 
     }
@@ -85,10 +82,10 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
 
 
     /**
-     * Do the true work - find one conflict after the other
+     * Do the true work - find one nodeLabel after the other
      */
     public List<T> findConflict(List<T> possiblyFaultyConstraints) {
-//    	System.out.println("-Find conflict called at level:   , results so far: " + results.size() + " , maxconflicts: " + maxConflicts);
+//    	System.out.println("-Find nodeLabel called at level:   , results so far: " + results.size() + " , maxconflicts: " + maxConflicts);
         try {
             // Increase the counter
             incCount();
@@ -100,19 +97,19 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
                 }
                 return null;
             }
-//	        System.out.println("Have to find a conflict. ...");
+//	        System.out.println("Have to find a nodeLabel. ...");
             // Create a new thread
             QXThread qxThread = new QXThread();
             //qxThread.dagbuilder = this.dagBuilder;
             //qxThread.session = this.sessionData;
-            qxThread.qx = new QuickXPlain<T>(this.sessionData, this.diagnosisEngine);
+            qxThread.qx = new ConstraintsQuickXPlain<T>(this.sessionData);
 
             // If we have been passed an updated list of constraints -> overwrite this thing.
             if (possiblyFaultyConstraints != null) {
 //	        	System.out.println("Got a new model to check ..");
 //	        	System.out.println(possiblyFaultyConstraints);
                 // Create a copy of the tests.diagnosis model
-                DiagnosisModel<T> model = new DiagnosisModel<T>(this.currentDiagnosisModel);
+                org.exquisite.core.model.DiagnosisModel model = new org.exquisite.core.model.DiagnosisModel(this.currentDiagnosisModel);
                 model.setPossiblyFaultyStatements(new ArrayList<T>(possiblyFaultyConstraints));
 
 //            	System.out.println("PFC: " + Utilities.printConstraintListOrderedByName(model.getPossiblyFaultyStatements(), model));
@@ -149,10 +146,10 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
 //                        Searchable<Id> ct = c.copy();
                         findConflict(new ArrayList<T>(cu));
                     } else {
-//                        System.out.println("Duplicate conflict possible. The branch is ignored!");
+//                        System.out.println("Duplicate nodeLabel possible. The branch is ignored!");
                     }
                 } else {
-//                	System.out.println("No conflict found at level " + level);
+//                	System.out.println("No nodeLabel found at level " + level);
                 }
             }
 //	        System.out.println("Done with the main loop at level " + level);
@@ -177,9 +174,9 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
 
 
     /**
-     * Look if the results already contain this conflict..
+     * Look if the results already contain this nodeLabel..
      *
-     * @param cu the updated conflict
+     * @param cu the updated nodeLabel
      * @return true if it is already there; false otherwise
      */
     private boolean isKnownConflict(Collection<T> cu) {
@@ -187,19 +184,19 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
         try {
             for (List<T> ids : getResults()) {
                 if (cu.containsAll(ids)) {
-//                	System.out.println("Found an existing conflict..");
+//                	System.out.println("Found an existing nodeLabel..");
                     return true;
                 }
             }
             return false;
         } finally {
-//        	System.out.println("New conflict, unlocking in contains Conflict");
+//        	System.out.println("New nodeLabel, unlocking in contains Conflict");
             resultsLock.readLock().unlock();
         }
     }
 
     /**
-     * Adds a conflict to the global set of conflicts
+     * Adds a nodeLabel to the global set of conflicts
      *
      * @param formulaSet
      */
@@ -250,10 +247,10 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
     private class QXThread implements Callable<List<T>> {
         // the current constellation to consider.
         // Has to be set from the coordinating thread.
-        //ExquisiteSession session;
-        //AbstractHSDagBuilder dagbuilder;
+        //ExcelExquisiteSession session;
+        //AbstractHSDagEngine dagbuilder;
         // The local solver - works with a different situation every time
-        QuickXPlain<T> qx = null; // new QuickXPlain(session, dagbuilder);
+        ConstraintsQuickXPlain<T> qx = null; // new ConstraintsQuickXPlain(session, dagbuilder);
 
         @Override
         public List<T> call() {
@@ -262,16 +259,16 @@ public class ParallelQXPlain<T> extends QuickXPlain<T> {
 //	        	System.out.println("Starting next thread after " + (threadstart - starttime) + " ms.");
 //        		System.out.println("Starting thread ...");
                 try {
-                    // Find a conflict
+                    // Find a nodeLabel
                     List<T> conflict = qx.findConflict();
                     if (conflict.size() == 0) {
-                        //                	System.out.println("It is not a conflict, done with the work..");
+                        //                	System.out.println("It is not a nodeLabel, done with the work..");
                         qx.constraintListener.release();
                         return null;
                     } else {
-                        //                    System.out.println("Found one of size " + conflict.size());
-                        //                    System.out.println(Utilities.printConstraintListOrderedByName(conflict, currentDiagnosisModel));
-                        // Register the conflict
+                        //                    System.out.println("Found one of size " + nodeLabel.size());
+                        //                    System.out.println(Utilities.printConstraintListOrderedByName(nodeLabel, currentDiagnosisModel));
+                        // Register the nodeLabel
                         addConflict(conflict);
                         return conflict;
                     }

@@ -1,12 +1,11 @@
 package tests.ts.interactivity;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.core.engines.tree.Node;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  * @author Schmitz
  *
  */
-public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
+public class InteractivityDiagnosisEngine<T> extends AbstractHSDagEngine<T> {
 
 	/**
 	 * Inner engine is used to calculate the diagnosis candidates.
@@ -41,7 +40,7 @@ public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 	float diagnosisTime;
 	float userInteractionTime;
 
-	public InteractivityDiagnosisEngine(ExquisiteSession sessionData, IDiagnosisEngine<T> innerEngine,
+	public InteractivityDiagnosisEngine(ExcelExquisiteSession sessionData, IDiagnosisEngine<T> innerEngine,
 										int diagnosesPerQuery,
 										IUserInteraction userInteraction, IBestQueryFinder bestQueryFinder) {
 		super(sessionData);
@@ -49,7 +48,7 @@ public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 		this.userInteraction = userInteraction;
 		this.bestQueryFinder = bestQueryFinder;
 
-		sessionData.config.maxDiagnoses = diagnosesPerQuery;
+		sessionData.getConfiguration().maxDiagnoses = diagnosesPerQuery;
 
 		this.innerEngine = innerEngine;
 	}
@@ -78,7 +77,7 @@ public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 
 		do {
 			innerEngine.resetEngine();
-			innerEngine.getSessionData().diagnosisModel = innerEngine.getModel();
+			innerEngine.getDiagnosisModel().getDiagnosisModel() = innerEngine.getDiagnosisModel();
 			numberOfDiagnosisRuns++;
 			long innerStart = System.nanoTime();
 			diagnoses = innerEngine.calculateDiagnoses();
@@ -94,7 +93,7 @@ public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 				numberOfQueries++;
 				DiagnosisModelExpansion diagModelExpansion = userInteraction.simulateUserInteraction(bestQuery);
 
-				expandDiagnosisModel(innerEngine.getModel(), diagModelExpansion);
+				expandDiagnosisModel(innerEngine.getDiagnosisModel(), diagModelExpansion);
 			}
 		} while (diagnoses.size() > 1);
 
@@ -118,11 +117,11 @@ public class InteractivityDiagnosisEngine<T> extends AbstractHSDagBuilder<T> {
 
 		model.getCorrectStatements().addAll(diagModelExpansion.getCorrectConstraintsToAdd());
 
-		model.getCertainlyFaultyStatements().addAll(diagModelExpansion.getCertainlyFaultyConstraintsToAdd());
+		model.getFaultyStatements().addAll(diagModelExpansion.getCertainlyFaultyConstraintsToAdd());
 	}
 
 	@Override
-	public void expandNodes(List<DAGNode<T>> nodesToExpand) throws DomainSizeException {
+	public void expandNodes(List<Node<T>> nodesToExpand) throws DomainSizeException {
 		// Nothing to do here
 
 	}

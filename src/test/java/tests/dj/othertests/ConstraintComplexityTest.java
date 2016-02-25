@@ -5,11 +5,11 @@ import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.diagnosis.ranking.ConstraintComplexityEstimator;
@@ -49,7 +49,7 @@ public class ConstraintComplexityTest {
 	// Do a test here 
    void runRankingTest() throws Exception {
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
-	   ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>(appXML);
+	   ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -57,7 +57,7 @@ public class ConstraintComplexityTest {
 	   modelLoader.loadDiagnosisModelFromXML();
 
 	   IDiagnosisEngine<Constraint> diagnosisEngine;
-		sessionData.config.searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 		
 		diagnosisEngine = EngineFactory.makeEngine(EngineType.HSDagStandardQX, sessionData,1);
 	   List<Diagnosis<Constraint>> diags = diagnosisEngine.calculateDiagnoses();

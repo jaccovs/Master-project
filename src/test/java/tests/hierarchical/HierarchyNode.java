@@ -1,7 +1,7 @@
 package tests.hierarchical;
 
 import choco.kernel.model.constraints.Constraint;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +39,7 @@ public class HierarchyNode<T> {
 	 * Creates a node with only leaf level elemnts
 	 */
 	public HierarchyNode(Set<Constraint> constraints, DiagnosisModel dm) {
-		this.diagnosisModel = dm;
+		this.getDiagnosisModel() = dm;
 		nextLevelElements = new HashSet<HierarchyNode<T>>();
 		for (Constraint c: constraints){
 			nextLevelElements.add(new HierarchyNode<T>(c, diagnosisModel.getConstraintName(c), dm, this));
@@ -51,7 +51,7 @@ public class HierarchyNode<T> {
 	 * @param c
 	 */
 	public HierarchyNode(Constraint c, String name, DiagnosisModel dm, HierarchyNode<T> parent) {
-		this.diagnosisModel = dm;
+		this.getDiagnosisModel() = dm;
 		this.constraint = c;
 		this.nodeName = name;
 		this.parent = parent;
@@ -61,7 +61,7 @@ public class HierarchyNode<T> {
 	 * Creates a new node
 	 */
 	public HierarchyNode(DiagnosisModel dm) {
-		this.diagnosisModel = dm;
+		this.getDiagnosisModel() = dm;
 		this.nextLevelElements = new HashSet<HierarchyNode<T>>();
 	}
 	

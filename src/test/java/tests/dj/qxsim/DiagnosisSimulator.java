@@ -3,20 +3,24 @@ package tests.dj.qxsim;
 import choco.kernel.model.constraints.Constraint;
 import evaluations.tools.DiagnosisEvaluation;
 import evaluations.tools.ResultsLogger;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.datamodel.ExcelExquisiteSession;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.*;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder.QuickXplainType;
+import org.exquisite.core.engines.AbstractHSDagEngine.QuickXplainType;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
 import java.io.File;
 import java.util.*;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 
 /**
@@ -39,7 +43,7 @@ public class DiagnosisSimulator  {
 //	public int nbConflicts_lb = 10;
 //	public int nbConflicts_ub = 50;
 //	public int nbConflicts_step = 10;
-//	// conflict size
+//	// nodeLabel size
 //	public int conflictSize_lb = 3;
 //	public int conflictSize_ub = 12;
 //	public int conflictSize_step = 3;
@@ -56,7 +60,7 @@ public class DiagnosisSimulator  {
 //	public int nbConflicts_lb = 5;
 //	public int nbConflicts_ub = 5;
 //	public int nbConflicts_step = 10;
-//	// conflict size
+//	// nodeLabel size
 //	public int conflictSize_lb = 4;
 //	public int conflictSize_ub = 4;
 //	public int conflictSize_step = 3;
@@ -73,7 +77,7 @@ public class DiagnosisSimulator  {
 //	public int nbConflicts_lb = 25;
 //	public int nbConflicts_ub = 25;
 //	public int nbConflicts_step = 10;
-//	// conflict size
+//	// nodeLabel size
 //	public int conflictSize_lb = 3;
 //	public int conflictSize_ub = 3;
 //	public int conflictSize_step = 3;
@@ -103,7 +107,7 @@ public class DiagnosisSimulator  {
 	public int nbConflicts_lb = 25;
 	public int nbConflicts_ub = 25;
 	public int nbConflicts_step = 10;
-	// conflict size
+	// nodeLabel size
 	public int conflictSize_lb = 3;
 	public int conflictSize_ub = 3;
 	public int conflictSize_step = 3;
@@ -134,7 +138,7 @@ public class DiagnosisSimulator  {
 		try {
 			Debug.DEBUGGING_ON = false;
 			System.out.println("-- Program starting");
-			AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.SimulatedQuickXplain;
+			AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.SimulatedQuickXplain;
 			// Start the work
 			DiagnosisSimulator sim = new DiagnosisSimulator();
 
@@ -187,11 +191,11 @@ public class DiagnosisSimulator  {
 		// Add a dummy example
 		Example exTestExample = new Example();
 		exTestExample.addConstraint(SimUtilities.createDummyConstraint(), "dummyexample");
-		model.getPositiveExamples().add(exTestExample);
+		model.getConsistentExamples().add(exTestExample);
 
 //		System.out.println("Known conflicts");
-//		for (List<Constraint> conflict : conflicts) {
-//			System.out.println(conflictToString(this.constraintNames, conflict));
+//		for (List<Constraint> nodeLabel : conflicts) {
+//			System.out.println(conflictToString(this.constraintNames, nodeLabel));
 //		}
 		return model;
 	}
@@ -231,7 +235,7 @@ public class DiagnosisSimulator  {
 		//
 
 
-		// Determine the size of each conflict to be generated.
+		// Determine the size of each nodeLabel to be generated.
 		int[] conflictSizes = new int[nbConflicts];
 		if (genStrategySize == ConflictGenerationStrategy_Size.equal) {
 			for (int i=0;i<nbConflicts;i++) {
@@ -277,9 +281,9 @@ public class DiagnosisSimulator  {
 		// some testing
 //		Map<Constraint, Integer> constraintCount = new HashMap<Constraint, Integer>();
 //		System.out.println("Known conflicts");
-//		for (List<Constraint> conflict : conflicts) {
-//			System.out.println(conflictToString(this.constraintNames, conflict));
-//			for (Constraint c : conflict) {
+//		for (List<Constraint> nodeLabel : conflicts) {
+//			System.out.println(conflictToString(this.constraintNames, nodeLabel));
+//			for (Constraint c : nodeLabel) {
 //				Integer cCount = constraintCount.get(c);
 //				if (cCount == null){
 //					constraintCount.put(c, 1);
@@ -347,7 +351,7 @@ public class DiagnosisSimulator  {
 	 * @param nbConflicts   number of conflicts to create
 	 * @param conflictSize   average size of conflicts
 	 * @param run   the number of the run
-	 * @return filename + nbcts + nbconflits + avg-conflict size + run
+	 * @return filename + nbcts + nbconflits + avg-nodeLabel size + run
 	 */
 	String getFullFileName(int nbConstraints, int nbConflicts, int conflictSize, int run) {
 		String result = this.filename;
@@ -365,7 +369,7 @@ public class DiagnosisSimulator  {
 	 * @param nbConflicts   number of conflicts to create
 	 * @param conflictSize   average size of conflicts
 	 * @param waitTime   the artificial wait time for QuickXplain
-	 * @returnresultfilename + nbcts + nbconflits + avg-conflict size + waittime
+	 * @returnresultfilename + nbcts + nbconflits + avg-nodeLabel size + waittime
 	 */
 	String getFullResultFileName(int nbConstraints, int nbConflicts, int conflictSize, int waitTime) {
 		String result = resultsFilename;
@@ -441,29 +445,29 @@ public class DiagnosisSimulator  {
 
 							clearModel();
 
-							QuickXPlain.reuseCount = 0;
+							ConstraintsQuickXPlain.reuseCount = 0;
 
 							IDiagnosisEngine<Constraint> engine = null;
 							// Create the diagnosis model
-							ExquisiteSession sessionData = new ExquisiteSession();
-							sessionData.diagnosisModel = defineModel(nbConstraints, nbConflicts, conflictSize, i);
+							ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+							sessionData.getDiagnosisModel() = defineModel(nbConstraints, nbConflicts, conflictSize, i);
 //							System.out.println("Created the model with examples");
-//								AbstractHSDagBuilder hsdag;
+//								AbstractHSDagEngine hsdag;
 
 							// Do not try to find a better strategy for the moment
-							sessionData.config.searchStrategy = SearchStrategies.Default;
+							sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 
 							switch (executionMode) {
 							case singlethreaded:
-								engine = new HSDagBuilder(sessionData);
+								engine = new HSDagEngine(sessionData);
 								break;
 
 								case levelparallel:
-								engine = new ParallelHSDagBuilder(sessionData, threadPoolSize);
+								engine = new ParallelHSDagEngine(sessionData, threadPoolSize);
 								break;
 
 								case fullparallel:
-								engine = new FullParallelHSDagBuilder(sessionData, threadPoolSize);
+								engine = new FullParallelHSDagEngine(sessionData, threadPoolSize);
 								break;
 
 								case heuristic:
@@ -479,9 +483,9 @@ public class DiagnosisSimulator  {
 							}
 
 
-							((AbstractHSDagBuilder)engine).setSearchDepth(SEARCH_DEPTH);
-							engine.getSessionData().config.searchDepth = SEARCH_DEPTH;
-							engine.getSessionData().config.maxDiagnoses = MAX_DIAGS;
+							((AbstractHSDagEngine)engine).setSearchDepth(SEARCH_DEPTH);
+							engine.getDiagnosisModel().getConfiguration().searchDepth = SEARCH_DEPTH;
+							engine.getDiagnosisModel().getConfiguration().maxDiagnoses = MAX_DIAGS;
 
 							// Shuffle to factor out random effects
 //							QXSim.shuffleConflicts();
@@ -492,25 +496,24 @@ public class DiagnosisSimulator  {
 
 
 							if (initFinished) {
-								diagEval.analyzeRun((AbstractHSDagBuilder)engine, end - start);
-
+								diagEval.analyzeRun(end - start);
+								diagEval.engineTest((AbstractHSDagEngine<Constraint>) engine);
 								// record data for this run.
 								String loggingResult = "";
 								int varCount = 0;
 								loggingResult += varCount + separator;
-								loggingResult += sessionData.diagnosisModel
+								loggingResult += sessionData.getDiagnosisModel()
 										.getConstraintNames().size() + separator;
-								loggingResult += engine.getPropagationCount()
-										+ separator;
-								loggingResult += engine.getCspSolvedCount() + separator;
+								loggingResult += getCounter(COUNTER_PROPAGATION).value();
+								loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 								loggingResult += (end - start) + separator;
-								loggingResult += sessionData.config.searchDepth
+								loggingResult += sessionData.getConfiguration().searchDepth
 										+ separator;
 
 								for (int j = 0; j < diagnoses.size(); j++) {
 									// loggingResult+="(Diag # " + j + ": " +
 									// Utilities.printConstraintList(diagnoses.get(j).getElements(),
-									// sessionData.diagnosisModel) + ") ";
+									// sessionData.getDiagnosisModel()) + ") ";
 								}
 								loggingResult += Utilities.printSortedDiagnoses(
 										diagnoses, ' ') + separator;

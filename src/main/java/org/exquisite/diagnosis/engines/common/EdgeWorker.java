@@ -1,16 +1,15 @@
 package org.exquisite.diagnosis.engines.common;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.engines.FullParallelHSDagBuilder;
-import org.exquisite.diagnosis.models.DAGNode;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.engines.AbstractHSDagEngine;
+import org.exquisite.datamodel.DiagnosisModel;
+import org.exquisite.diagnosis.engines.FullParallelHSDagEngine;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Used by ParallelHSDagBuilder to expand an edge label of a parent node.
+ * Used by ParallelHSDagEngine to expand an edge label of a parent node.
  * Runs an instance of NodeExpander in its own thread.
  * Decrements the CountDownLatch counter.
  *
@@ -18,12 +17,12 @@ import java.util.concurrent.CountDownLatch;
  */
 public class EdgeWorker<T> extends Thread {
 
-    public AbstractHSDagBuilder<T> dagBuilder = null;
+    public AbstractHSDagEngine<T> dagBuilder = null;
 
     /**
      * The node to be expanded.
      */
-    DAGNode<T> parent;
+    Node<T> parent;
     /**
      * Which edge label of the parent node to expand.
      */
@@ -36,30 +35,30 @@ public class EdgeWorker<T> extends Thread {
     /**
      * Session data
      */
-    ExquisiteSession sessionData;
+    DiagnosisModel sessionData;
 
     /**
      * The original tests.diagnosis model
      */
-    DiagnosisModel<T> model;
+    org.exquisite.core.model.DiagnosisModel model;
 
     /**
      * A shared collection of nodes to expand
      */
-    SharedCollection<DAGNode<T>> newNodesToExpand;
+    SharedCollection<Node<T>> newNodesToExpand;
 
     // Are we level-synchronized or not
     boolean inFullParallel = false;
 
 
     public EdgeWorker(
-            AbstractHSDagBuilder<T> dagbuilder,
-            DAGNode<T> parent,
+            AbstractHSDagEngine<T> dagbuilder,
+            Node<T> parent,
             T edgeLabel,
             CountDownLatch cdl,
-            ExquisiteSession<T> sessionData,
-            SharedCollection<DAGNode<T>> newNodesToExpand,
-            DiagnosisModel<T> model) {
+            DiagnosisModel<T> sessionData,
+            SharedCollection<Node<T>> newNodesToExpand,
+            org.exquisite.core.model.DiagnosisModel model) {
 
         this.setDaemon(true);
         this.dagBuilder = dagbuilder;
@@ -92,11 +91,11 @@ public class EdgeWorker<T> extends Thread {
 
 //			System.out.println("Expanding node (EdgeWorker.run())");
             // Remmeber that we are now working on it
-            this.parent.nodeStatusP = DAGNode.nodeStatusParallel.active;
+            this.parent.nodeStatusP = Node.nodeStatusParallel.active;
 //			System.out.println("WORKER: Running on the expansion");
             nodeExpander.expandNode(this.parent, this.edgeLabel);
 //			System.out.println("Done expansion: " + Thread.currentThread().getId());
-            this.parent.nodeStatusP = DAGNode.nodeStatusParallel.finished;
+            this.parent.nodeStatusP = Node.nodeStatusParallel.finished;
         } catch (DomainSizeException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -109,7 +108,7 @@ public class EdgeWorker<T> extends Thread {
             // We are in full parallel.
             // Count down - we have seen enough
             synchronized (dagBuilder) {
-                ((FullParallelHSDagBuilder) dagBuilder).incrementJobsToDo(-1);
+                ((FullParallelHSDagEngine) dagBuilder).incrementJobsToDo(-1);
                 dagBuilder.notify();
             }
             // TODO some cleanup

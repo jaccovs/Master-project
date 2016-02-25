@@ -8,12 +8,12 @@ import evaluations.mutation.Mutation;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.i8n.Culture;
 import org.exquisite.i8n.CultureInfo;
@@ -23,6 +23,10 @@ import org.exquisite.tools.Utilities;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 /**
  * Where the h/f*** are the comments, David?
@@ -188,7 +192,7 @@ public class Scalability {
 			mutator.mutate(mutationCount, numOperatorsToChange, supportedArithmeticOperators);
 					
 			//transform the model into a CSP model...			
-			ExquisiteSession sessionData = new ExquisiteSession(appXML);
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
 			ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 			Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 			VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -213,16 +217,16 @@ public class Scalability {
 			String loggingResult = "";
 			loggingResult+=inputRows + separator;
 			loggingResult+=kb.getInputVarCount() + separator;
-			loggingResult+=sessionData.diagnosisModel.getConstraintNames().size() + separator;
-			loggingResult+= diagnosisEngine.getPropagationCount() + separator;
-			loggingResult+= diagnosisEngine.getCspSolvedCount() + separator;
+			loggingResult+=sessionData.getDiagnosisModel().getConstraintNames().size() + separator;
+			loggingResult += getCounter(COUNTER_PROPAGATION).value();
+			loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 			loggingResult+=duration + separator;
 			loggingResult+=this.maxSearchDepth + separator;
 			loggingResult+=mutator.getMutatationDescriptions() + separator;
 			
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
-				loggingResult+="(Diag # " + i + ": " + Utilities.printConstraintList(diagnoses.get(i).getElements(), sessionData.diagnosisModel) + ") ";
+				loggingResult+="(Diag # " + i + ": " + Utilities.printConstraintList(diagnoses.get(i).getElements(), sessionData.getDiagnosisModel()) + ") ";
 			}		
 			
 			this.loggingData.addRow(loggingResult);

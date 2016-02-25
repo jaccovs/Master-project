@@ -1,7 +1,8 @@
 package org.exquisite.communication.protocol;
 
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.ranking.DiagnosisRanker;
 
@@ -19,14 +20,16 @@ import java.util.List;
  */
 public class DiagnosisRunner<T> implements Runnable {
     volatile IDiagnosisEngine<T> engine;
+    volatile ExcelExquisiteSession<T> session;
     volatile List<Diagnosis<T>> diagnoses = new ArrayList<>();
     volatile long startTime;
     volatile long endTime;
 
     /**
      * @param engine the tests.diagnosis engine to be run in a thread.
+     * @param session
      */
-    public DiagnosisRunner(IDiagnosisEngine<T> engine) {
+    public DiagnosisRunner(IDiagnosisEngine<T> engine, ExcelExquisiteSession session) {
         this.engine = engine;
     }
 
@@ -36,10 +39,10 @@ public class DiagnosisRunner<T> implements Runnable {
         try {
             startTime = System.currentTimeMillis();
             diagnoses = engine.calculateDiagnoses();
-            diagnoses = DiagnosisRanker.rankDiagnoses(diagnoses, engine.getSessionData());
+            diagnoses = DiagnosisRanker.rankDiagnoses(diagnoses, session);
             endTime = System.currentTimeMillis();
         } catch (DiagnosisException e) {
-            System.err.println("    DiagnosisException caught when calling engine.calculateDiagnoses.");
+            System.err.println("    DiagnosisException caught when calling engine.calculateDiagnoses. ");
         }
     }
 }

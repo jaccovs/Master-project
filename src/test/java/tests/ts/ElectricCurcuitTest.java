@@ -7,11 +7,11 @@ import evaluations.dxc.synthetic.model.DXCScenarioData;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
 import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
 import evaluations.dxc.synthetic.tools.DXCTools;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Utilities;
@@ -66,14 +66,14 @@ public class ElectricCurcuitTest {
 		Enumeration<String> cConstraints = correctConstraints.keys();
 		while (cConstraints.hasMoreElements()) {
 			String constName = cConstraints.nextElement();
-			model.addCorrectConstraint(correctConstraints.get(constName), constName);
+			model.addCorrectFormula(correctConstraints.get(constName), constName);
 		}
 
 		// add an empty example, because it is needed for diagnosis
 		Example<Constraint> ex = new Example();
 		List<Example<Constraint>> posExamples = new ArrayList<>();
 		posExamples.add(ex);
-		model.setPositiveExamples(posExamples);
+		model.setConsistentExamples(posExamples);
 		
 		return model;
 	}
@@ -93,11 +93,11 @@ public class ElectricCurcuitTest {
 				diagModel.shufflePossiblyFaulyConstraints();
 	
 			// Create the engine
-			ExquisiteSession sessionData = new ExquisiteSession(null,
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null,
 					null, new DiagnosisModel<Constraint>(diagModel));
 			// Do not try to find a better strategy for the moment
-			sessionData.config.searchStrategy = SearchStrategies.Default;
-			sessionData.config.searchDepth = maxDiagSize;
+			sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+			sessionData.getConfiguration().searchDepth = maxDiagSize;
 
 			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData);
@@ -174,12 +174,12 @@ public class ElectricCurcuitTest {
 				diagModel.shufflePossiblyFaulyConstraints();
 	
 			// Create the engine
-			ExquisiteSession sessionData = new ExquisiteSession(null,
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null,
 					null, new DiagnosisModel<Constraint>(diagModel));
 			// Do not try to find a better strategy for the moment
-			sessionData.config.searchStrategy = SearchStrategies.Default;
-			sessionData.config.searchDepth = -1;
-			sessionData.config.maxDiagnoses = -1;
+			sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+			sessionData.getConfiguration().searchDepth = -1;
+			sessionData.getConfiguration().maxDiagnoses = -1;
 
 			IDiagnosisEngine<Constraint> engine = EngineFactory
 					.makeDAGEngineStandardQx(sessionData); //, 4);

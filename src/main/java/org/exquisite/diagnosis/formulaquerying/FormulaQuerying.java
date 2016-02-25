@@ -1,8 +1,8 @@
 package org.exquisite.diagnosis.formulaquerying;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.*;
 
@@ -13,9 +13,9 @@ import java.util.*;
  */
 public class FormulaQuerying<T> {
 
-    private ExquisiteSession<T> session;
+    private ExcelExquisiteSession<T> session;
 
-    public FormulaQuerying(ExquisiteSession<T> session) {
+    public FormulaQuerying(ExcelExquisiteSession<T> session) {
         this.session = session;
     }
 
@@ -77,10 +77,10 @@ public class FormulaQuerying<T> {
         T c = constraints.get(0);
         System.out.println("Here is the first: " + c);
         System.out.println("Got a session: " + session);
-        System.out.println("Got a diagmodel: " + session.diagnosisModel);
-        DiagnosisModel<T> dm = session.diagnosisModel;
+        System.out.println("Got a diagmodel: " + session.getDiagnosisModel());
+        DiagnosisModel<T> dm = session.getDiagnosisModel();
         return dm.getConstraintName(c);
-        // return session.diagnosisModel.getConstraintName(diagnoses.get(0).getElements().get(0));
+        // return session.getDiagnosisModel().getConstraintName(diagnoses.get(0).getElements().get(0));
     }
 
     /**

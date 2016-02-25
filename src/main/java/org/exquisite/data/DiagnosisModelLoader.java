@@ -3,6 +3,7 @@ package org.exquisite.data;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
 import org.exquisite.datamodel.*;
+import org.exquisite.diagnosis.models.ConstraintsDiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.parser.FormulaParser;
 
@@ -29,7 +30,7 @@ import java.util.List;
 public class DiagnosisModelLoader {
     // Let's see them from outside
     public Dictionary<String, Constraint> formulae;
-    private ExquisiteSession<Constraint> sessionData;
+    private ExcelExquisiteSession<Constraint> sessionData;
     private ExquisiteAppXML appXML;        //source data.
     private ExquisiteGraph<String> graph;
     private VariablesFactory varFactory;    //for making decision variables.
@@ -41,7 +42,7 @@ public class DiagnosisModelLoader {
      * @param varFactory   A helper class for building the constraint model variables.
      * @param conFactory   A helper class for making the various kinds of constraints for the model.
      */
-    public DiagnosisModelLoader(ExquisiteSession<Constraint> sessionData, VariablesFactory varFactory,
+    public DiagnosisModelLoader(ExcelExquisiteSession<Constraint> sessionData, VariablesFactory varFactory,
                                 ConstraintsFactory conFactory) {
         this.sessionData = sessionData;
         this.appXML = this.sessionData.appXML;
@@ -73,21 +74,23 @@ public class DiagnosisModelLoader {
         List<IntegerVariable> outputVariables = varFactory.makeVariables(appXML.getOutputs(), min, max);
 
         //Now add all the variables to the tests.diagnosis model.
-        this.sessionData.diagnosisModel.getVariables().addAll(varsWithGlobalValueBounds);
-        this.sessionData.diagnosisModel.getVariables().addAll(inputVariables);
-        this.sessionData.diagnosisModel.getVariables().addAll(interimVariables);
-        this.sessionData.diagnosisModel.getVariables().addAll(outputVariables);
+        final ConstraintsDiagnosisModel<Constraint> diagnosisModel =
+                (ConstraintsDiagnosisModel<Constraint>) this.sessionData.getDiagnosisModel();
+        diagnosisModel.getVariables().addAll(varsWithGlobalValueBounds);
+        diagnosisModel.getVariables().addAll(inputVariables);
+        diagnosisModel.getVariables().addAll(interimVariables);
+        diagnosisModel.getVariables().addAll(outputVariables);
 
         //Build a graph representation of the dependencies between the variables.
         appXML.buildGraph(this.graph);
-        this.sessionData.diagnosisModel.graph = this.graph;
+        diagnosisModel.graph = this.graph;
 
         //Make the constraint representations of the spreadsheet formulae.
         FormulaParser formulaParser = new FormulaParser(this.graph);
         formulae = conFactory.makeFormulae(appXML.getFormulas(),
                 formulaParser,
                 varFactory.getVariablesMap(),
-                this.sessionData.diagnosisModel);
+                diagnosisModel);
 
         //Make globally defined value bounds constraints for the variables defined with global value bounds at the start of this method.
         // TS: We do not have to do this, as variables with global value bounds are directly created with their value bounds
@@ -100,30 +103,30 @@ public class DiagnosisModelLoader {
         for (Enumeration<String> keys = formulae.keys(); keys.hasMoreElements(); ) {
             String cellReference = keys.nextElement();
             Constraint constraint = formulae.get(cellReference);
-            this.sessionData.diagnosisModel.addPossiblyFaultyConstraint(constraint, cellReference);
+            diagnosisModel.addPossiblyFaultyConstraint(constraint, cellReference);
         }
 
         //Add global test data
         //Sort correct formulae constraints - these constraints are removed from possibly faulty constraints list and added to the correct statements list.
         List<Constraint> correctFormulae = findCorrectStatementsInParser(appXML.getCorrectFormulas(), formulaParser);
-        this.sessionData.diagnosisModel.removeConstraintsToIgnore(correctFormulae);
+        diagnosisModel.removeConstraintsToIgnore(correctFormulae);
         for (Constraint correctStatement : correctFormulae) {
-            this.sessionData.diagnosisModel.
-                    addCorrectConstraint(correctStatement,
-                            this.sessionData.diagnosisModel.getConstraintName(correctStatement));
+            diagnosisModel.
+                    addCorrectFormula(correctStatement,
+                            diagnosisModel.getConstraintName(correctStatement));
         }
 
         //Add global value bound constraints.
         for (Constraint constraint : conFactory.getPositiveExample().constraints) {
-            this.sessionData.diagnosisModel
-                    .addCorrectConstraint(constraint, conFactory.getPositiveExample().constraintNames.get(constraint));
+            diagnosisModel
+                    .addCorrectFormula(constraint, conFactory.getPositiveExample().constraintNames.get(constraint));
         }
 
         //Add negative examples - comprised of constraints derived from all of the test cases.");
         if (conFactory.getNegativeExample().constraints.size() != 0) {
             List<Example<Constraint>> negativeExamples = new ArrayList<>();
             negativeExamples.add(conFactory.getNegativeExample());
-            this.sessionData.diagnosisModel.setNegativeExamples(negativeExamples);
+            diagnosisModel.setNegativeExamples(negativeExamples);
         }
 
         //Transform ExquisiteAppXML test cases into (positive) Example objects.
@@ -146,7 +149,7 @@ public class DiagnosisModelLoader {
         }
 
         //Add positive examples to the tests.diagnosis model
-        this.sessionData.diagnosisModel.setPositiveExamples(examples);
+        diagnosisModel.setPositiveExamples(examples);
     }
 
     /**

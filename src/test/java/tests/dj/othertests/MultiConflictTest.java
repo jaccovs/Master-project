@@ -47,7 +47,7 @@ public class MultiConflictTest extends Thread {
 			try {
 				this.wait();
 				
-				System.out.println("wait done, let's give the other a chance. first conflict: " + this.firstConflict[0]);
+				System.out.println("wait done, let's give the other a chance. first nodeLabel: " + this.firstConflict[0]);
 				Thread.sleep(3000);
 				System.out.println("Entries: " + entries);
 			}

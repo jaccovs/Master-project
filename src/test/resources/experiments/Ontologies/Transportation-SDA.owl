@@ -1204,7 +1204,7 @@ speed of the Vehicle ?TRANSPORT is the PhysicalQuantity ?SPEED.  This
 
 predicate need not be used with a temporal constraint.  For actual vehicle 
 
-speed at a given time, use speed or measure with SpeedFn and an 
+speed at a given time, use speed or costs with SpeedFn and an
 
 appropriate temporal qualification.</rdfs:comment>
         <rdfs:range rdf:resource="&SUMO;PhysicalQuantity"/>
@@ -3348,7 +3348,7 @@ loose, uncontainerized form in the holds of a CargoShip.</rdfs:comment>
         <rdfs:comment
             >Bulkhead is a class of vertical walls or 
 
-partitions within a Vehicle that prevent cargo from shifting during 
+queries within a Vehicle that prevent cargo from shifting during
 
 transit.  On a ship, Bulkheads may form the walls of a ShipCompartment.</rdfs:comment>
     </owl:Class>
@@ -5140,7 +5140,7 @@ for ready accessibility.</rdfs:comment>
         <rdfs:comment
             >LongTon is the UnitOfMeasure, 
 
-equal to 2,240 PoundMass, which is used to measure Dead Weight 
+equal to 2,240 PoundMass, which is used to costs Dead Weight
 
 Tonnage capacity of Ships.</rdfs:comment>
     </owl:Class>
@@ -6120,11 +6120,11 @@ to refrigerate the ShipHold.</rdfs:comment>
         <rdfs:label>Gross Ton</rdfs:label>
         <rdfs:subClassOf rdf:resource="&SUMO;MassMeasure"/>
         <rdfs:comment
-            >RegistryTon is a unit of measure used to 
+            >RegistryTon is a unit of costs used to
 
 represent the Gross Registered Tonnage (GRT) capacity of Ships.  
 
-GRT is based on a volume measure, with one RegistryTon equal to a 
+GRT is based on a volume costs, with one RegistryTon equal to a
 
 volume of 100 cubic feet.</rdfs:comment>
     </owl:Class>

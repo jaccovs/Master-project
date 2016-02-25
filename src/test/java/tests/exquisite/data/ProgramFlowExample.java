@@ -4,7 +4,7 @@ import choco.kernel.model.constraints.Constraint;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -53,7 +53,7 @@ public class ProgramFlowExample {
 			for (Diagnosis<Constraint> diagnosis : result) {
 				String list = Utilities.printConstraintListOrderedByName(
 						new ArrayList<>(
-									diagnosis.getElements()), diagnosisEngine.getSessionData().diagnosisModel);
+									diagnosis.getElements()), diagnosisEngine.getDiagnosisModel().getDiagnosisModel());
 				prettyResults.add(list);				
 			}
 			Collections.sort(prettyResults);

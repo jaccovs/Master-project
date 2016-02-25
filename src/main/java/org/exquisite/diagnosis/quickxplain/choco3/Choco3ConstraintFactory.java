@@ -51,7 +51,7 @@ public class Choco3ConstraintFactory {
         this.c3solver = c3solver;
         this.graph = c3solver.diagnosisModel.graph;
         solver = c3solver.solver;
-        ExquisiteValueBound valueBounds = c3solver.qx.getSessionData().appXML.getDefaultValueBound();
+//        ExquisiteValueBound valueBounds = c3solver.qx.getDiagnosisModel().appXML.getDefaultValueBound();
 //		this.min = (int) valueBounds.getLower();
 //		this.max = (int) valueBounds.getUpper();
 

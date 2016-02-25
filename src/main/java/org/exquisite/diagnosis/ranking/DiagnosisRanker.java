@@ -1,6 +1,6 @@
 package org.exquisite.diagnosis.ranking;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.tools.Utilities;
 
@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @author dietmar
  */
-public class DiagnosisRanker<T> {
+public class DiagnosisRanker {
 
 
     // Set some global switch for the moment
@@ -23,7 +23,7 @@ public class DiagnosisRanker<T> {
 
     // Ranks the diagnoses
     // Ranking criterion 1: tests.diagnosis length
-    public static <T> List<Diagnosis<T>> rankDiagnoses(List<Diagnosis<T>> diagnoses, ExquisiteSession<T> session) {
+    public static <T> List<Diagnosis<T>> rankDiagnoses(List<Diagnosis<T>> diagnoses, ExcelExquisiteSession<T> session) {
 //		System.out.println("Todo: " + diagnoses.size());
         if (RANKING_STRATEGY > 0) {
             // Prepare the string representations of the constraints
@@ -31,7 +31,7 @@ public class DiagnosisRanker<T> {
             // Go through all the diagnoses
             for (Diagnosis<T> d : diagnoses) {
                 for (T c : d.getElements()) {
-                    String cName = session.diagnosisModel.getConstraintName(c);
+                    String cName = session.getDiagnosisModel().getConstraintName(c);
                     String formula = session.appXML.getFormulas().get(cName);
                     constraintFormulas.put(c, formula);
                 }
@@ -71,7 +71,7 @@ public class DiagnosisRanker<T> {
                     List<Diagnosis<T>> diags = sizesMap.get(s);
 //					System.out.println("Processing size " + s + ", " + diags.size() + " diags");
 
-                    List<Diagnosis<T>> reRanked = reRankDiagnosesInternal(diags, constraintFormulas, session);
+                    List<Diagnosis<T>> reRanked = reRankDiagnosesInternal(diags, constraintFormulas);
 //					System.out.println("Reranked them leaving at " + reRanked.size() + " elements");
                     rankedDiagnoses.addAll(reRanked);
                 }
@@ -80,7 +80,7 @@ public class DiagnosisRanker<T> {
 
             } else if (RANKING_STRATEGY == 2) {
 //				System.out.println("Ranking by complexity only -- not implemented yet");
-                return reRankDiagnosesInternal(diagnoses, constraintFormulas, session);
+                return reRankDiagnosesInternal(diagnoses, constraintFormulas);
 
             }
         }
@@ -89,12 +89,11 @@ public class DiagnosisRanker<T> {
 
 
     // Reranks a given list according to the combined complexity
-    static <T> List<Diagnosis<T>> reRankDiagnosesInternal(List<Diagnosis<T>> diags, Map<T, String> constraintFormulas,
-                                                          ExquisiteSession<T> session) {
+    static <T> List<Diagnosis<T>> reRankDiagnosesInternal(List<Diagnosis<T>> diags, Map<T, String> constraintFormulas) {
         List<Diagnosis<T>> result = new ArrayList<>();
         Map<Diagnosis<T>, Double> scores = new HashMap<>();
         for (Diagnosis<T> d : diags) {
-            double score = computeComplexity(d, constraintFormulas, session);
+            double score = computeComplexity(d, constraintFormulas);
             scores.put(d, score);
 //			System.out.println("Found a score: " + score);
         }
@@ -108,14 +107,13 @@ public class DiagnosisRanker<T> {
     }
 
     // Computes the complexity of a formula
-    static <T> double computeComplexity(Diagnosis<T> d, Map<T, String> constraintFormulas, ExquisiteSession<T>
-            session) {
+    static <T> double computeComplexity(Diagnosis<T> d, Map<T, String> constraintFormulas) {
         double result = 0.0;
         // Simply add the complexity of the diagnoses
         for (T c : d.getElements()) {
             ConstraintComplexityEstimator estimator = new ConstraintComplexityEstimator(constraintFormulas.get(c));
             double r = estimator.estimateComplexity();
-//			System.out.println("Complexity of " + session.diagnosisModel.getConstraintName(c) + " : " + r + " (" + constraintFormulas.get(c) + ")");
+//			System.out.println("Complexity of " + session.getDiagnosisModel().getConstraintName(c) + " : " + r + " (" + constraintFormulas.get(c) + ")");
             result += r;
         }
         return result;

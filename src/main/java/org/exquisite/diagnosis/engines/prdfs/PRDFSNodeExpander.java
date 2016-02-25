@@ -5,10 +5,13 @@ import org.exquisite.diagnosis.engines.common.NodeExpander;
 import org.exquisite.diagnosis.engines.common.NodeUtilities;
 import org.exquisite.diagnosis.engines.heuristic.ExtendedDAGNode;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CONSTRUCTED_NODES;
+import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
 
 public class PRDFSNodeExpander<T> extends Thread {
 
@@ -49,10 +52,10 @@ public class PRDFSNodeExpander<T> extends Thread {
      */
     void expand() throws Exception {
 //		System.out.println("more to do: " + engine.nodeSelector.hasMoreConstraints(node));
-        // for all conflict elements
+        // for all nodeLabel elements
         while (!Thread.currentThread()
-                .isInterrupted() && !(engine.sessionData.config.maxDiagnoses > 0 && engine.knownDiags.getCollection()
-                .size() >= engine.sessionData.config.maxDiagnoses)) {
+                .isInterrupted() && !(engine.sessionData.getConfiguration().maxDiagnoses > 0 && engine.knownDiags.getCollection()
+                .size() >= engine.sessionData.getConfiguration().maxDiagnoses)) {
             NodeWithConstraint<T> nodeWithConstraint;
             synchronized (nodeSelector) {
                 nodeWithConstraint = nodeSelector.getNextNode();
@@ -79,24 +82,23 @@ public class PRDFSNodeExpander<T> extends Thread {
                 T c = nodeWithConstraint.constraint;
 
                 // Do not search too deep
-                if (engine.sessionData.config.searchDepth > 0 && node.treeLevel >= engine.sessionData.config.searchDepth) {
-                    //				System.out.println("Max. search depth of " + engine.sessionData.config.searchDepth + " reached. Not expanding this node");
+                if (engine.sessionData.getConfiguration().searchDepth > 0 && node.treeLevel >= engine.sessionData.getConfiguration().searchDepth) {
+                    //				System.out.println("Max. search depth of " + engine.sessionData.getConfiguration().searchDepth + " reached. Not expanding this node");
                     return;
                 }
-                // Create a new node with a new conflict or a tests.diagnosis
+                // Create a new node with a new nodeLabel or a tests.diagnosis
                 // Get the path labels first
                 List<T> labels = new ArrayList<>(node.pathLabels);
                 labels.add(c);
 
-                // get a new conflict
+                // get a new nodeLabel
                 List<T> newConflict = NodeUtilities.getConflictToReuse(
                         labels, new ArrayList<>(engine.knownConflicts.getCollection()));
                 if (newConflict != null) {
-                    // System.out.println("Reusing conflict");
+                    // System.out.println("Reusing nodeLabel");
                     // Create a new node
-                    if (engine != null) {
-                        engine.incrementConstructedNodes();
-                    }
+                    incrementCounter(COUNTER_CONSTRUCTED_NODES);
+
                     ExtendedDAGNode<T> newNode = new ExtendedDAGNode<>(newConflict);
                     newNode.nodeLevel = node.nodeLevel + 1;
                     // Actually not sure if we really should check everything ..
@@ -107,8 +109,8 @@ public class PRDFSNodeExpander<T> extends Thread {
                     //				expand(newNode, null);
                 } else {
                     // System.out.println("Have to check a new path: " + labels);
-                    QuickXPlain<T> qxplain = NodeExpander.createQX(
-                            this.engine.sessionData, engine);
+                    ConstraintsQuickXPlain<T> qxplain = NodeExpander.createQX(
+                            this.engine.sessionData);
                     ConflictCheckingResult<T> checkingResult = qxplain.checkExamples(
                             node.examplesToCheck,
                             new ArrayList<>(labels), true);
@@ -119,7 +121,7 @@ public class PRDFSNodeExpander<T> extends Thread {
                     }
 
                     if (checkingResult.conflictFound()) {
-                        // System.out.println("Found a new conflict " +
+                        // System.out.println("Found a new nodeLabel " +
                         // checkingResult.conflicts.get(0));
                         // Add all conflicts to the known ones
                         synchronized (checkingResult.conflicts.getWriteLock()) {
@@ -128,9 +130,8 @@ public class PRDFSNodeExpander<T> extends Thread {
                             }
                         }
                         // Create a new node
-                        if (engine != null) {
-                            engine.incrementConstructedNodes();
-                        }
+                        incrementCounter(COUNTER_CONSTRUCTED_NODES);
+
                         ExtendedDAGNode<T> newNode = new ExtendedDAGNode<T>(
                                 checkingResult.conflicts.get(0));
                         newNode.nodeLevel = node.nodeLevel + 1;

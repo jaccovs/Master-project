@@ -52,7 +52,7 @@ public class MergeXplainConflictWorker<T> extends MergeXplainWorker<T> {
 
             //		splittingConflicts = result.Conflicts.size();
 
-            //		System.out.println("Found " + result.Conflicts.size() + " conflict(s) with splitting technique.");
+            //		System.out.println("Found " + result.Conflicts.size() + " nodeLabel(s) with splitting technique.");
 
             // Search for conflicts in remaining constraints
             List<T> remainingConstraints = new ArrayList<T>(r1.ConflictFreeStatements);
@@ -65,7 +65,7 @@ public class MergeXplainConflictWorker<T> extends MergeXplainWorker<T> {
             while (!mergeXplain.isConsistent(allTestStatements)) {
                 List<T> conflict = findSingleConflict(correctStatements, kb2, kb2, kb1);
                 conflict.addAll(findSingleConflict(correctStatements, conflict, conflict, kb2));
-                //kb1.removeAll(conflict);
+                //kb1.removeAll(nodeLabel);
 
                 result.Conflicts.add(conflict);
 

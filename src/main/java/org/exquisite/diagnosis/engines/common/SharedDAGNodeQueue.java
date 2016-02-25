@@ -1,8 +1,8 @@
 package org.exquisite.diagnosis.engines.common;
 
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.models.DAGNode;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.engines.AbstractHSDagEngine;
+import org.exquisite.core.engines.tree.Node;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.List;
 
@@ -21,19 +21,19 @@ public class SharedDAGNodeQueue<T> extends SharedCollection<T> {
      *
      * @param node
      */
-    public void processNewDAGNodeFullParallel(DAGNode<T> newNode,
-                                              AbstractHSDagBuilder<T> dagBuilder, DiagnosisModel<T> model)
+    public void processNewDAGNodeFullParallel(Node<T> newNode,
+                                              AbstractHSDagEngine<T> dagBuilder, DiagnosisModel<T> model)
             throws Exception {
         // Need to some work
         synchronized (getWriteLock()) {
 
             // TS: We can add this test to guarantee, that only maxDiagnoses will be found.
-//			if (Thread.currentThread().isInterrupted()||dagBuilder.diagnosisNodes.getCollection().size() >= dagBuilder.sessionData.config.maxDiagnoses) {
+//			if (Thread.currentThread().isInterrupted()||dagBuilder.diagnosisNodes.getCollection().size() >= dagBuilder.sessionData.getConfiguration().maxDiagnoses) {
 //				return;
 //			}
 
 
-            if (newNode.nodeStatusP == DAGNode.nodeStatusParallel.cancelled) {
+            if (newNode.nodeStatusP == Node.nodeStatusParallel.cancelled) {
 //				System.err.println("I have been cancelled in the meantime ...");
                 // Do nothing actually
                 return;
@@ -41,8 +41,8 @@ public class SharedDAGNodeQueue<T> extends SharedCollection<T> {
 
             // Check if another tests.diagnosis superset was found in the meantime
 //			System.out.println("My tests.diagnosis so far: ");
-//			List<DAGNode> diags = dagBuilder.diagnosisNodes.getCollection();
-//			for (DAGNode diag : diags) {
+//			List<Node> diags = dagBuilder.diagnosisNodes.getCollection();
+//			for (Node diag : diags) {
 //				System.out.println(Utilities.printConstraintList(diag.tests.diagnosis, model));
 //			}
 
@@ -71,14 +71,14 @@ public class SharedDAGNodeQueue<T> extends SharedCollection<T> {
                 // Go through all the nodes we have so far.
                 // Is there another node that can be removed or pruned
                 // DJ: This might be not thread-safe ... TODO!
-                for (DAGNode<T> node : (List<DAGNode<T>>) this.getCollection()) {
+                for (Node<T> node : (List<Node<T>>) this.getCollection()) {
                     if (NodeUtilities.isPathLabelSupersetOfOrEqualDiagnosis(node.diagnosis, newNode.diagnosis)) {
 //						System.out.println("Found a super set in the expansion list: will remove the node, nodestatus: " + node.nodeStatusP);
                         dagBuilder.diagnosisNodes.getCollection().remove(node);
                         // Cancel processing
-                        if (node.nodeStatusP == DAGNode.nodeStatusParallel.active
-                                || node.nodeStatusP == DAGNode.nodeStatusParallel.scheduled) {
-                            node.nodeStatusP = DAGNode.nodeStatusParallel.cancelled;
+                        if (node.nodeStatusP == Node.nodeStatusParallel.active
+                                || node.nodeStatusP == Node.nodeStatusParallel.scheduled) {
+                            node.nodeStatusP = Node.nodeStatusParallel.cancelled;
                         }
                     }
                 }
@@ -95,7 +95,7 @@ public class SharedDAGNodeQueue<T> extends SharedCollection<T> {
             addedNodes++;
 
             // Check for duplicate paths
-//			ParallelHSDagBuilder.checkForDuplicatePaths((List<DAGNode>) this.getCollection());
+//			ParallelHSDagEngine.checkForDuplicatePaths((List<Node>) this.getCollection());
         }
 
     }

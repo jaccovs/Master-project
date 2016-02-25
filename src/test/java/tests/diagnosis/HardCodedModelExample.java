@@ -3,10 +3,9 @@ package tests.diagnosis;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.HSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.tools.Utilities;
@@ -26,9 +25,9 @@ public class HardCodedModelExample {
 	public void run()
 	{
 		try{
-			ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>();
-			sessionData.diagnosisModel = makeModel();
-			HSDagBuilder<Constraint> hsdag = new HSDagBuilder<>(sessionData);
+			ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>();
+			sessionData.getDiagnosisModel() = makeModel();
+			HSDagEngine<Constraint> hsdag = new HSDagEngine<>(sessionData);
 //			hsdag.setMaxSearchDepth(-1);			
 //			hsdag.setMaxDiagnoses(-1);
 
@@ -37,7 +36,7 @@ public class HardCodedModelExample {
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
 				System.out.println("-- Diagnosis #" + i);
-				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.diagnosisModel));
+				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.getDiagnosisModel()));
 				System.out.println("--");
 			}
 		}
@@ -74,8 +73,8 @@ public class HardCodedModelExample {
 		
 		
 
-		model.getPositiveExamples().add(exTestExample);
-		//model.getNegativeExamples().add(negTestCase);
+		model.getConsistentExamples().add(exTestExample);
+		//model.getInconsistentExamples().add(negTestCase);
 	
 		return model;
 	}

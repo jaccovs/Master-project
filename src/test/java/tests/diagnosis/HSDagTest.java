@@ -3,10 +3,9 @@ package tests.diagnosis;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.HSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Utilities;
 
@@ -31,15 +30,15 @@ public class HSDagTest {
 	 */
 	public void run() {
 		try {
-			ExquisiteSession sessionData = new ExquisiteSession();
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
 //			 Create a constraint model
-//			sessionData.diagnosisModel = this.defineModelForSmallExampleInPaper();
-//			sessionData.diagnosisModel = defineModelAndInputs();
-//			sessionData.diagnosisModel = defineMiniModel();
-//			sessionData.diagnosisModel = notSoMiniModel();
-			sessionData.diagnosisModel = defineExampleFromPaper5Vars();
+//			sessionData.getDiagnosisModel() = this.defineModelForSmallExampleInPaper();
+//			sessionData.getDiagnosisModel() = defineModelAndInputs();
+//			sessionData.getDiagnosisModel() = defineMiniModel();
+//			sessionData.getDiagnosisModel() = notSoMiniModel();
+			sessionData.getDiagnosisModel() = defineExampleFromPaper5Vars();
 			System.out.println("Created the model with examples");
-			HSDagBuilder hsdag = new HSDagBuilder(sessionData);
+			HSDagEngine hsdag = new HSDagEngine(sessionData);
 //			hsdag.setMaxSearchDepth(-1);			
 //			hsdag.setMaxDiagnoses(-1);
 
@@ -48,7 +47,7 @@ public class HSDagTest {
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
 				System.out.println("-- Diagnosis #" + i);
-				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.diagnosisModel));
+				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.getDiagnosisModel()));
 				System.out.println("--");
 			}
 			//*/			
@@ -76,7 +75,7 @@ public class HSDagTest {
 		exTestExample.addConstraint(Choco.eq(b1, 8), "b1=8");
 
 
-		model.getPositiveExamples().add(exTestExample);
+		model.getConsistentExamples().add(exTestExample);
 
 		
 		return model;
@@ -101,7 +100,7 @@ public class HSDagTest {
 		exTestExample.addConstraint(Choco.eq(c1, 8), "c1=8");
 
 
-		model.getPositiveExamples().add(exTestExample);
+		model.getConsistentExamples().add(exTestExample);
 
 		
 		return model;
@@ -149,17 +148,17 @@ public class HSDagTest {
 		exPositive.addConstraint(Choco.lt(c1, 20), "c1<200");
 		exPositive.addConstraint(Choco.gt(d1, 100), "d1>1000");
 		
-		//model.addCorrectConstraint(Choco.and(Choco.gt(c1, 100), Choco.lt(c1, 200), Choco.gt(d1, 1000)), "c1>100&c1<200&d1>1000");
+		//model.addCorrectFormula(Choco.and(Choco.gt(c1, 100), Choco.lt(c1, 200), Choco.gt(d1, 1000)), "c1>100&c1<200&d1>1000");
 
 		Example<Constraint> exNegative = new Example<>();
 		exNegative.addConstraint(Choco.gt(c1, 100), "c1>100");
 		exNegative.addConstraint(Choco.lt(d1, 1000), "d1<1000");
 		
 		Example exPos2 = new Example();
-//		model.addCorrectConstraint(Choco.and(Choco.and(Choco.gt(c1, 14), Choco.lt(c1, 61)), Choco.gt(d1, 100)), "(c1>100 & c1 < 200) -> d1 > 1000");
-		model.addCorrectConstraint(Choco.and(Choco.gt(c1, 14), Choco.lt(c1, 61)), "(c1>100 & c1 < 200) -> d1 > 1000");
+//		model.addCorrectFormula(Choco.and(Choco.and(Choco.gt(c1, 14), Choco.lt(c1, 61)), Choco.gt(d1, 100)), "(c1>100 & c1 < 200) -> d1 > 1000");
+		model.addCorrectFormula(Choco.and(Choco.gt(c1, 14), Choco.lt(c1, 61)), "(c1>100 & c1 < 200) -> d1 > 1000");
 		
-//		model.addCorrectConstraint(Choco.lt(c1, 100), "c1<100");
+//		model.addCorrectFormula(Choco.lt(c1, 100), "c1<100");
 
 		
 //		//a1 = 1 && a2 = 6 && c1 = 20
@@ -183,16 +182,16 @@ public class HSDagTest {
 //		pExample4.addConstraint(test4, "test4");
 				
 		//Add/remove //'s next to examples to show diagnosis result per example.
-		//model.getPositiveExamples().add(pExample1); //returns {B2}, {C1}
-		//model.getPositiveExamples().add(pExample2); //returns {B1}, {C1}  - this is different to the paper where b1 & b2 are returned as one diagnosis.
-		//model.getPositiveExamples().add(pExample3); //returns {B1}, {B2}, {C1}
-		//model.getPositiveExamples().add(pExample4); //returns {B1}, {C1}
-		model.getPositiveExamples().add(exTestExample);
+		//model.getConsistentExamples().add(pExample1); //returns {B2}, {C1}
+		//model.getConsistentExamples().add(pExample2); //returns {B1}, {C1}  - this is different to the paper where b1 & b2 are returned as one diagnosis.
+		//model.getConsistentExamples().add(pExample3); //returns {B1}, {B2}, {C1}
+		//model.getConsistentExamples().add(pExample4); //returns {B1}, {C1}
+		model.getConsistentExamples().add(exTestExample);
 		
-//		model.getPositiveExamples().add(exPositive);
-		model.getPositiveExamples().add(exPos2);
+//		model.getConsistentExamples().add(exPositive);
+		model.getConsistentExamples().add(exPos2);
 		
-//		model.getNegativeExamples().add(exNegative);
+//		model.getInconsistentExamples().add(exNegative);
 		
 		
 		return model;
@@ -238,7 +237,7 @@ public class HSDagTest {
 		positiveExamples.add(posEx3);
 		positiveExamples.add(posEx4);
 		
-		model.setPositiveExamples(positiveExamples);
+		model.setConsistentExamples(positiveExamples);
 		
 		return model;
 	}
@@ -260,24 +259,24 @@ public class HSDagTest {
 		
 		// Dynamically shrink the domains to what the user has specified.
 		
-		model.addCorrectConstraint(Choco.lt(a1, 100), "a1<100");
-		model.addCorrectConstraint(Choco.lt(a2, 100), "a2<100");
-		model.addCorrectConstraint(Choco.lt(b1, 100), "b1<100");
-		model.addCorrectConstraint(Choco.lt(b2, 100), "b2<100");
-		model.addCorrectConstraint(Choco.lt(c1, 100), "c1<100");
+		model.addCorrectFormula(Choco.lt(a1, 100), "a1<100");
+		model.addCorrectFormula(Choco.lt(a2, 100), "a2<100");
+		model.addCorrectFormula(Choco.lt(b1, 100), "b1<100");
+		model.addCorrectFormula(Choco.lt(b2, 100), "b2<100");
+		model.addCorrectFormula(Choco.lt(c1, 100), "c1<100");
 		
-		model.addCorrectConstraint(Choco.gt(a1, 0), "a1>0");
-		model.addCorrectConstraint(Choco.gt(a2, 0), "a2>0");
-		model.addCorrectConstraint(Choco.gt(b1, 0), "b1>0");
-		model.addCorrectConstraint(Choco.gt(b2, 0), "b2>0");
-		model.addCorrectConstraint(Choco.gt(c1, 0), "c1>0");
+		model.addCorrectFormula(Choco.gt(a1, 0), "a1>0");
+		model.addCorrectFormula(Choco.gt(a2, 0), "a2>0");
+		model.addCorrectFormula(Choco.gt(b1, 0), "b1>0");
+		model.addCorrectFormula(Choco.gt(b2, 0), "b2>0");
+		model.addCorrectFormula(Choco.gt(c1, 0), "c1>0");
 		
 		model.addPossiblyFaultyConstraint(Choco.eq(b1,Choco.mult(a1, 2)), "C1 (b1 = a1 * 2) (1)");
 		model.addPossiblyFaultyConstraint(Choco.eq(b2,Choco.mult(a2, 3)), "C2 (b2 = a2 * 3) (2)");
 		model.addPossiblyFaultyConstraint(Choco.eq(c1,Choco.mult(b1, b2)), "C3 (c1 = b1 * b2) (3)"); //should be plus...
 
 		// Something assumed to be correct
-		//model.addCorrectConstraint(Choco.eq(b2,Choco.mult(a2, 3)), "C2");
+		//model.addCorrectFormula(Choco.eq(b2,Choco.mult(a2, 3)), "C2");
 		
 		// One example
 		Example<Constraint> pExample1 = new Example<>();
@@ -295,16 +294,16 @@ public class HSDagTest {
 //		pExample3.addConstraint(Choco.eq(a2, 10), "a2=10");
 //		pExample3.addConstraint(Choco.eq(c1, 60), "c1=47");
 		
-		model.getPositiveExamples().add(pExample1);
-		//model.getPositiveExamples().add(pExample2);
-		//model.getPositiveExamples().add(pExample3);
+		model.getConsistentExamples().add(pExample1);
+		//model.getConsistentExamples().add(pExample2);
+		//model.getConsistentExamples().add(pExample3);
 
 		Example<Constraint> nExample1 = new Example<>(true);
 		nExample1.addConstraint(Choco.eq(a1, 1), "a1=1");
 		nExample1.addConstraint(Choco.gt(a2, 6), "a2=6");
 		nExample1.addConstraint(Choco.gt(c1, 36), "c1=36");
 		
-//		model.getNegativeExamples().add(nExample1);
+//		model.getInconsistentExamples().add(nExample1);
 		return model;
 	}	
 }

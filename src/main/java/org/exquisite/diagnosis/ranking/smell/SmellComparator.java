@@ -1,7 +1,7 @@
 package org.exquisite.diagnosis.ranking.smell;
 
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.Comparator;
 import java.util.List;

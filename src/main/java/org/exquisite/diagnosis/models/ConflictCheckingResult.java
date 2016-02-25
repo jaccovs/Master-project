@@ -12,9 +12,9 @@ import java.util.List;
  * @author Dietmar
  */
 public class ConflictCheckingResult<T> {
-    // A conflict, if there were inconsistent examples / test cases
+    // A nodeLabel, if there were inconsistent examples / test cases
     // field is null if all examples were consistent.
-    // if there is more than one conflict we observe, remember it.
+    // if there is more than one nodeLabel we observe, remember it.
     public SharedCollection<List<T>> conflicts = new SharedCollection<>();
     // A list of failing test cases
     public List<Example<T>> failedExamples = new ArrayList<>();
@@ -27,18 +27,18 @@ public class ConflictCheckingResult<T> {
     }
 
     /**
-     * Indicates if we have found a conflict
+     * Indicates if we have found a nodeLabel
      *
-     * @return true, if the conflict list is not empty
+     * @return true, if the nodeLabel list is not empty
      */
     public boolean conflictFound() {
         return this.conflicts.size() > 0;
     }
 
     /**
-     * Adds the conflict if it was not already there
+     * Adds the nodeLabel if it was not already there
      *
-     * @param conflict the conflict to add
+     * @param conflict the nodeLabel to add
      */
     public void addConflict(List<T> conflict) {
         if (this.conflicts.size() == 0) {
@@ -48,7 +48,7 @@ public class ConflictCheckingResult<T> {
         List<List<T>> existingConflicts = new ArrayList<List<T>>(this.conflicts.getCollection());
         for (List<T> existingConflict : existingConflicts) {
             if (areListsEqual(conflict, existingConflict)) {
-                System.out.println("Already have this conflict");
+                System.out.println("Already have this nodeLabel");
                 return;
             }
         }

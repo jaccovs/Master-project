@@ -1,10 +1,10 @@
 package org.exquisite.diagnosis.engines.common;
 
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.engines.tree.Node;
 
 /**
  * Is used as an additional output in NodeUtilites.checkAndAddNode().
- * A NodeContainer is passed to the function and the contained DAGNode is created or set.
+ * A NodeContainer is passed to the function and the contained Node is created or set.
  *
  * @author Thomas
  */
@@ -13,5 +13,5 @@ public class NodeContainer<T> {
     /**
      * The node to be created or set
      */
-    public DAGNode<T> node;
+    public Node<T> node;
 }

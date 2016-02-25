@@ -8,18 +8,17 @@ import evaluations.plainconstraints.PlainConstraintsUtilities;
 import evaluations.plainconstraints.TestCaseGenerator;
 import evaluations.tools.DiagnosisEvaluation;
 import evaluations.tools.ResultsLogger;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.engines.common.NodeExpander;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.choco3.C3Runner;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -31,6 +30,10 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 /**
  * Doing tests with plain constraints.
@@ -136,7 +139,7 @@ public class MutatedConstraintsIndividual {
 //	 	"normalized-renault-mod-13_ext.xml", // Leads to 15% on level-w, and plus 10% on full. (4 diags of size 4)
 //		"normalized-domino-100-100.xml"
 //		"normalized-e0ddr1-10-by-5-6.xml", // This is slower ...
-//		"normalized-ex5-pi.xml" // single element conflict
+//		"normalized-ex5-pi.xml" // single element nodeLabel
 //		"normalized-fischer-1-1-fair.xml"
 //		"normalized-pack.xml" // takes forever .. overnight?
 //		"normalized-patat-02-small-2.xml" // takes forever.. overnight?
@@ -196,7 +199,7 @@ static int nbInitizializationRuns = 20;
 //		}
 
 		// Overwrite this
-		QuickXPlain.PRINT_SOLUTION_TIME = false;
+		ConstraintsQuickXPlain.PRINT_SOLUTION_TIME = false;
 
 
 		NodeExpander.USE_LAST_LEVEL_CHECK = useLastLevelCheck;
@@ -224,7 +227,7 @@ static int nbInitizializationRuns = 20;
 				maxDiagSize = testScenario.MaxDiagSize;
 				waittime = testScenario.Waittime;
 
-				QuickXPlain.ARTIFICIAL_WAIT_TIME = waittime;
+				ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = waittime;
 
 				test.runExampleFromFile(testScenario.Filename);
 			}
@@ -244,11 +247,11 @@ static int nbInitizializationRuns = 20;
 	void runSimpleExample() {
 		DiagnosisModel<Constraint> model = createSimpleDiagnosisModel();
 
-		ExquisiteSession sessionData = new ExquisiteSession();
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
 
-		sessionData.diagnosisModel = model;
-		sessionData.config.searchStrategy = SearchStrategies.Default;
-		sessionData.config.searchDepth = -1;
+		sessionData.getDiagnosisModel() = model;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().searchDepth = -1;
 
 		Debug.DEBUGGING_ON = true;
 
@@ -268,17 +271,17 @@ static int nbInitizializationRuns = 20;
 		}
 
 		 System.out.println("Found " + diagnoses.size() + " diagnoses in " + (stop-start) + " millisecs");
-		// System.out.println("Constructed nodes: " + ((AbstractHSDagBuilder)
+		// System.out.println("Constructed nodes: " + ((AbstractHSDagEngine)
 		// engine).allConstructedNodes.getCollection().size());
 		// // TEST ONLY
 		// System.out.println(Utilities.printSortedDiagnoses(diagnoses, '\n'));
 		// System.out.println("Nb of solves : " + engine.getCspSolvedCount());
 		// System.out.println("Nb of s calls: " + engine.getSolverCalls());
 		// System.out.println("Nb of props  : " + engine.getPropagationCount());
-		// System.out.println("Reuse count:   " + QuickXPlain.reuseCount);
+		// System.out.println("Reuse count:   " + ConstraintsQuickXPlain.reuseCount);
 
 //		NodeUtilities.traverseNode(engine.getRootNode(),
-//				sessionData.diagnosisModel.getConstraintNames());
+//				sessionData.getDiagnosisModel().getConstraintNames());
 
 	}
 
@@ -312,7 +315,7 @@ static int nbInitizializationRuns = 20;
 							EngineType.ParaHSDagStandardQX, xmlFile,
 							threadPoolSize);
 				}
-				engine.getSessionData().config.searchDepth = searchDepth;
+				engine.getDiagnosisModel().getConfiguration().searchDepth = searchDepth;
 
 				long start = System.currentTimeMillis();
 				long end = -1;
@@ -332,9 +335,9 @@ static int nbInitizializationRuns = 20;
 					// System.out.println("Diagnoses:    " + diagnoses.size());
 					//
 					// System.out.println("Possibly faulty: " +
-					// engine.getSessionData().diagnosisModel.getPossiblyFaultyStatements().size());
+					// engine.getDiagnosisModel().getDiagnosisModel().getPossiblyFaultyStatements().size());
 					// System.out.println("Variables : " +
-					// engine.getSessionData().diagnosisModel.getVariables().size());
+					// engine.getDiagnosisModel().getDiagnosisModel().getVariables().size());
 					//
 					//
 					float diagSize = 0;
@@ -455,7 +458,7 @@ static int nbInitizializationRuns = 20;
 		pos1.addConstraint(Choco.eq(v4, 3), "v4=3");
 		pos1.addConstraint(Choco.eq(v6, 6), "v6=6");
 
-		model.getPositiveExamples().add(pos1);
+		model.getConsistentExamples().add(pos1);
 
 		// Create a runner for the example
 		c3runner = new C3Runner() {
@@ -478,7 +481,7 @@ static int nbInitizializationRuns = 20;
 		// pos2.addConstraint(Choco.eq(v1, 3), "v1=3");
 		// pos1.addConstraint(Choco.eq(v6, 6), "v6=6");
 
-		// model.getPositiveExamples().add(pos2);
+		// model.getConsistentExamples().add(pos2);
 
 		return model;
 
@@ -571,21 +574,21 @@ static int nbInitizializationRuns = 20;
 			System.out.println("Starting to diagnose");
 
 			// Create the engine
-			// ExquisiteSession sessionData = new ExquisiteSession(null, null,
+			// ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null, null,
 			// diagModel);
 			// Do not try to find a better strategy for the moment
-			// sessionData.config.searchStrategy = SearchStrategies.Default;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.ImpactBasedBranching;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.AssignOrForbidIntVarVal_DomWDegBin;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.AssignVar_MinDomIncDom;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.AssignOrForbidIntVarVal_RandomIntBinSearch;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.AssignVar_MinDomIncDom;
-			// sessionData.config.searchStrategy =
+			// sessionData.getConfiguration().searchStrategy =
 			// SearchStrategies.AssignVar_MinDomDecDom;
 
 			// Debug.DEBUGGING_ON = true;
@@ -618,7 +621,7 @@ static int nbInitizializationRuns = 20;
 						System.out.println("Initialization finished");
 					}
 
-					QuickXPlain.reuseCount = 0;
+					ConstraintsQuickXPlain.reuseCount = 0;
 
 					IDiagnosisEngine<Constraint> engine = null;
 					// Create the diagnosis model
@@ -632,19 +635,19 @@ static int nbInitizializationRuns = 20;
 						diagModel.shufflePossiblyFaulyConstraints();
 
 					// Create the engine
-					ExquisiteSession sessionData = new ExquisiteSession(null,
+					ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null,
 							null, new DiagnosisModel<Constraint>(diagModel));
 					// Do not try to find a better strategy for the moment
-					sessionData.config.searchStrategy = SearchStrategies.Default;
-					sessionData.config.searchDepth = maxDiagSize;
-					// sessionData.config.maxDiagnoses = 1;
+					sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+					sessionData.getConfiguration().searchDepth = maxDiagSize;
+					// sessionData.getConfiguration().maxDiagnoses = 1;
 
 					// DJ: Remove all but one of the inconsistent test cases for the moment (not mentioned in paper)
 					// 23.12.2013
-//					Example ex = sessionData.diagnosisModel.getPositiveExamples().get(0);
-//					sessionData.diagnosisModel.getPositiveExamples().clear();
-//					sessionData.diagnosisModel.getPositiveExamples().add(ex);
-//					sessionData.diagnosisModel.getNegativeExamples().clear();
+//					Example ex = sessionData.getDiagnosisModel().getConsistentExamples().get(0);
+//					sessionData.getDiagnosisModel().getConsistentExamples().clear();
+//					sessionData.getDiagnosisModel().getConsistentExamples().add(ex);
+//					sessionData.getDiagnosisModel().getInconsistentExamples().clear();
 
 
 					if (k == 0) {
@@ -680,32 +683,32 @@ static int nbInitizializationRuns = 20;
 					// (float) diagnoses.size()));
 
 					// System.out.println("SIZE OF known solutions: " +
-					// QuickXPlain.knownSolutions.size());
+					// ConstraintsQuickXPlain.knownSolutions.size());
 					// System.out.println("Reuse count:   " +
-					// QuickXPlain.reuseCount);
+					// ConstraintsQuickXPlain.reuseCount);
 
 					// //////////////////////////////////////////////////////////////
 
 					if (initFinished) {
-						diagEval.analyzeRun((AbstractHSDagBuilder)engine, end - start);
+						diagEval.analyzeRun(end - start);
+						diagEval.engineTest((AbstractHSDagEngine<Constraint>)engine);
 
 						// record data for this run.
 						String loggingResult = "";
 						int varCount = mutatedModel.getNbIntVars();
 						loggingResult += varCount + separator;
-						loggingResult += sessionData.diagnosisModel
+						loggingResult += sessionData.getDiagnosisModel()
 								.getConstraintNames().size() + separator;
-						loggingResult += engine.getPropagationCount()
-								+ separator;
-						loggingResult += engine.getCspSolvedCount() + separator;
+						loggingResult += getCounter(COUNTER_PROPAGATION).value();
+						loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 						loggingResult += (end - start) + separator;
-						loggingResult += sessionData.config.searchDepth
+						loggingResult += sessionData.getConfiguration().searchDepth
 								+ separator;
 
 						for (int j = 0; j < diagnoses.size(); j++) {
 							// loggingResult+="(Diag # " + j + ": " +
 							// Utilities.printConstraintList(diagnoses.get(j).getElements(),
-							// sessionData.diagnosisModel) + ") ";
+							// sessionData.getDiagnosisModel()) + ") ";
 						}
 						loggingResult += Utilities.printSortedDiagnoses(
 								diagnoses, ' ') + separator;
@@ -756,7 +759,7 @@ static int nbInitizializationRuns = 20;
 				summary.append("Average Tree Width: " + diagEval.AvgTreeWidth + "\r\n");
 
 				// DJ TEST
-				summary.append("Average conflict reuse: " + diagEval.AvgConflictReuse + "\r\n");
+				summary.append("Average nodeLabel reuse: " + diagEval.AvgConflictReuse + "\r\n");
 
 
 			}

@@ -4,14 +4,15 @@ import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import org.exquisite.communication.messages.ClientMessages;
 import org.exquisite.communication.messages.ServerMessages;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.data.*;
 import org.exquisite.datamodel.*;
 import org.exquisite.datamodel.ExquisiteEnums.ContentTypes;
 import org.exquisite.datamodel.ExquisiteEnums.StatusCodes;
 import org.exquisite.datamodel.serialisation.*;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.formulaquerying.FormulaQuerying;
+import org.exquisite.diagnosis.models.ConstraintsDiagnosisModel;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.parallelsearch.ParallelSolver;
 import org.exquisite.fragmentation.IFragmentExtractor;
@@ -80,7 +81,7 @@ public class ServerProtocol implements INotifyingThreadListener {
      * Session data instance, this is updated every time an ExquisiteAppXML
      * object is sent from the client.
      */
-    private ExquisiteSession sessionData = null;
+    private ExcelExquisiteSession sessionData = null;
     /**
      * The results of the last run of the tests.diagnosis engine.
      */
@@ -114,11 +115,11 @@ public class ServerProtocol implements INotifyingThreadListener {
      * When <tt>ServerProtocol</tt> is instantiated. sessionData is also instantiated in order to use initial defaults in config.
      * sessionData will be overwritten when Client later sends <tt>ExquisiteAppXML</tt>.
      *
-     * @see org.exquisite.datamodel.ExquisiteSession
+     * @see ExcelExquisiteSession
      * @see org.exquisite.datamodel.ExquisiteAppXML
      */
     public ServerProtocol() {
-        this.sessionData = new ExquisiteSession();
+        this.sessionData = new ExcelExquisiteSession();
     }
 
     /**
@@ -129,7 +130,7 @@ public class ServerProtocol implements INotifyingThreadListener {
     public static void main(String[] args) {
         System.out.println("--- Start Server Protocol example.");
         ServerProtocol protocol = new ServerProtocol();
-        protocol.sessionData.config.showServerDebugMessages = true;
+        protocol.sessionData.getConfiguration().showServerDebugMessages = true;
         runExampleConversation(protocol);
 
         //repeated to make sure it still can run after an initial pass.
@@ -199,7 +200,7 @@ public class ServerProtocol implements INotifyingThreadListener {
      * @see org.exquisite.communication.Server
      */
     public ExquisiteMessage processClientInput(String message) {
-        if (this.sessionData.config.showServerDebugMessages) {
+        if (this.sessionData.getConfiguration().showServerDebugMessages) {
             System.out.println(
                     "processClientInput, client message = (" + message + ") server state at start = " + stateLookup[this.state]);
         }
@@ -218,7 +219,7 @@ public class ServerProtocol implements INotifyingThreadListener {
          */
         //-- Client has issued a SHUT_DOWN request
         if (ClientMessages.SHUT_DOWN.equalsIgnoreCase(message)) {
-            if (this.sessionData.config.showServerDebugMessages) {
+            if (this.sessionData.getConfiguration().showServerDebugMessages) {
                 System.out.println("Shutting down.");
             }
             System.exit(0);
@@ -341,11 +342,11 @@ public class ServerProtocol implements INotifyingThreadListener {
                 //parse model data sent from client.
                 if (!ClientMessages.REQUEST_DIAGNOSIS_RESULT.equalsIgnoreCase(message)) {
                     try {
-                        this.sessionData = new ExquisiteSession();
+                        this.sessionData = new ExcelExquisiteSession();
                         XMLParser xmlParser = new XMLParser();
                         xmlParser.parse(message);
                         ExquisiteAppXML appXML = StringPreprocessor
-                                .processForImport(xmlParser.getExquisiteAppXML(), this.sessionData.config);
+                                .processForImport(xmlParser.getExquisiteAppXML(), this.sessionData.getConfiguration());
 
 						/*
                         XMLWriter writer = new XMLWriter();
@@ -363,7 +364,7 @@ public class ServerProtocol implements INotifyingThreadListener {
                                 new Hashtable<String, IntegerExpressionVariable>());
                         DiagnosisModelLoader loader = new DiagnosisModelLoader(sessionData, varFactory, conFactory);
                         loader.loadDiagnosisModelFromXML();
-                        this.sessionData.config
+                        this.sessionData.getConfiguration()
                                 .updateFromUserSettings(xmlParser.getExquisiteAppXML().getUserSettings());
                         response.status = StatusCodes.OK;
                     } catch (DOMException e) {
@@ -408,12 +409,12 @@ public class ServerProtocol implements INotifyingThreadListener {
             //Return the tests.diagnosis result to the client if requested.
             case STATE_DIAGNOSIS_READY:
                 if (ClientMessages.REQUEST_DIAGNOSIS_RESULT.equalsIgnoreCase(message)) {
-                    if (this.sessionData.config.showServerDebugMessages) {
+                    if (this.sessionData.getConfiguration().showServerDebugMessages) {
                         for (int i = 0; i < diagnoses.size(); i++) {
                             System.out.println("-- Diagnosis #" + i);
                             System.out.println("    " + Utilities
                                     .printConstraintList(new ArrayList<Constraint>(diagnoses.get(i).getElements()),
-                                            this.sessionData.diagnosisModel));
+                                            this.sessionData.getDiagnosisModel()));
                             System.out.println("--");
                         }
                         System.out.println("this.diagnoses.size = " + this.diagnoses.size());
@@ -433,7 +434,9 @@ public class ServerProtocol implements INotifyingThreadListener {
                         // TODO: Add real rank (same rank for diagnoses with same fault probability)
                         result.rank = "" + (i + 1);
                         for (Constraint constraint : diagnosis.getElements()) {
-                            result.candidates.add(this.sessionData.diagnosisModel.getConstraintName(constraint));
+                            result.candidates
+                                    .add(((ConstraintsDiagnosisModel<Constraint>) this.sessionData.getDiagnosisModel()).
+                                            getConstraintName(constraint));
                         }
                         diagResults.results.add(result);
                     }
@@ -455,7 +458,7 @@ public class ServerProtocol implements INotifyingThreadListener {
      * to be run in a separate thread.<p>
      * <p>
      * <ol>
-     * <li>Instantiates the tests.diagnosis engine that is to perform the tests.diagnosis; e.g. <tt>HSDagBuilder</tt> or <tt>ParallelHSDagBuilder</tt> etc.</li>
+     * <li>Instantiates the tests.diagnosis engine that is to perform the tests.diagnosis; e.g. <tt>HSDagEngine</tt> or <tt>ParallelHSDagEngine</tt> etc.</li>
      * <li>Instantiates a <tt>DiagnosisRunner</tt> object and passes the tests.diagnosis engine to it.</li>
      * <li>Makes a <tt>NotifyingThread</tt> instance and passes the <tt>DiagnosisRunner</tt> object to that.</li>
      * </ol>
@@ -470,7 +473,7 @@ public class ServerProtocol implements INotifyingThreadListener {
 //		IDiagnosisEngine engine = EngineFactory.makeHeuristicSearchEngine(sessionData,4);
 
         //instantiate a runner to wrap the tests.diagnosis engine.
-        DiagnosisRunner runner = new DiagnosisRunner(engine);
+        DiagnosisRunner runner = new DiagnosisRunner(engine, this.sessionData);
 
         //instantiate a thread for the tests.diagnosis runner to be run in.
         NotifyingThread thread = new NotifyingThread(runner);
@@ -494,7 +497,7 @@ public class ServerProtocol implements INotifyingThreadListener {
     @Override
     public void notifyOfThreadComplete(NotifyingThread thread) {
         if (thread.isInterrupted()) {
-            if (this.sessionData.config.showServerDebugMessages) {
+            if (this.sessionData.getConfiguration().showServerDebugMessages) {
                 System.out.println("Diagnosis was cancelled, shifting to idle state.");
             }
             state = STATE_IDLE;

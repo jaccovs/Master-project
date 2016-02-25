@@ -1,5 +1,6 @@
 package org.exquisite.diagnosis.models;
 
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.tools.Utilities;
 
 import java.math.BigDecimal;

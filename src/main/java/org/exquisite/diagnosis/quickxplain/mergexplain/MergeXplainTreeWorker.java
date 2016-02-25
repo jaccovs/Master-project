@@ -46,7 +46,7 @@ public class MergeXplainTreeWorker<T> extends MergeXplainWorker<T> {
         try {
 //			System.out.println("Tree worker started at level " + depth);
 
-            // If all statements are consistent together, we cannot find a conflict here
+            // If all statements are consistent together, we cannot find a nodeLabel here
             List<T> allStatements = new ArrayList<T>(possiblyFaultyStatements);
             allStatements.addAll(correctStatements);
             if (mergeXplain.isConsistent(allStatements)) {
@@ -55,7 +55,7 @@ public class MergeXplainTreeWorker<T> extends MergeXplainWorker<T> {
                 return;
             }
 
-            // If we have only one possibly faulty statement, it has to be a conflict
+            // If we have only one possibly faulty statement, it has to be a nodeLabel
             if (possiblyFaultyStatements.size() == 1) {
                 result.Conflicts.add(new ArrayList<T>(possiblyFaultyStatements));
                 finished = true;

@@ -1,6 +1,6 @@
 package org.exquisite.diagnosis.invquickxplain;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.quickxplain.mergexplain.MergeXplain;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author Thomas
  */
 public class MXPandInvQXP<T> extends InvQXDiagnosisEngine<T> {
-    public MXPandInvQXP(ExquisiteSession sessionData) {
+    public MXPandInvQXP(ExcelExquisiteSession sessionData) {
         super(sessionData);
     }
 
@@ -26,7 +26,7 @@ public class MXPandInvQXP<T> extends InvQXDiagnosisEngine<T> {
 //		long start = System.nanoTime();
 
         // call MergeXplain
-        MergeXplain<T> mxp = new MergeXplain<>(sessionData, this);
+        MergeXplain<T> mxp = new MergeXplain<>(sessionData);
         MergeXplain.ConflictSearchMode = ConflictSearchModes.Least;
         List<List<T>> conflicts = mxp.findConflicts();
 
@@ -41,11 +41,11 @@ public class MXPandInvQXP<T> extends InvQXDiagnosisEngine<T> {
         }
 
         // Add rest of old possibly faulty constraints to correct constraints
-        getModel().getCorrectStatements().addAll(getModel().getPossiblyFaultyStatements());
-        getModel().getCorrectStatements().removeAll(newPossiblyFaulty);
+        getDiagnosisModel().getCorrectStatements().addAll(getDiagnosisModel().getPossiblyFaultyStatements());
+        getDiagnosisModel().getCorrectStatements().removeAll(newPossiblyFaulty);
 
         // set new possibly faulty constraints
-        getModel().setPossiblyFaultyStatements(newPossiblyFaulty);
+        getDiagnosisModel().setPossiblyFaultyStatements(newPossiblyFaulty);
 
         // TEST
 //		long end = System.nanoTime();

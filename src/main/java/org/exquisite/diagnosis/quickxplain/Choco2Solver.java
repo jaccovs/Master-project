@@ -6,9 +6,8 @@ import choco.cp.solver.CPSolver;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.Variable;
 import choco.kernel.solver.ContradictionException;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.core.ISolver;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.ISolver;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -16,6 +15,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_SOLVER_CALLS;
+import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
 
 /**
  * The standard Choco 2 solver implementation.
@@ -32,7 +35,7 @@ public class Choco2Solver implements ISolver<Constraint> {
     protected CPSolver solver = new CPSolver();
 
     @Override
-    public void createModel(QuickXPlain<Constraint> qx, List<Constraint> constraints) {
+    public void createModel(ConstraintsQuickXPlain<Constraint> qx, List<Constraint> constraints) {
 
         solver = new CPSolver();
 
@@ -52,7 +55,7 @@ public class Choco2Solver implements ISolver<Constraint> {
             cpmodel.addConstraint(c);
         }
         // add the negative constraints as well
-        for (Example nex : qx.currentDiagnosisModel.getNegativeExamples()) {
+        for (Example<Constraint> nex : qx.currentDiagnosisModel.getNegativeExamples()) {
             Constraint constraintToAdd = generateConstraintFromNegExample(nex.constraints);
             cpmodel.addConstraint(constraintToAdd);
         }
@@ -107,34 +110,27 @@ public class Choco2Solver implements ISolver<Constraint> {
     }
 
     @Override
-    public boolean isFeasible(IDiagnosisEngine<Constraint> diagnosisEngine) {
-        if (diagnosisEngine != null) {
-            // System.out.println("Propagating..");
-            diagnosisEngine.incrementPropagationCount();
-        }
-
+    public boolean isFeasible() {
         try {
+            incrementCounter(COUNTER_PROPAGATION);
             solver.propagate();
         } catch (ContradictionException e) {
             return false;
         }
 
-        if (diagnosisEngine != null) {
-            diagnosisEngine.incrementSolverCalls();
-        }
-
+        incrementCounter(COUNTER_SOLVER_CALLS);
         solver.solve();
         return solver.isFeasible();
     }
 
 
     @Override
-    public boolean isEntailed(IDiagnosisEngine<Constraint> diagnosisEngine, Set<Constraint> entailments) {
+    public boolean isEntailed(Set<Constraint> entailments) {
         // Add negated entailments
         Constraint entailment = Choco.not(Choco.and(entailments.toArray(new Constraint[entailments.size()])));
         solver.addConstraint(entailment);
 
-        return !isFeasible(diagnosisEngine);
+        return !isFeasible();
     }
 
     @Override

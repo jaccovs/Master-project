@@ -77,7 +77,7 @@ public class SimUtilities {
 	//		System.out.println("2nd line: " + line);
 			String[] cfs = line.split(" ");
 			for (String cf : cfs) {
-	//			System.out.println("Found conflict" + cf );
+	//			System.out.println("Found nodeLabel" + cf );
 				String cftrimmed = cf.substring(1,cf.length()-1);
 				String[] cnames = cftrimmed.split(",");
 				List<Constraint> conflict = new ArrayList<Constraint>();
@@ -103,7 +103,7 @@ public class SimUtilities {
 	}
 	
 	/**
-	 * returns a string rep of the conflict
+	 * returns a string rep of the nodeLabel
 	 * @param constraints
 	 * @return
 	 */

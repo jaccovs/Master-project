@@ -7,11 +7,11 @@ import choco.cp.solver.CPSolver;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.solver.Solver;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.logging.ExquisiteLogger;
 
@@ -110,10 +110,10 @@ public class JCKBSETest {
 				}
 				thePosExamples.add(ex);
 			}
-			dmodel.setPositiveExamples(thePosExamples);
+			dmodel.setConsistentExamples(thePosExamples);
 
-			ExquisiteSession sessionData = new ExquisiteSession();
-			sessionData.diagnosisModel = dmodel;
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+			sessionData.getDiagnosisModel() = dmodel;
 			
 			
 			// Now diagnose?

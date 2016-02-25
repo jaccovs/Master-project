@@ -4,13 +4,13 @@ import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerVariable;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteGraph;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
@@ -35,8 +35,8 @@ public class ProgramFlowExampleJavaAPI {
 		Debug.msg("    Instantiate a ExquisiteGraph object to populate.");
 		ExquisiteGraph<String> graph = new ExquisiteGraph<String>();
 		
-		ExquisiteSession sessionData = new ExquisiteSession();
-		sessionData.diagnosisModel = model;
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+		sessionData.getDiagnosisModel() = model;
 		sessionData.graph = graph;
 		
 		
@@ -46,7 +46,7 @@ public class ProgramFlowExampleJavaAPI {
 		IDiagnosisEngine<Constraint> diagnosisEngine = EngineFactory.makeDAGEngineStandardQx(sessionData);
 		
 		Debug.msg("    diagnosisEngine.setModel(model)");
-		diagnosisEngine.setSessionData(sessionData);
+		diagnosisEngine.setDiagnosisModel(sessionData);
 		
 		Debug.msg("    diagnosisEngine.calculateDiagnoses()\n");
 		try{
@@ -155,28 +155,28 @@ public class ProgramFlowExampleJavaAPI {
 		
 		//Correct statements
 		//h2=f2+c2
-		model.addCorrectConstraint(Choco.eq(h2, Choco.plus(f2, c2)), "WS_1_H2");
+		model.addCorrectFormula(Choco.eq(h2, Choco.plus(f2, c2)), "WS_1_H2");
 		//h3=f3*c3
-		model.addCorrectConstraint(Choco.eq(h3, Choco.mult(f3, c3)), "WS_1_H3");
+		model.addCorrectFormula(Choco.eq(h3, Choco.mult(f3, c3)), "WS_1_H3");
 		//g7=g5-g6
-		model.addCorrectConstraint(Choco.eq(g7, Choco.minus(g5, g6)), "WS_1_G7");
+		model.addCorrectFormula(Choco.eq(g7, Choco.minus(g5, g6)), "WS_1_G7");
 		
 		Debug.msg("\nMake globally defined value bounds - number to make is: 5");	
 		//d2:e3 0 >= & <= 40
-		model.addCorrectConstraint(Choco.and(Choco.geq(d2, d2e3Min), Choco.leq(d2, d2e3Max)), "valueBoundConstraint_d2");
-		model.addCorrectConstraint(Choco.and(Choco.geq(d3, d2e3Min), Choco.leq(d3, d2e3Max)), "valueBoundConstraint_d3");
-		model.addCorrectConstraint(Choco.and(Choco.geq(e2, d2e3Min), Choco.leq(e2, d2e3Max)), "valueBoundConstraint_e2");
-		model.addCorrectConstraint(Choco.and(Choco.geq(e3, d2e3Min), Choco.leq(e3, d2e3Max)), "valueBoundConstraint_e3");			
+		model.addCorrectFormula(Choco.and(Choco.geq(d2, d2e3Min), Choco.leq(d2, d2e3Max)), "valueBoundConstraint_d2");
+		model.addCorrectFormula(Choco.and(Choco.geq(d3, d2e3Min), Choco.leq(d3, d2e3Max)), "valueBoundConstraint_d3");
+		model.addCorrectFormula(Choco.and(Choco.geq(e2, d2e3Min), Choco.leq(e2, d2e3Max)), "valueBoundConstraint_e2");
+		model.addCorrectFormula(Choco.and(Choco.geq(e3, d2e3Min), Choco.leq(e3, d2e3Max)), "valueBoundConstraint_e3");
 		
 		//b2:c3 0 >= & <= 50
-		model.addCorrectConstraint(Choco.and(Choco.geq(b2, b2c3Min), Choco.leq(b2, b2c3Max)), "valueBoundConstraint_b2");
-		model.addCorrectConstraint(Choco.and(Choco.geq(b3, b2c3Min), Choco.leq(b3, b2c3Max)), "valueBoundConstraint_b3");
-		model.addCorrectConstraint(Choco.and(Choco.geq(c2, b2c3Min), Choco.leq(c2, b2c3Max)), "valueBoundConstraint_c2");
-		model.addCorrectConstraint(Choco.and(Choco.geq(c3, b2c3Min), Choco.leq(c3, b2c3Max)), "valueBoundConstraint_c3");
+		model.addCorrectFormula(Choco.and(Choco.geq(b2, b2c3Min), Choco.leq(b2, b2c3Max)), "valueBoundConstraint_b2");
+		model.addCorrectFormula(Choco.and(Choco.geq(b3, b2c3Min), Choco.leq(b3, b2c3Max)), "valueBoundConstraint_b3");
+		model.addCorrectFormula(Choco.and(Choco.geq(c2, b2c3Min), Choco.leq(c2, b2c3Max)), "valueBoundConstraint_c2");
+		model.addCorrectFormula(Choco.and(Choco.geq(c3, b2c3Min), Choco.leq(c3, b2c3Max)), "valueBoundConstraint_c3");
 		
 		//f2:f3 0 >= & <= 30
-		model.addCorrectConstraint(Choco.and(Choco.geq(f2, f2f3Min), Choco.leq(f2, f2f3Max)), "valueBoundConstraint_f2");
-		model.addCorrectConstraint(Choco.and(Choco.geq(f3, f2f3Min), Choco.leq(f3, f2f3Max)), "valueBoundConstraint_f3");
+		model.addCorrectFormula(Choco.and(Choco.geq(f2, f2f3Min), Choco.leq(f2, f2f3Max)), "valueBoundConstraint_f2");
+		model.addCorrectFormula(Choco.and(Choco.geq(f3, f2f3Min), Choco.leq(f3, f2f3Max)), "valueBoundConstraint_f3");
 		
 		Debug.msg("\nTransform ExquisiteAppXML test cases into Example objects.");
 		Debug.msg("No. of test cases to transform: 1");
@@ -203,7 +203,7 @@ public class ProgramFlowExampleJavaAPI {
 		//Value bounds
 		//none for this example.
 		
-		model.getPositiveExamples().add(positiveExample);
+		model.getConsistentExamples().add(positiveExample);
 		
 		//Negative example
 		//!(d2=2 & e2=4 & b2=10 & c2=5 & d3=6 & e3=8 & b3=20 & c3=15 & g5=16800)
@@ -211,7 +211,7 @@ public class ProgramFlowExampleJavaAPI {
 		Example<Constraint> negativeExample = new Example<>(true);
 		negativeExample.addConstraint(negativeConstraint, "negative constraint derived from positive example constraints.");
 				
-		model.getNegativeExamples().add(negativeExample);
+		model.getInconsistentExamples().add(negativeExample);
 		
 		Debug.msg("Variables in model:");
 		for(Variable variable : model.getVariables())

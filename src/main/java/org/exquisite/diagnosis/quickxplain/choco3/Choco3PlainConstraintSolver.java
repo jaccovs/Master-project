@@ -3,11 +3,10 @@ package org.exquisite.diagnosis.quickxplain.choco3;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.core.ISolver;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.ISolver;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import solver.variables.VariableFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -42,7 +41,7 @@ public class Choco3PlainConstraintSolver implements ISolver<Constraint> {
      */
     // Create the model
     @Override
-    public void createModel(QuickXPlain<Constraint> qx, List<Constraint> constraints) {
+    public void createModel(ConstraintsQuickXPlain<Constraint> qx, List<Constraint> constraints) {
         this.diagnosisModel = qx.currentDiagnosisModel;
         this.currentExample = qx.currentExample;
         this.solver = new solver.Solver();
@@ -58,7 +57,7 @@ public class Choco3PlainConstraintSolver implements ISolver<Constraint> {
 
     // Look for a solution
     @Override
-    public boolean isFeasible(IDiagnosisEngine<Constraint> diagnosisEngine) {
+    public boolean isFeasible() {
         if (this.solver == null) {
             System.err.println("No solver defined in Choco3PlainConstraintSolver");
             System.exit(0);
@@ -115,7 +114,7 @@ public class Choco3PlainConstraintSolver implements ISolver<Constraint> {
     }
 
     @Override
-    public boolean isEntailed(IDiagnosisEngine<Constraint> diagnosisEngine, Set<Constraint> entailments) {
+    public boolean isEntailed(Set<Constraint> entailments) {
         throw new NotImplementedException();
     }
 

@@ -14,7 +14,7 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.diagnosis.engines.common.ConstraintComparator;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -158,7 +158,7 @@ public class Utilities {
     }
 
     /**
-     * Prints a conflict
+     * Prints a nodeLabel
      *
      * @param constraints
      */
@@ -172,7 +172,7 @@ public class Utilities {
     }
 
     /**
-     * Prints a conflict given as a set
+     * Prints a nodeLabel given as a set
      *
      * @param conflict
      */
@@ -657,7 +657,7 @@ public class Utilities {
     }
 
     /**
-     * A method that looks up if a conflict is already known
+     * A method that looks up if a nodeLabel is already known
      *
      * @param newConflict
      * @param knownConflicts
@@ -677,7 +677,7 @@ public class Utilities {
     /**
      * Add without duplicates
      *
-     * @param list           current list (conflict)
+     * @param list           current list (nodeLabel)
      * @param knownConflicts (known conflicts)
      * @return
      */

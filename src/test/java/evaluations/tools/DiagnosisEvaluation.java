@@ -1,15 +1,15 @@
 package evaluations.tools;
 
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.engines.common.SharedDAGNodeQueue;
-import org.exquisite.diagnosis.models.DAGNode;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.tools.Utilities;
 
 import java.util.HashSet;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.*;
 
 /**
  * Evaluation of different diagnosis runs to calculate average values.
@@ -60,58 +60,59 @@ public class DiagnosisEvaluation<T> {
 	 * @param start   the start time of the diagnosis
 	 * @param end   the end time of the diagnosis
 	 */
-	public void analyzeRun(IDiagnosisEngine<T> engine, double ms) {
+	public void analyzeRun(double ms) {
 //		System.err.println("Analyzing");
-		if (engine != null) {
+		//if (engine != null) {
 			totalRuns++;
 			
 			totalTime += ms;
-			totalProps += engine.getPropagationCount();
-			totalSolves += engine.getCspSolvedCount();
-			totalSolverTime += engine.getSolverTime();
-			totalQXPCalls += engine.getTPCalls();
-			totalSearchesForConflicts += engine.getSearchesForConflicts();
-			totalMXPConflicts += engine.getMXPConflicts();
-			totalMXPSplittingTechniqueConflicts += engine.getMXPSplittingTechniqueConflicts();
-			
-			if (engine instanceof AbstractHSDagBuilder) {
-				AbstractHSDagBuilder<T> dagEngine = (AbstractHSDagBuilder<T>) engine;
-				
-//				printConflicts(dagEngine.knownConflicts.getCollection(), dagEngine.model);
-				
-			
-				// DJ TEST
-				conflictReuse += dagEngine.reuseCount;
-				
-				totalNodes += dagEngine.getConstructedNodeCount();
-				
-				int conflictSizes = 0;
-				List<List<T>> conflicts = dagEngine.knownConflicts.getCollection();
-				for (List<T> conflict : conflicts) {
-					conflictSizes += conflict.size();
-				}
-				totalConflictSizes += conflictSizes / (double) conflicts.size();
-				totalConflictCount += conflicts.size();
-				
-				int diagSizes = 0;
-				for (Diagnosis<T> d : dagEngine.diagnoses) {
-					// System.out.println(d.getElements());
-					if (d.getElements() != null) {
-						diagSizes += d.getElements().size();
-					} else {
-						System.err.println("No elements? ");
-					}
-				}
-				totalDiagSizes += (double) diagSizes; // / engine.diagnoses.size();
-				totalDiags += dagEngine.diagnoses.size();
+			totalProps += getCounter(COUNTER_PROPAGATION).value();
+			totalSolves += getCounter(COUNTER_CSP_SOLUTIONS).value();
+			totalSolverTime += getTimer(TIMER_SOLVER).total();
+			totalQXPCalls += getCounter(COUNTER_SOLVER_CALLS).value();
+			totalSearchesForConflicts += getCounter(COUNTER_SEARCH_CONFLICTS).value();
+			totalMXPConflicts += getCounter(COUNTER_MXP_CONFLICTS).value();
+			totalMXPSplittingTechniqueConflicts += getCounter(COUNTER_MXP_SPLITTING).value();
+			totalNodes += getCounter(COUNTER_CONSTRUCTED_NODES).value();
+			conflictReuse += getCounter(COUNTER_REUSE).value();
+		//	if (engine instanceof AbstractHSDagEngine) {
+		//		AbstractHSDagEngine<T> dagEngine = (AbstractHSDagEngine<T>) engine;
 
-				List<DAGNode<T>> nodes = dagEngine.allConstructedNodes.getCollection();
-				calculateAverageTreeWidth(nodes);
-				
-				checkForDuplicateNodes(dagEngine.allConstructedNodes.getCollection());
-			}
-		}
+//				printConflicts(dagEngine.knownConflicts.getCollection(), dagEngine.model);
+
+
+		//	}
+		//}
 		
+	}
+
+	public void engineTest(AbstractHSDagEngine<T> dagEngine) {
+		// DJ TEST
+
+		int conflictSizes = 0;
+		List<List<T>> conflicts = dagEngine.knownConflicts.getCollection();
+		for (List<T> conflict : conflicts) {
+            conflictSizes += conflict.size();
+        }
+		totalConflictSizes += conflictSizes / (double) conflicts.size();
+		totalConflictCount += conflicts.size();
+
+		int diagSizes = 0;
+		for (Diagnosis<T> d : dagEngine.diagnoses) {
+            // System.out.println(d.getElements());
+            if (d.getElements() != null) {
+                diagSizes += d.getElements().size();
+            } else {
+                System.err.println("No elements? ");
+            }
+        }
+		totalDiagSizes += (double) diagSizes; // / engine.diagnoses.size();
+		totalDiags += dagEngine.diagnoses.size();
+
+		List<Node<T>> nodes = dagEngine.allConstructedNodes.getCollection();
+		calculateAverageTreeWidth(nodes);
+
+		checkForDuplicateNodes(dagEngine.allConstructedNodes.getCollection());
 	}
 
 	private void printConflicts(List<List<T>> conflicts, DiagnosisModel<T> model) {
@@ -127,10 +128,10 @@ public class DiagnosisEvaluation<T> {
 	 * Checks a list of DAGNodes for duplicates. Prints out the number of found duplicates.
 	 * @param nodes   the list to check
 	 */
-	private void checkForDuplicateNodes(List<DAGNode<T>> nodes) {
+	private void checkForDuplicateNodes(List<Node<T>> nodes) {
 		int duplicateNodes = 0;
-		HashSet<DAGNode<T>> testSet = new HashSet<DAGNode<T>>();
-		for (DAGNode<T> node : nodes) {
+		HashSet<Node<T>> testSet = new HashSet<Node<T>>();
+		for (Node<T> node : nodes) {
 			if (testSet.contains(node)) {
 				System.err.println("Duplicate at level: " + node.nodeLevel);
 				duplicateNodes++;
@@ -155,9 +156,9 @@ public class DiagnosisEvaluation<T> {
 	 * Calculates the average tree width of constructed nodes.
 	 * @param nodes   the nodes of the tree
 	 */
-	private void calculateAverageTreeWidth(List<DAGNode<T>> nodes) {
+	private void calculateAverageTreeWidth(List<Node<T>> nodes) {
 		int maxLevel = 0;
-		for (DAGNode<T> node : nodes) {
+		for (Node<T> node : nodes) {
 			if (node.nodeLevel > maxLevel) {
 				maxLevel = node.nodeLevel;
 			}
@@ -208,7 +209,7 @@ public class DiagnosisEvaluation<T> {
 		result.append("Average Tree Width: " + AvgTreeWidth + "\r\n");
 
 		// DJ TEST
-		result.append("Average conflict reuse: " + AvgConflictReuse + "\r\n");
+		result.append("Average nodeLabel reuse: " + AvgConflictReuse + "\r\n");
 
 		result.append("Average searches for conflicts: " + AvgSearchesForConflicts + "\r\n");
 		result.append("Average conflicts per search: " + AvgMXPConflicts + "\r\n");

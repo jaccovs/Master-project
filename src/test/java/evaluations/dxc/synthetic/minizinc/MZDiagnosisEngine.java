@@ -1,17 +1,17 @@
 package evaluations.dxc.synthetic.minizinc;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
-import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MZDiagnosisEngine implements IDiagnosisEngine {
+public class MZDiagnosisEngine implements IDiagnosisEngine<String> {
 
 	private final int abCounter;
 	public String lastInput;
@@ -21,7 +21,7 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 	int threads;
 	// Time, where the search for diagnoses was finished
 	long finishedTime = 0;
-	private ExquisiteSession sessionData;
+	private ExcelExquisiteSession sessionData;
 	private List<String> diagnoses = new LinkedList<>();
 	private int diagnosesMinCard = 0;
     private int diagnosesMaxCard = 0;
@@ -56,18 +56,17 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 
 	}
 
-	@Override
-	public ExquisiteSession getSessionData() {
+	public ExcelExquisiteSession getDiagnosisModel() {
         return this.sessionData;
 	}
 
 	@Override
-	public void setSessionData(ExquisiteSession sessionData) {
+	public void setSessionData(ExcelExquisiteSession sessionData) {
         this.sessionData = sessionData;
 	}
 
 	@Override
-	public List<Diagnosis> calculateDiagnoses() throws DiagnosisException {
+	public List<Diagnosis<String>> calculateDiagnoses() throws DiagnosisException {
 		try {
 			switch (searchType) {
 		        case FindAll:
@@ -86,7 +85,7 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		catch (IOException e) {
 			throw new DiagnosisException(e);
 		}
-		List<Diagnosis> diags = new LinkedList<>();
+		List<Diagnosis<String>> diags = new LinkedList<>();
 		for (String s: diagnoses) {
 			diags.add(new MZDiagnosis(s));
 		}
@@ -244,61 +243,10 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
         }
     }
 
-	@Override
-	public int getSolverCalls() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
-	public long getSolverTime() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getCspSolvedCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getPropagationCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getTPCalls() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public long getFinishedTime() {
-		return finishedTime;
-	}
-
-	@Override
-	public int getSearchesForConflicts() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMXPConflicts() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMXPSplittingTechniqueConflicts() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public DiagnosisModel getModel() {
+	public DiagnosisModel getDiagnosisModel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -307,53 +255,6 @@ public class MZDiagnosisEngine implements IDiagnosisEngine {
 		this.model = model;
 	}
 
-	@Override
-	public void incrementSolverCalls() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementSolverTime(long time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementCSPSolutionCount() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementPropagationCount() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementQXPCalls() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementSearchesForConflicts() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementMXPConflicts(int conflicts) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void incrementMXPSplittingTechniqueConflicts(int conflicts) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public enum SearchType {FindAll, OneMinCardinality, AllMinCardinality}
 

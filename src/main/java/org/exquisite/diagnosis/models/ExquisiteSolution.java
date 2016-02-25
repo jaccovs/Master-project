@@ -71,7 +71,7 @@ public class ExquisiteSolution {
 //			Constraint ct = null;
 //			while (ct_it.hasNext()) {
 //				ct = ct_it.next();
-//				System.out.println(HSDagBuilder.globalDiagnosisModel.getConstraintName(ct) +  ", " + ct);
+//				System.out.println(HSDagEngine.globalDiagnosisModel.getConstraintName(ct) +  ", " + ct);
 //			}
 //
 //			CPSolver solver = new CPSolver();

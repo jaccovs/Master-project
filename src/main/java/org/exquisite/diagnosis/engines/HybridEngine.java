@@ -1,8 +1,9 @@
 package org.exquisite.diagnosis.engines;
 
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.core.engines.AbstractHSDagEngine;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.engines.common.SharedCollection;
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
@@ -13,18 +14,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.exquisite.core.measurements.MeasurementManager.start;
+import static org.exquisite.core.measurements.MeasurementManager.stop;
+
 /**
  * A hybrid engine that runs both the depth-first and the parallelized breadth-first search
  * Will only returns the first minimal tests.diagnosis
  *
  * @author dietmar
  */
-public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
+public class HybridEngine<T> extends AbstractHSDagEngine<T> {
     // The internal engines
     // breadth first
-    AbstractHSDagBuilder bfsEngine;
+    AbstractHSDagEngine bfsEngine;
     // depth first
-    AbstractHSDagBuilder dfsEngine;
+    AbstractHSDagEngine dfsEngine;
 
     // create a threadpool of size two to run the engines
     ExecutorService threadPool;
@@ -45,16 +49,16 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
      * @param sessionData
      * @param nbThreads
      */
-    public HybridEngine(ExquisiteSession sessionData, int nbThreads) {
+    public HybridEngine(ExcelExquisiteSession sessionData, int nbThreads) {
         super(sessionData);
         // limit the search
-        sessionData.config.maxDiagnoses = 1;
+        sessionData.getConfiguration().maxDiagnoses = 1;
         // also the depth for the bfs-search?
         // initialize the engines
         // give them half of the threads at the moment
         int threadsForDFS = nbThreads;
         if (nbThreads > 1) {
-            this.bfsEngine = new FullParallelHSDagBuilder(sessionData, nbThreads / 2);
+            this.bfsEngine = new FullParallelHSDagEngine(sessionData, nbThreads / 2);
             threadsForDFS = nbThreads / 2 + (nbThreads % 2);
         } else {
             this.bfsEngine = null;
@@ -80,10 +84,16 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
     public List<Diagnosis<T>> calculateDiagnoses() {
 //		System.out.println("Starting hybrid");
         // run them
+        long bfsFinished = 0;
         if (this.bfsEngine != null) {
+            start("timer.bfs");
             this.threadPool.execute(bfs);
+            bfsFinished = stop("timer.bfs");
         }
+        long dfsFinished=0;
+        start("timer.dfs");
         this.threadPool.execute(dfs);
+        dfsFinished = stop("timer.dfs");
 
         // Wait until one runner is done
 
@@ -103,7 +113,7 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
         List<Diagnosis<T>> finalResult = new ArrayList<>();
         if (diagsFromRunners.size() > 0) {
             oneDiag = new ArrayList<T>(diagsFromRunners.get(0));
-            Diagnosis<T> d = new Diagnosis<>(oneDiag, sessionData.diagnosisModel);
+            Diagnosis<T> d = new Diagnosis<>(oneDiag, sessionData.getDiagnosisModel());
             finalResult.add(d);
         }
 //		else {
@@ -113,8 +123,9 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
         this.threadPool.shutdownNow();
 
         // Use minimum of both engines as own finishedTime, because both engines also wait for their threads to be terminated.
-        long bfsFinished = bfs.getFinishedTime();
-        long dfsFinished = dfs.getFinishedTime();
+        //long bfsFinished = bfs.getFinishedTime();
+        //long dfsFinished = dfs.getFinishedTime();
+        long finishedTime = 0;
         if (bfsFinished != 0 && dfsFinished != 0) {
             finishedTime = Math.min(bfsFinished, dfsFinished);
         } else if (bfsFinished != 0) {
@@ -143,7 +154,7 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
 
 
     @Override
-    public void expandNodes(List<DAGNode<T>> nodesToExpand)
+    public void expandNodes(List<Node<T>> nodesToExpand)
             throws DomainSizeException {
     }
 
@@ -156,7 +167,7 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
         // Am i finished?
         public boolean finished = false;
         // the handle to the engine
-        AbstractHSDagBuilder engine;
+        AbstractHSDagEngine engine;
         // a pointer to the result
         SharedCollection<List<T>> result;
         // The latch
@@ -168,7 +179,7 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
          * @param engine
          * @param result
          */
-        public EngineRunner(AbstractHSDagBuilder engine,
+        public EngineRunner(AbstractHSDagEngine engine,
                             SharedCollection<List<T>> result, CountDownLatch latch) {
             super();
             this.engine = engine;
@@ -196,9 +207,9 @@ public class HybridEngine<T> extends AbstractHSDagBuilder<T> {
             }
         }
 
-        public long getFinishedTime() {
-            return engine.getFinishedTime();
-        }
+//        public long getFinishedTime() {
+//            return engine.getFinishedTime();
+//        }
     }
 
 }

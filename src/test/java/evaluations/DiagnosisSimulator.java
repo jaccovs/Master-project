@@ -8,13 +8,12 @@ import evaluations.configuration.AbstractScenario;
 import evaluations.configuration.SimulatorScenario;
 import evaluations.configuration.StdRunConfiguration;
 import evaluations.configuration.StdRunConfiguration.ExecutionMode;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder.QuickXplainType;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.AbstractHSDagEngine.QuickXplainType;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.tools.Utilities;
@@ -107,7 +106,7 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 	List<Constraint> shuffledConstraints = null;
 
 	/**
-	 * returns a string rep of the conflict
+	 * returns a string rep of the nodeLabel
 	 *
 	 * @param constraints
 	 * @return
@@ -175,25 +174,25 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 		StdRunConfiguration runConfiguration = (StdRunConfiguration)abstractRunConfiguration;
 		SimulatorScenario scenario = (SimulatorScenario)abstractScenario;
 		
-		AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.SimulatedQuickXplain;
+		AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.SimulatedQuickXplain;
 		QXSim.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
 
-		ExquisiteSession sessionData = new ExquisiteSession();
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
 		try {
-			sessionData.diagnosisModel = defineModel(scenario.nbConstraints, scenario.nbConflicts, scenario.conflictSize, scenario.varDistribution, iteration);
+			sessionData.getDiagnosisModel() = defineModel(scenario.nbConstraints, scenario.nbConflicts, scenario.conflictSize, scenario.varDistribution, iteration);
 		}
 		catch (Exception e) {
 			addError(e.getMessage(), runConfiguration, subScenario, iteration);
 			return null;
 		}
 //		System.out.println("Created the model with examples");
-//			AbstractHSDagBuilder hsdag; 
+//			AbstractHSDagEngine hsdag;
 		
 		// Do not try to find a better strategy for the moment
-		sessionData.config.searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 
-		sessionData.config.searchDepth = scenario.searchDepth;
-		sessionData.config.maxDiagnoses = scenario.maxDiags;
+		sessionData.getConfiguration().searchDepth = scenario.searchDepth;
+		sessionData.getConfiguration().maxDiagnoses = scenario.maxDiags;
 		
 		EngineType engineType = null;
 		switch (runConfiguration.executionMode) {
@@ -223,7 +222,7 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 		IDiagnosisEngine<Constraint> engine = EngineFactory.makeEngine(engineType, sessionData, runConfiguration.threads);
 		
 
-		((AbstractHSDagBuilder)engine).setSearchDepth(scenario.searchDepth);
+		((AbstractHSDagEngine)engine).setSearchDepth(scenario.searchDepth);
 		
 		
 		return engine;
@@ -261,11 +260,11 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 		// Add a dummy example
 		Example exTestExample = new Example();
 		exTestExample.addConstraint(createDummyConstraint(), "dummyexample");
-		model.getPositiveExamples().add(exTestExample);
+		model.getConsistentExamples().add(exTestExample);
 
 //		System.out.println("Known conflicts");
-//		for (List<Constraint> conflict : conflicts) {
-//			System.out.println(conflictToString(this.constraintNames, conflict));
+//		for (List<Constraint> nodeLabel : conflicts) {
+//			System.out.println(conflictToString(this.constraintNames, nodeLabel));
 //		}
 		return model;
 	}
@@ -305,7 +304,7 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 		// 		
 
 
-		// Determine the size of each conflict to be generated.
+		// Determine the size of each nodeLabel to be generated.
 		int[] conflictSizes = new int[nbConflicts]; 
 		if (genStrategySize == ConflictGenerationStrategy_Size.uniform) {
 			for (int i=0;i<nbConflicts;i++) {
@@ -351,9 +350,9 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 		// some testing
 //		Map<Constraint, Integer> constraintCount = new HashMap<Constraint, Integer>();
 //		System.out.println("Known conflicts");
-//		for (List<Constraint> conflict : conflicts) {
-//			System.out.println(conflictToString(this.constraintNames, conflict));
-//			for (Constraint c : conflict) {
+//		for (List<Constraint> nodeLabel : conflicts) {
+//			System.out.println(conflictToString(this.constraintNames, nodeLabel));
+//			for (Constraint c : nodeLabel) {
 //				Integer cCount = constraintCount.get(c);
 //				if (cCount == null){
 //					constraintCount.put(c, 1);
@@ -402,7 +401,7 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 	 * @param nbConflicts   number of conflicts to create
 	 * @param conflictSize   average size of conflicts
 	 * @param run   the number of the run
-	 * @return filename + nbcts + nbconflits + avg-conflict size + run
+	 * @return filename + nbcts + nbconflits + avg-nodeLabel size + run
 	 */
 	String getFullFileName(int nbConstraints, int nbConflicts, int conflictSize, ConflictGenerationStrategy_VarDistribution varDistribution, int run) {
 		String result = this.conflictDirectory;
@@ -431,7 +430,7 @@ public class DiagnosisSimulator extends AbstractEvaluation<Constraint> {
 	//		System.out.println("2nd line: " + line);
 			String[] cfs = line.split(" ");
 			for (String cf : cfs) {
-	//			System.out.println("Found conflict" + cf );
+	//			System.out.println("Found nodeLabel" + cf );
 				String cftrimmed = cf.substring(1,cf.length()-1);
 				String[] cnames = cftrimmed.split(",");
 				List<Constraint> conflict = new ArrayList<Constraint>();

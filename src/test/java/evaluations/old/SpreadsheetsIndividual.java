@@ -7,14 +7,17 @@ import evaluations.tools.ResultsLogger;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain.SolverType;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
 import java.util.*;
+
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CSP_SOLUTIONS;
+import static org.exquisite.core.measurements.MeasurementManager.COUNTER_PROPAGATION;
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 /**
  * A class to run individual tests in different configurations
@@ -54,7 +57,7 @@ public class SpreadsheetsIndividual {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		QuickXPlain.ARTIFICIAL_WAIT_TIME = ARTIFICIAL_WAIT_TIME;
+		ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = ARTIFICIAL_WAIT_TIME;
 
 		Debug.DEBUGGING_ON = false;
 		Debug.QX_DEBUGGING = false;
@@ -182,9 +185,9 @@ public class SpreadsheetsIndividual {
 			logFileName += getScenarioDescription(scenario);
 
 			if (scenario.choco3) {
-    			QuickXPlain.SOLVERTYPE = SolverType.Choco3;
+    			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco3;
     		} else {
-    			QuickXPlain.SOLVERTYPE = SolverType.Choco2;
+    			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco2;
     		}
 
 //			if (threads == 0) threads = 1;
@@ -257,7 +260,7 @@ public class SpreadsheetsIndividual {
 
 //				System.out.println("Diagnosis iteration: " + (i+1));
 				// Create the engine
-				AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder)
+				AbstractHSDagEngine<Constraint> diagnosisEngine = (AbstractHSDagEngine)
 												  EngineFactory.makeEngineFromXMLFile(
 														  engineType,
 														  fullInputFilename,
@@ -265,12 +268,12 @@ public class SpreadsheetsIndividual {
 //				System.out.println("Created an engine for " + fullInputFilename);
 				// Set the search depth
 				diagnosisEngine.setSearchDepth(SpreadsheetsIndividual.SEARCH_DEPTH);
-				diagnosisEngine.getSessionData().config.searchDepth = SpreadsheetsIndividual.SEARCH_DEPTH;
-				diagnosisEngine.getSessionData().config.maxDiagnoses = SpreadsheetsIndividual.MAX_DIAGS;
+				diagnosisEngine.getDiagnosisModel().getConfiguration().searchDepth = SpreadsheetsIndividual.SEARCH_DEPTH;
+				diagnosisEngine.getDiagnosisModel().getConfiguration().maxDiagnoses = SpreadsheetsIndividual.MAX_DIAGS;
 
-//				System.out.println("Max diags: " + diagnosisEngine.getSessionData().config.maxDiagnoses);
+//				System.out.println("Max diags: " + diagnosisEngine.getDiagnosisModel().getConfiguration().maxDiagnoses);
 
-//				System.out.println(diagnosisEngine.getSessionData().appXML.getFormulas());
+//				System.out.println(diagnosisEngine.getDiagnosisModel().appXML.getFormulas());
 //				System.err.println("Loaded - ending");
 
 				// ===================================================================================================
@@ -282,12 +285,12 @@ public class SpreadsheetsIndividual {
 					if (positions == null) {
 	//					System.out.println("Will create a new sequence for this iteration ..");
 						// Get the constraints
-						List<Constraint> theConstraints = new ArrayList<Constraint>(diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements());
+						List<Constraint> theConstraints = new ArrayList<Constraint>(diagnosisEngine.sessionData.getDiagnosisModel().getPossiblyFaultyStatements());
 						Collections.shuffle(theConstraints);
-						diagnosisEngine.sessionData.diagnosisModel.setPossiblyFaultyStatements(theConstraints);
+						diagnosisEngine.sessionData.getDiagnosisModel().setPossiblyFaultyStatements(theConstraints);
 						// Put them into a list by constraint expression (as text to reuse the order across engines)
 						// If two are the same this should not be a problem ... as they have the same semantics
-	//					System.out.println("First element in iteration " + i + ": "  + diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements().get(0));
+	//					System.out.println("First element in iteration " + i + ": "  + diagnosisEngine.sessionData.getDiagnosisModel().getPossiblyFaultyStatements().get(0));
 
 						positions = new HashMap<String, Integer>();
 						int cnt = 0;
@@ -308,7 +311,7 @@ public class SpreadsheetsIndividual {
 					else {
 	//					System.out.println("Will reuse a sequence for iteration " + i );
 						List<Constraint> theConstraints = new ArrayList<Constraint>(
-									diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements());
+									diagnosisEngine.sessionData.getDiagnosisModel().getPossiblyFaultyStatements());
 						// Make an array and fill it at correct positions. Finally, create an array list from this one
 						Constraint[] constrArray = new Constraint[theConstraints.size()];
 						for (Constraint c : theConstraints) {
@@ -321,8 +324,8 @@ public class SpreadsheetsIndividual {
 							}
 						}
 						List<Constraint> finalConstraints = Arrays.asList(constrArray);
-						diagnosisEngine.sessionData.diagnosisModel.setPossiblyFaultyStatements(finalConstraints);
-	//					System.out.println("First element: " + diagnosisEngine.sessionData.diagnosisModel.getPossiblyFaultyStatements().get(0));
+						diagnosisEngine.sessionData.getDiagnosisModel().setPossiblyFaultyStatements(finalConstraints);
+	//					System.out.println("First element: " + diagnosisEngine.sessionData.getDiagnosisModel().getPossiblyFaultyStatements().get(0));
 
 
 					}
@@ -331,7 +334,7 @@ public class SpreadsheetsIndividual {
 
 
 				// Shuffle the constraints
-//				diagnosisEngine.sessionData.diagnosisModel.setPossiblyFaultyStatements(shuffledConstraints);
+//				diagnosisEngine.sessionData.getDiagnosisModel().setPossiblyFaultyStatements(shuffledConstraints);
 				//Make a call to the diagnosis engine.
 				long startTime = 0;
 				List<Diagnosis<Constraint>> diagnoses = null;
@@ -371,25 +374,25 @@ public class SpreadsheetsIndividual {
 
 
 				if (initFinished) {
-					diagEval.analyzeRun(diagnosisEngine, endTime - startTime);
+					diagEval.analyzeRun(endTime - startTime);
+					diagEval.engineTest(diagnosisEngine);
 
 					// record data for this run.
 					String loggingResult = "";
-					int varCount = diagnosisEngine.sessionData.diagnosisModel.getVariables().size();
+					int varCount = diagnosisEngine.sessionData.getDiagnosisModel().getVariables().size();
 					loggingResult += varCount + separator;
-					loggingResult += diagnosisEngine.sessionData.diagnosisModel
+					loggingResult += diagnosisEngine.sessionData.getDiagnosisModel()
 							.getConstraintNames().size() + separator;
-					loggingResult += diagnosisEngine.getPropagationCount()
-							+ separator;
-					loggingResult += diagnosisEngine.getCspSolvedCount() + separator;
+					loggingResult += getCounter(COUNTER_PROPAGATION).value();
+					loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 					loggingResult += (endTime - startTime) + separator;
-					loggingResult += diagnosisEngine.sessionData.config.searchDepth
+					loggingResult += diagnosisEngine.sessionData.getConfiguration().searchDepth
 							+ separator;
 
 					for (int j = 0; j < diagnoses.size(); j++) {
 						// loggingResult+="(Diag # " + j + ": " +
 						// Utilities.printConstraintList(diagnoses.get(j).getElements(),
-						// sessionData.diagnosisModel) + ") ";
+						// sessionData.getDiagnosisModel()) + ") ";
 					}
 					loggingResult += Utilities.printSortedDiagnoses(
 							diagnoses, ' ') + separator;
@@ -455,7 +458,7 @@ public class SpreadsheetsIndividual {
 			summary.append("Average Tree Width: " + diagEval.AvgTreeWidth + "\r\n");
 
 			// DJ TEST
-			summary.append("Average conflict reuse: " + diagEval.AvgConflictReuse + "\r\n");
+			summary.append("Average nodeLabel reuse: " + diagEval.AvgConflictReuse + "\r\n");
 
 			// Calculate average improvements
 //			double winLWP = 1 - (totalLevelW / totalSeq);
@@ -575,26 +578,26 @@ public class SpreadsheetsIndividual {
 	 * Writes the result of one diagnosis process to the log data structure
 	 * @param diagnosisEngine
 	 */
-//	void appendResultToLog(AbstractHSDagBuilder diagnosisEngine, long duration, List<Diagnosis> diagnoses, int threads){
+//	void appendResultToLog(AbstractHSDagEngine diagnosisEngine, long duration, List<Diagnosis> diagnoses, int threads){
 //		//record data for this run.
-//		ExquisiteAppXML appXML = diagnosisEngine.getSessionData().appXML;
-//		ExquisiteSession sessionData = diagnosisEngine.getSessionData();
+//		ExquisiteAppXML appXML = diagnosisEngine.getDiagnosisModel().appXML;
+//		ExcelExquisiteSession sessionData = diagnosisEngine.getDiagnosisModel();
 //		
 //		
 //		String loggingResult = "";
 //		int varCount = appXML.getInputs().size() + appXML.getInterims().size() + appXML.getOutputs().size();
 //		loggingResult += "" + 				varCount + separator;
-//		loggingResult += "" + 				sessionData.diagnosisModel.getConstraintNames().size() + separator;
+//		loggingResult += "" + 				sessionData.getDiagnosisModel().getConstraintNames().size() + separator;
 //		loggingResult += "" + 				diagnosisEngine.getPropagationCount() + separator;
 //		loggingResult += "" + 				diagnosisEngine.getCspSolvedCount() + separator;
 //		loggingResult += "" + 				duration + separator;
-//		loggingResult += "" + 				diagnosisEngine.getSessionData().config.searchDepth + separator;
+//		loggingResult += "" + 				diagnosisEngine.getDiagnosisModel().getConfiguration().searchDepth + separator;
 //		
 //		loggingResult += "" + 				Utilities.printSortedDiagnoses(diagnoses, ' ') + separator;
 //		
 //		String threadPoolContent = "" + threads;
 //		// The default engine is single threaded
-//		if (diagnosisEngine instanceof HSDagBuilder){
+//		if (diagnosisEngine instanceof HSDagEngine){
 //			threadPoolContent = "0";
 //		}
 //		loggingResult += "" + 				threadPoolContent + separator;

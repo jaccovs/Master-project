@@ -3,8 +3,8 @@ package tests.diagnosis;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.engines.common.ConstraintComparator;
-import org.exquisite.diagnosis.models.DAGNode;
 
 import java.util.*;
 
@@ -16,10 +16,10 @@ import java.util.*;
 public class MockNodeData {
 
     public Hashtable<String, Constraint> constraints = new Hashtable<String, Constraint>();
-    public List<DAGNode<Constraint>> graph = new ArrayList<>();
+    public List<Node<Constraint>> graph = new ArrayList<>();
     public List<List<Constraint>> knownConflicts = new ArrayList<List<Constraint>>();
-    public Hashtable<List<Constraint>, List<DAGNode<Constraint>>> conflictNodeLookup = new Hashtable<>();
-    public DAGNode<Constraint> rootNode;
+    public Hashtable<List<Constraint>, List<Node<Constraint>>> conflictNodeLookup = new Hashtable<>();
+    public Node<Constraint> rootNode;
 
     /**
      * @return a graph the same as used in Greiner's paper.
@@ -58,19 +58,19 @@ public class MockNodeData {
 		constraints.put("d", d);
 		
 		Constraint[] rootArray = {a,b};
-        DAGNode<Constraint> root = makeRoot(rootArray);
+        Node<Constraint> root = makeRoot(rootArray);
 
         Constraint[] n1Conflicts = {b, c};
-        DAGNode<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
+        Node<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
 
         Constraint[] n2Conflicts = {a, c};
-        DAGNode<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
+        Node<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
 
         Constraint[] n3Conflicts = {};
-        DAGNode<Constraint> n3 = makeNode("n3", n3Conflicts, n1, b);
+        Node<Constraint> n3 = makeNode("n3", n3Conflicts, n1, b);
 
         Constraint[] n4Conflicts = {b, d};
-        DAGNode<Constraint> n4 = makeNode("n4", n4Conflicts, n1, c);
+        Node<Constraint> n4 = makeNode("n4", n4Conflicts, n1, c);
     }
 
     /**
@@ -90,33 +90,33 @@ public class MockNodeData {
 		constraints.put("d", d);
 						
 		Constraint[] rootArray = {a,b};
-        DAGNode<Constraint> root = makeRoot(rootArray);
+        Node<Constraint> root = makeRoot(rootArray);
 
         Constraint[] n1Conflicts = {b, c};
-        DAGNode<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
+        Node<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
 
         Constraint[] n2Conflicts = {a, c};
-        DAGNode<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
+        Node<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
 
         Constraint[] n3Conflicts = {};
-        DAGNode<Constraint> n3 = makeNode("n3", n3Conflicts, n1, b);
+        Node<Constraint> n3 = makeNode("n3", n3Conflicts, n1, b);
         n2.addChild(n3, a);
 
         Constraint[] n4Conflicts = {b, d};
-        DAGNode<Constraint> n4 = makeNode("n4", n4Conflicts, n1, c);
+        Node<Constraint> n4 = makeNode("n4", n4Conflicts, n1, c);
 
         Constraint[] n5Conflicts = {};
-        DAGNode<Constraint> n5 = makeNode("n5", n5Conflicts, n2, c);
+        Node<Constraint> n5 = makeNode("n5", n5Conflicts, n2, c);
 
         Constraint[] n6Conflicts = {};
-        DAGNode<Constraint> n6 = makeNode("n6", n6Conflicts, n4, b);
+        Node<Constraint> n6 = makeNode("n6", n6Conflicts, n4, b);
 
         Constraint[] n7Conflicts = {b};
-        DAGNode<Constraint> n7 = makeNode("n7", n7Conflicts, n4, d);
+        Node<Constraint> n7 = makeNode("n7", n7Conflicts, n4, d);
     }
 
     /**
-	 * For testing parallel dag pre-check for duplicate node paths.
+	 * For testing parallel tree pre-check for duplicate node paths.
 	 */
 	private void makeDuplicatePathExample(){
 		IntegerVariable testVar = Choco.makeIntVar("testVar");
@@ -136,64 +136,64 @@ public class MockNodeData {
 						
 		//level 0
 		Constraint[] rootArray = {a,b,c};
-        DAGNode<Constraint> root = makeRoot(rootArray);
+        Node<Constraint> root = makeRoot(rootArray);
 
         //level 1
         Constraint[] n1Conflicts = {b, e};
-        DAGNode<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
+        Node<Constraint> n1 = makeNode("n1", n1Conflicts, root, a);
 
         Constraint[] n2Conflicts = {a, f};
-        DAGNode<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
+        Node<Constraint> n2 = makeNode("n2", n2Conflicts, root, b);
 
         Constraint[] n3Conflicts = {d, e};
-        DAGNode<Constraint> n3 = makeNode("n3", n3Conflicts, root, c);
+        Node<Constraint> n3 = makeNode("n3", n3Conflicts, root, c);
     }
 
     /**
-	 * Makes a DAGNode and configures that node as a root node.
-	 * @param conflict the conflict set for this root node
-	 * @return DAGNode set as root.
+	 * Makes a Node and configures that node as a root node.
+	 * @param conflict the nodeLabel set for this root node
+	 * @return Node set as root.
 	 */
-    private DAGNode<Constraint> makeRoot(Constraint[] conflict) {
-        DAGNode<Constraint> root = new DAGNode<Constraint>(new ArrayList<Constraint>(Arrays.asList(conflict)));
+    private Node<Constraint> makeRoot(Constraint[] conflict) {
+        Node<Constraint> root = new Node<Constraint>(new ArrayList<Constraint>(Arrays.asList(conflict)));
         root.nodeName = "root";
         graph.add(root);
-		knownConflicts.add(root.conflict);
-        List<DAGNode<Constraint>> nodes = new ArrayList<DAGNode<Constraint>>();
+		knownConflicts.add(root.nodeLabel);
+        List<Node<Constraint>> nodes = new ArrayList<Node<Constraint>>();
         nodes.add(root);
-        conflictNodeLookup.put(root.conflict, nodes);
+        conflictNodeLookup.put(root.nodeLabel, nodes);
 		rootNode = root;
 		return root;
 	}
 	
 	/**
-	 * Makes a (non-root) DAGNode
+	 * Makes a (non-root) Node
 	 * @param name    A name for the node (can be useful for printing, debugging).
-	 * @param conflict    The conflict set for this particular node. 
+	 * @param conflict    The nodeLabel set for this particular node.
 	 * @param parent    The parent of this node.
 	 * @param edge    The path label from the parent that points to this node.
-	 * @return A DAGNode that is the child of another node.
+	 * @return A Node that is the child of another node.
 	 */
-    private DAGNode<Constraint> makeNode(String name, Constraint[] conflict, DAGNode<Constraint> parent,
-                                         Constraint edge) {
-        DAGNode<Constraint> node = new DAGNode<Constraint>(parent, edge);
-        node.conflict = new ArrayList<Constraint>(Arrays.asList(conflict));
-        //System.out.println("Making node " + name + " with conflict size of: " + node.conflict.size());
+    private Node<Constraint> makeNode(String name, Constraint[] conflict, Node<Constraint> parent,
+									  Constraint edge) {
+        Node<Constraint> node = new Node<Constraint>(parent, edge);
+        node.nodeLabel = new ArrayList<Constraint>(Arrays.asList(conflict));
+        //System.out.println("Making node " + name + " with nodeLabel size of: " + node.nodeLabel.size());
 		node.nodeName = name;
 		Set<Constraint> set = new TreeSet<Constraint>(new ConstraintComparator());
 		set.addAll(parent.pathLabels);
 		node.pathLabels.addAll(set);
 		node.pathLabels.add(edge);
 		graph.add(node);
-		if (!node.conflict.isEmpty()){
-			knownConflicts.add(node.conflict);
+		if (!node.nodeLabel.isEmpty()){
+			knownConflicts.add(node.nodeLabel);
 
-            List<DAGNode<Constraint>> nodes = conflictNodeLookup.get(node.conflict);
+            List<Node<Constraint>> nodes = conflictNodeLookup.get(node.nodeLabel);
             if (nodes == null) {
-                nodes = new ArrayList<DAGNode<Constraint>>();
+                nodes = new ArrayList<Node<Constraint>>();
             }
             nodes.add(node);
-			conflictNodeLookup.put(node.conflict, nodes);
+			conflictNodeLookup.put(node.nodeLabel, nodes);
 		}
 		return node;
 	}

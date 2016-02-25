@@ -11,16 +11,15 @@ import evaluations.dxc.synthetic.model.DXCSystem;
 import evaluations.dxc.synthetic.model.DXCSystemDescription;
 import evaluations.dxc.synthetic.tools.DXCDiagnosisModelGenerator;
 import evaluations.dxc.synthetic.tools.DXCTools;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder.QuickXplainType;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.AbstractHSDagEngine.QuickXplainType;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain.SolverType;
 
 /**
  * Tests of DXC Synthetic Track
@@ -198,7 +197,7 @@ public class DXCSyntheticBenchmark extends AbstractEvaluation<Constraint> {
 		DXCScenario scenario = (DXCScenario)abstractScenario;
 
 
-		AbstractHSDagBuilder.USE_QXTYPE = QuickXplainType.QuickXplain;
+		AbstractHSDagEngine.USE_QXTYPE = QuickXplainType.QuickXplain;
 
 		// Create the diagnosis model
 		DXCSystemDescription sd = DXCTools.readSystemDescription(inputFileDirectory + scenario.inputFileName);
@@ -220,18 +219,18 @@ public class DXCSyntheticBenchmark extends AbstractEvaluation<Constraint> {
 		}
 
 		// Create the engine
-		ExquisiteSession sessionData = new ExquisiteSession(null,
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession(null,
 				null, new DiagnosisModel(diagModel));
 		// Do not try to find a better strategy for the moment
-		sessionData.config.searchStrategy = SearchStrategies.Default;
-		sessionData.config.maxDiagnoses = scenario.maxDiags;
+		sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
+		sessionData.getConfiguration().maxDiagnoses = scenario.maxDiags;
 
 		// With a value of -2 the maxDiagSize is set to the size of the actual error of the scenario
 		if (scenario.searchDepth == -2) {
-			sessionData.config.searchDepth = scn.getFaultyComponents().size();
+			sessionData.getConfiguration().searchDepth = scn.getFaultyComponents().size();
 		}
 		else {
-			sessionData.config.searchDepth = scenario.searchDepth;
+			sessionData.getConfiguration().searchDepth = scenario.searchDepth;
 		}
 
 		EngineType engineType = chooseEngineType(scenario, runConfiguration);
@@ -239,11 +238,11 @@ public class DXCSyntheticBenchmark extends AbstractEvaluation<Constraint> {
 
 		IDiagnosisEngine engine = EngineFactory.makeEngine(engineType, sessionData, runConfiguration.threads);
 
-		QuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
+		ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
 		if (runConfiguration.choco3) {
-			QuickXPlain.SOLVERTYPE = SolverType.Choco3;
+			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco3;
 		} else {
-			QuickXPlain.SOLVERTYPE = SolverType.Choco2;
+			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco2;
 		}
 
 		return engine;

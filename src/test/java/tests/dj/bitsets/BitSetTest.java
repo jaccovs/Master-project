@@ -5,7 +5,7 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
@@ -59,16 +59,16 @@ public class BitSetTest<T> {
 		list1.add(c1);  list1.add(c4); list1.add(c3);
 		list2.add(c2); list2.add(c3);
 		
-		BitSet bs1 = QuickXPlain.makeBitSet(allConstraints, list1);
-		BitSet bs2 = QuickXPlain.makeBitSet(allConstraints, list2);
+		BitSet bs1 = ConstraintsQuickXPlain.makeBitSet(allConstraints, list1);
+		BitSet bs2 = ConstraintsQuickXPlain.makeBitSet(allConstraints, list2);
 				
 		List<BitSet> knownBS = new ArrayList<BitSet>();
 		knownBS.add(bs2);
 		
-		boolean result = QuickXPlain.checkSetIsSubsetOfKnown(knownBS, bs1);
+		boolean result = ConstraintsQuickXPlain.checkSetIsSubsetOfKnown(knownBS, bs1);
 		System.out.println("Result: " + result);
 		
-		result = QuickXPlain.checkIsSupersetOfKnown(knownBS, bs1);
+		result = ConstraintsQuickXPlain.checkIsSupersetOfKnown(knownBS, bs1);
 		System.out.println("Result: " + result);
 
 		if (true) {
@@ -91,8 +91,8 @@ public class BitSetTest<T> {
 		List<String> someElements2 = new ArrayList<String>();
 		someElements2.add("D"); someElements2.add("C"); someElements2.add("B");
 
-		BitSet some1 = QuickXPlain.makeBitSet(allElements, someElements1);
-		BitSet some2 = QuickXPlain.makeBitSet(allElements, someElements2);
+		BitSet some1 = ConstraintsQuickXPlain.makeBitSet(allElements, someElements1);
+		BitSet some2 = ConstraintsQuickXPlain.makeBitSet(allElements, someElements2);
 	
 		System.out.println("Created the bitsets.");
 

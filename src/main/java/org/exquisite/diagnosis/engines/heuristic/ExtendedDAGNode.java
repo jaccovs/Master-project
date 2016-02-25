@@ -1,6 +1,6 @@
 package org.exquisite.diagnosis.engines.heuristic;
 
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.engines.tree.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author dietmar
  */
-public class ExtendedDAGNode<T> extends DAGNode<T> {
+public class ExtendedDAGNode<T> extends Node<T> {
 
 
     // Remember the open list of constraints to explore
@@ -35,7 +35,7 @@ public class ExtendedDAGNode<T> extends DAGNode<T> {
      */
     public ExtendedDAGNode(ExtendedDAGNode<T> dagnode) {
         super(dagnode);
-        this.constraintsToExplore = new ArrayList<>(dagnode.conflict);
+        this.constraintsToExplore = new ArrayList<>(dagnode.nodeLabel);
         this.examplesToCheck = new ArrayList<>(dagnode.examplesToCheck);
 //		System.out.println("Examples to check: " + this.examplesToCheck.size());
     }

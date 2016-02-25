@@ -1,36 +1,32 @@
 package org.exquisite.diagnosis.quickxplain.mergexplain;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.datamodel.DiagnosisModel;
 import org.exquisite.diagnosis.engines.common.SharedCollection;
 import org.exquisite.diagnosis.models.ConflictCheckingResult;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.tools.ListComparator;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.*;
 
 /**
  * Implementation of MergeXplain
  *
  * @author Thomas
  */
-public class MergeXplain<T> extends QuickXPlain<T> {
+public class MergeXplain<T> extends ConstraintsQuickXPlain<T> {
 
     public static ConflictSearchModes ConflictSearchMode = ConflictSearchModes.Least;
-
-    ListComparator<T> listComparator = new ListComparator<T>();
-    private int splittingConflicts;
-    private int conflicts;
 
     /**
      * set currentDiagnosisModel as a copy of SessionData tests.diagnosis model.
      *
      * @param sessionData
      */
-    public MergeXplain(ExquisiteSession sessionData, IDiagnosisEngine<T> diagnosisEngine) {
-        super(sessionData, diagnosisEngine);
+    public MergeXplain(DiagnosisModel<T> sessionData) {
+        super(sessionData);
     }
 
     /**
@@ -39,8 +35,6 @@ public class MergeXplain<T> extends QuickXPlain<T> {
     @Override
     public List<List<T>> findConflicts() throws DomainSizeException {
 //		System.out.println("findConflicts()");
-        splittingConflicts = 0;
-        conflicts = 0;
 
         List<List<T>> result = new ArrayList<>();
 
@@ -48,11 +42,11 @@ public class MergeXplain<T> extends QuickXPlain<T> {
 //			Debug.msg("checkConsistency = true.");
 //			return result;
 //		} else {
-        MergeXplainResult mxpResult = mergeXplain(this.currentDiagnosisModel.getPossiblyFaultyStatements(),
+        MergeXplainResult<T> mxpResult = mergeXplain(this.currentDiagnosisModel.getPossiblyFaultyStatements(),
                 this.currentDiagnosisModel.getCorrectStatements());
 
         result.addAll(mxpResult.Conflicts);
-//			System.out.println("Found " + result.size() + " conflict(s).");
+//			System.out.println("Found " + result.size() + " nodeLabel(s).");
 //		}
 
         // Release this guy
@@ -61,25 +55,20 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             this.constraintListener.release();
         }
 
-        if (diagnosisEngine != null) {
-            diagnosisEngine.incrementSearchesForConflicts();
-            diagnosisEngine.incrementMXPConflicts(conflicts);
-            diagnosisEngine.incrementMXPSplittingTechniqueConflicts(splittingConflicts);
-        }
+        incrementCounter(COUNTER_SEARCH_CONFLICTS);
 
         return result;
     }
 
     /**
-     * Variant of findConflicts() that notifies parent thread, when the first conflict was found
+     * Variant of findConflicts() that notifies parent thread, when the first nodeLabel was found
      */
     @Override
     public void findConflictsParallel(ConflictCheckingResult<T> result,
                                       SharedCollection<List<T>> knownConflicts)
             throws DomainSizeException {
 //		System.out.println("findConflictsParallel()");
-        splittingConflicts = 0;
-        conflicts = 0;
+
 
 
 //		if (checkConsistency() == true) {
@@ -95,7 +84,7 @@ public class MergeXplain<T> extends QuickXPlain<T> {
 
 
 //			result.addAll(mxpResult.Conflicts);
-//			System.out.println("Found " + result.size() + " conflict(s).");
+//			System.out.println("Found " + result.size() + " nodeLabel(s).");
 //		}
 
         // Release this guy
@@ -104,22 +93,19 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             this.constraintListener.release();
         }
 
-        if (diagnosisEngine != null) {
-            diagnosisEngine.incrementSearchesForConflicts();
-            diagnosisEngine.incrementMXPConflicts(conflicts);
-            diagnosisEngine.incrementMXPSplittingTechniqueConflicts(splittingConflicts);
-        }
+        incrementCounter(COUNTER_SEARCH_CONFLICTS);
+
 
 //		Debug.syncMsg("MXP: Finished.");
     }
 
-    private MergeXplainResult mergeXplain(
+    private MergeXplainResult<T> mergeXplain(
             List<T> possiblyFaultyStatements,
             List<T> correctStatements) throws DomainSizeException {
 
-        MergeXplainResult result = new MergeXplainResult();
+        MergeXplainResult<T> result = new MergeXplainResult<>();
 
-        // If all statements are consistent together, we cannot find a conflict here
+        // If all statements are consistent together, we cannot find a nodeLabel here
         List<T> allStatements = new ArrayList<T>(possiblyFaultyStatements);
         allStatements.addAll(correctStatements);
         if (isConsistent(allStatements)) {
@@ -127,7 +113,7 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             return result;
         }
 
-        // If we have only one possibly faulty statement, it has to be a conflict
+        // If we have only one possibly faulty statement, it has to be a nodeLabel
         if (possiblyFaultyStatements.size() == 1) {
             result.Conflicts.add(new ArrayList<T>(possiblyFaultyStatements));
             return result;
@@ -140,16 +126,17 @@ public class MergeXplain<T> extends QuickXPlain<T> {
                 possiblyFaultyStatements.subList(split, possiblyFaultyStatements.size()));
 
         // Recursion
-        MergeXplainResult r1 = mergeXplain(s1, correctStatements);
-        MergeXplainResult r2 = mergeXplain(s2, correctStatements);
+        MergeXplainResult<T> r1 = mergeXplain(s1, correctStatements);
+        MergeXplainResult<T> r2 = mergeXplain(s2, correctStatements);
 
         // Add found conflicts
         result.Conflicts.addAll(r1.Conflicts);
         result.Conflicts.addAll(r2.Conflicts);
 
-        splittingConflicts = result.Conflicts.size();
 
-//		System.out.println("Found " + result.Conflicts.size() + " conflict(s) with splitting technique.");
+        incrementCounter(COUNTER_MXP_SPLITTING, result.Conflicts.size());
+
+//		System.out.println("Found " + result.Conflicts.size() + " nodeLabel(s) with splitting technique.");
 
         // Search for conflicts in remaining constraints
         List<T> remainingConstraints = new ArrayList<T>(r1.ConflictFreeStatements);
@@ -163,7 +150,7 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             try {
                 List<T> conflict = findSingleConflict(correctStatements, kb2, kb2, kb1);
                 conflict.addAll(findSingleConflict(correctStatements, conflict, conflict, kb2));
-                //kb1.removeAll(conflict);
+                //kb1.removeAll(nodeLabel);
 
                 result.Conflicts.add(conflict);
 
@@ -197,23 +184,21 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             }
         }
         result.ConflictFreeStatements.addAll(remainingConstraints);
-
-        conflicts = result.Conflicts.size();
-
+        incrementCounter(COUNTER_MXP_CONFLICTS,result.Conflicts.size());
         return result;
     }
 
     /**
-     * Variant of mergeXplain() that notifies parent thread, when the first conflict was found
+     * Variant of mergeXplain() that notifies parent thread, when the first nodeLabel was found
      */
-    private MergeXplainResult mergeXplainParallel(
+    private MergeXplainResult<T> mergeXplainParallel(
             List<T> possiblyFaultyStatements,
-            List<T> correctStatements, ConflictCheckingResult endResult,
+            List<T> correctStatements, ConflictCheckingResult<T> endResult,
             SharedCollection<List<T>> knownConflicts) throws DomainSizeException {
 
-        MergeXplainResult result = new MergeXplainResult();
+        MergeXplainResult<T> result = new MergeXplainResult<>();
 
-        // If all statements are consistent together, we cannot find a conflict here
+        // If all statements are consistent together, we cannot find a nodeLabel here
         List<T> allStatements = new ArrayList<T>(possiblyFaultyStatements);
         allStatements.addAll(correctStatements);
         if (Thread.currentThread().isInterrupted()) {
@@ -225,19 +210,19 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             return result;
         }
 
-        // If we have only one possibly faulty statement, it has to be a conflict
+        // If we have only one possibly faulty statement, it has to be a nodeLabel
         if (possiblyFaultyStatements.size() == 1) {
             List<T> conflict = new ArrayList<T>(possiblyFaultyStatements);
             result.Conflicts.add(conflict);
             endResult.addConflict(conflict);
 //			if (endResult.conflicts.size() == 1) {
-//				Debug.syncMsg("MXP: Found first conflict.");
-            synchronized (QuickXPlain.ContinuingSync) {
+//				Debug.syncMsg("MXP: Found first nodeLabel.");
+            synchronized (ConstraintsQuickXPlain.ContinuingSync) {
                 knownConflicts.addItemListNoDups(conflict);
-                QuickXPlain.ContinuingSync.notifyAll();
+                ConstraintsQuickXPlain.ContinuingSync.notifyAll();
             }
 //			} else {
-//				knownConflicts.addItemListNoDups(conflict);
+//				knownConflicts.addItemListNoDups(nodeLabel);
 //			}
             return result;
         }
@@ -249,16 +234,16 @@ public class MergeXplain<T> extends QuickXPlain<T> {
                 possiblyFaultyStatements.subList(split, possiblyFaultyStatements.size()));
 
         // Recursion
-        MergeXplainResult r1 = mergeXplainParallel(s1, correctStatements, endResult, knownConflicts);
-        MergeXplainResult r2 = mergeXplainParallel(s2, correctStatements, endResult, knownConflicts);
+        MergeXplainResult<T> r1 = mergeXplainParallel(s1, correctStatements, endResult, knownConflicts);
+        MergeXplainResult<T> r2 = mergeXplainParallel(s2, correctStatements, endResult, knownConflicts);
 
         // Add found conflicts
         result.Conflicts.addAll(r1.Conflicts);
         result.Conflicts.addAll(r2.Conflicts);
 
-        splittingConflicts = result.Conflicts.size();
+        incrementCounter(COUNTER_MXP_SPLITTING, result.Conflicts.size());
 
-//		System.out.println("Found " + result.Conflicts.size() + " conflict(s) with splitting technique.");
+//		System.out.println("Found " + result.Conflicts.size() + " nodeLabel(s) with splitting technique.");
 
         // Search for conflicts in remaining constraints
         List<T> remainingConstraints = new ArrayList<T>(r1.ConflictFreeStatements);
@@ -277,18 +262,18 @@ public class MergeXplain<T> extends QuickXPlain<T> {
                 List<T> conflict = findSingleConflict(correctStatements, kb2, kb2, kb1);
                 conflict.addAll(findSingleConflict(correctStatements, conflict, conflict, kb2));
 
-                //kb1.removeAll(conflict);
+                //kb1.removeAll(nodeLabel);
 
                 result.Conflicts.add(conflict);
                 endResult.addConflict(conflict);
 //				if (endResult.conflicts.size() == 1) {
-                //				Debug.syncMsg("MXP: Found First conflict.");
-                synchronized (QuickXPlain.ContinuingSync) {
+                //				Debug.syncMsg("MXP: Found First nodeLabel.");
+                synchronized (ConstraintsQuickXPlain.ContinuingSync) {
                     knownConflicts.addItemListNoDups(conflict);
-                    QuickXPlain.ContinuingSync.notifyAll();
+                    ConstraintsQuickXPlain.ContinuingSync.notifyAll();
                 }
 //				} else {
-//					knownConflicts.addItemListNoDups(conflict);
+//					knownConflicts.addItemListNoDups(nodeLabel);
 //				}
 
                 switch (ConflictSearchMode) {
@@ -321,8 +306,7 @@ public class MergeXplain<T> extends QuickXPlain<T> {
             }
         }
         result.ConflictFreeStatements.addAll(remainingConstraints);
-
-        conflicts = result.Conflicts.size();
+        incrementCounter(COUNTER_MXP_CONFLICTS, result.Conflicts.size());
 
         return result;
     }

@@ -3,10 +3,9 @@ package org.exquisite.diagnosis.quickxplain.choco3;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.Variable;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.core.ISolver;
-import org.exquisite.diagnosis.models.DiagnosisModel;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
+import org.exquisite.core.ISolver;
+import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import solver.variables.IntVar;
 import solver.variables.VariableFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -32,12 +31,12 @@ public class Choco3FormulaSolver implements ISolver<Constraint> {
     // The tests.diagnosis model
     DiagnosisModel<Constraint> diagnosisModel;
 
-    // A handle to the calling QuickXPlain
-    QuickXPlain<Constraint> qx = null;
+    // A handle to the calling ConstraintsQuickXPlain
+    ConstraintsQuickXPlain<Constraint> qx = null;
 
     // Create things
     @Override
-    public void createModel(QuickXPlain<Constraint> qx, List<Constraint> constraints) {
+    public void createModel(ConstraintsQuickXPlain<Constraint> qx, List<Constraint> constraints) {
         this.solver = new solver.Solver();
         this.diagnosisModel = qx.currentDiagnosisModel;
         this.qx = qx;
@@ -46,7 +45,7 @@ public class Choco3FormulaSolver implements ISolver<Constraint> {
     }
 
     @Override
-    public boolean isFeasible(IDiagnosisEngine<Constraint> diagnosisEngine) {
+    public boolean isFeasible() {
         if (solver == null) {
             System.err.println("No solver defined in Choco3FormulaSolver");
             System.exit(0);
@@ -122,7 +121,7 @@ public class Choco3FormulaSolver implements ISolver<Constraint> {
     }
 
     @Override
-    public boolean isEntailed(IDiagnosisEngine<Constraint> diagnosisEngine, Set<Constraint> entailments) {
+    public boolean isEntailed(Set<Constraint> entailments) {
         throw new NotImplementedException();
     }
 

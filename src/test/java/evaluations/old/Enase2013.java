@@ -11,18 +11,18 @@ import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
 import evaluations.models.LoggingData;
 import evaluations.tools.PositiveTestCaseGenerator;
+import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.data.VariablesFactory;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.datamodel.TestCase;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;
 import org.exquisite.i8n.Culture;
@@ -34,13 +34,15 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.exquisite.core.measurements.MeasurementManager.*;
+
 /**
  * For generating data for the Enase2013 paper.
  */
 public class Enase2013 {
 
 	private static EngineType engineConfig = EngineType.HSDagStandardQX;//default setting.
-	private static int threadPoolSize = 4; //default threadpool size (for parallel dag engine).
+	private static int threadPoolSize = 4; //default threadpool size (for parallel tree engine).
 	/**
 	 * Name of the logfile where test data will be written to.
 	 */
@@ -70,7 +72,7 @@ public class Enase2013 {
 	
 	
 	/**
-	 * Optional constructor to specify different dag engine configuration.
+	 * Optional constructor to specify different tree engine configuration.
 	 * @param logfileName
 	 * @param maxSearchDepth
 	 * @param config
@@ -431,7 +433,7 @@ public class Enase2013 {
 		for (int i = 0; i < iterations; i++) {
 			try {
 				ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(xmlFilePath);
-				ExquisiteSession sessionData = new ExquisiteSession(appXML);
+				ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
 				ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 				Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 				VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -439,7 +441,7 @@ public class Enase2013 {
 				modelLoader.loadDiagnosisModelFromXML();
 
 				IDiagnosisEngine<Constraint> diagnosisEngine;
-				sessionData.config.searchStrategy = SearchStrategies.Default;
+				sessionData.getConfiguration().searchStrategy = SearchStrategies.Default;
 				System.out.println(" ----------> " + engineConfig);
 				diagnosisEngine = EngineFactory.makeEngine(engineConfig, sessionData, threadPoolSize);
 //				diagnosisEngine.setMaxSearchDepth(this.maxSearchDepth);
@@ -492,15 +494,15 @@ public class Enase2013 {
 				loggingResult += "N/A" + separator;
 				int varCount = appXML.getInputs().size() + appXML.getInterims().size() + appXML.getOutputs().size();
 				loggingResult += varCount + separator;
-				loggingResult += sessionData.diagnosisModel.getConstraintNames().size() + separator;
-				loggingResult += diagnosisEngine.getPropagationCount() + separator;
-				loggingResult += diagnosisEngine.getCspSolvedCount() + separator;
+				loggingResult += sessionData.getDiagnosisModel().getConstraintNames().size() + separator;
+				loggingResult += getCounter(COUNTER_PROPAGATION).value();
+				loggingResult += getCounter(COUNTER_CSP_SOLUTIONS).value() + separator;
 				loggingResult += duration + separator;
 				loggingResult += this.maxSearchDepth + separator;
 				loggingResult += "N/A" + separator;
 
 				for (int j = 0; j < diagnoses.size(); j++) {
-//					loggingResult+="(Diag # " + j + ": " + Utilities.printConstraintList(diagnoses.get(j).getElements(), sessionData.diagnosisModel) + ") ";
+//					loggingResult+="(Diag # " + j + ": " + Utilities.printConstraintList(diagnoses.get(j).getElements(), sessionData.getDiagnosisModel()) + ") ";
 				}
 				loggingResult += Utilities.printSortedDiagnoses(diagnoses, ' ');
 
@@ -526,7 +528,7 @@ public class Enase2013 {
 		final String appXMLFile = ".\\experiments\\spreadsheetsbenchmark\\karinscorpus_VDEPPreserve_TC_no_division.xml";
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(appXMLFile);
 
-		ExquisiteSession sessionData = new ExquisiteSession(appXML);
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		Dictionary<String, IntegerExpressionVariable> variablesMap = new Hashtable<String, IntegerExpressionVariable>();
 		VariablesFactory varFactory = new VariablesFactory(variablesMap);
@@ -534,7 +536,7 @@ public class Enase2013 {
 		modelLoader.loadDiagnosisModelFromXML();
 
 		CPSolver solver = new CPSolver();
-		CPModel cpModel = makeCPModel(sessionData.diagnosisModel);
+		CPModel cpModel = makeCPModel(sessionData.getDiagnosisModel());
 
 
 
@@ -596,7 +598,7 @@ public class Enase2013 {
 		}*/
 
 		//example constraints
-		Example<Constraint> example = diagModel.getPositiveExamples().get(0);
+		Example<Constraint> example = diagModel.getConsistentExamples().get(0);
 		for (int i = 0; i < example.constraints.size(); i++) {
 			Constraint c = example.constraints.get(i);
 			model.addConstraint(c);

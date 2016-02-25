@@ -1,6 +1,6 @@
 package org.exquisite.diagnosis.sfl;
 
-import org.exquisite.diagnosis.interactivity.partitioning.scoring.Rounding;
+import org.exquisite.core.partitioning.scoring.Rounding;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

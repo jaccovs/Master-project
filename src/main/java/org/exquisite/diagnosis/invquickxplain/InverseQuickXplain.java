@@ -1,9 +1,8 @@
 package org.exquisite.diagnosis.invquickxplain;
 
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.IDiagnosisEngine;
+import org.exquisite.datamodel.DiagnosisModel;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +12,9 @@ import java.util.List;
  *
  * @author Thomas
  */
-public class InverseQuickXplain<T> extends QuickXPlain<T> {
-    public InverseQuickXplain(ExquisiteSession<T> sessionData,
-                              IDiagnosisEngine<T> diagnosisEngine) {
-        super(sessionData, diagnosisEngine);
+public class InverseQuickXplain<T> extends ConstraintsQuickXPlain<T> {
+    public InverseQuickXplain(DiagnosisModel<T> sessionData) {
+        super(sessionData);
     }
 
     @Override

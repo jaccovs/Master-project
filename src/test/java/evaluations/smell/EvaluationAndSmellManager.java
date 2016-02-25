@@ -4,7 +4,6 @@ import choco.kernel.model.constraints.Constraint;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.diagnosis.ranking.smell.Config;
 import org.exquisite.diagnosis.ranking.smell.SmellIdentification;
@@ -125,14 +124,14 @@ public class EvaluationAndSmellManager {
 		ConstraintsFactory.PRUNE_IRRELEVANT_CELLS = pruningmode != pruningMode.off;
 		for (int i = 0; i < iterations; i++) {
 			// Create the engine
-			AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder) EngineFactory
+			AbstractHSDagEngine diagnosisEngine = (AbstractHSDagEngine) EngineFactory
 					.makeEngineFromXMLFile(engineType, fullInputFilename,
 							EvaluationAndSmellManager.PARALLEL_THREADS);
 
 			// Set the search depth
 			diagnosisEngine
 					.setSearchDepth(EvaluationAndSmellManager.SEARCH_DEPTH);
-			diagnosisEngine.getSessionData().config.searchDepth = EvaluationAndSmellManager.SEARCH_DEPTH;
+			diagnosisEngine.getDiagnosisModel().getConfiguration().searchDepth = EvaluationAndSmellManager.SEARCH_DEPTH;
 
 			// Make a call to the diagnosis engine.
 			List<Diagnosis<Constraint>> diagnoses = null;

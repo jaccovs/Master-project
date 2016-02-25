@@ -3,17 +3,19 @@ package tests.diagnosis;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteGraph;
-import org.exquisite.datamodel.ExquisiteSession;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.engines.ParallelHSDagBuilder;
+import org.exquisite.diagnosis.engines.ParallelHSDagEngine;
 import org.exquisite.diagnosis.engines.common.NodeUtilities;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.tools.Utilities;
 
 import java.util.List;
+
+import static org.exquisite.core.measurements.MeasurementManager.getCounter;
 
 public class ParallelDAGTest {
 
@@ -28,12 +30,12 @@ public class ParallelDAGTest {
 	 */
 	public void run() {
 		try {
-			ExquisiteSession sessionData = new ExquisiteSession();
-			sessionData.diagnosisModel = defineMiniModel();
+			ExcelExquisiteSession sessionData = new ExcelExquisiteSession();
+			sessionData.getDiagnosisModel() = defineMiniModel();
 			sessionData.graph = new ExquisiteGraph<String>();
 			
 			System.out.println("Created the model with examples");
-			ParallelHSDagBuilder engine = (ParallelHSDagBuilder) EngineFactory.makeParaDagEngineStandardQx(sessionData, 4);
+			ParallelHSDagEngine engine = (ParallelHSDagEngine) EngineFactory.makeParaDagEngineStandardQx(sessionData, 4);
 //			engine.setMaxSearchDepth(-1);			
 //			engine.setMaxDiagnoses(-1);
 						
@@ -42,14 +44,14 @@ public class ParallelDAGTest {
 			for (int i = 0; i < diagnoses.size(); i++) 
 			{
 				System.out.println("-- Diagnosis #" + i);
-				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.diagnosisModel));
+				System.out.println("    " + Utilities.printConstraintList((diagnoses.get(i).getElements()), sessionData.getDiagnosisModel()));
 				System.out.println("--");
 			}
 			//
 			
-			System.out.println("#cspsolved: " + engine.getCspSolvedCount());
-			System.out.println("#propagations: " + engine.getPropagationCount());
-			System.out.println("#solver calls: " + engine.getSolverCalls());
+			System.out.println("#cspsolved: " + getCounter("csp.solved"));
+			System.out.println("#propagations: " + getCounter("propagation.count").value());
+			System.out.println("#solver calls: " + getCounter("solver.calls").value());
 			//*/
 			
 			isConstraintSetContainedInListTest();
@@ -75,7 +77,7 @@ public class ParallelDAGTest {
 		exTestExample.addConstraint(Choco.eq(a2, 5), "a2=5");
 		exTestExample.addConstraint(Choco.eq(b1, 8), "b1=8");
 
-		model.getPositiveExamples().add(exTestExample);		
+		model.getConsistentExamples().add(exTestExample);
 		return model;
 	}	
 	
@@ -84,7 +86,7 @@ public class ParallelDAGTest {
 		
 		System.out.println("BEFORE DUPLICATE CHECK.");
 		NodeUtilities.traverseNode(mockNodeData.rootNode, mockNodeData.constraints);
-		ParallelHSDagBuilder.checkForDuplicatePaths(mockNodeData.graph);
+		ParallelHSDagEngine.checkForDuplicatePaths(mockNodeData.graph);
 		System.out.println("AFTER DUPLICATE CHECK.");
 		NodeUtilities.traverseNode(mockNodeData.rootNode, mockNodeData.constraints);
 	}

@@ -3,10 +3,10 @@ package tests.hierarchical;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.engines.common.ConstraintComparator;
 import org.exquisite.diagnosis.models.Diagnosis;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.models.Example;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 
@@ -45,10 +45,10 @@ public class HierarchicalTest {
 	 * @throws Exception
 	 */
 	public void run() throws Exception {
-		ExquisiteSession<Constraint> sessionData = new ExquisiteSession<>();
-		sessionData.diagnosisModel = new DiagnosisModel<Constraint>();
+		ExcelExquisiteSession<Constraint> sessionData = new ExcelExquisiteSession<>();
+		sessionData.getDiagnosisModel() = new DiagnosisModel<Constraint>();
 
-		Hierarchy<Constraint> h = defineHierarchyAndProblem(sessionData.diagnosisModel);
+		Hierarchy<Constraint> h = defineHierarchyAndProblem(sessionData.getDiagnosisModel());
 //		h.printHierarchy();
 		runHierarchicalDiagnosis(sessionData, h);
 	}
@@ -59,9 +59,9 @@ public class HierarchicalTest {
 	 * @param model
 	 * @param h
 	 */
-	public void runHierarchicalDiagnosis(ExquisiteSession<Constraint> sessionData, Hierarchy<Constraint> h) {
+	public void runHierarchicalDiagnosis(ExcelExquisiteSession<Constraint> sessionData, Hierarchy<Constraint> h) {
 			
-		HierarchicalHSDagBuilder dagBuilder = new HierarchicalHSDagBuilder(sessionData);
+		HierarchicalHSDagEngine dagBuilder = new HierarchicalHSDagEngine(sessionData);
 		dagBuilder.setHierarchy(h);
 		
 		
@@ -85,7 +85,7 @@ public class HierarchicalTest {
 				List<Constraint> cts = (d.getElements());
 				System.out.print("[");
 				for (Constraint c : cts) {
-					System.out.print( sessionData.diagnosisModel.getConstraintName(c) + " ");
+					System.out.print( sessionData.getDiagnosisModel().getConstraintName(c) + " ");
 				}
 				System.out.println("]");
 			}
@@ -131,7 +131,7 @@ public class HierarchicalTest {
 		Example<Constraint> e1 = new Example<>();
 		e1.addConstraint(Choco.eq(v1,2), "example1-constraint");
 		posExamples.add(e1);
-		model.setPositiveExamples(posExamples);
+		model.setConsistentExamples(posExamples);
 		
 		
 		// Set up the hierarchy

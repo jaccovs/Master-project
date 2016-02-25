@@ -33,7 +33,7 @@ public class SolutionReuse {
         for (Map<String, Integer> knownSol : knownSolutions) {
             if (solutionConsistent(cpmodel, knownSol)) {
 //				System.out.println("-reuse");
-                QuickXPlain.reuseCount++;
+                ConstraintsQuickXPlain.reuseCount++;
                 return true;
             }
         }
@@ -133,7 +133,7 @@ public class SolutionReuse {
 			}
 		}
 		if (!alreadyThere) {
-			//FIXME - the static property "knownSolutions" is missing from the copy AbstractHSDagBuilder currently in svn.
+			//FIXME - the static property "knownSolutions" is missing from the copy AbstractHSDagEngine currently in svn.
 			knownSolutions.add(newSolution);
 //			System.out.println("Store solution: Stored solution with number: " + knownSolutions.size());
 //			System.out.println(newSolution);

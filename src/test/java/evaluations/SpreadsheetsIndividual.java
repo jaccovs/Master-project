@@ -10,10 +10,9 @@ import evaluations.configuration.StdScenario;
 import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.diagnosis.EngineFactory;
-import org.exquisite.diagnosis.IDiagnosisEngine;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain;
-import org.exquisite.diagnosis.quickxplain.QuickXPlain.SolverType;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain;
+import org.exquisite.diagnosis.quickxplain.ConstraintsQuickXPlain.SolverType;
 
 /**
  * Evaluation for the individual spreadsheet files.
@@ -187,14 +186,14 @@ public class SpreadsheetsIndividual extends AbstractEvaluation<Constraint> {
                 fullInputFilename,
                 runConfiguration.threads);
 
-        if (iDiagnosisEngine instanceof AbstractHSDagBuilder) {
-            AbstractHSDagBuilder diagnosisEngine = (AbstractHSDagBuilder)
+        if (iDiagnosisEngine instanceof AbstractHSDagEngine) {
+            AbstractHSDagEngine diagnosisEngine = (AbstractHSDagEngine)
                     iDiagnosisEngine;
 
             // Set the search depth
             diagnosisEngine.setSearchDepth(scenario.searchDepth);
-            diagnosisEngine.getSessionData().config.searchDepth = scenario.searchDepth;
-            diagnosisEngine.getSessionData().config.maxDiagnoses = scenario.maxDiags;
+            diagnosisEngine.getDiagnosisModel().getConfiguration().searchDepth = scenario.searchDepth;
+            diagnosisEngine.getDiagnosisModel().getConfiguration().maxDiagnoses = scenario.maxDiags;
             
             // TS: TEST!!!!!!!!
     		
@@ -208,11 +207,11 @@ public class SpreadsheetsIndividual extends AbstractEvaluation<Constraint> {
 //            }
 
             if (runConfiguration.choco3) {
-    			QuickXPlain.SOLVERTYPE = SolverType.Choco3;
+    			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco3;
     		} else {
-    			QuickXPlain.SOLVERTYPE = SolverType.Choco2;
+    			ConstraintsQuickXPlain.SOLVERTYPE = SolverType.Choco2;
     		}
-            QuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
+            ConstraintsQuickXPlain.ARTIFICIAL_WAIT_TIME = scenario.waitTime;
             return diagnosisEngine;
         }
 

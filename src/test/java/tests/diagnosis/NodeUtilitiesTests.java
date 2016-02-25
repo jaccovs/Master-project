@@ -1,8 +1,8 @@
 package tests.diagnosis;
 
 import choco.kernel.model.constraints.Constraint;
+import org.exquisite.core.engines.tree.Node;
 import org.exquisite.diagnosis.engines.common.NodeUtilities;
-import org.exquisite.diagnosis.models.DAGNode;
 import org.exquisite.tools.Debug;
 import org.exquisite.tools.Utilities;
 
@@ -47,9 +47,9 @@ public class NodeUtilitiesTests {
 		Debug.msg("\napplyNodeClosingRulesTest");
 		Debug.msg("---------------------");
 		MockNodeData mockNodeData = MockNodeData.greinerExample();
-		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
-		DAGNode<Constraint> n6 = testGraph.get(6);
-		List<DAGNode<Constraint>> diagnosisNodes = new ArrayList<>();
+		List<Node<Constraint>> testGraph = mockNodeData.graph;
+		Node<Constraint> n6 = testGraph.get(6);
+		List<Node<Constraint>> diagnosisNodes = new ArrayList<>();
 		diagnosisNodes.add(testGraph.get(3));
 		diagnosisNodes.add(testGraph.get(5));
 		Debug.msg("Node " + n6.nodeName + " should be closed after node closing rules are applied:");
@@ -65,12 +65,12 @@ public class NodeUtilitiesTests {
 		Debug.msg("---------------------");
 		MockNodeData mockNodeData = MockNodeData.greinerExample();	
 		
-		//new conflict  { b } is a subset of root nodes set {a , b} so the root node should have its 
-		//conflict set replaced and any subsequent redundant edges pruned.
+		//new nodeLabel  { b } is a subset of root nodes set {a , b} so the root node should have its
+		//nodeLabel set replaced and any subsequent redundant edges pruned.
 		List<Constraint> newConflict = new ArrayList<Constraint>();
 		newConflict.add(mockNodeData.constraints.get("b"));
 
-		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
+		List<Node<Constraint>> testGraph = mockNodeData.graph;
 		Debug.msg("");
 		Debug.msg("BEFORE PRUNE:");		
 		NodeUtilities.traverseNode(testGraph.get(0), mockNodeData.constraints);
@@ -88,15 +88,15 @@ public class NodeUtilitiesTests {
 		Debug.msg("\ncheckForExistingNodeTest");
 		Debug.msg("---------------------");
 		MockNodeData mockNodeData = MockNodeData.nodeReuseExample();
-		List<DAGNode<Constraint>> testGraph = mockNodeData.graph;
-		DAGNode<Constraint> n2 = testGraph.get(2);
+		List<Node<Constraint>> testGraph = mockNodeData.graph;
+		Node<Constraint> n2 = testGraph.get(2);
 		
 		Debug.msg("Source graph to use:");
 		NodeUtilities.traverseNode(testGraph.get(0), mockNodeData.constraints);
 		
 		Debug.msg("Checking for existing nodes to use as children for node: " + n2.nodeName);
 		
-		for (Constraint conflict : n2.conflict ){
+		for (Constraint conflict : n2.nodeLabel){
 			
 			List<Constraint> newPathLabelSet = new ArrayList<Constraint>();
 			newPathLabelSet.addAll(n2.pathLabels);
@@ -109,7 +109,7 @@ public class NodeUtilitiesTests {
 			}
 			System.out.println("]");
 
-			DAGNode<Constraint> node = NodeUtilities.checkForExistingNode(newPathLabelSet, testGraph);
+			Node<Constraint> node = NodeUtilities.checkForExistingNode(newPathLabelSet, testGraph);
 			String result = (node == null) ? "    No existing node found, will need to make a new one." : "    Node with name of " + node.nodeName + " can be reused.";
 			Debug.msg(result);
 		}	
@@ -124,7 +124,7 @@ public class NodeUtilitiesTests {
 		Debug.msg("---------------------");
 		MockNodeData mockNodeData = MockNodeData.greinerExample();
 
-		DAGNode<Constraint> testNode1 = new DAGNode<>(new ArrayList<>());
+		Node<Constraint> testNode1 = new Node<>(new ArrayList<>());
 		testNode1.nodeName = "testNode1";
 		testNode1.pathLabels = new ArrayList<>();
 		testNode1.pathLabels.addAll(mockNodeData.constraints.values());

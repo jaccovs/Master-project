@@ -14,7 +14,7 @@ import org.exquisite.data.ConstraintsFactory;
 import org.exquisite.data.DiagnosisModelLoader;
 import org.exquisite.datamodel.ExquisiteAppXML;
 import org.exquisite.datamodel.ExquisiteGraph;
-import org.exquisite.datamodel.ExquisiteSession;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.datamodel.ExquisiteValueBound;
 import org.exquisite.i8n.CultureInfo;
 import org.exquisite.i8n.en.gb.EnglishGB;
@@ -81,7 +81,7 @@ public class Choco3Tests {
 		
 		// Do all the default stuff
 		ExquisiteAppXML appXML = ExquisiteAppXML.parseToAppXML(testfile);
-		ExquisiteSession sessionData = new ExquisiteSession(appXML);
+		ExcelExquisiteSession sessionData = new ExcelExquisiteSession(appXML);
 		ConstraintsFactory conFactory = new ConstraintsFactory(sessionData);
 		DiagnosisModelLoader modelLoader = new DiagnosisModelLoader(sessionData, null, conFactory);
 		System.out.println("Loading from file done");
@@ -95,10 +95,10 @@ public class Choco3Tests {
 		this.max = (int)defaultValueBound.getUpper();
 		
 		//Now add all the variables to the diagnosis model.
-//		sessionData.diagnosisModel.getVariables().addAll(varsWithGlobalValueBounds);
-//		sessionData.diagnosisModel.getVariables().addAll(inputVariables);
-//		sessionData.diagnosisModel.getVariables().addAll(interimVariables);
-//		sessionData.diagnosisModel.getVariables().addAll(outputVariables);
+//		sessionData.getDiagnosisModel().getVariables().addAll(varsWithGlobalValueBounds);
+//		sessionData.getDiagnosisModel().getVariables().addAll(inputVariables);
+//		sessionData.getDiagnosisModel().getVariables().addAll(interimVariables);
+//		sessionData.getDiagnosisModel().getVariables().addAll(outputVariables);
 		
 		//Build a graph representation of the dependencies between the variables.
 		// the graph

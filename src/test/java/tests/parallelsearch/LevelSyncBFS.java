@@ -3,7 +3,7 @@ package tests.parallelsearch;
 import choco.Choco;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.model.variables.integer.IntegerVariable;
-import org.exquisite.diagnosis.models.DAGNode;
+import org.exquisite.core.engines.tree.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,21 +45,21 @@ public class LevelSyncBFS {
 	/**
 	 * Run the demo...
 	 * 
-	 * Create a root node with some artificial conflict.
+	 * Create a root node with some artificial nodeLabel.
 	 * Expand the root node until max search depth is reached.
 	 */
 	public void run(){
-		//create root node with an arbitrary conflict from Mock qx call.
+		//create root node with an arbitrary nodeLabel from Mock qx call.
 		MockQxSearch mockQx = new MockQxSearch();
 		List<Constraint> rootConflict = mockQx.getRootConflict();
-		DAGNode<Constraint> root = new DAGNode<Constraint>(rootConflict);
+		Node<Constraint> root = new Node<Constraint>(rootConflict);
 		root.nodeLevel = 0;
 		root.nodeName = "root";
 		
 		//add root node to list of nodes to expand...
-		List<DAGNode<Constraint>> nodesToExpand = new ArrayList<DAGNode<Constraint>>();
+		List<Node<Constraint>> nodesToExpand = new ArrayList<Node<Constraint>>();
 		nodesToExpand.add(root);		
-		currentLevelEdgeCount = root.conflict.size();
+		currentLevelEdgeCount = root.nodeLabel.size();
 		
 		//begin node expansion				
 		this.expandNodes(nodesToExpand);
@@ -75,7 +75,7 @@ public class LevelSyncBFS {
 	 * Uses CountDownLatch to block the program continuing until all nodes for a given level
 	 * have been expanded.
 	 */
-	public void expandNodes(List<DAGNode<Constraint>> nodesToExpand) {
+	public void expandNodes(List<Node<Constraint>> nodesToExpand) {
 		System.out.println("START NODE EXPANSION...");
 		//pool of available threads for node expansion workers
 		ExecutorService threadPool = Executors.newFixedThreadPool(MAX_THREAD_POOL_SIZE);
@@ -83,15 +83,15 @@ public class LevelSyncBFS {
 			//a barrier to enforce only nodes of a given level are expanded.
 			CountDownLatch barrier = new CountDownLatch(currentLevelEdgeCount);
 			//list caching each node that is expanded.
-			List<DAGNode<Constraint>> expandedNodes = new ArrayList<DAGNode<Constraint>>();
+			List<Node<Constraint>> expandedNodes = new ArrayList<Node<Constraint>>();
 			//do bfs...
 			while (!nodesToExpand.isEmpty()){
 				//remove node from queue
-				DAGNode<Constraint> node = nodesToExpand.remove(0);
+				Node<Constraint> node = nodesToExpand.remove(0);
 				//expand the node
 				if (node.nodeLevel < MAX_SEARCH_DEPTH){
 					//threadPool.execute(new ExpansionWorker(node, barrier));				
-					for (Constraint label : node.conflict){		
+					for (Constraint label : node.nodeLabel){
 						threadPool.execute(new EdgeWorker(node, label, barrier));
 					}
 					expandedNodes.add(node);
@@ -117,11 +117,11 @@ public class LevelSyncBFS {
 		System.out.println("END OF NODE EXPANSION.");
 	}
 
-	private int calculateEdgeLevelCount(List<DAGNode<Constraint>> nodes) {
+	private int calculateEdgeLevelCount(List<Node<Constraint>> nodes) {
 		int result = 0;
 
-		for (DAGNode<Constraint> node : nodes) {
-			result += node.conflict.size();
+		for (Node<Constraint> node : nodes) {
+			result += node.nodeLabel.size();
 		}
 		
 		return result;
@@ -132,10 +132,10 @@ public class LevelSyncBFS {
 	 * @param visitedNodes - nodes which have been expanded and may have new child nodes.
 	 * @param nodesToExpand - the shared list where nodes that are to be expanded are queued.
 	 */
-	private void queueNonVisitedNodes(List<DAGNode<Constraint>> visitedNodes, List<DAGNode<Constraint>> nodesToExpand) {
-		for (DAGNode<Constraint> node : visitedNodes) {
+	private void queueNonVisitedNodes(List<Node<Constraint>> visitedNodes, List<Node<Constraint>> nodesToExpand) {
+		for (Node<Constraint> node : visitedNodes) {
 			if (!node.children.isEmpty()){
-				Enumeration<DAGNode<Constraint>> enumeration = node.children.elements();
+				Enumeration<Node<Constraint>> enumeration = node.children.elements();
 				while(enumeration.hasMoreElements()){
 					nodesToExpand.add(enumeration.nextElement());
 				}
@@ -147,7 +147,7 @@ public class LevelSyncBFS {
 	 * just a util for printing the resulting node graph to console window.
 	 * @param targetNode
 	 */
-	private void traverseNode(DAGNode<Constraint> targetNode)
+	private void traverseNode(Node<Constraint> targetNode)
 	{
 		final String indent = "    ";
 		String nodeMessage = "";
@@ -159,11 +159,11 @@ public class LevelSyncBFS {
 		
 		nodeMessage+=targetNode.nodeName;
 		System.out.println(nodeMessage);
-		if (targetNode.conflict != null)
+		if (targetNode.nodeLabel != null)
 		{
-			for(Constraint c : targetNode.conflict)
+			for(Constraint c : targetNode.nodeLabel)
 			{
-				DAGNode<Constraint> child = targetNode.children.get(c);
+				Node<Constraint> child = targetNode.children.get(c);
 				if(child!=null)
 				{
 					traverseNode(child);
@@ -176,11 +176,11 @@ public class LevelSyncBFS {
 
 class EdgeWorker extends Thread{
 	MockQxSearch search = new MockQxSearch();
-	DAGNode<Constraint> parent;
+	Node<Constraint> parent;
 	Constraint edgeLabel;
 	CountDownLatch cdl;
 
-	public EdgeWorker(DAGNode<Constraint> parent, Constraint edgeLabel, CountDownLatch cdl) {
+	public EdgeWorker(Node<Constraint> parent, Constraint edgeLabel, CountDownLatch cdl) {
 		this.parent = parent;
 		this.edgeLabel = edgeLabel;
 		this.cdl = cdl;
@@ -190,9 +190,9 @@ class EdgeWorker extends Thread{
 		List<Constraint> constraintsToIgnore = new ArrayList<Constraint>(parent.pathLabels);
 		constraintsToIgnore.add(edgeLabel);
 		List<Constraint> conflict = search.findConflict(constraintsToIgnore);			
-		System.out.println("conflict size = " + conflict.size());
-		DAGNode<Constraint> childNode = new DAGNode<Constraint>(parent, edgeLabel);
-		childNode.conflict = conflict;			
+		System.out.println("nodeLabel size = " + conflict.size());
+		Node<Constraint> childNode = new Node<Constraint>(parent, edgeLabel);
+		childNode.nodeLabel = conflict;
 		parent.children.put(edgeLabel, childNode);
 		childNode.nodeLevel = parent.nodeLevel + 1;
 		childNode.nodeName = "n" + childNode.nodeLevel + "_" +  cdl.getCount();
@@ -203,18 +203,18 @@ class EdgeWorker extends Thread{
 
 /**
  * Expands a target node by creating a new child node for each label of the targe nodes
- * conflict set.
+ * nodeLabel set.
  * 
  * @author David 
  */
 class ExpansionWorker extends Thread{
 	
 	MockQxSearch search = new MockQxSearch();
-	DAGNode<Constraint> nodeToExpand;
+	Node<Constraint> nodeToExpand;
 	int nodeNamePostfix = 0;
 	CountDownLatch cdl;
 
-	public ExpansionWorker(DAGNode<Constraint> node, CountDownLatch cdl) {
+	public ExpansionWorker(Node<Constraint> node, CountDownLatch cdl) {
 		this.nodeToExpand = node;
 		this.cdl = cdl;				
 	}
@@ -222,14 +222,14 @@ class ExpansionWorker extends Thread{
 	@Override
 	public void run(){		
 		System.out.println("    Expanding node: " + nodeToExpand.nodeName);
-		for (Constraint label : nodeToExpand.conflict){				
+		for (Constraint label : nodeToExpand.nodeLabel){
 			List<Constraint> constraintsToIgnore = new ArrayList<Constraint>(nodeToExpand.pathLabels);
 			constraintsToIgnore.add(label);
 			List<Constraint> conflict = search.findConflict(constraintsToIgnore);
 
-			DAGNode<Constraint> childNode = new DAGNode<Constraint>(nodeToExpand, label);
+			Node<Constraint> childNode = new Node<Constraint>(nodeToExpand, label);
 			
-			childNode.conflict = conflict;			
+			childNode.nodeLabel = conflict;
 			nodeToExpand.children.put(label, childNode);
 			childNode.nodeLevel = nodeToExpand.nodeLevel + 1;
 			childNode.nodeName = "n" + childNode.nodeLevel + "_" +  nodeNamePostfix;
@@ -250,7 +250,7 @@ class ExpansionWorker extends Thread{
 
 
 /**
- * Mocking a solver/qx search... generates fake conflict set...
+ * Mocking a solver/qx search... generates fake nodeLabel set...
  * @author David
  */
 class MockQxSearch{	
@@ -281,7 +281,7 @@ class MockQxSearch{
 	}
 	
 	/**
-	 * Make an arbitrary conflict set for root node.
+	 * Make an arbitrary nodeLabel set for root node.
 	 * @return
 	 */
 	public List<Constraint> getRootConflict(){
@@ -292,14 +292,14 @@ class MockQxSearch{
 		return result;		
 	}
 	
-	//just returns two constraints from collection to simulate a conflict set.
+	//just returns two constraints from collection to simulate a nodeLabel set.
 	public List<Constraint> findConflict(List<Constraint> pathLabels){
 		//get a copy of the constraint list
 		List<Constraint> copy = new ArrayList<Constraint>(constraints);
 		//remove constraints in list that are in the nodes path
 		copy.removeAll(pathLabels);
 		
-		//return 2 randomly selected constraints from remaining list to simulate conflict set.
+		//return 2 randomly selected constraints from remaining list to simulate nodeLabel set.
 		Collections.shuffle(copy);		
 		List<Constraint> result = new ArrayList<Constraint>();
 		result.add(copy.get(0));

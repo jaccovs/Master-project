@@ -119,7 +119,7 @@ public class ModelReader extends DefaultHandler {
 	/**
 	 * Creating a tabular constraint
 	 * @param r the relation
-	 * @return the conflict
+	 * @return the nodeLabel
 	 */
 	public void createConstraintsFromRelation(CPModel cpmodel, Map<String, Relation> rel, boolean feasiblePairs ){
 		

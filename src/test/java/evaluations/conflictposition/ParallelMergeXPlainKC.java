@@ -1,8 +1,7 @@
 package evaluations.conflictposition;
 
 import choco.kernel.model.constraints.Constraint;
-import org.exquisite.datamodel.ExquisiteSession;
-import org.exquisite.diagnosis.engines.AbstractHSDagBuilder;
+import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.quickxplain.DomainSizeException;
 import org.exquisite.diagnosis.quickxplain.mergexplain.ParallelMergeXplain;
 
@@ -15,15 +14,17 @@ import java.util.List;
  */
 public class ParallelMergeXPlainKC extends ParallelMergeXplain<Constraint> {
 
-	public ParallelMergeXPlainKC(ExquisiteSession sessionData,
-			AbstractHSDagBuilder dagbuilder) {
-		super(sessionData, dagbuilder);
+	private int numberOfConstraints = 0;
+
+	public ParallelMergeXPlainKC(ExcelExquisiteSession sessionData, int numberOfConstraints) {
+		super(sessionData);
+		this.numberOfConstraints = numberOfConstraints;
 	}
 	
 	@Override
 	public boolean isConsistent(List<Constraint> constraints)
 			throws DomainSizeException {
-		return QXKCTools.isConsistent(constraints, this.diagnosisEngine);
+		return QXKCTools.isConsistent(constraints, this.numberOfConstraints);
 	}
 
 }

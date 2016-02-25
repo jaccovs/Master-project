@@ -485,9 +485,9 @@
     
 
 
-    <!-- http://www.mindswap.org/ontologies/debugging/university.owl#Formula -->
+    <!-- http://www.mindswap.org/ontologies/debugging/university.owl#F -->
 
-    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#Formula">
+    <owl:Class rdf:about="http://www.mindswap.org/ontologies/debugging/university.owl#F">
         <rdfs:subClassOf rdf:resource="http://www.mindswap.org/ontologies/debugging/university.owl#Student"/>
     </owl:Class>
     

@@ -1,7 +1,7 @@
 package tests.hierarchical;
 
 import choco.kernel.model.constraints.Constraint;
-import org.exquisite.diagnosis.models.DiagnosisModel;
+import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Hierarchy<T> {
 	 * @param model
 	 */
 	public Hierarchy(DiagnosisModel<T> model) {
-		this.diagnosisModel = model;
+		this.getDiagnosisModel() = model;
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class Hierarchy<T> {
 	 * @return
 	 */
 	HierarchyNode<T> createNode() {
-		HierarchyNode<T> node = new HierarchyNode<T>(this.diagnosisModel);
+		HierarchyNode<T> node = new HierarchyNode<T>(this.getDiagnosisModel());
 		return node;
 	}
 	
@@ -65,7 +65,7 @@ public class Hierarchy<T> {
 	 * @return
 	 */
 	HierarchyNode<T> createNode(Set<Constraint> constraints) {
-		HierarchyNode<T> node = new HierarchyNode<T>(constraints, this.diagnosisModel);
+		HierarchyNode<T> node = new HierarchyNode<T>(constraints, this.getDiagnosisModel());
 		return node;
 
 	}
@@ -124,8 +124,8 @@ public class Hierarchy<T> {
 	}
 	
 	/**
-	 * Maps a detailed conflict to a higher abstraction layer
-	 * @param conflict a given detailed conflict
+	 * Maps a detailed nodeLabel to a higher abstraction layer
+	 * @param conflict a given detailed nodeLabel
 	 * @param hierarchicalConflict the hierarchical context
 	 * @return the result of the mapping process
 	 */
