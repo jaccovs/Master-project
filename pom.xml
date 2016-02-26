@@ -152,6 +152,19 @@
                     <configuration>
                         <source>${java.source.version}</source>
                         <target>${java.target.version}</target>
+                        <includes>
+                            <include>
+                                **/src/main/java/org/exquisite/core/**/*.java
+                            </include>
+                            <include>
+                                **/src/test/java/org/exquisite/core/**/*.java
+                            </include>
+                        </includes>
+                        <excludes>
+                            <exclude>**src/main/java/org/exquisite/core/engines/exclude/*.java</exclude>
+                            <exclude>**src/main/java/org/exquisite/core/engines/query/scoring/DynamicRiskQSS.java
+                            </exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
             </plugins>
