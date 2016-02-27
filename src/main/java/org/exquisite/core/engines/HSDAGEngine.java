@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.tree;
+package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.ISolver;
@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static org.exquisite.core.measurements.MeasurementManager.COUNTER_CONSTRUCTED_NODES;
-import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_CONSTRUCTED_NODES;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
  * The class that calculates the HS-Dag

@@ -1,4 +1,4 @@
-package org.exquisite.core.measurements;
+package org.exquisite.core.perfmeasures;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class Timer extends Counter {
     }
 
     /**
-     * @return timings of the time measurements
+     * @return timings of the time perfmeasures
      */
     public List<Long> getTimings() {
         return unmodifiableList(this.timings);

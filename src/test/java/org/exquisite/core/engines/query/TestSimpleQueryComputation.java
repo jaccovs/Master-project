@@ -2,7 +2,7 @@ package org.exquisite.core.engines.query;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.query.scoring.MinScoreQSS;
-import org.exquisite.core.measurements.MeasurementManager;
+import org.exquisite.core.perfmeasures.PerfMeasurementManager;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,8 +11,8 @@ import java.util.Collections;
 import static junit.framework.Assert.assertEquals;
 import static org.exquisite.core.TestUtils.getDiagnosis;
 import static org.exquisite.core.TestUtils.getSet;
-import static org.exquisite.core.measurements.MeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
-import static org.exquisite.core.measurements.MeasurementManager.getCounter;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.getCounter;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class TestSimpleQueryComputation {
     @Before
     public void init() {
-        MeasurementManager.reset();
+        PerfMeasurementManager.reset();
     }
 
     @Test

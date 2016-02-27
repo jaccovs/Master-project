@@ -1,6 +1,8 @@
 package org.exquisite.core.engines.tree;
 
 import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.engines.HSTreeEngine;
+import org.exquisite.core.engines.Node;
 import org.junit.Test;
 
 import java.math.BigDecimal;

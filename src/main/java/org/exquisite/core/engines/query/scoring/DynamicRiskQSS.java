@@ -1,4 +1,4 @@
-package org.exquisite.diagnosis.interactivity.partitioning.scoring;
+package org.exquisite.core.engines.query.scoring;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +24,7 @@ public class DynamicRiskQSS extends StaticRiskQSS {
     protected void preprocessC() {
         double maxPossibleCMax;
         if ((maxPossibleCMax = (double) this
-                .getMaxPossibleNumOfDiagsToEliminate() / (double) numOfLeadingDiags) < cMax) {
+                .getMaxPossibleNumOfDiagsToEliminate() / numOfLeadingDiags) < cMax) {
             cMax = maxPossibleCMax;
         }
         if (cMin < 0d) cMin = 0d;
@@ -37,13 +37,13 @@ public class DynamicRiskQSS extends StaticRiskQSS {
         double interval = cMax - cMin;
         double epsilon = 0.01d;
         double adjust = ((Math
-                .floor(((double) numOfLeadingDiags / 2d) - epsilon) - (double) numOfEliminatedLeadingDiags) / (double) numOfLeadingDiags);
+                .floor((numOfLeadingDiags / 2d) - epsilon) - numOfEliminatedLeadingDiags) / numOfLeadingDiags);
         return adjust * interval * 2d;
     }
 
     public void updateParameters(boolean answerToLastQuery) {
 
-        preprocessBeforeUpdate(answerToLastQuery);
+        //preprocessBeforeUpdate(answerToLastQuery);
 
         double cAdjust = getCAdjust();
         if (c + cAdjust > cMax) {

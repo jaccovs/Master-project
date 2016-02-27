@@ -12,13 +12,13 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
 /**
  * A general interface for conflict searchers, like QuickXPlain, MergeXPlain or Progression
  */
-public class QuickXPlain<F> implements IConflictSearcher<F> {
+public class MergeXPlain<F> implements IConflictSearcher<F> {
 
 
     private final ISolver<F> solver;
     private Split split = Split.Half;
 
-    public QuickXPlain(ISolver<F> solver) {
+    public MergeXPlain(ISolver<F> solver) {
         this.solver = solver;
 
     }

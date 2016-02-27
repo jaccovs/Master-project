@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.exquisite.core.measurements.MeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
-import static org.exquisite.core.measurements.MeasurementManager.incrementCounter;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
  * Simple query computation methods that implements a brute force approach to query computation. This approach simply

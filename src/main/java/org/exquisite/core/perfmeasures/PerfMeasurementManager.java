@@ -1,4 +1,4 @@
-package org.exquisite.core.measurements;
+package org.exquisite.core.perfmeasures;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by kostya on 23.11.2015.
  */
-public class MeasurementManager {
+public class PerfMeasurementManager {
 
     public static final String TIMER_SOLVER = "solver.time";
     public static final String TIMER_DIAGNOSIS_SESSION = "diagnosis.session";
@@ -109,7 +109,7 @@ public class MeasurementManager {
     }
 
     /**
-     * Reinitialize all existing counters. Use this method to reset the measurements manager in case one and the same
+     * Reinitialize all existing counters. Use this method to reset the perfmeasures manager in case one and the same
      * diagnosis routine is executed multiple times.
      */
     public static void reset() {

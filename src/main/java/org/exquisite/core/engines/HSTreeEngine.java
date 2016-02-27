@@ -1,10 +1,9 @@
-package org.exquisite.core.engines.tree;
+package org.exquisite.core.engines;
 
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.ISolver;
-import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static org.exquisite.core.Utils.hasIntersection;
-import static org.exquisite.core.measurements.MeasurementManager.*;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
 /**
  * A basic class that is extended by all tree-like search engines

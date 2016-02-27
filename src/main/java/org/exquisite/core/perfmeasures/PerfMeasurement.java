@@ -1,18 +1,18 @@
-package org.exquisite.core.measurements;
+package org.exquisite.core.perfmeasures;
 
 /**
  * Created by kostya on 23.11.2015.
  */
-public abstract class Measurement implements Comparable<Measurement> {
+public abstract class PerfMeasurement implements Comparable<PerfMeasurement> {
 
     protected final String name;
 
-    Measurement(String name) {
+    PerfMeasurement(String name) {
         this.name = name;
     }
 
     @Override
-    public int compareTo(Measurement o) {
+    public int compareTo(PerfMeasurement o) {
         return this.name.compareTo(o.name);
     }
 

@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.tree;
+package org.exquisite.core.engines;
 
 import org.exquisite.core.costestimators.CostsEstimator;
 

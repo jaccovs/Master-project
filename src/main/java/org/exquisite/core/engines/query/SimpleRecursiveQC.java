@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.exquisite.core.measurements.MeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
-import static org.exquisite.core.measurements.MeasurementManager.getCounter;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.getCounter;
 
 /**
  * Simple query computation that implements recursive brute force computation method

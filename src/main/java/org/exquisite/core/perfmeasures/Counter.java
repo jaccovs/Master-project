@@ -1,9 +1,9 @@
-package org.exquisite.core.measurements;
+package org.exquisite.core.perfmeasures;
 
 /**
- * Simple counter used for performance measurements
+ * Simple counter used for performance perfmeasures
  */
-public class Counter extends Measurement {
+public class Counter extends PerfMeasurement {
 
     private long value = 0;
 
