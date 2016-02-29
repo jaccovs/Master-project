@@ -1,4 +1,6 @@
-package org.exquisite.core;
+package org.exquisite.core.search;
+
+import org.exquisite.core.DiagnosisException;
 
 import java.util.Collection;
 import java.util.Set;

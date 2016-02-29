@@ -4,6 +4,7 @@ import org.exquisite.core.ISolver;
 import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This is a default implementation of a solver that provides methods for handling of test cases, etc. Extend this
@@ -90,7 +91,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
 
         // sync the formulas with the solver
         HashSet<T> remove = new HashSet<>(this.formulasCache);
-        HashSet<T> add = new HashSet<>(checkFormulas);
+        HashSet<T> add = checkFormulas.stream().filter(e -> e != null).collect(Collectors.toCollection(HashSet<T>::new));
         remove.removeAll(checkFormulas);
         add.removeAll(this.formulasCache);
 

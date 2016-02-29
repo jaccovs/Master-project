@@ -1,12 +1,12 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.IConflictSearcher;
 import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.ISolver;
 import org.exquisite.core.costestimators.CostsEstimator;
 import org.exquisite.core.costestimators.SimpleCostsEstimator;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.search.IConflictSearcher;
 import org.exquisite.core.search.QuickXPlain;
 
 import java.util.HashSet;
