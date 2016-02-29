@@ -1,7 +1,7 @@
 package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.ISolver;
+import org.exquisite.core.solver.ISolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +85,7 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
     /**
      * Removes the subtree from a lookup table starting from the given node.
      *
-     * @param node from which the search should start
+     * @param node from which the conflictsearch should start
      */
     private void cleanUpNodes(Node<F> node) {
         if (!node.getParents().isEmpty())

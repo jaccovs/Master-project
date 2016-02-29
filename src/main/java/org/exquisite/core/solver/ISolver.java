@@ -1,4 +1,4 @@
-package org.exquisite.core;
+package org.exquisite.core.solver;
 
 import org.exquisite.core.model.DiagnosisModel;
 

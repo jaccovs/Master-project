@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query.scoring;
+package org.exquisite.core.query.scoring;
 
 
 import org.exquisite.core.model.Diagnosis;

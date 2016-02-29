@@ -2,6 +2,7 @@ package org.exquisite.core;
 
 
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.solver.ISolver;
 
 import java.util.Set;
 

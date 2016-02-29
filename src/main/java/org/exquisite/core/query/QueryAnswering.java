@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query;
+package org.exquisite.core.query;
 
 /**
  * Created by kostya on 04.12.2015.

@@ -1,8 +1,8 @@
-package org.exquisite.core.engines.query.scoring;
+package org.exquisite.core.query.scoring;
 
 
-import org.exquisite.core.engines.query.Query;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.exquisite.core.search;
+package org.exquisite.core.conflictsearch;
 
 import org.exquisite.core.DiagnosisException;
 

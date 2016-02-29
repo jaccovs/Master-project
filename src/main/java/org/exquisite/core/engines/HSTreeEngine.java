@@ -3,8 +3,8 @@ package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
-import org.exquisite.core.ISolver;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.solver.ISolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ import static org.exquisite.core.Utils.hasIntersection;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
 /**
- * A basic class that is extended by all tree-like search engines
+ * A basic class that is extended by all tree-like conflictsearch engines
  */
 public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 
@@ -38,7 +38,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
      * nodes have the same costs, then the one with the lover generation is greater.
      * <p>
      * Override this method to get other orderings of the list of open nodes. The current one implements the uniform
-     * cost search ordering.
+     * cost conflictsearch ordering.
      */
     public static <F> Comparator<Node<F>> getNodeComparator() {
         return (o1, o2) -> {

@@ -1,7 +1,7 @@
-package org.exquisite.core.search;
+package org.exquisite.core.conflictsearch;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.ISolver;
+import org.exquisite.core.solver.ISolver;
 
 import java.util.*;
 

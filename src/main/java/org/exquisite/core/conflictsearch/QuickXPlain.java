@@ -1,7 +1,7 @@
-package org.exquisite.core.search;
+package org.exquisite.core.conflictsearch;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.ISolver;
+import org.exquisite.core.solver.ISolver;
 
 import java.util.*;
 
@@ -11,13 +11,13 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
 /**
  * A general interface for conflict searchers, like QuickXPlain, MergeXPlain or Progression
  */
-public class Progression<F> implements IConflictSearcher<F> {
+public class QuickXPlain<F> implements IConflictSearcher<F> {
 
 
-    private final ISolver<F> solver;
-    private Split split = Split.Half;
+    protected final ISolver<F> solver;
+    protected Split split = Split.Half;
 
-    public Progression(ISolver<F> solver) {
+    public QuickXPlain(ISolver<F> solver) {
         this.solver = solver;
 
     }
@@ -25,9 +25,7 @@ public class Progression<F> implements IConflictSearcher<F> {
     @Override
     public Set<Set<F>> findConflicts(Collection<F> formulas) throws DiagnosisException {
         incrementCounter(COUNTER_QXP_CALLS);
-        if (!solver.isConsistent(Collections.emptySet()))
-            throw new DiagnosisException("Inconsistent diagnosis model! Conflict finding is not possible!");
-        if (solver.isConsistent(formulas))
+        if (checkInput(formulas))
             return Collections.emptySet();
 
         ArrayList<F> b = new ArrayList<>(formulas.size());
@@ -36,7 +34,13 @@ public class Progression<F> implements IConflictSearcher<F> {
         return Collections.singleton(new HashSet<>(conflict));
     }
 
-    private List<F> quickXPlain(List<F> b, List<F> d, List<F> c) {
+    protected boolean checkInput(Collection<F> formulas) throws DiagnosisException {
+        if (!solver.isConsistent(Collections.emptySet()))
+            throw new DiagnosisException("Inconsistent diagnosis model! Conflict finding is not possible!");
+        return solver.isConsistent(formulas);
+    }
+
+    protected List<F> quickXPlain(List<F> b, List<F> d, List<F> c) {
         if (!d.isEmpty() && !solver.isConsistent(b))
             return new ArrayList<>(0);
         if (c.size() == 1)

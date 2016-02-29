@@ -60,6 +60,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         this.inconsistentExamples = ObservableList.observableList(orig.inconsistentExamples, this);
         this.consistentExamples = ObservableList.observableList(orig.consistentExamples, this);
         this.notEntailedExamples = ObservableList.observableList(orig.notEntailedExamples, this);
+        this.entailedExamples = ObservableList.observableList(orig.entailedExamples, this);
         this.possiblyFaultyStatements = ObservableList.observableList(orig.possiblyFaultyStatements, this);
         //this.faultyStatements = ObservableList.observableList(orig.faultyStatements, this);
         this.statementWeights = new HashMap<>(orig.statementWeights);

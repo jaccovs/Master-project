@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query;
+package org.exquisite.core.query;
 
 import java.util.HashSet;
 import java.util.Set;
