@@ -47,6 +47,8 @@ public class TestMergeXPlain extends TestConflictSearcher {
         conflicts.add(getSet(0, 5));
         conflicts.add(getSet(2, 4));
 
+        // invocation of the framework
+
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Collections.singletonList(0));

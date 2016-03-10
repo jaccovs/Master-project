@@ -6,6 +6,7 @@
 
     <groupId>org.exquisite</groupId>
     <artifactId>exquisite</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <licenses>
@@ -16,6 +17,10 @@
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
+    <modules>
+       <!-- <module>excel-plugin</module> -->
+        <module>diagnosis</module>
+    </modules>
 
     <developers>
         <developer>
@@ -143,7 +148,6 @@
     </dependencies>
 
     <build>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -152,18 +156,9 @@
                     <configuration>
                         <source>${java.source.version}</source>
                         <target>${java.target.version}</target>
-                        <includes>
-                            <include>
-                                **/src/main/java/org/exquisite/core/**/*.java
-                            </include>
-                            <include>
-                                **/src/test/java/org/exquisite/core/**/*.java
-                            </include>
-                        </includes>
                         <excludes>
-                            <exclude>**src/main/java/org/exquisite/core/engines/exclude/*.java</exclude>
-                            <exclude>**src/main/java/org/exquisite/core/engines/query/scoring/DynamicRiskQSS.java
-                            </exclude>
+                            <exclude>**src/main/java/org/exquisite/core/engines/exclude_engine/*.java</exclude>
+                            <exclude>**src/main/java/org/exquisite/core/query/exclude_search/*.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

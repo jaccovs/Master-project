@@ -144,6 +144,7 @@ public class SimpleQC<T> implements QueryComputation<T> {
             throw new IllegalArgumentException("Input sets of diagnoses must not be empty!");
 
         Query<T> query = new Query<>();
+        // TODO check if we can simply use query.dx.addAll(dx);
         query.dx.addAll(dx.stream().collect(Collectors.toList()));
         if (logger.isDebugEnabled())
             logger.debug("Creating a query with dx: " + dx);
