@@ -1,4 +1,4 @@
-package core.engines.query;
+package org.exquisite.core.engines.query;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.perfmeasures.PerfMeasurementManager;
@@ -15,6 +15,7 @@ import static org.exquisite.core.TestUtils.getDiagnosis;
 import static org.exquisite.core.TestUtils.getSet;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_INTERACTIVE_PARTITIONS;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.getCounter;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**

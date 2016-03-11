@@ -1,4 +1,4 @@
-package core.solver;
+package org.exquisite.core.solver;
 
 import org.exquisite.core.model.DiagnosisModel;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import static org.exquisite.core.TestUtils.getSet;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

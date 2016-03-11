@@ -1,6 +1,6 @@
-package core.conflictsearch;
+package org.exquisite.core.conflictsearch;
 
-import core.solver.SimpleNumericSolver;
+import org.exquisite.core.solver.SimpleNumericSolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;

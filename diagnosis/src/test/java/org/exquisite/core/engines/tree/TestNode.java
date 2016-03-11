@@ -1,4 +1,4 @@
-package core.engines.tree;
+package org.exquisite.core.engines.tree;
 
 import org.exquisite.core.costestimators.CostsEstimator;
 import org.exquisite.core.engines.HSTreeEngine;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.TreeSet;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by kostya on 01.12.2015.

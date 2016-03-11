@@ -1,4 +1,4 @@
-package core;
+package org.exquisite.core;
 
 import org.exquisite.core.model.Diagnosis;
 import org.junit.Test;

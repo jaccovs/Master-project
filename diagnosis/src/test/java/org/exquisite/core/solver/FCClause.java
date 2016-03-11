@@ -1,4 +1,4 @@
-package core.solver;
+package org.exquisite.core.solver;
 
 import java.util.Arrays;
 import java.util.Collection;

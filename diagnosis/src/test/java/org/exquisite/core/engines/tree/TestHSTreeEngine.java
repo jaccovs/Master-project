@@ -1,6 +1,6 @@
-package core.engines.tree;
+package org.exquisite.core.engines.tree;
 
-import core.solver.SimpleNumericSolver;
+import org.exquisite.core.solver.SimpleNumericSolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
