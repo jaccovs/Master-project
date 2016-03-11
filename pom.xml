@@ -20,6 +20,7 @@
     <modules>
        <!-- <module>excel-plugin</module> -->
         <module>diagnosis</module>
+        <!-- <module>protege-plugin</module> -->
     </modules>
 
     <developers>
@@ -95,23 +96,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>${java.source.version}</source>
-                        <target>${java.target.version}</target>
-                        <excludes>
-                            <exclude>**src/main/java/org/exquisite/core/engines/exclude_engine/*.java</exclude>
-                            <exclude>**src/main/java/org/exquisite/core/query/exclude_search/*.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>
