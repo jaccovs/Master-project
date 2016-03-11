@@ -18,7 +18,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      */
     private List<T> correctStatements = ObservableList.observableArrayList();
     /**
-     * The set of the statements which could be faulty
+     * The set of the statements which could be faulty = KB (knowledge base).
      */
     private List<T> possiblyFaultyStatements = ObservableList.observableArrayList();
     /**
@@ -50,6 +50,28 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     private List<T> splitPoints = null;
 
     /**
+     * Entailed Testcases = Queries that are answered positively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     */
+    private List<Set<T>> entailedTestCases = ObservableList.observableArrayList(); // NEW
+
+    /**
+     * Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     */
+    private List<Set<T>> notEntailedTestCases = ObservableList.observableArrayList(); // NEW
+
+    /**
+     * True means that repaired knowledge base is required to be coherent. Default is False.
+     */
+    private Boolean coherencyRequired = Boolean.FALSE; // NEW
+
+    /**
+     * True means that repaired knowledge base is required to be consistent. Default is True.
+     */
+    private Boolean consistencyRequired = Boolean.TRUE; // NEW
+
+    /**
      * A copy constructor that copies all lists and links the pointers to non-changing information
      *
      * @param orig the original model to copy
@@ -64,6 +86,9 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         this.possiblyFaultyStatements = ObservableList.observableList(orig.possiblyFaultyStatements, this);
         //this.faultyStatements = ObservableList.observableList(orig.faultyStatements, this);
         this.statementWeights = new HashMap<>(orig.statementWeights);
+
+        this.entailedTestCases = ObservableList.observableList(orig.entailedTestCases);
+        this.notEntailedTestCases = ObservableList.observableList(orig.notEntailedTestCases);
     }
 
     /**
@@ -113,30 +138,6 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         setChanged();
         notifyObservers(this.possiblyFaultyStatements);
     }
-
-    /**
-     * Getter for the certainly faulty statements
-     *
-     * @return
-     */
-    /*
-    public List<T> getFaultyStatements() {
-        return faultyStatements;
-    }
-*/
-    /**
-     * Setter for the certainly faulty statements
-     *
-     * @param faultyStatements
-     */
-    /*
-    public void setFaultyStatements(
-            List<T> faultyStatements) {
-        this.faultyStatements = ObservableList.observableList(faultyStatements, this);
-        setChanged();
-        notifyObservers(this.faultyStatements);
-    }
-*/
 
     /**
      * A method that randomizes the order of the possibly faulty constraints for experiments..
@@ -190,9 +191,48 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     public void setNotEntailedExamples(Collection<T> notEntailedExamples) {
         this.notEntailedExamples = ObservableList.observableList(notEntailedExamples, this);
         setChanged();
-        notifyObservers(this.inconsistentExamples);
+        notifyObservers(this.notEntailedExamples); // TODO fixed a possible bug, clarify with Dietmar
     }
 
+    /**
+     * Get entailed testcases = Queries that are answered positively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     * @return
+     */
+    public List<Set<T>> getEntailedTestCases() {
+        return entailedTestCases;
+    }
+
+    /**
+     * Set entailed testcases = Queries that are answered positively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     * @param entailedTestCases
+     */
+    public void setEntailedTestCases(List<Set<T>> entailedTestCases) {
+        this.entailedTestCases = ObservableList.observableList(entailedTestCases, this);
+        setChanged();
+        notifyObservers(this.entailedTestCases);
+    }
+
+    /**
+     * Get Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     * @return
+     */
+    public List<Set<T>> getNotEntailedTestCases() {
+        return notEntailedTestCases;
+    }
+
+    /**
+     * Set Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
+     * exactly the set of formulas in a query.
+     * @param notEntailedTestCases
+     */
+    public void setNotEntailedTestCases(List<Set<T>> notEntailedTestCases) {
+        this.notEntailedTestCases = ObservableList.observableList(notEntailedTestCases, this);
+        this.notEntailedTestCases = notEntailedTestCases;
+        notifyObservers(this.notEntailedTestCases);
+    }
 
     /**
      * Add a correct constraint
@@ -259,4 +299,21 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     public void initialize() {
 
     }
+
+    public Boolean isCoherencyRequired() {
+        return coherencyRequired;
+    }
+
+    public void setCoherencyRequired(Boolean coherencyRequired) {
+        this.coherencyRequired = coherencyRequired;
+    }
+
+    public Boolean isConsistencyRequired() {
+        return consistencyRequired;
+    }
+
+    public void setConsistencyRequired(Boolean consistencyRequired) {
+        this.consistencyRequired = consistencyRequired;
+    }
+
 }
