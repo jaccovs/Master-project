@@ -1,9 +1,9 @@
 package org.exquisite.core.conflictsearch;
 
-import org.exquisite.core.solver.SimpleNumericSolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
+import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 import org.junit.Test;
 
 import java.util.*;
@@ -53,7 +53,7 @@ public class TestMergeXPlain extends TestConflictSearcher {
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Collections.singletonList(0));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);

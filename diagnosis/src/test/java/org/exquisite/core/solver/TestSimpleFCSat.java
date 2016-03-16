@@ -6,9 +6,7 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import static org.exquisite.core.TestUtils.getSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * A test case showing different usages of the SimpleFCSat class.
@@ -18,6 +16,8 @@ public class TestSimpleFCSat {
     @Test
     public void testFCSAT() {
         DiagnosisModel<FCClause> model = new DiagnosisModel<>();
+        // A-1, B-2, C-3, D-4
+        // A. -A v B. -B v A. -D v C.
         HashSet<FCClause> clauses = getSet(new FCClause(1), new FCClause(-1, 2), new FCClause(-2, 1),
                 new FCClause(-4, 3));
         SimpleFCSat fc = new SimpleFCSat(model, clauses);

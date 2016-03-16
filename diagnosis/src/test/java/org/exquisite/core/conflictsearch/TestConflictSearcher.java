@@ -1,9 +1,9 @@
 package org.exquisite.core.conflictsearch;
 
-import org.exquisite.core.solver.SimpleNumericSolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
+import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 
 import java.util.*;
 
@@ -18,7 +18,7 @@ public abstract class TestConflictSearcher {
 
     public void testSearcher() throws DiagnosisException {
         List<Set<Integer>> conflicts = new LinkedList<>();
-        HashSet<Integer> testConflict = getSet(2, 3, 4);
+        Set<Integer> testConflict = getSet(2, 3, 4);
 //        HashSet<Integer> testConflict = getSet(1, 2);
 
         conflicts.add(testConflict);
@@ -29,7 +29,7 @@ public abstract class TestConflictSearcher {
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Arrays.asList(6, 7));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);
@@ -48,7 +48,7 @@ public abstract class TestConflictSearcher {
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Arrays.asList(6, 7));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);
@@ -65,7 +65,7 @@ public abstract class TestConflictSearcher {
         model.setCorrectStatements(Arrays.asList(6, 7));
         model.setNotEntailedExamples(Collections.singletonList(1));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, Collections.emptyList());
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, Collections.emptyList());
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);

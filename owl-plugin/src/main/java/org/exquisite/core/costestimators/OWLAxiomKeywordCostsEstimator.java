@@ -1,10 +1,11 @@
 package org.exquisite.core.costestimators;
 
+
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -102,6 +103,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
         return map;
     }
 
+    @Override
     public BigDecimal getFormulaCosts(OWLLogicalAxiom axiom) {
 
         //NEU bei null wird 1 zurückgegeben
@@ -113,9 +115,20 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             return p;
 
         ManchesterOWLSyntaxOWLObjectRendererImpl impl = new ManchesterOWLSyntaxOWLObjectRendererImpl();
-        String renderedAxiom = impl.render(axiom); // String renderedAxiom = modelManager.getRendering(axiom);
-        BigDecimal result = BigDecimal.ONE;
+        String renderedAxiom = impl.render(axiom);
+        // String renderedAxiom = modelManager.getRendering(axiom);
 
+        BigDecimal result = getAxiomScore(renderedAxiom);
+        result = BigDecimal.ONE.subtract(result);
+        // no keyword is known
+        if (result.compareTo(new BigDecimal("0.0")) == 0)
+            result = new BigDecimal("0.000000000000000000000000000000000000000000001");
+
+        return result;
+    }
+
+    private BigDecimal getAxiomScore(String renderedAxiom) {
+        BigDecimal result = BigDecimal.ONE;
         for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
             int occurrence = getNumOccurrences(keyword, renderedAxiom);
             BigDecimal probability = getProbability(keyword);
@@ -125,11 +138,6 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
 
             result = result.multiply(temp);
         }
-        result = BigDecimal.ONE.subtract(result);
-        // no keyword is known
-        if (result.compareTo(new BigDecimal("0.0")) == 0)
-            result = new BigDecimal("0.000000000000000000000000000000000000000000001");
-
         return result;
     }
 
@@ -175,17 +183,11 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
         Collection<OWLLogicalAxiom> activeFormulas = getFaultyFormulas();
         BigDecimal sum = BigDecimal.ZERO;
         for (OWLLogicalAxiom axiom : activeFormulas) {
-            String renderedAxiom = impl.render(axiom); // String renderedAxiom = modelManager.getRendering(axiom);
-            BigDecimal result = BigDecimal.ONE;
+            String renderedAxiom = impl.render(axiom);
+            // String renderedAxiom = modelManager.getRendering(axiom);
 
-            for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
-                int occurrence = getNumOccurrences(keyword, renderedAxiom);
-                BigDecimal probability = getProbability(keyword);
+            BigDecimal result = getAxiomScore(renderedAxiom);
 
-                BigDecimal t = BigDecimal.ONE.subtract(probability);
-                t = t.pow(occurrence, MathContext.DECIMAL128);
-                result = result.multiply(t);
-            }
             result = BigDecimal.ONE.subtract(result);
             // no keyword is known
             if (result.compareTo(new BigDecimal("0.0")) == 0)

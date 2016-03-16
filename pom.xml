@@ -17,11 +17,28 @@
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
-    <modules>
-       <!-- <module>excel-plugin</module> -->
-        <module>diagnosis</module>
-        <!-- <module>protege-plugin</module> -->
-    </modules>
+
+    <profiles>
+        <!-- DO NOT CHANGE THE *ORDER* IN WHICH THESE PROFILES ARE DEFINED! -->
+        <profile>
+            <id>excel</id>
+            <modules>
+                <module>diagnosis</module>
+                <module>excel-plugin</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>protege</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>diagnosis</module>
+                <module>owl-plugin</module>
+                <!--<module>protege-plugin</module>-->
+            </modules>
+        </profile>
+    </profiles>
 
     <developers>
         <developer>
@@ -96,4 +113,22 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${java.source.version}</source>
+                        <target>${java.target.version}</target>
+                        <excludes>
+                            <exclude>org/exquisite/core/query/exclude_search/*.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

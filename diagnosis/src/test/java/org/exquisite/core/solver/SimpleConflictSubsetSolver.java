@@ -11,14 +11,14 @@ import java.util.*;
  * returns that any input set of integers from the domain is consistent only if none of the conflicts is a subset of
  * the input set.
  */
-public class SimpleNumericSolver extends AbstractSolver<Integer> {
+public class SimpleConflictSubsetSolver extends AbstractSolver<Integer> {
 
     private final Set<Integer> domain;
     private final List<Set<Integer>> conflicts;
 
     private final Set<Integer> currentState = new HashSet<>();
 
-    public SimpleNumericSolver(DiagnosisModel<Integer> model, Set<Integer> domain, List<Set<Integer>> conflicts) {
+    public SimpleConflictSubsetSolver(DiagnosisModel<Integer> model, Set<Integer> domain, List<Set<Integer>> conflicts) {
         super(model);
         this.domain = new HashSet<>(domain);
         this.conflicts = new LinkedList<>(conflicts);

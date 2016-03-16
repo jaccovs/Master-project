@@ -1,10 +1,10 @@
 package org.exquisite.core.engines.tree;
 
-import org.exquisite.core.solver.SimpleNumericSolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 import org.junit.Test;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class TestHSTreeEngine {
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Arrays.asList(6, 7));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         HSTreeEngine<Integer> hs = new HSTreeEngine<>(solver);
         Set<Diagnosis<Integer>> diagnoses = hs.calculateDiagnoses();
         System.out.println(diagnoses);
@@ -49,7 +49,7 @@ public class TestHSTreeEngine {
         model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
         model.setCorrectStatements(Arrays.asList(6, 7));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         HSTreeEngine<Integer> hs = new HSTreeEngine<>(solver);
         Set<Diagnosis<Integer>> diagnoses = hs.calculateDiagnoses();
         assertEquals(diagnoses, getSet(getDiagnosis(3), getDiagnosis(2, 4)));
@@ -71,7 +71,7 @@ public class TestHSTreeEngine {
         // hitting set "3" is not a diagnosis, since its KB violates the next example
         model.setEntailedExamples(Arrays.asList(3));
 
-        SimpleNumericSolver solver = new SimpleNumericSolver(model, domain, conflicts);
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         HSTreeEngine<Integer> hs = new HSTreeEngine<>(solver);
         Set<Diagnosis<Integer>> diagnoses = hs.calculateDiagnoses();
         // the only diagnosis is "2,4,5"
