@@ -72,7 +72,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
                 return getDiagnoses();
             }
             getConflicts().addAll(conflicts);
-            Node<F> root = new Node<F>(selectConflict(conflicts));
+            Node<F> root = Node.createRoot(selectConflict(conflicts));
 
             incrementCounter(COUNTER_CONSTRUCTED_NODES);
             logger.debug("Initializing the tree with the root {}", root);

@@ -51,12 +51,20 @@ public class Node<T> {
      *
      * @param conflict - the initial nodeLabel set returned from call to qx...
      */
-    public Node(Set<T> conflict) {
+    public static <T> Node<T> createRoot(Set<T> conflict) {
+        generationOrderCounter = 0;
+
+        Node<T> root = new Node<>();
+        root.nodeLabel = conflict;
+        return root;
+    }
+
+    private Node(){
         this.parents = null;
         this.arcLabel = null;
-        this.nodeLabel = conflict;
         this.nodeLevel = 0;
         this.costs = BigDecimal.ZERO;
+        this.status = Status.Open;
     }
 
     /**
@@ -66,6 +74,7 @@ public class Node<T> {
      * @param arcLabel - the label from the parent that immediately points here.
      */
     public Node(Node<T> parent, T arcLabel, CostsEstimator<T> estimator) {
+        assert(parent!=null);
         this.parents = new ArrayList<>(1);
         this.parents.add(parent);
         this.arcLabel = arcLabel;
