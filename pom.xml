@@ -35,7 +35,7 @@
             <modules>
                 <module>diagnosis</module>
                 <module>owl-plugin</module>
-                <!--<module>protege-plugin</module>-->
+                <module>protege-plugin</module>
             </modules>
         </profile>
     </profiles>
@@ -63,6 +63,8 @@
         <java.source.version>1.8</java.source.version>
         <java.target.version>1.8</java.target.version>
         <junit.version>4.10</junit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <distributionRepositoryId>releases</distributionRepositoryId>
         <distributionRepositoryUrl>
             https://vcs-isbi.aau.at/nexus/content/repositories/releases  
@@ -120,12 +122,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
                     <configuration>
                         <source>${java.source.version}</source>
                         <target>${java.target.version}</target>
-                        <excludes>
-                            <exclude>org/exquisite/core/query/exclude_search/*.java</exclude>
-                        </excludes>
                     </configuration>
                 </plugin>
             </plugins>
