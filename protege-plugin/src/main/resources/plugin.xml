@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+    <!-- Tabs -->
+
+    <extension id="ExampleWorkspaceTab" point="org.protege.editor.core.application.WorkspaceTab">
+        <label value="Exquisite Example Tab"/>
+        <class value="org.protege.editor.owl.ui.OWLWorkspaceViewsTab"/>
+        <index value="X"/>
+        <editorKitId value="OWLEditorKit"/>
+        <defaultViewConfigFileName value="viewconfig-exampletab.xml"/>
+    </extension>
+
+    <!--
+        <extension id="InteractiveDebugging" point="org.protege.editor.core.application.WorkspaceTab">
+            <label value="Interactive Debugging"/>
+            <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
+            <index value="X2"/>
+            <editorKitId value="OWLEditorKit"/>
+            <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
+        </extension>
+    -->
+    <!-- View -->
+
+    <extension id="ExampleViewComponent" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Exquisite Example view component"/>
+        <class value="org.exquisite.protege.ui.view.test.ExampleViewComponent"/>
+        <headerColor value="@org.protege.ontologycolor"/>
+        <category value="@org.protege.ontologycategory"/>
+    </extension>
+
+
+</plugin>

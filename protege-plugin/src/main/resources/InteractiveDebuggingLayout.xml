@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <VSNode splits="0.306311253589862">
+        <HSNode splits="0.11492406542056076">
+            <VSNode splits="0.03992544346292266 0.06375446307913342">
+                <HSNode splits="0.010375148700360576 0.013110718454153396">
+                    <CNode>
+                        <Component label="Query View">
+                            <Property id="pluginId"
+                                      value="at.ainf.protegeview.at.ainf.protegeview.gui.queryview.QueryView"/>
+                        </Component>
+                    </CNode>
+                    <CNode>
+                        <Component label="Query History View">
+                            <Property id="pluginId"
+                                      value="at.ainf.protegeview.at.ainf.protegeview.gui.historyview.QueryHistoryView"/>
+                        </Component>
+                    </CNode>
+                </HSNode>
+                <HSNode splits="0.02591997663551402">
+                    <VSNode splits="0.01295998831775701 0.01295998831775701">
+                        <CNode>
+                            <Component label="Diagnoses">
+                                <Property id="pluginId"
+                                          value="at.ainf.protegeview.at.ainf.protegeview.gui.axiomsetviews.DiagnosesView"/>
+                            </Component>
+                        </CNode>
+                        <CNode>
+                            <Component label="Conflicts">
+                                <Property id="pluginId"
+                                          value="at.ainf.protegeview.at.ainf.protegeview.gui.axiomsetviews.ConflictsView"/>
+                            </Component>
+                        </CNode>
+                    </VSNode>
+                </HSNode>
+            </VSNode>
+        </HSNode>
+    </VSNode>
+</layout>
