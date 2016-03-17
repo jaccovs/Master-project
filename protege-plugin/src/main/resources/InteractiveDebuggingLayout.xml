@@ -6,14 +6,12 @@
                 <HSNode splits="0.010375148700360576 0.013110718454153396">
                     <CNode>
                         <Component label="Query View">
-                            <Property id="pluginId"
-                                      value="at.ainf.protegeview.at.ainf.protegeview.gui.queryview.QueryView"/>
+                            <Property id="pluginId" value="org.exquisite.protege.QueryView"/>
                         </Component>
                     </CNode>
                     <CNode>
                         <Component label="Query History View">
-                            <Property id="pluginId"
-                                      value="at.ainf.protegeview.at.ainf.protegeview.gui.historyview.QueryHistoryView"/>
+                            <Property id="pluginId" value="org.exquisite.protege.QueryHistoryView"/>
                         </Component>
                     </CNode>
                 </HSNode>
@@ -21,14 +19,12 @@
                     <VSNode splits="0.01295998831775701 0.01295998831775701">
                         <CNode>
                             <Component label="Diagnoses">
-                                <Property id="pluginId"
-                                          value="at.ainf.protegeview.at.ainf.protegeview.gui.axiomsetviews.DiagnosesView"/>
+                                <Property id="pluginId" value="org.exquisite.protege.DiagnosesView"/>
                             </Component>
                         </CNode>
                         <CNode>
                             <Component label="Conflicts">
-                                <Property id="pluginId"
-                                          value="at.ainf.protegeview.at.ainf.protegeview.gui.axiomsetviews.ConflictsView"/>
+                                <Property id="pluginId" value="org.exquisite.protege.ConflictsView"/>
                             </Component>
                         </CNode>
                     </VSNode>

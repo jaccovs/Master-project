@@ -3,6 +3,12 @@
 
 <plugin>
 
+    <extension id="org.exquisite.protege.model.EditorKitHook"
+               point="org.protege.editor.core.application.EditorKitHook">
+        <class value="org.exquisite.protege.model.EditorKitHook"/>
+        <editorKitId value="OWLEditorKit"/>
+    </extension>
+
     <!-- Tabs -->
 
     <extension id="ExampleWorkspaceTab" point="org.protege.editor.core.application.WorkspaceTab">
@@ -13,16 +19,15 @@
         <defaultViewConfigFileName value="viewconfig-exampletab.xml"/>
     </extension>
 
-    <!--
-        <extension id="InteractiveDebugging" point="org.protege.editor.core.application.WorkspaceTab">
-            <label value="Interactive Debugging"/>
-            <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
-            <index value="X2"/>
-            <editorKitId value="OWLEditorKit"/>
-            <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
-        </extension>
-    -->
-    <!-- View -->
+    <extension id="InteractiveDebugging" point="org.protege.editor.core.application.WorkspaceTab">
+        <label value="Exquisite Interactive Debugging"/>
+        <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
+        <index value="X2"/>
+        <editorKitId value="OWLEditorKit"/>
+        <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
+    </extension>
+
+    <!-- View for Test -->
 
     <extension id="ExampleViewComponent" point="org.protege.editor.core.application.ViewComponent">
         <label value="Exquisite Example view component"/>
@@ -31,5 +36,34 @@
         <category value="@org.protege.ontologycategory"/>
     </extension>
 
+    <!-- Views for Interactive Debugging -->
+
+    <extension id="QueryView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Query View"/>
+        <class value="org.exquisite.protege.ui.view.QueryView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <extension id="QueryHistoryView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Query History View"/>
+        <class value="org.exquisite.protege.ui.view.QueryHistoryView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <extension id="DiagnosesView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Diagnoses"/>
+        <class value="org.exquisite.protege.ui.view.DiagnosesView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <extension id="ConflictsView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Conflicts "/>
+        <class value="org.exquisite.protege.ui.view.ConflictsView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
 
 </plugin>
