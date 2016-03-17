@@ -3,7 +3,9 @@ package org.exquisite.core.query;
 import org.exquisite.core.model.Diagnosis;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,9 +31,16 @@ public class QPartition<Formula> {
      */
     public Set<Diagnosis<Formula>> dz = new HashSet<>();
 
+    public QPartition(Set<Diagnosis<Formula>> dx, Set<Diagnosis<Formula>> dnx, Set<Diagnosis<Formula>> dz) {
+        this.dx = dx;
+        this.dnx = dnx;
+        this.dz = dz;
+    }
+
     /**
      * Uniquely defined query for a given Q-Partition, used in the search for Q-Partitions.
      */
+
     public Set<Formula> canonicalQuery;
 
     /**
@@ -48,6 +57,11 @@ public class QPartition<Formula> {
      * Set of queries that the user rejected to answer.
      */
     public Set<Set<Formula>> rejectedQueries;
+
+    /**
+     * Traits, used in Algorithm 2 (Computing successor in D+-Partitioning)
+     */
+    public Map<Diagnosis<Formula>,Set<Formula>> diagsTraits = new HashMap<>();
 
     /**
      * Return the result of query computation.
