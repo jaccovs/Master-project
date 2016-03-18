@@ -1,6 +1,8 @@
 package org.exquisite.core.query;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.slf4j.Logger;
@@ -21,20 +23,24 @@ public class NewQC<Formula> implements NewQueryComputation<Formula> {
 
     private QPartition<Formula> qPartition = null;
 
-    private DiagnosisModel<Formula> diagnosisModel;
+    private AbstractDiagnosisEngine<Formula> diagnosisEngine;
+
+    private DiagnosisModel<Formula>  diagnosisModel;
 
     public NewQC() {
     }
 
-    public NewQC(QPartitionQualityMeasure qPartitionQualityMeasure, DiagnosisModel<Formula> diagnosisModel) {
+    public NewQC(QPartitionQualityMeasure qPartitionQualityMeasure, AbstractDiagnosisEngine<Formula> diagnosisEngine) {
         this.qPartitionQualityMeasure = qPartitionQualityMeasure;
-        this.diagnosisModel = diagnosisModel;
+        this.diagnosisEngine = diagnosisEngine;
+        this.diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
     }
 
     @Override
     public void initialize(Set<Diagnosis<Formula>> diagnoses)
             throws DiagnosisException {
-    /*
+
+
         List<Formula> kb = diagnosisModel.getPossiblyFaultyStatements();
 
         qPartition = findQPartition(diagnoses, diagnosisModel.getStatementWeights(), qPartitionQualityMeasure); // (2)
@@ -44,7 +50,7 @@ public class NewQC<Formula> implements NewQueryComputation<Formula> {
         enrichQuery(qPartition, diagnosisModel); // (4)
 
         Query<Formula> q = optimizeQuery(qPartition); // (5)
-    */
+
     }
 
     @Override
@@ -71,6 +77,8 @@ public class NewQC<Formula> implements NewQueryComputation<Formula> {
      * @return TODO documentation
      */
     private QPartition<Formula> findQPartition(Set<Diagnosis<Formula>> diagnoses, Map statementWeights, QPartitionQualityMeasure qPartitionQualityMeasure) {
+
+        QPartition<Formula> partition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), diagnosisEngine.getCostsEstimator());
 
         // TODO implement (2) of Main Algorithm
 

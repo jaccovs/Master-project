@@ -86,7 +86,7 @@ public class NewInteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F>
         super(solver);
         this.costsEstimator = new SimpleCostsEstimator<>();
         this.innerEngine = new HSTreeEngine<>(solver);
-        this.queryComputation = new NewQC<>(null, this.getDiagnosisModel()); // TODO create implementation of first parameter
+        this.queryComputation = new NewQC<>(null, (AbstractDiagnosisEngine) this.innerEngine); // TODO create implementation of first parameter
         this.queryAnswering = queryAnswering;
     }
 
