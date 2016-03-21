@@ -3,21 +3,55 @@
 
 <plugin>
 
-    <extension id="org.exquisite.protege.model.EditorKitHook"
-               point="org.protege.editor.core.application.EditorKitHook">
+    <extension id="EditorKitHook" point="org.protege.editor.core.application.EditorKitHook">
         <class value="org.exquisite.protege.model.EditorKitHook"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
 
-    <!-- Tabs -->
+    <!-- Menus -->
 
-    <extension id="ExampleWorkspaceTab" point="org.protege.editor.core.application.WorkspaceTab">
-        <label value="Exquisite Example Tab"/>
-        <class value="org.protege.editor.owl.ui.OWLWorkspaceViewsTab"/>
-        <index value="X"/>
-        <editorKitId value="OWLEditorKit"/>
-        <defaultViewConfigFileName value="viewconfig-exampletab.xml"/>
+    <extension id="menu.menudebug" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Excquisite Debugger"/>
+        <toolTip value="Debug with Query Module "/>
+        <path value="/SlotYB-B"/>
+        <editorKitId value="any"/>
     </extension>
+
+    <extension id="menu.menudebug.openinteractivedebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Open Interactive Debug Tab"/>
+        <toolTip value="Open Interactive Debug Tab"/>
+        <class value="org.exquisite.protege.ui.menu.OpenInteractiveDebugTab"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAA-C"/>
+        <editorKitId value="any"/>
+    </extension>
+
+    <extension id="menu.menudebug.options" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Options "/>
+        <toolTip value="Options"/>
+        <class value="org.exquisite.protege.ui.menu.OpenOptionsDialog"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAD-C"/>
+        <editorKitId value="any"/>
+    </extension>
+
+    <extension id="menu.menudebug.calculatediagnoses" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Calculate Diagnoses"/>
+        <toolTip value="Calculate Diagnoses"/>
+        <class value="org.exquisite.protege.ui.menu.CalculateDiagnoses"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAC-B"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift C"/>
+    </extension>
+
+    <extension id="menu.menudebug.reset" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Reset "/>
+        <toolTip value="Reset"/>
+        <class value="org.exquisite.protege.ui.menu.Reset"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAC-C"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift R"/>
+    </extension>
+
+    <!-- Tabs -->
 
     <extension id="InteractiveDebugging" point="org.protege.editor.core.application.WorkspaceTab">
         <label value="Exquisite Interactive Debugging"/>
@@ -25,15 +59,6 @@
         <index value="X2"/>
         <editorKitId value="OWLEditorKit"/>
         <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
-    </extension>
-
-    <!-- View for Test -->
-
-    <extension id="ExampleViewComponent" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Exquisite Example view component"/>
-        <class value="org.exquisite.protege.ui.view.test.ExampleViewComponent"/>
-        <headerColor value="@org.protege.ontologycolor"/>
-        <category value="@org.protege.ontologycategory"/>
     </extension>
 
     <!-- Views for Interactive Debugging -->

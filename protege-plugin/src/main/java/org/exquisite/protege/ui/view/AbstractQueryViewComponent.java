@@ -27,7 +27,7 @@ public abstract class AbstractQueryViewComponent extends AbstractOWLViewComponen
 
     protected void addActiveSearcherListener() {
         editorKitHook = (EditorKitHook)
-                getOWLEditorKit().get("org.exquisite.protege.model.EditorKitHook");
+                getOWLEditorKit().get("org.exquisite.protege.EditorKitHook");
         //getEditorKitHook().addActiveSearcherChangeListener(this); // TODO
     }
 
