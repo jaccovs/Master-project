@@ -1,6 +1,9 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.ui.view.buttons.CommitAndGetNextButton;
+import org.exquisite.protege.ui.view.buttons.GetAlternativeQueryButton;
+import org.exquisite.protege.ui.view.buttons.GetQueryButton;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
@@ -20,10 +23,10 @@ public class QueryView extends AbstractListQueryViewComponent {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setFloatable(false);
-        //toolBar.add(new GetQueryButton(this)); TODO
-        //toolBar.add(new GetAlternativeQueryButton(this)); TODO
+        toolBar.add(new GetQueryButton(this));
+        toolBar.add(new GetAlternativeQueryButton(this));
         toolBar.add(Box.createHorizontalGlue());
-        //toolBar.add(new CommitAndGetNextButton(this)); TODO
+        toolBar.add(new CommitAndGetNextButton(this));
         toolBar.setMaximumSize(toolBar.getPreferredSize());
 
         return toolBar;

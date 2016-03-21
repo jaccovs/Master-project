@@ -5,6 +5,7 @@ import at.ainf.diagnosis.storage.FormulaSet;
 import at.ainf.protegeview.gui.buttons.StartButton;
 import at.ainf.protegeview.model.configuration.SearchCreator;
 */
+import org.exquisite.protege.ui.view.buttons.StartButton;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ import java.util.Set;
  */
 public class DiagnosesView extends AbstractAxiomSetView {
 
-    // private StartButton startButton; // TODO
+    private StartButton startButton;
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -34,11 +35,8 @@ public class DiagnosesView extends AbstractAxiomSetView {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setFloatable(false);
-        /* TODO
         startButton = new StartButton(this);
         toolBar.add(startButton);
-        */
-        //toolBar.add(new ResetButton(this));
         toolBar.add(Box.createHorizontalGlue());
 
         return toolBar;
