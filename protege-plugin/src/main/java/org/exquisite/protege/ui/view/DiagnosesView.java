@@ -5,13 +5,11 @@ import at.ainf.diagnosis.storage.FormulaSet;
 import at.ainf.protegeview.gui.buttons.StartButton;
 import at.ainf.protegeview.model.configuration.SearchCreator;
 */
-import org.exquisite.protege.ui.view.buttons.StartButton;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.exquisite.protege.ui.buttons.StartButton;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.

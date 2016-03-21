@@ -1,4 +1,4 @@
-package org.exquisite.protege.ui.view.buttons;
+package org.exquisite.protege.ui.buttons;
 
 import org.osgi.framework.Bundle;
 import org.protege.editor.core.ProtegeApplication;
