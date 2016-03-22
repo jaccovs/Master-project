@@ -27,6 +27,12 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
         this.diagnosisModel.addObserver(this);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof DiagnosisModel)
+            checkDiagnosisModel();
+    }
+
     /**
      * This method implements consistency checking in presence of the test examples: consistent, inconsistent,
      * entailed and not-entailed. The method implements caching and is suitable for incremental solvers. It saves the
@@ -71,8 +77,6 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @param formulas set of formulas
      */
     private void synchronizeCache(Collection<T> formulas) {
-        if (this.diagnosisModel.hasChanged())
-            checkDiagnosisModel();
         Set<T> checkFormulas = new HashSet<>(this.formulasCache.size());
         checkFormulas.addAll(diagnosisModel.getCorrectStatements());
         checkFormulas.addAll(diagnosisModel.getEntailedExamples());
@@ -102,8 +106,10 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
         this.formulasCache = checkFormulas;
     }
 
-    protected void checkDiagnosisModel() {
-
+    public void checkDiagnosisModel() {
+        if (this.diagnosisModel.getConsistentExamples().stream().
+                anyMatch(o -> this.diagnosisModel.getPossiblyFaultyStatements().contains(o)))
+            throw new RuntimeException("Intersection of correct and faulty statements is not empty!");
         if (!isConsistent(Collections.emptySet()))
             throw new RuntimeException("Inconsistent diagnosis model!");
     }
@@ -152,7 +158,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
 
     /**
      * Computation of entailments is specific for every solver. Please consult documentation of used implementation
-     * for mode details.
+     * for more details.
      *
      * @return a set of entailments of the set of formulas stored in the solver
      */

@@ -63,9 +63,4 @@ public class SimpleConflictSubsetSolver extends AbstractSolver<Integer> {
         }
         return true;
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO implement the sync on changes!
-    }
 }

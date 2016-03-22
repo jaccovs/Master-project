@@ -85,8 +85,7 @@ public class ObservableList<E> extends Observable implements List<E> {
             @Override
             public void remove() {
                 itr.remove();
-                setChanged();
-                notifyObservers();
+                notifyObs(true);
             }
         };
     }
@@ -103,16 +102,20 @@ public class ObservableList<E> extends Observable implements List<E> {
 
     @Override
     public boolean add(E e) {
-        setChanged();
-        notifyObservers();
-        return list.add(e);
+        return notifyObs(list.add(e));
+    }
+
+    private boolean notifyObs(boolean b) {
+        if (b) {
+            setChanged();
+            notifyObservers();
+        }
+        return b;
     }
 
     @Override
     public boolean remove(Object o) {
-        setChanged();
-        notifyObservers();
-        return list.remove(o);
+        return notifyObs(list.remove(o));
     }
 
     @Override
@@ -122,37 +125,28 @@ public class ObservableList<E> extends Observable implements List<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        setChanged();
-        notifyObservers();
-        return list.addAll(c);
+        return notifyObs(list.addAll(c));
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        setChanged();
-        notifyObservers();
-        return list.addAll(index, c);
+        return notifyObs(list.addAll(index, c));
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        setChanged();
-        notifyObservers();
-        return list.removeAll(c);
+        return notifyObs(list.removeAll(c));
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        setChanged();
-        notifyObservers();
-        return list.retainAll(c);
+        return notifyObs(list.retainAll(c));
     }
 
     @Override
     public void replaceAll(UnaryOperator<E> operator) {
-        setChanged();
-        notifyObservers();
         list.replaceAll(operator);
+        notifyObs(true);
     }
 
     @Override
@@ -162,9 +156,8 @@ public class ObservableList<E> extends Observable implements List<E> {
 
     @Override
     public void clear() {
-        setChanged();
-        notifyObservers();
         list.clear();
+        notifyObs(true);
     }
 
     @Override
@@ -184,23 +177,22 @@ public class ObservableList<E> extends Observable implements List<E> {
 
     @Override
     public E set(int index, E element) {
-        setChanged();
-        notifyObservers();
-        return list.set(index, element);
+        E set = list.set(index, element);
+        notifyObs(true);
+        return set;
     }
 
     @Override
     public void add(int index, E element) {
-        setChanged();
-        notifyObservers();
         list.add(index, element);
+        notifyObs(true);
     }
 
     @Override
     public E remove(int index) {
-        setChanged();
-        notifyObservers();
-        return list.remove(index);
+        E remove = list.remove(index);
+        notifyObs(true);
+        return remove;
     }
 
     @Override
@@ -256,22 +248,19 @@ public class ObservableList<E> extends Observable implements List<E> {
             @Override
             public void remove() {
                 itr.remove();
-                setChanged();
-                notifyObservers();
+                notifyObs(true);
             }
 
             @Override
             public void set(E e) {
                 itr.set(e);
-                setChanged();
-                notifyObservers();
+                notifyObs(true);
             }
 
             @Override
             public void add(E e) {
                 itr.add(e);
-                setChanged();
-                notifyObservers();
+                notifyObs(true);
             }
         };
     }
@@ -283,12 +272,7 @@ public class ObservableList<E> extends Observable implements List<E> {
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        boolean b = list.removeIf(filter);
-        if (b) {
-            setChanged();
-            notifyObservers();
-        }
-        return b;
+        return notifyObs(list.removeIf(filter));
     }
 
     @Override

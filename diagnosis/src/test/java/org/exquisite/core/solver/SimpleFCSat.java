@@ -94,9 +94,4 @@ public class SimpleFCSat extends AbstractSolver<FCClause> {
             }
         }
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO implement the sync on changes!
-    }
 }

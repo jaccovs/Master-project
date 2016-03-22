@@ -68,11 +68,12 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     }
 
     /**
-     * Creates an empty diagnosis model
-     * TODO collections cannot detect if the object stored in the collections is modified
+     * Creates an empty diagnosis model. Note that the observers will not be notified if
+     * elements of lists are changed directly!
      */
     public DiagnosisModel() {
     }
+
 
     /**
      * Getter for the correct statements
@@ -162,22 +163,10 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         notifyObservers(this.notEntailedExamples);
     }
 
-    /**
-     * Add a correct constraint
-     *
-     * @param c
-     */
-    public T addCorrectStatement(T c) {
-        this.correctStatements.add(c);
-        return c;
-    }
-
-
-
     @Override
     public void update(Observable o, Object arg) {
         setChanged();
-        // notifyObservers(o);
+        notifyObservers(o);
     }
 
     public Map<T, Float> getStatementWeights() {
