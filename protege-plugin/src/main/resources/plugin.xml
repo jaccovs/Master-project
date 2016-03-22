@@ -17,16 +17,24 @@
         <editorKitId value="any"/>
     </extension>
 
+    <extension id="menu.menudebug.openmanualdebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Open Exquisite Ontology Debug Tab"/>
+        <toolTip value="Open Exquisite Ontology Debug Tab"/>
+        <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAA-B"/>
+        <editorKitId value="any"/>
+    </extension>
+
     <extension id="menu.menudebug.openinteractivedebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Interactive Debug Tab"/>
-        <toolTip value="Open Interactive Debug Tab"/>
+        <name value="Open Exquisite Interactive Debug Tab"/>
+        <toolTip value="Open Exquisite Interactive Debug Tab"/>
         <class value="org.exquisite.protege.ui.menu.OpenInteractiveDebugTab"/>
         <path value="org.exquisite.protege.menu.menudebug/SlotAA-C"/>
         <editorKitId value="any"/>
     </extension>
 
     <extension id="menu.menudebug.options" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Options "/>
+        <name value="Options"/>
         <toolTip value="Options"/>
         <class value="org.exquisite.protege.ui.menu.OpenOptionsDialog"/>
         <path value="org.exquisite.protege.menu.menudebug/SlotAD-C"/>
@@ -61,7 +69,15 @@
         <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
     </extension>
 
-    <!-- Views for Interactive Debugging -->
+    <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
+        <label value="Exquisite Ontology Debugging"/>
+        <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
+        <defaultViewConfigFileName value="OntologyDebuggingLayout.xml"/>
+        <index value="X1"/>
+        <editorKitId value="OWLEditorKit"/>
+    </extension>
+
+    <!-- Views -->
 
     <extension id="QueryView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Query View"/>
@@ -85,8 +101,22 @@
     </extension>
 
     <extension id="ConflictsView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Conflicts "/>
+        <label value="Conflicts"/>
         <class value="org.exquisite.protege.ui.view.ConflictsView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <extension id="BackgroundView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Background View"/>
+        <class value="org.exquisite.protege.ui.view.BackgroundView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <extension id="TestcaseView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Testcases"/>
+        <class value="org.exquisite.protege.ui.view.TestcaseView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>

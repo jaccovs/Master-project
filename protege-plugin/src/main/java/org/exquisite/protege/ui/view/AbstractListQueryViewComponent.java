@@ -15,11 +15,11 @@ import java.awt.*;
 public abstract class AbstractListQueryViewComponent extends AbstractQueryViewComponent {
 
     private JComponent list;
-/* TODO
+
     public JComponent getList() {
         return list;
     }
-*/
+
     @Override
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();

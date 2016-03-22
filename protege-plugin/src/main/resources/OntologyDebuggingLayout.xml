@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <VSNode splits="1.0">
+        <HSNode splits="0.916311257212772">
+            <VSNode splits="0.1250903986371008">
+                <HSNode splits="0.008037221886648531">
+                    <VSNode splits="0.0027616126450321792 0.002619373795247719 0.0026562354463686333">
+                        <CNode>
+                            <Component label="Diagnoses">
+                                <Property id="pluginId" value="org.exquisite.protege.DiagnosesView"/>
+                            </Component>
+                        </CNode>
+                        <HSNode splits="0.0010804804872227714 0.0012600064758690169">
+                            <CNode>
+                                <Component label="Conflicts">
+                                    <Property id="pluginId" value="org.exquisite.protege.ConflictsView"/>
+                                </Component>
+                            </CNode>
+                            <CNode>
+                                <Component label="Background View">
+                                    <Property id="pluginId" value="org.exquisite.protege.BackgroundView"/>
+                                </Component>
+                            </CNode>
+                        </HSNode>
+                        <CNode>
+                            <Component label="Testcases">
+                                <Property id="pluginId" value="org.exquisite.protege.TestcaseView"/>
+                            </Component>
+                        </CNode>
+                    </VSNode>
+                </HSNode>
+            </VSNode>
+        </HSNode>
+    </VSNode>
+</layout>

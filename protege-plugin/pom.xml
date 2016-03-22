@@ -31,6 +31,11 @@
             <artifactId>diagnosis</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.exquisite</groupId>
+            <artifactId>owl-plugin</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
     </dependencies>
 
 
@@ -58,6 +63,15 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <destFileName>org.exquisite.diagnosis.jar</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.exquisite</groupId>
+                                    <artifactId>owl-plugin</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <destFileName>org.exquisite.owl.jar</destFileName>
                                 </artifactItem>
 
                             </artifactItems>
@@ -98,6 +112,7 @@
                         <Bundle-ClassPath>
                             .;
                             org.exquisite.diagnosis.jar;
+                            org.exquisite.owl.jar;
                         </Bundle-ClassPath>
 
                         <Require-Bundle>
