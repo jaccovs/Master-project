@@ -22,11 +22,6 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      */
     private List<T> possiblyFaultyStatements = ObservableList.observableArrayList();
     /**
-     * The set of the statements which are faulty for sure. These statements will be ignored durign tests.diagnosis process,
-     * but will afterwards be added to every found tests.diagnosis.
-     */
-    // private List<T> faultyStatements = ObservableList.observableArrayList();
-    /**
      * The positive examples
      */
     private List<T> consistentExamples = ObservableList.observableArrayList();
@@ -45,31 +40,16 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     private List<T> entailedExamples = ObservableList.observableArrayList();
 
     /**
-     * A set of possible split points for the fault constraints
-     */
-    private List<T> splitPoints = null;
-
-    /**
      * Entailed Testcases = Queries that are answered positively by the user. Each element of the list is
      * exactly the set of formulas in a query.
      */
-    private List<Set<T>> entailedTestCases = ObservableList.observableArrayList(); // NEW
+    //private List<Set<T>> entailedTestCases = ObservableList.observableArrayList(); // NEW
 
     /**
      * Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
      * exactly the set of formulas in a query.
      */
-    private List<Set<T>> notEntailedTestCases = ObservableList.observableArrayList(); // NEW
-
-    /**
-     * True means that repaired knowledge base is required to be coherent. Default is False.
-     */
-    private Boolean coherencyRequired = Boolean.FALSE; // NEW
-
-    /**
-     * True means that repaired knowledge base is required to be consistent. Default is True.
-     */
-    private Boolean consistencyRequired = Boolean.TRUE; // NEW
+    //private List<Set<T>> notEntailedTestCases = ObservableList.observableArrayList(); // NEW
 
     /**
      * A copy constructor that copies all lists and links the pointers to non-changing information
@@ -84,11 +64,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         this.notEntailedExamples = ObservableList.observableList(orig.notEntailedExamples, this);
         this.entailedExamples = ObservableList.observableList(orig.entailedExamples, this);
         this.possiblyFaultyStatements = ObservableList.observableList(orig.possiblyFaultyStatements, this);
-        //this.faultyStatements = ObservableList.observableList(orig.faultyStatements, this);
         this.statementWeights = new HashMap<>(orig.statementWeights);
-
-        this.entailedTestCases = ObservableList.observableList(orig.entailedTestCases);
-        this.notEntailedTestCases = ObservableList.observableList(orig.notEntailedTestCases);
     }
 
     /**
@@ -140,14 +116,6 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     }
 
     /**
-     * A method that randomizes the order of the possibly faulty constraints for experiments..
-     */
-    public void shufflePossiblyFaulyConstraints() {
-        Collections.shuffle(this.possiblyFaultyStatements);
-    }
-
-
-    /**
      * returns the positive examples
      *
      * @return
@@ -191,47 +159,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     public void setNotEntailedExamples(Collection<T> notEntailedExamples) {
         this.notEntailedExamples = ObservableList.observableList(notEntailedExamples, this);
         setChanged();
-        notifyObservers(this.notEntailedExamples); // TODO fixed a possible bug, clarify with Dietmar
-    }
-
-    /**
-     * Get entailed testcases = Queries that are answered positively by the user. Each element of the list is
-     * exactly the set of formulas in a query.
-     * @return
-     */
-    public List<Set<T>> getEntailedTestCases() {
-        return entailedTestCases;
-    }
-
-    /**
-     * Set entailed testcases = Queries that are answered positively by the user. Each element of the list is
-     * exactly the set of formulas in a query.
-     * @param entailedTestCases
-     */
-    public void setEntailedTestCases(List<Set<T>> entailedTestCases) {
-        this.entailedTestCases = ObservableList.observableList(entailedTestCases, this);
-        setChanged();
-        notifyObservers(this.entailedTestCases);
-    }
-
-    /**
-     * Get Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
-     * exactly the set of formulas in a query.
-     * @return
-     */
-    public List<Set<T>> getNotEntailedTestCases() {
-        return notEntailedTestCases;
-    }
-
-    /**
-     * Set Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
-     * exactly the set of formulas in a query.
-     * @param notEntailedTestCases
-     */
-    public void setNotEntailedTestCases(List<Set<T>> notEntailedTestCases) {
-        this.notEntailedTestCases = ObservableList.observableList(notEntailedTestCases, this);
-        this.notEntailedTestCases = notEntailedTestCases;
-        notifyObservers(this.notEntailedTestCases);
+        notifyObservers(this.notEntailedExamples);
     }
 
     /**
@@ -239,29 +167,11 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @param c
      */
-    public T addCorrectFormula(T c) {
+    public T addCorrectStatement(T c) {
         this.correctStatements.add(c);
         return c;
     }
 
-
-    /**
-     * Returns the split points or null
-     *
-     * @return
-     */
-    public List<T> getSplitPoints() {
-        return splitPoints;
-    }
-
-    /**
-     * Remember the split points
-     *
-     * @param splitPoints
-     */
-    public void setSplitPoints(List<T> splitPoints) {
-        this.splitPoints = ObservableList.observableList(splitPoints, this);
-    }
 
 
     @Override
@@ -299,21 +209,4 @@ public class DiagnosisModel<T> extends Observable implements Observer {
     public void initialize() {
 
     }
-
-    public Boolean isCoherencyRequired() {
-        return coherencyRequired;
-    }
-
-    public void setCoherencyRequired(Boolean coherencyRequired) {
-        this.coherencyRequired = coherencyRequired;
-    }
-
-    public Boolean isConsistencyRequired() {
-        return consistencyRequired;
-    }
-
-    public void setConsistencyRequired(Boolean consistencyRequired) {
-        this.consistencyRequired = consistencyRequired;
-    }
-
 }

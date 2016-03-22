@@ -25,9 +25,9 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 /**
  * A diagnosis engine that interacts with a user or any of the query answering interface to find the one correct
  * diagnosis. This class depends on another engine that allows computation of diagnoses.
- *
+ * <p>
  * Copy of InteractiveDiagnosisEngine and slightly adapted for requirements of NewQC.
- *
+ * <p>
  * Created by pr8 and wolfi on 10.03.2015.
  */
 public class NewInteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
@@ -124,10 +124,8 @@ public class NewInteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F>
 
                     Answer<F> answer = this.queryAnswering.getAnswer(query);
 
-                    if (answer.positive.containsAll(query))
-                        getDiagnosisModel().getEntailedTestCases().add(query);
-                    else
-                        getDiagnosisModel().getNotEntailedTestCases().add(query);
+                    getDiagnosisModel().getEntailedExamples().addAll(answer.positive);
+                    getDiagnosisModel().getNotEntailedExamples().addAll(answer.negative);
                 }
             }
         } while (diagnoses.size() > 1 && belowThreshold(diagnoses)); // TODO LOGISCHES UND ???

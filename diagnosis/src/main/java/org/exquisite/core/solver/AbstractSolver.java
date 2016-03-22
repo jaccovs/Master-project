@@ -71,6 +71,8 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @param formulas set of formulas
      */
     private void synchronizeCache(Collection<T> formulas) {
+        if (this.diagnosisModel.hasChanged())
+            checkDiagnosisModel();
         Set<T> checkFormulas = new HashSet<>(this.formulasCache.size());
         checkFormulas.addAll(diagnosisModel.getCorrectStatements());
         checkFormulas.addAll(diagnosisModel.getEntailedExamples());
@@ -100,13 +102,19 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
         this.formulasCache = checkFormulas;
     }
 
+    protected void checkDiagnosisModel() {
+
+        if (!isConsistent(Collections.emptySet()))
+            throw new RuntimeException("Inconsistent diagnosis model!");
+    }
+
     private boolean violatesExample(Collection<T> examples, boolean expectedResult) {
-        Set<T> prevEx = Collections.EMPTY_SET;
+        Set<T> prevEx = Collections.emptySet();
         for (T example : examples) {
             Set<T> ex = Collections.singleton(example);
             sync(ex, prevEx);
             if (isConsistent() != expectedResult) {
-                sync(Collections.EMPTY_SET, ex);
+                sync(Collections.emptySet(), ex);
                 return true;
             }
         }
