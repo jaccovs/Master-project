@@ -57,6 +57,14 @@
             <id>kostya</id>
             <name>Konstantin Schekotihin</name>
         </developer>
+        <developer>
+            <id>patrick</id>
+            <name>Patrick Rodler</name>
+        </developer>
+        <developer>
+            <id>pfleiss</id>
+            <name>Philipp Fleiss</name>
+        </developer>
     </developers>
 
     <properties>
