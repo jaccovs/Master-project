@@ -1,6 +1,9 @@
 package org.exquisite.core;
 
+import org.exquisite.core.model.Diagnosis;
+
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,5 +30,19 @@ public class Utils {
         }
         return false;
         */
+    }
+
+    /**
+     * Creates a new set of diagnoses representing the union of all sets given as parameter.
+     *
+     * @param sets Sets of diagnoses, they are unmodified after operation.
+     * @param <F> Formulas, Statements, Axioms, Sentences, etc.
+     * @return A new set of diagnoses representing the union of all sets of diagnoses.
+     */
+    public static <F> Set<Diagnosis<F>> union(Set<Diagnosis<F>>... sets) {
+        // TODO add assertion that no intersection is allowed ?
+        Set<Diagnosis<F>> union = new HashSet<>();
+        for (Set<Diagnosis<F>> set: sets) union.addAll(set);
+        return union;
     }
 }
