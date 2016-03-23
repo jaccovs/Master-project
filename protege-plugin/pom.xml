@@ -29,12 +29,12 @@
         <dependency>
             <groupId>org.exquisite</groupId>
             <artifactId>diagnosis</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exquisite</groupId>
             <artifactId>owl-plugin</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
