@@ -8,7 +8,7 @@ import org.exquisite.core.query.QPartition;
  * @author patrick
  * @author wolfi
  */
-public class EntropyBasedQueryMeasure<F> implements IQPartitionQualityMeasure<F> {
+public class EntropyBasedMeasure<F> implements IQPartitionQualityMeasure<F> {
 
     /**
      * A threshold value.
@@ -19,7 +19,7 @@ public class EntropyBasedQueryMeasure<F> implements IQPartitionQualityMeasure<F>
      *
      * @param threshold A threshold value tm.
      */
-    public EntropyBasedQueryMeasure(Double threshold) {
+    public EntropyBasedMeasure(Double threshold) {
         this.tm = threshold;
     }
 

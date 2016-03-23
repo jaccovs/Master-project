@@ -12,7 +12,7 @@ import java.util.Set;
  * @author patrick
  * @author wolfi
  */
-public class RiskOptimizedQualityMeasure<F> implements IQPartitionQualityMeasure<F> {
+public class RiskOptimizationMeasure<F> implements IQPartitionQualityMeasure<F> {
 
     private Double c;                       // TODO Datentyp nachfragen
 
@@ -27,7 +27,7 @@ public class RiskOptimizedQualityMeasure<F> implements IQPartitionQualityMeasure
      * @param cardinalityThreshold
      * @param cautious
      */
-    public RiskOptimizedQualityMeasure(Double entropyThreshold, Double cardinalityThreshold, Double cautious) {
+    public RiskOptimizationMeasure(Double entropyThreshold, Double cardinalityThreshold, Double cautious) {
         this.tEnt = entropyThreshold;
         this.tCard = cardinalityThreshold;
         this.c = cautious;

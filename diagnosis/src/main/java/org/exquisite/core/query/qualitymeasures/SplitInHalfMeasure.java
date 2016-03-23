@@ -12,7 +12,7 @@ import java.util.Set;
  * @author patrick
  * @author wolfi
  */
-public class SplitInHalfQueryMeasure<F> implements IQPartitionQualityMeasure<F> {
+public class SplitInHalfMeasure<F> implements IQPartitionQualityMeasure<F> {
 
     /**
      * A threshold value.
@@ -23,7 +23,7 @@ public class SplitInHalfQueryMeasure<F> implements IQPartitionQualityMeasure<F> 
      *
      * @param threshold A threshold value.
      */
-    public SplitInHalfQueryMeasure(Double threshold) {
+    public SplitInHalfMeasure(Double threshold) {
         this.tm = threshold;
     }
 
