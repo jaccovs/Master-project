@@ -18,14 +18,14 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
  * Simple query computation methods that implements a brute force approach to query computation. This approach simply
  * traverses all possible partitions of diagnoses into two sets and computes a query for each partition if it exists
  */
-public class SimpleQC<T> implements QueryComputation<T> {
+public class SimpleQC<F> implements QueryComputation<F> {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleQC.class);
 
-    private final QuerySelection<T> querySelection;
+    private final QuerySelection<F> querySelection;
 
     private BigDecimal threshold = BigDecimal.ZERO;
-    private Iterator<Query<T>> queriesIterator = null;
+    private Iterator<Query<F>> queriesIterator = null;
 
     /**
      * Default constructor that sets query selection strategy to MinScoreQSS
@@ -34,19 +34,19 @@ public class SimpleQC<T> implements QueryComputation<T> {
         this(new MinScoreQSS<>());
     }
 
-    public SimpleQC(QuerySelection<T> querySelection) {
+    public SimpleQC(QuerySelection<F> querySelection) {
         this.querySelection = querySelection;
     }
 
     @Override
-    public void initialize(Set<Diagnosis<T>> hittingSets)
+    public void initialize(Set<Diagnosis<F>> diagnoses)
             throws DiagnosisException {
-        Set<Query<T>> queries = new TreeSet<>((Comparator<Query<T>>) (o1, o2) -> {
-            int res = o1.score.compareTo(o2.score);
+        Set<Query<F>> queries = new TreeSet<>((Comparator<Query<F>>) (o1, o2) -> {
+            int res = o1.qPartition.score.compareTo(o2.qPartition.score);
             if (res == 0) res = compare(o1.formulas.size(), o2.formulas.size());
             if (res == 0) {
-                Iterator<T> it1 = o1.formulas.iterator();
-                Iterator<T> it2 = o2.formulas.iterator();
+                Iterator<F> it1 = o1.formulas.iterator();
+                Iterator<F> it2 = o2.formulas.iterator();
                 while (it1.hasNext() && it2.hasNext()) {
                     res = compare(it1.next().hashCode(), it2.next().hashCode());
                     if (res != 0)
@@ -55,9 +55,9 @@ public class SimpleQC<T> implements QueryComputation<T> {
             }
             return res;
         });
-        Set<T> kb = hittingSets.stream().map(Diagnosis::getFormulas).flatMap(Collection::stream).collect
+        Set<F> kb = diagnoses.stream().map(Diagnosis::getFormulas).flatMap(Collection::stream).collect
                 (Collectors.toSet());
-        computeQueries(kb, new ArrayList<>(hittingSets), queries);
+        computeQueries(kb, new ArrayList<>(diagnoses), queries);
         this.queriesIterator = queries.iterator();
     }
 
@@ -66,7 +66,7 @@ public class SimpleQC<T> implements QueryComputation<T> {
     }
 
     @Override
-    public Query<T> next() {
+    public Query<F> next() {
         return queriesIterator.next();
     }
 
@@ -88,18 +88,18 @@ public class SimpleQC<T> implements QueryComputation<T> {
         this.threshold = BigDecimal.valueOf(threshold);
     }
 
-    public QuerySelection<T> getQuerySelection() {
+    public QuerySelection<F> getQuerySelection() {
         return querySelection;
     }
 
-    protected long computeQueries(Set<T> kb, ArrayList<Diagnosis<T>> diagnoses,
-                                  Set<Query<T>> queries) {
+    protected long computeQueries(Set<F> kb, ArrayList<Diagnosis<F>> diagnoses,
+                                  Set<Query<F>> queries) {
 
         return computeQueries(kb, diagnoses, queries, 1L);
     }
 
-    private long computeQueries(Set<T> kb, ArrayList<Diagnosis<T>> diagnoses,
-                                Set<Query<T>> queries, long start) {
+    private long computeQueries(Set<F> kb, ArrayList<Diagnosis<F>> diagnoses,
+                                Set<Query<F>> queries, long start) {
 
         long n = diagnoses.size();
         long range = (long) Math.pow(2, n) - 1;
@@ -107,7 +107,7 @@ public class SimpleQC<T> implements QueryComputation<T> {
             throw new IllegalArgumentException("Incorrect start value!");
 
         for (; start < range; start = getNext(start)) {
-            Set<Diagnosis<T>> dx = new LinkedHashSet<>();
+            Set<Diagnosis<F>> dx = new LinkedHashSet<>();
 
             // convert value to the bit representation and generate the partition of diagnoses
             long value = start;
@@ -120,14 +120,14 @@ public class SimpleQC<T> implements QueryComputation<T> {
                 value = value >>> 1;
             }
 
-            Set<Diagnosis<T>> remainingDiagnoses = diagnoses.stream().filter(d -> !dx.contains(d)).collect
+            Set<Diagnosis<F>> remainingDiagnoses = diagnoses.stream().filter(d -> !dx.contains(d)).collect
                     (Collectors.toSet());
 
-            Query<T> query = createQuery(kb, dx, remainingDiagnoses);
-            if (query != null && query.score.compareTo(getThreshold()) < 0) {
+            Query<F> query = createQuery(kb, dx, remainingDiagnoses);
+            if (query != null && query.qPartition.score.compareTo(getThreshold()) < 0) {
                 queries.add(query);
                 if (logger.isDebugEnabled())
-                    logger.debug("Created query: \n dx:" + query.dx + "\n remainingDiagnoses:" + query.dnx + "\n dz:" + query.dz);
+                    logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n remainingDiagnoses:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz);
             }
 
         }
@@ -138,19 +138,19 @@ public class SimpleQC<T> implements QueryComputation<T> {
         return i + 1;
     }
 
-    public Query<T> createQuery(Set<T> kb, Collection<Diagnosis<T>> dx, Collection<Diagnosis<T>> remainingDiagnoses) {
+    public Query<F> createQuery(Set<F> kb, Collection<Diagnosis<F>> dx, Collection<Diagnosis<F>> remainingDiagnoses) {
 
         if (dx.isEmpty() || remainingDiagnoses.isEmpty())
             throw new IllegalArgumentException("Input sets of diagnoses must not be empty!");
 
-        Query<T> query = new Query<>();
+        Query<F> query = new Query<>();
         // TODO check if we can simply use query.dx.addAll(dx);
-        query.dx.addAll(dx.stream().collect(Collectors.toList()));
+        query.qPartition.dx.addAll(dx.stream().collect(Collectors.toList()));
         if (logger.isDebugEnabled())
             logger.debug("Creating a query with dx: " + dx);
 
 
-        Set<T> ent = getCommonFormulas(kb, query.dx);
+        Set<F> ent = getCommonFormulas(kb, query.qPartition.dx);
         if (ent.isEmpty()) return null;
 
         incrementCounter(COUNTER_INTERACTIVE_PARTITIONS);
@@ -160,23 +160,23 @@ public class SimpleQC<T> implements QueryComputation<T> {
             logger.debug("Common entailments: " + query.formulas);
 
         // query the rest of diagnoses
-        for (Diagnosis<T> hs : remainingDiagnoses) {
-            if (!query.dx.contains(hs)) {
+        for (Diagnosis<F> hs : remainingDiagnoses) {
+            if (!query.qPartition.dx.contains(hs)) {
                 if (getEntailments(kb, hs).containsAll(ent))
-                    query.dx.add(hs);
+                    query.qPartition.dx.add(hs);
                 else if (hs.getFormulas().stream().anyMatch(ent::contains))
-                    query.dnx.add(hs);
+                    query.qPartition.dnx.add(hs);
                 else
-                    query.dz.add(hs);
+                    query.qPartition.dz.add(hs);
             }
         }
-        query.score = getQuerySelection().getScore(query);
+        query.qPartition.score = getQuerySelection().getScore(query);
         return query;
     }
 
-    public Set<T> getCommonFormulas(Set<T> kb, Set<Diagnosis<T>> dx) {
-        Set<T> intersection = null;
-        for (Diagnosis<T> hs : dx) {
+    public Set<F> getCommonFormulas(Set<F> kb, Set<Diagnosis<F>> dx) {
+        Set<F> intersection = null;
+        for (Diagnosis<F> hs : dx) {
             if (intersection == null) {
                 intersection = getEntailments(kb, hs);
             } else
@@ -187,8 +187,8 @@ public class SimpleQC<T> implements QueryComputation<T> {
         return intersection;
     }
 
-    private Set<T> getEntailments(Set<T> kb, Diagnosis<T> hs) {
-        Set<T> intersection = new HashSet<>(kb);
+    private Set<F> getEntailments(Set<F> kb, Diagnosis<F> hs) {
+        Set<F> intersection = new HashSet<>(kb);
         intersection.removeAll(hs.getFormulas());
         return intersection;
     }

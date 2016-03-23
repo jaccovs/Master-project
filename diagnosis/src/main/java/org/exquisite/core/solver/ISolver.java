@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author Thomas
  */
-public interface ISolver<T> {
+public interface ISolver<F> {
 
     /**
      * Checks consistency of a set of formulas
@@ -19,7 +19,7 @@ public interface ISolver<T> {
      * @param formulas       set of formulas
      * @return <code>true</code> if formulas are consistent and <code>false</code> otherwise
      */
-    boolean isConsistent(Collection<T> formulas);
+    boolean isConsistent(Collection<F> formulas);
 
     /**
      * Special version of isConsistent, that checks if the set of formulas entails the set of entailments
@@ -28,7 +28,7 @@ public interface ISolver<T> {
      * @param alpha          set of formulas that must be verified
      * @return <code>true</code> if formulas entail entailments
      */
-    boolean isEntailed(Collection<T> formulas, Collection<T> alpha);
+    boolean isEntailed(Collection<F> formulas, Collection<F> alpha);
 
     /**
      * Calculates the set of entailed formulas. See documentation of implementing classes for particular semantics
@@ -37,11 +37,11 @@ public interface ISolver<T> {
      * @param formulas       set of formulas
      * @return set of entailments
      */
-    Set<T> calculateEntailments(Collection<T> formulas);
+    Set<F> calculateEntailments(Collection<F> formulas);
 
     /**
      *
      * @return the diagnosis model of the solver
      */
-    DiagnosisModel<T> getDiagnosisModel();
+    DiagnosisModel<F> getDiagnosisModel();
 }

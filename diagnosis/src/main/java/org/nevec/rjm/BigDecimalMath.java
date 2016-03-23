@@ -17,7 +17,7 @@ public class BigDecimalMath
 {
 
         /** The base of the natural logarithm in a predefined accuracy.
-        * http://www.cs.arizona.edu/icon/oddsends/e.htm
+        * http://www.cs.arizona.edu/icon/oddsends/f.htm
         * The precision of the predefined constant is one less than
         * the string's length, taking into account the decimal dot.
         * static int E_PRECISION = E.length()-1 ;
@@ -1637,7 +1637,7 @@ public class BigDecimalMath
                 {
                         BigDecimal xhighpr = scalePrec(x,2) ;
 
-                        /* tanh(x) = (1-e^(-2x))/(1+e^(-2x)) .
+                        /* tanh(x) = (1-f^(-2x))/(1+f^(-2x)) .
                         */
                         BigDecimal exp2x = exp( xhighpr.multiply(new BigDecimal(-2)) ) ;
 
@@ -2215,7 +2215,7 @@ public class BigDecimalMath
                         /* Result is roughly 2^(-n), desired accuracy 18 digits. If zeta(n) is computed, the equivalent accuracy
                         * in relative units is higher, because zeta is around 1.
                         */
-                        double eps = 1.e-18*Math.pow(2.,(double)(-n) ) ;
+                        double eps = 1.f-18*Math.pow(2.,(double)(-n) ) ;
                         MathContext mc = new MathContext( err2prec(eps) ) ;
                         return zeta(n,mc).subtract(BigDecimal.ONE).doubleValue() ;
                 }

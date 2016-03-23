@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author David
  */
-public interface IDiagnosisEngine<T> {
+public interface IDiagnosisEngine<F> {
 
     /**
      * Reverts the state of the engine to how it was when first instantiated.
@@ -25,7 +25,7 @@ public interface IDiagnosisEngine<T> {
      *
      * @return solver of the engine
      */
-    ISolver<T> getSolver();
+    ISolver<F> getSolver();
 
     /**
      * Start the tests.diagnosis process.
@@ -33,12 +33,12 @@ public interface IDiagnosisEngine<T> {
      * @return a list of diagnoses or an empty list if no diagnoses were found.
      * @throws DiagnosisException
      */
-    Set<Diagnosis<T>> calculateDiagnoses() throws DiagnosisException;
+    Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException;
 
 
     /**
      * Use this method to preset known conflicts to the diagnosis engine
      * @param conflicts a set of known conflicts
      */
-    void setConflicts(Set<Set<T>> conflicts);
+    void setConflicts(Set<Set<F>> conflicts);
 }

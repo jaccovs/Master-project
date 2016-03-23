@@ -21,7 +21,7 @@ public class TestReasoner extends AbstractTest {
         ExquisiteOWLReasoner reasoner = createReasoner(ontology);
 
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = reasoner.getDiagnosisModel();
-        reasoner.isConsistent(diagnosisModel.getPossiblyFaultyStatements());
+        reasoner.isConsistent(diagnosisModel.getPossiblyFaultyFormulas());
 
     }
 

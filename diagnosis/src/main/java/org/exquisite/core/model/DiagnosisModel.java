@@ -7,64 +7,64 @@ import java.util.*;
  *
  * @author Dietmar
  */
-public class DiagnosisModel<T> extends Observable implements Observer {
+public class DiagnosisModel<F> extends Observable implements Observer {
 
     /**
      * Weights of constraints
      */
-    private Map<T, Float> statementWeights = new HashMap<>();
+    private Map<F, Float> formulaWeights = new HashMap<>();
     /**
      * The set of formulas which we assume to be always correct (background knowledge)
      */
-    private List<T> correctStatements = ObservableList.observableArrayList();
+    private List<F> correctFormulas = ObservableList.observableArrayList();
     /**
      * The set of the statements which could be faulty = KB (knowledge base).
      */
-    private List<T> possiblyFaultyStatements = ObservableList.observableArrayList();
+    private List<F> possiblyFaultyFormulas = ObservableList.observableArrayList();
     /**
      * The positive examples
      */
-    private List<T> consistentExamples = ObservableList.observableArrayList();
+    private List<F> consistentExamples = ObservableList.observableArrayList();
     /**
      * The negative examples
      */
-    private List<T> inconsistentExamples = ObservableList.observableArrayList();
+    private List<F> inconsistentExamples = ObservableList.observableArrayList();
     /**
      * List of statements, that should not be entailed
      */
-    private List<T> notEntailedExamples = ObservableList.observableArrayList();
+    private List<F> notEntailedExamples = ObservableList.observableArrayList();
 
     /**
      * List of statements, that should be entailed
      */
-    private List<T> entailedExamples = ObservableList.observableArrayList();
+    private List<F> entailedExamples = ObservableList.observableArrayList();
 
     /**
      * Entailed Testcases = Queries that are answered positively by the user. Each element of the list is
      * exactly the set of formulas in a query.
      */
-    //private List<Set<T>> entailedTestCases = ObservableList.observableArrayList(); // NEW
+    //private List<Set<F>> entailedTestCases = ObservableList.observableArrayList(); // NEW
 
     /**
      * Not Entailed Testcases = Queries that are answered negatively by the user. Each element of the list is
      * exactly the set of formulas in a query.
      */
-    //private List<Set<T>> notEntailedTestCases = ObservableList.observableArrayList(); // NEW
+    //private List<Set<F>> notEntailedTestCases = ObservableList.observableArrayList(); // NEW
 
     /**
      * A copy constructor that copies all lists and links the pointers to non-changing information
      *
      * @param orig the original model to copy
      */
-    public DiagnosisModel(DiagnosisModel<T> orig) {
+    public DiagnosisModel(DiagnosisModel<F> orig) {
         // only copy the
-        this.correctStatements = ObservableList.observableList(orig.correctStatements, this);
+        this.correctFormulas = ObservableList.observableList(orig.correctFormulas, this);
         this.inconsistentExamples = ObservableList.observableList(orig.inconsistentExamples, this);
         this.consistentExamples = ObservableList.observableList(orig.consistentExamples, this);
         this.notEntailedExamples = ObservableList.observableList(orig.notEntailedExamples, this);
         this.entailedExamples = ObservableList.observableList(orig.entailedExamples, this);
-        this.possiblyFaultyStatements = ObservableList.observableList(orig.possiblyFaultyStatements, this);
-        this.statementWeights = new HashMap<>(orig.statementWeights);
+        this.possiblyFaultyFormulas = ObservableList.observableList(orig.possiblyFaultyFormulas, this);
+        this.formulaWeights = new HashMap<>(orig.formulaWeights);
     }
 
     /**
@@ -80,19 +80,19 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @return
      */
-    public List<T> getCorrectStatements() {
-        return correctStatements;
+    public List<F> getCorrectFormulas() {
+        return correctFormulas;
     }
 
     /**
      * Sets the correct statements
      *
-     * @param correctStatements
+     * @param correctFormulas
      */
-    public void setCorrectStatements(List<T> correctStatements) {
-        this.correctStatements = ObservableList.observableList(correctStatements, this);
+    public void setCorrectFormulas(List<F> correctFormulas) {
+        this.correctFormulas = ObservableList.observableList(correctFormulas, this);
         setChanged();
-        notifyObservers(this.correctStatements);
+        notifyObservers(this.correctFormulas);
     }
 
     /**
@@ -100,20 +100,20 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @return
      */
-    public List<T> getPossiblyFaultyStatements() {
-        return possiblyFaultyStatements;
+    public List<F> getPossiblyFaultyFormulas() {
+        return possiblyFaultyFormulas;
     }
 
     /**
      * Setter for the possibly faulty statements
      *
-     * @param possiblyFaultyStatements
+     * @param possiblyFaultyFormulas
      */
-    public void setPossiblyFaultyStatements(
-            Collection<T> possiblyFaultyStatements) {
-        this.possiblyFaultyStatements = ObservableList.observableList(possiblyFaultyStatements, this);
+    public void setPossiblyFaultyFormulas(
+            Collection<F> possiblyFaultyFormulas) {
+        this.possiblyFaultyFormulas = ObservableList.observableList(possiblyFaultyFormulas, this);
         setChanged();
-        notifyObservers(this.possiblyFaultyStatements);
+        notifyObservers(this.possiblyFaultyFormulas);
     }
 
     /**
@@ -121,7 +121,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @return
      */
-    public List<T> getConsistentExamples() {
+    public List<F> getConsistentExamples() {
         return consistentExamples;
     }
 
@@ -131,7 +131,7 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @param consistentExamples
      */
-    public void setConsistentExamples(Collection<T> consistentExamples) {
+    public void setConsistentExamples(Collection<F> consistentExamples) {
         this.consistentExamples = ObservableList.observableList(consistentExamples, this);
         setChanged();
         notifyObservers(this.consistentExamples);
@@ -142,22 +142,22 @@ public class DiagnosisModel<T> extends Observable implements Observer {
      *
      * @return
      */
-    public List<T> getInconsistentExamples() {
+    public List<F> getInconsistentExamples() {
         return inconsistentExamples;
     }
 
 
-    public void setInconsistentExamples(Collection<T> inconsistentExamples) {
+    public void setInconsistentExamples(Collection<F> inconsistentExamples) {
         this.inconsistentExamples = ObservableList.observableList(inconsistentExamples, this);
         setChanged();
         notifyObservers(this.inconsistentExamples);
     }
 
-    public List<T> getNotEntailedExamples() {
+    public List<F> getNotEntailedExamples() {
         return notEntailedExamples;
     }
 
-    public void setNotEntailedExamples(Collection<T> notEntailedExamples) {
+    public void setNotEntailedExamples(Collection<F> notEntailedExamples) {
         this.notEntailedExamples = ObservableList.observableList(notEntailedExamples, this);
         setChanged();
         notifyObservers(this.notEntailedExamples);
@@ -169,19 +169,19 @@ public class DiagnosisModel<T> extends Observable implements Observer {
         notifyObservers(o);
     }
 
-    public Map<T, Float> getStatementWeights() {
-        return statementWeights;
+    public Map<F, Float> getFormulaWeights() {
+        return formulaWeights;
     }
 
-    public void setStatementWeights(Map<T, Float> statementWeights) {
-        this.statementWeights = statementWeights;
+    public void setFormulaWeights(Map<F, Float> formulaWeights) {
+        this.formulaWeights = formulaWeights;
     }
 
-    public List<T> getEntailedExamples() {
+    public List<F> getEntailedExamples() {
         return entailedExamples;
     }
 
-    public void setEntailedExamples(Collection<T> entailedExamples) {
+    public void setEntailedExamples(Collection<F> entailedExamples) {
         this.entailedExamples = ObservableList.observableList(entailedExamples, this);
         setChanged();
         notifyObservers(this.entailedExamples);

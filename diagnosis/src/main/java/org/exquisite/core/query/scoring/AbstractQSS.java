@@ -18,7 +18,7 @@ import static org.nevec.rjm.BigDecimalMath.log;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractQSS<Formula> implements QuerySelection<Formula> {
+public abstract class AbstractQSS<F> implements QuerySelection<F> {
 
     public final MathContext DEFAULT_MC = MathContext.DECIMAL128;
 
@@ -32,14 +32,14 @@ public abstract class AbstractQSS<Formula> implements QuerySelection<Formula> {
     }
 
     protected int getMinNumOfElimDiags(Query query) {
-        return Math.min(query.dx.size(), query.dnx.size());
+        return Math.min(query.qPartition.dx.size(), query.qPartition.dnx.size());
     }
 
 
-    protected BigDecimal getQueryScore(Query<Formula> query) {
-        BigDecimal sumDx = getSumProb(query.dx);
-        BigDecimal sumDnx = getSumProb(query.dnx);
-        BigDecimal sumD0 = getSumProb(query.dz);
+    protected BigDecimal getQueryScore(Query<F> query) {
+        BigDecimal sumDx = getSumProb(query.qPartition.dx);
+        BigDecimal sumDnx = getSumProb(query.qPartition.dnx);
+        BigDecimal sumD0 = getSumProb(query.qPartition.dz);
 
         BigDecimal temp = sumDx.multiply(log2(sumDx));
         temp = temp.add(sumDnx.multiply(log2(sumDnx)));
@@ -48,9 +48,9 @@ public abstract class AbstractQSS<Formula> implements QuerySelection<Formula> {
 
     }
 
-    protected BigDecimal getSumProb(Set<Diagnosis<Formula>> set) {
+    protected BigDecimal getSumProb(Set<Diagnosis<F>> set) {
         BigDecimal pr = new BigDecimal("0");
-        for (Diagnosis<Formula> diagnosis : set)
+        for (Diagnosis<F> diagnosis : set)
             pr = pr.add(diagnosis.getMeasure());
 
         return pr;
@@ -68,14 +68,14 @@ public abstract class AbstractQSS<Formula> implements QuerySelection<Formula> {
         }
     }
 
-    public class ScoreComparator implements Comparator<Query<Formula>> {
-        public int compare(Query<Formula> o1, Query<Formula> o2) {
+    public class ScoreComparator implements Comparator<Query<F>> {
+        public int compare(Query<F> o1, Query<F> o2) {
             if (getQueryScore(o1).compareTo(getQueryScore(o2)) < 0)
                 return -1;
             else if (getQueryScore(o1).compareTo(getQueryScore(o2)) > 0)
                 return 1;
             else
-                return -1 * ((Integer) o1.dx.size()).compareTo(o2.dx.size());
+                return -1 * ((Integer) o1.qPartition.dx.size()).compareTo(o2.qPartition.dx.size());
 
         }
     }

@@ -16,22 +16,22 @@ import java.util.Set;
  * Time: 11:19
  * To change this template use File | Settings | File Templates.
  */
-public class MinScoreQSS<Formula> extends AbstractQSS<Formula> {
+public class MinScoreQSS<F> extends AbstractQSS<F> {
 
     private static Logger logger = LoggerFactory.getLogger(MinScoreQSS.class.getName());
 
-    public BigDecimal getScore(Query<Formula> query) {
-        if (query == null || query.dx.isEmpty())
+    public BigDecimal getScore(Query<F> query) {
+        if (query == null || query.qPartition.dx.isEmpty())
             return BigDecimal.valueOf(Double.MAX_VALUE);
-        if (query.score.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) < 0)
-            return query.score;
-        BigDecimal pX = sum(query.dx).add(sum(query.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
-        BigDecimal pNX = sum(query.dnx).add(sum(query.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
+        if (query.qPartition.score.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) < 0)
+            return query.qPartition.score;
+        BigDecimal pX = sum(query.qPartition.dx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
+        BigDecimal pNX = sum(query.qPartition.dnx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
 
         BigDecimal t1 = pX.multiply(log2(pX));
         BigDecimal t2 = pNX.multiply(log2(pNX));
 
-        BigDecimal sc = t1.add(t2.add(sum(query.dz).add(BigDecimal.ONE)));
+        BigDecimal sc = t1.add(t2.add(sum(query.qPartition.dz).add(BigDecimal.ONE)));
 
         if (sc.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("Score is less than 0! sc=" + sc);
@@ -39,13 +39,13 @@ public class MinScoreQSS<Formula> extends AbstractQSS<Formula> {
 
         }
 
-        query.score = sc;
+        query.qPartition.score = sc;
         return sc;
     }
 
-    private BigDecimal sum(Set<Diagnosis<Formula>> dx) {
+    private BigDecimal sum(Set<Diagnosis<F>> dx) {
         BigDecimal sum = new BigDecimal("0");
-        for (Diagnosis<Formula> hs : dx)
+        for (Diagnosis<F> hs : dx)
             sum = sum.add(hs.getMeasure());
         return sum;
     }
@@ -54,9 +54,9 @@ public class MinScoreQSS<Formula> extends AbstractQSS<Formula> {
         return "Entropy";
     }
 
-    public void normalize(Set<Diagnosis<Formula>> diagnosises) {
+    public void normalize(Set<Diagnosis<F>> diagnosises) {
         BigDecimal sum = sum(diagnosises);
-        for (Diagnosis<Formula> hs : diagnosises) {
+        for (Diagnosis<F> hs : diagnosises) {
             BigDecimal value = hs.getMeasure().divide(sum, DEFAULT_MC);
             hs.setMeasure(value);
         }

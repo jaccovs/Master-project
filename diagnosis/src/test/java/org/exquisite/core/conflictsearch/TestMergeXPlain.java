@@ -50,8 +50,8 @@ public class TestMergeXPlain extends TestConflictSearcher {
         // invocation of the framework
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Collections.singletonList(0));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Collections.singletonList(0));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 

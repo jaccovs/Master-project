@@ -27,8 +27,8 @@ public class TestHSTreeEngine {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         HSTreeEngine<Integer> hs = new HSTreeEngine<>(solver);
@@ -46,8 +46,8 @@ public class TestHSTreeEngine {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         HSTreeEngine<Integer> hs = new HSTreeEngine<>(solver);
@@ -64,8 +64,8 @@ public class TestHSTreeEngine {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
         // "5" must be in every diagnosis, as it must not be entailed
         model.setNotEntailedExamples(Arrays.asList(5));
         // hitting set "3" is not a diagnosis, since its KB violates the next example

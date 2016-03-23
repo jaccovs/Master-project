@@ -38,7 +38,7 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
     @Override
     protected Set<Set<F>> computeLabel(Node<F> node) throws DiagnosisException {
         Set<Set<F>> conflicts;
-        ArrayList<F> formulas = new ArrayList<>(getDiagnosisModel().getPossiblyFaultyStatements());
+        ArrayList<F> formulas = new ArrayList<>(getDiagnosisModel().getPossiblyFaultyFormulas());
         formulas.removeAll(node.getPathLabels());
         conflicts = getSearcher().findConflicts(formulas);
 

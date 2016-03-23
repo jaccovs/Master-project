@@ -12,12 +12,11 @@ import java.util.Set;
  * Time: 16:19
  * To change this template use File | Settings | File Templates.
  */
-public interface QueryComputation<Formula> {
+public interface QueryComputation<F> {
 
-    void initialize(Set<Diagnosis<Formula>> hittingSets)
-            throws DiagnosisException;
+    void initialize(Set<Diagnosis<F>> diagnoses) throws DiagnosisException;
 
-    Query<Formula> next();
+    Query<F> next();
 
     boolean hasNext();
 

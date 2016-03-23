@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
  * 12-13, 88–103</li>
  * </ul>
  */
-public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
+public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
 
-    private final DiagnosisModel<T> diagnosisModel;
-    private Set<T> formulasCache = new HashSet<>();
-    private Map<T, T> negationsCache = new HashMap<>();
+    private final DiagnosisModel<F> diagnosisModel;
+    private Set<F> formulasCache = new HashSet<>();
+    private Map<F, F> negationsCache = new HashMap<>();
 
-    public AbstractSolver(DiagnosisModel<T> diagnosisModel) {
+    public AbstractSolver(DiagnosisModel<F> diagnosisModel) {
         this.diagnosisModel = diagnosisModel;
         this.diagnosisModel.addObserver(this);
     }
@@ -43,14 +43,14 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * diagnosis model.
      */
     @Override
-    public boolean isConsistent(Collection<T> formulas) {
+    public boolean isConsistent(Collection<F> formulas) {
         synchronizeCache(formulas);
 
         if (!isConsistent())
             return false;
 
         // check non-entailed examples
-        for (T example : diagnosisModel.getNotEntailedExamples()) {
+        for (F example : diagnosisModel.getNotEntailedExamples()) {
             if (isEntailed(Collections.singleton(example))) {
                 return false;
             }
@@ -76,13 +76,13 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      *
      * @param formulas set of formulas
      */
-    private void synchronizeCache(Collection<T> formulas) {
-        Set<T> checkFormulas = new HashSet<>(this.formulasCache.size());
-        checkFormulas.addAll(diagnosisModel.getCorrectStatements());
+    private void synchronizeCache(Collection<F> formulas) {
+        Set<F> checkFormulas = new HashSet<>(this.formulasCache.size());
+        checkFormulas.addAll(diagnosisModel.getCorrectFormulas());
         checkFormulas.addAll(diagnosisModel.getEntailedExamples());
         if (supportsNegation()) {
-            for (T example : diagnosisModel.getInconsistentExamples()) {
-                T neg = negationsCache.get(example);
+            for (F example : diagnosisModel.getInconsistentExamples()) {
+                F neg = negationsCache.get(example);
                 if (neg == null) {
                     neg = negate(example);
                     checkFormulas.add(neg);
@@ -95,8 +95,8 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
         checkFormulas.addAll(formulas);
 
         // sync the formulas with the solver
-        HashSet<T> remove = new HashSet<>(this.formulasCache);
-        HashSet<T> add = checkFormulas.stream().filter(e -> e != null).collect(Collectors.toCollection(HashSet<T>::new));
+        HashSet<F> remove = new HashSet<>(this.formulasCache);
+        HashSet<F> add = checkFormulas.stream().filter(e -> e != null).collect(Collectors.toCollection(HashSet<F>::new));
         remove.removeAll(checkFormulas);
         add.removeAll(this.formulasCache);
 
@@ -108,16 +108,16 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
 
     public void checkDiagnosisModel() {
         if (this.diagnosisModel.getConsistentExamples().stream().
-                anyMatch(o -> this.diagnosisModel.getPossiblyFaultyStatements().contains(o)))
+                anyMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)))
             throw new RuntimeException("Intersection of correct and faulty statements is not empty!");
         if (!isConsistent(Collections.emptySet()))
             throw new RuntimeException("Inconsistent diagnosis model!");
     }
 
-    private boolean violatesExample(Collection<T> examples, boolean expectedResult) {
-        Set<T> prevEx = Collections.emptySet();
-        for (T example : examples) {
-            Set<T> ex = Collections.singleton(example);
+    private boolean violatesExample(Collection<F> examples, boolean expectedResult) {
+        Set<F> prevEx = Collections.emptySet();
+        for (F example : examples) {
+            Set<F> ex = Collections.singleton(example);
             sync(ex, prevEx);
             if (isConsistent() != expectedResult) {
                 sync(Collections.emptySet(), ex);
@@ -137,7 +137,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @return a set of entailed formulas
      */
     @Override
-    public boolean isEntailed(Collection<T> formulas, Collection<T> alpha) {
+    public boolean isEntailed(Collection<F> formulas, Collection<F> alpha) {
         synchronizeCache(formulas);
         return isEntailed(alpha);
     }
@@ -151,7 +151,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @return a set of entailments of the set of formulas given as input
      */
     @Override
-    public Set<T> calculateEntailments(Collection<T> formulas) {
+    public Set<F> calculateEntailments(Collection<F> formulas) {
         synchronizeCache(formulas);
         return calculateEntailments();
     }
@@ -162,7 +162,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      *
      * @return a set of entailments of the set of formulas stored in the solver
      */
-    protected abstract Set<T> calculateEntailments();
+    protected abstract Set<F> calculateEntailments();
 
     /**
      * Checks if the set of formulas in the solver entails the set of axioms.
@@ -170,7 +170,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @param entailments set of formulas
      * @return <code>true</code> if the set of formulas is entailed
      */
-    protected abstract boolean isEntailed(Collection<T> entailments);
+    protected abstract boolean isEntailed(Collection<F> entailments);
 
     /**
      * Returns a negation of the input formula. This operation might be undefined for some solver APIs.
@@ -178,7 +178,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @param example input formula
      * @return negation of the input formula
      */
-    protected abstract T negate(T example);
+    protected abstract F negate(F example);
 
     /**
      * Not every solver ASIs supports negation of formulas. For instance, OWL API does not support negation of axioms
@@ -195,7 +195,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
      * @param addFormulas    a set of formulas that must to be added to the solver
      * @param removeFormulas a set of formulas that must be removed from the solver
      */
-    protected abstract void sync(Set<T> addFormulas, Set<T> removeFormulas);
+    protected abstract void sync(Set<F> addFormulas, Set<F> removeFormulas);
 
     /**
      * @return <code>true</code> if the set of formulas in the solver is consistent and <code>false</code> otherwise.
@@ -203,7 +203,7 @@ public abstract class AbstractSolver<T> implements ISolver<T>, Observer {
     protected abstract boolean isConsistent();
 
     @Override
-    public DiagnosisModel<T> getDiagnosisModel() {
+    public DiagnosisModel<F> getDiagnosisModel() {
         return this.diagnosisModel;
     }
 }

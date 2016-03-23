@@ -105,14 +105,14 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                 for (OWLClass cl : classes) {
                     OWLDataFactory df = manager.getOWLDataFactory();
                     OWLIndividual ind = df.getOWLAnonymousIndividual();
-                    dm.getCorrectStatements().add(df.getOWLClassAssertionAxiom(cl, ind));
+                    dm.getCorrectFormulas().add(df.getOWLClassAssertionAxiom(cl, ind));
                 }
             }
         } else
             possiblyFaulty.addAll(ontology.getLogicalAxioms());
 
-        possiblyFaulty.removeAll(dm.getCorrectStatements());
-        dm.setPossiblyFaultyStatements(possiblyFaulty);
+        possiblyFaulty.removeAll(dm.getCorrectFormulas());
+        dm.setPossiblyFaultyFormulas(possiblyFaulty);
         return dm;
     }
 

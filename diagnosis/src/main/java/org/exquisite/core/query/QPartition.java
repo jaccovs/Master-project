@@ -1,6 +1,5 @@
 package org.exquisite.core.query;
 
-import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.costestimators.CostsEstimator;
 import org.exquisite.core.model.Diagnosis;
 
@@ -8,53 +7,51 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * A qPartiton object of constraints that splits the diagnoses into the 3 parts dx, dnx, and dz.
- *
- * Copy of Query and slightly adapted for requirements of NewQC.
+ * A qPartition object of constraints that splits the diagnoses into the 3 parts dx, dnx, and dz.
  *
  * Created by pr8 and wolfi on 10.03.2015.
  */
-public class QPartition<Formula> {
+public class QPartition<F> {
     /**
      * Diagnoses that are supported by the query
      */
-    public Set<Diagnosis<Formula>> dx = new HashSet<>();
+    public Set<Diagnosis<F>> dx = new HashSet<>();
 
     /**
      * Diagnoses that are not supported by the query
      */
-    public Set<Diagnosis<Formula>> dnx = new HashSet<>();
+    public Set<Diagnosis<F>> dnx = new HashSet<>();
 
     /**
      * Diagnoses that are unaffected by the query
      */
-    public Set<Diagnosis<Formula>> dz = new HashSet<>();
+    public Set<Diagnosis<F>> dz = new HashSet<>();
 
     /**
      * Uniquely defined query for a given Q-Partition, used in the search for Q-Partitions.
      */
 
-    public Set<Formula> canonicalQuery;
+    private Set<F> canonicalQuery;
 
     /**
      * Set of queries consisting of only explicit entailments (=formulas in KB) which have exactly this Q-Partition. Does not necessarily include all queries for this Q-Partition.
      */
-    public Set<Set<Formula>> explicitEntailmentsQueries;
+    private Set<Set<F>> explicitEntailmentsQueries;
 
     /**
      * Set of queries consisting of not only explicit entailments (=formulas in KB) which have exactly this Q-Partition. Does not necessarily include all queries for this Q-Partition.
      */
-    public Set<Set<Formula>>enrichedQueries;
+    private Set<Set<F>>enrichedQueries;
 
     /**
      * Set of queries that the user rejected to answer.
      */
-    public Set<Set<Formula>> rejectedQueries;
+    private Set<Set<F>> rejectedQueries;
 
     /**
      * Traits, used in Algorithm 2 (Computing successor in D+-Partitioning)
      */
-    public Map<Diagnosis<Formula>,Set<Formula>> diagsTraits = new HashMap<>();
+    public Map<Diagnosis<F>,Set<F>> diagsTraits = new HashMap<>();
 
     /**
      *
@@ -71,11 +68,27 @@ public class QPartition<Formula> {
      */
     public boolean isVerified = false;
 
-    public CostsEstimator<Formula> costEstimator = null;
+    /**
+     *
+     */
+    public CostsEstimator<F> costEstimator = null;
 
-    public BigDecimal dxProbs;
+    /**
+     *
+     */
+    public BigDecimal probDx;
 
-    public BigDecimal dnxProbs;
+    /**
+     *
+     */
+    public BigDecimal probDnx;
+
+    /**
+     *
+     */
+    public QPartition() {
+        this(new HashSet<>(),new HashSet<>(),new HashSet<>(),null);
+    }
 
     /**
      * A QPartition which
@@ -85,21 +98,21 @@ public class QPartition<Formula> {
      * @param dz Diagnoses that are unaffected by the query.
      * @param  costestimator Costestimator.
      */
-    public QPartition(Set<Diagnosis<Formula>> dx, Set<Diagnosis<Formula>> dnx, Set<Diagnosis<Formula>> dz, CostsEstimator<Formula> costestimator) {
+    public QPartition(Set<Diagnosis<F>> dx, Set<Diagnosis<F>> dnx, Set<Diagnosis<F>> dz, CostsEstimator<F> costestimator) {
         this.dx = dx;
         this.dnx = dnx;
         this.dz = dz;
         this.costEstimator = costestimator;
 
-        this.dxProbs = computeProbs(this.dx);
-        this.dnxProbs = computeProbs(this.dnx);
+        this.probDx = computeProbabibilty(this.dx);
+        this.probDnx = computeProbabibilty(this.dnx);
     }
 
 
-    private BigDecimal computeProbs(Set<Diagnosis<Formula>> diags) {
+    private BigDecimal computeProbabibilty(Set<Diagnosis<F>> diags) {
         BigDecimal sum = BigDecimal.ZERO;
         if (costEstimator!=null) {
-            for (Diagnosis<Formula> d : diags) {
+            for (Diagnosis<F> d : diags) {
                 sum = sum.add(costEstimator.getFormulasCosts(d.getFormulas()));
             }
         }
@@ -110,13 +123,13 @@ public class QPartition<Formula> {
      *
      * @return Set of Formulas
      */
-    public Set<Formula> getQuery() {
+    public Query<F> getQuery() {
         if (!enrichedQueries.isEmpty()) {
-            return enrichedQueries.iterator().next();
+            return new Query(enrichedQueries.iterator().next(),this);
         } else if (!explicitEntailmentsQueries.isEmpty()) {
-            return explicitEntailmentsQueries.iterator().next();
+            return new Query(explicitEntailmentsQueries.iterator().next(),this);
         } else {
-            return canonicalQuery;
+            return new Query(canonicalQuery,this);
         }
     }
 
@@ -128,30 +141,30 @@ public class QPartition<Formula> {
      *
      * @return The set of all canonical QPartitions sucs that result from Pk by a minimal D+-transformation.
      */
-    public Collection<QPartition<Formula>> computeSuccessors() {
+    public Collection<QPartition<F>> computeSuccessors() {
         assert dz.isEmpty();
 
-        Collection<QPartition<Formula>> sucs = new HashSet<>();                                                         // line 2: stores successors of Parition Pk by a minimal
+        Collection<QPartition<F>> sucs = new HashSet<>();                                                         // line 2: stores successors of Parition Pk by a minimal
         this.diagsTraits = new HashMap<>();                                                                             // line 3: stores tuples including a diagnosis and the trait of the eq. class w.r.t. it belongs to
-        Set<Set<Diagnosis<Formula>>> eqClasses = new HashSet<>();                                                       // line 4: set of sets of diagnoses, each set is eq. class with set-minimal trait
+        Set<Set<Diagnosis<F>>> eqClasses = new HashSet<>();                                                       // line 4: set of sets of diagnoses, each set is eq. class with set-minimal trait
 
         if (dx.isEmpty()) {                                                                                             // line 5: initial State, apply S_init
             sucs = generateInitialSuccessors();                                                                         // line 6-7:
         } else {                                                                                                        // line 8: Pk is canonical q-partition, apply Snext
             diagsTraits = computeDiagsTraits();                                                                         // line 9-11: compute trait of eq. class, enables to retrive ti for Di in operations below
-            Set<Diagnosis<Formula>> diags = new HashSet<>(dnx);                                                         // line 12: make a copy of dnx
-            Set<Diagnosis<Formula>> minTraitDiags = new HashSet<>();                                                    // line 13: to store one representative of each eq. class with set-minimial trait
+            Set<Diagnosis<F>> diags = new HashSet<>(dnx);                                                         // line 12: make a copy of dnx
+            Set<Diagnosis<F>> minTraitDiags = new HashSet<>();                                                    // line 13: to store one representative of each eq. class with set-minimial trait
             boolean sucsExist = false;                                                                                  // line 14: will be set to true if Pk is found to have some canonical successor q-partition
 
             while (!diags.isEmpty()) {                                                                                  // line 15:
-                Diagnosis<Formula> Di = getFirst(diags);                                                                // line 16: Di is first (any) element in diags and diags := diags - Di (getFirst removes Di from diags)
-                Set<Diagnosis<Formula>> necFollowers = new HashSet<>();                                                 // line 17: to store all necessary followers of Di
+                Diagnosis<F> Di = getFirst(diags);                                                                // line 16: Di is first (any) element in diags and diags := diags - Di (getFirst removes Di from diags)
+                Set<Diagnosis<F>> necFollowers = new HashSet<>();                                                 // line 17: to store all necessary followers of Di
                 boolean diagOK = true;                                                                                  // line 18: will be set to false if Di is found to have a non-set-minimal trait
-                Set<Diagnosis<Formula>> diagsAndMinTraitDiags = new HashSet<>(diags);                                   // prepare unification of diags with minTraitDiags
+                Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);                                   // prepare unification of diags with minTraitDiags
                 diagsAndMinTraitDiags.addAll(minTraitDiags);
-                Set<Formula> ti = diagsTraits.get(Di);
-                for (Diagnosis<Formula> Dj : diagsAndMinTraitDiags) {                                                   // line 19:
-                    Set<Formula> tj = diagsTraits.get(Dj);
+                Set<F> ti = diagsTraits.get(Di);
+                for (Diagnosis<F> Dj : diagsAndMinTraitDiags) {                                                   // line 19:
+                    Set<F> tj = diagsTraits.get(Dj);
                     if (ti.containsAll(tj))                                                                             // line 20:
                         if (ti.equals(tj))                                                                              // line 21: equal trait, Di and Dj are same eq. class
                             necFollowers.add(Dj);                                                                       // line 22:
@@ -159,7 +172,7 @@ public class QPartition<Formula> {
                             diagOK = false;                                                                             // line 24: eq. class of Di has a non-set-minimal trait
                 }
 
-                Set<Diagnosis<Formula>> eqCls = new HashSet<>(necFollowers);                                            // line 25:
+                Set<Diagnosis<F>> eqCls = new HashSet<>(necFollowers);                                            // line 25:
                 eqCls.add(Di);                                                                                          // line 25:
 
                 if (!sucsExist && eqCls.equals(dnx))                                                                    // line 26: test only run in first iteration of while-loop
@@ -173,16 +186,16 @@ public class QPartition<Formula> {
                 diags.removeAll(necFollowers);                                                                          // line 32: delete all representatives for eq. class
             }
 
-            for (Set<Diagnosis<Formula>> E : eqClasses) {                                                               // line 33-34: construct all canonical successor q-partitions by means of eq.class
-                Set<Diagnosis<Formula>> newDx = new HashSet<>(dx);
+            for (Set<Diagnosis<F>> E : eqClasses) {                                                               // line 33-34: construct all canonical successor q-partitions by means of eq.class
+                Set<Diagnosis<F>> newDx = new HashSet<>(dx);
                 boolean hasBeenAdded = newDx.addAll(E);
                 assert hasBeenAdded;
 
-                Set<Diagnosis<Formula>> newDnx = new HashSet<>(dnx);
+                Set<Diagnosis<F>> newDnx = new HashSet<>(dnx);
                 boolean hasBeenRemoved = newDnx.removeAll(E);
                 assert hasBeenRemoved;
 
-                QPartition<Formula> sucsPartition = new QPartition<>(newDx, newDnx, new HashSet<>(), this.costEstimator);
+                QPartition<F> sucsPartition = new QPartition<>(newDx, newDnx, new HashSet<>(), this.costEstimator);
                 sucs.add(sucsPartition);
             }
         }
@@ -198,20 +211,20 @@ public class QPartition<Formula> {
      *
      * @return The set of initial successors of the QPartition partitionPk.
      */
-    public Collection<QPartition<Formula>> generateInitialSuccessors() {
+    public Collection<QPartition<F>> generateInitialSuccessors() {
         assert dx.isEmpty();
         assert dz.isEmpty();
 
-        Collection<QPartition<Formula>> sucs = new HashSet<>();
-        for (Diagnosis<Formula> diagnosis : dnx) {
-            Set<Diagnosis<Formula>> new_dx = new HashSet<>(); // create the new dx (diagnoses that are supported by the query)
+        Collection<QPartition<F>> sucs = new HashSet<>();
+        for (Diagnosis<F> diagnosis : dnx) {
+            Set<Diagnosis<F>> new_dx = new HashSet<>(); // create the new dx (diagnoses that are supported by the query)
             new_dx.add(diagnosis);
 
-            Set<Diagnosis<Formula>> new_dnx = new HashSet<>(dnx); // make a copy of the original dnx set...
+            Set<Diagnosis<F>> new_dnx = new HashSet<>(dnx); // make a copy of the original dnx set...
             boolean isRemoved = new_dnx.remove(diagnosis); // and remove the current diagnosis
             assert isRemoved;
 
-            Set<Diagnosis<Formula>> new_dz = new HashSet<>(dz); // make a copy of the original dz
+            Set<Diagnosis<F>> new_dz = new HashSet<>(dz); // make a copy of the original dz
 
             sucs.add(new QPartition<>(new_dx, new_dnx, new_dz, this.costEstimator));
         }
@@ -224,17 +237,17 @@ public class QPartition<Formula> {
      *
      * @return Mapping from each diagnosis in dnx to it's traits. This mapping is stored in qPartition partitionPk.
      */
-    public Map<Diagnosis<Formula>,Set<Formula>> computeDiagsTraits() {
+    public Map<Diagnosis<F>,Set<F>> computeDiagsTraits() {
         assert !dx.isEmpty();
 
         //  compute the union of formulas of diagnoses dx of partitionPk
-        Set<Formula> unitedDxFormulas = new HashSet<>();
-        for (Diagnosis<Formula> diag_dx : dx)
+        Set<F> unitedDxFormulas = new HashSet<>();
+        for (Diagnosis<F> diag_dx : dx)
             unitedDxFormulas.addAll(diag_dx.getFormulas());
 
         // compute trait of using unionDxFormulas
-        for (Diagnosis<Formula> diag_dnx : dnx) {
-            Set<Formula> traits = new HashSet<>(diag_dnx.getFormulas());    // initialize traits with the formulas of diag_dnx ...
+        for (Diagnosis<F> diag_dnx : dnx) {
+            Set<F> traits = new HashSet<>(diag_dnx.getFormulas());    // initialize traits with the formulas of diag_dnx ...
             traits.removeAll(unitedDxFormulas);                             // ... and remove all formulas that occurred in dx of partionPk
             diagsTraits.put(diag_dnx, traits);                              // enables to retrieve trait ti for diagnosis di in later operations
         }

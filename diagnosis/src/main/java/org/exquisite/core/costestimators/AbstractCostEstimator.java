@@ -13,31 +13,31 @@ import java.util.Set;
  * Time: 09:56
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractCostEstimator<T> implements CostsEstimator<T> {
+public abstract class AbstractCostEstimator<F> implements CostsEstimator<F> {
 
-    private final Set<T> faultyFormulas;
+    private final Collection<F> possiblyFaultyFormulas;
 
-    public AbstractCostEstimator(Set<T> faultyFormulas) {
-        this.faultyFormulas = faultyFormulas;
+    public AbstractCostEstimator(Collection<F> possiblyFaultyFormulas) {
+        this.possiblyFaultyFormulas = possiblyFaultyFormulas;
     }
 
-    protected Set<T> getFaultyFormulas() {
-        return faultyFormulas;
+    protected Collection<F> getPossiblyFaultyFormulas() {
+        return possiblyFaultyFormulas;
     }
 
 
     @Override
-    public BigDecimal getFormulasCosts(Collection<T> formulas) {
+    public BigDecimal getFormulasCosts(Collection<F> formulas) {
         BigDecimal probability = BigDecimal.ONE;
         if (formulas != null)
-            for (T axiom : formulas) {
-                probability = probability.multiply(getFormulaCosts(axiom));
+            for (F formula : formulas) {
+                probability = probability.multiply(getFormulaCosts(formula));
             }
-        Collection<T> activeFormulas = new ArrayList<>(faultyFormulas);
+        Collection<F> activeFormulas = new ArrayList<>(possiblyFaultyFormulas);
         assert formulas != null;
         activeFormulas.removeAll(formulas);
-        for (T axiom : activeFormulas) {
-            probability = probability.multiply(BigDecimal.ONE.subtract(getFormulaCosts(axiom)));
+        for (F formula : activeFormulas) {
+            probability = probability.multiply(BigDecimal.ONE.subtract(getFormulaCosts(formula)));
         }
         return probability;
     }

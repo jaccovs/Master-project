@@ -66,7 +66,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
         start(TIMER_DIAGNOSIS_SESSION);
         // generate root if there is none
         if (!hasRoot()) {
-            Set<Set<F>> conflicts = getSearcher().findConflicts(getDiagnosisModel().getPossiblyFaultyStatements());
+            Set<Set<F>> conflicts = getSearcher().findConflicts(getDiagnosisModel().getPossiblyFaultyFormulas());
             if (conflicts == null || conflicts.isEmpty()) {
                 logger.debug("The provided diagnosis model is correct");
                 return getDiagnoses();
@@ -124,7 +124,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
      * @return a set of labels
      */
     protected Set<Set<F>> computeLabel(Node<F> node) throws DiagnosisException {
-        Set<F> formulas = new HashSet<>(getDiagnosisModel().getPossiblyFaultyStatements());
+        Set<F> formulas = new HashSet<>(getDiagnosisModel().getPossiblyFaultyFormulas());
         formulas.removeAll(node.getPathLabels());
         Set<Set<F>> conflicts = getSearcher().findConflicts(formulas);
         getConflicts().addAll(conflicts);

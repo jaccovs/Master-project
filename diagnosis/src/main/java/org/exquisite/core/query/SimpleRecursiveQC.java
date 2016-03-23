@@ -15,7 +15,7 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.getCounter;
 /**
  * Simple query computation that implements recursive brute force computation method
  */
-public class SimpleRecursiveQC<T> extends SimpleQC<T> {
+public class SimpleRecursiveQC<F> extends SimpleQC<F> {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleQC.class);
 
@@ -23,32 +23,32 @@ public class SimpleRecursiveQC<T> extends SimpleQC<T> {
         super();
     }
 
-    public SimpleRecursiveQC(QuerySelection<T> querySelection) {
+    public SimpleRecursiveQC(QuerySelection<F> querySelection) {
         super(querySelection);
     }
 
     @Override
-    protected long computeQueries(Set<T> kb, ArrayList<Diagnosis<T>> diagnoses, Set<Query<T>> queries) {
+    protected long computeQueries(Set<F> kb, ArrayList<Diagnosis<F>> diagnoses, Set<Query<F>> queries) {
         computeQueries(kb, new ArrayList<>(diagnoses), new HashSet<>(diagnoses.size()),
                 new HashSet<>(diagnoses.size()), queries);
         return queries.size();
     }
 
-    protected void computeQueries(Set<T> kb, ArrayList<Diagnosis<T>> hittingSets, Set<Diagnosis<T>> dx,
-                                  Set<Diagnosis<T>> dnx,
-                                  Set<Query<T>> queries) {
+    protected void computeQueries(Set<F> kb, ArrayList<Diagnosis<F>> hittingSets, Set<Diagnosis<F>> dx,
+                                  Set<Diagnosis<F>> dnx,
+                                  Set<Query<F>> queries) {
 
         if (hittingSets.isEmpty()) {
             if (dx.isEmpty() || dnx.isEmpty())
                 return;
-            Query<T> query = createQuery(kb, dx, dnx);
-            if (query != null && query.score.compareTo(getThreshold()) < 0) {
+            Query<F> query = createQuery(kb, dx, dnx);
+            if (query != null && query.qPartition.score.compareTo(getThreshold()) < 0) {
                 queries.add(query);
                 if (logger.isDebugEnabled())
-                    logger.debug("Created query: \n dx:" + query.dx + "\n dnx:" + query.dnx + "\n dz:" + query.dz);
+                    logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n dnx:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz);
             }
         } else {
-            Diagnosis<T> diag = hittingSets.remove(0);
+            Diagnosis<F> diag = hittingSets.remove(0);
             if (logger.isDebugEnabled())
                 logger.debug("Partitions: " + getCounter(COUNTER_INTERACTIVE_PARTITIONS).value()
                         + " dx: " + dx.size() + " " + "hsets:" + hittingSets.size());

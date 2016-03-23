@@ -11,9 +11,9 @@ import java.util.Collection;
  * Time: 17:27
  * To change this template use File | Settings | File Templates.
  */
-public interface CostsEstimator<T> {
+public interface CostsEstimator<F> {
 
-    BigDecimal getFormulasCosts(Collection<T> formulas);
+    BigDecimal getFormulasCosts(Collection<F> formulas);
 
-    BigDecimal getFormulaCosts(T formula);
+    BigDecimal getFormulaCosts(F formula);
 }

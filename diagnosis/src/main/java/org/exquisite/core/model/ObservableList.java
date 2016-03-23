@@ -14,11 +14,11 @@ import java.util.stream.Stream;
  * symbols, is not considered as the change of the list, but as a change of the object stored in the list. The latter
  * must be considered separately.
  */
-public class ObservableList<E> extends Observable implements List<E> {
+public class ObservableList<F> extends Observable implements List<F> {
 
-    private List<E> list;
+    private List<F> list;
 
-    private ObservableList(List<E> list) {
+    private ObservableList(List<F> list) {
         this.list = list;
     }
 
@@ -48,7 +48,7 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public Spliterator<E> spliterator() {
+    public Spliterator<F> spliterator() {
         return list.spliterator();
     }
 
@@ -68,9 +68,9 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            Iterator<E> itr = list.iterator();
+    public Iterator<F> iterator() {
+        return new Iterator<F>() {
+            Iterator<F> itr = list.iterator();
 
             @Override
             public boolean hasNext() {
@@ -78,7 +78,7 @@ public class ObservableList<E> extends Observable implements List<E> {
             }
 
             @Override
-            public E next() {
+            public F next() {
                 return itr.next();
             }
 
@@ -101,8 +101,8 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public boolean add(E e) {
-        return notifyObs(list.add(e));
+    public boolean add(F f) {
+        return notifyObs(list.add(f));
     }
 
     private boolean notifyObs(boolean b) {
@@ -124,12 +124,12 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(Collection<? extends F> c) {
         return notifyObs(list.addAll(c));
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends E> c) {
+    public boolean addAll(int index, Collection<? extends F> c) {
         return notifyObs(list.addAll(index, c));
     }
 
@@ -144,13 +144,13 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public void replaceAll(UnaryOperator<E> operator) {
+    public void replaceAll(UnaryOperator<F> operator) {
         list.replaceAll(operator);
         notifyObs(true);
     }
 
     @Override
-    public void sort(Comparator<? super E> c) {
+    public void sort(Comparator<? super F> c) {
         list.sort(c);
     }
 
@@ -171,26 +171,26 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public E get(int index) {
+    public F get(int index) {
         return list.get(index);
     }
 
     @Override
-    public E set(int index, E element) {
-        E set = list.set(index, element);
+    public F set(int index, F element) {
+        F set = list.set(index, element);
         notifyObs(true);
         return set;
     }
 
     @Override
-    public void add(int index, E element) {
+    public void add(int index, F element) {
         list.add(index, element);
         notifyObs(true);
     }
 
     @Override
-    public E remove(int index) {
-        E remove = list.remove(index);
+    public F remove(int index) {
+        F remove = list.remove(index);
         notifyObs(true);
         return remove;
     }
@@ -206,14 +206,14 @@ public class ObservableList<E> extends Observable implements List<E> {
     }
 
     @Override
-    public ListIterator<E> listIterator() {
+    public ListIterator<F> listIterator() {
         return listIterator(0);
     }
 
     @Override
-    public ListIterator<E> listIterator(int index) {
-        return new ListIterator<E>() {
-            ListIterator<E> itr = list.listIterator();
+    public ListIterator<F> listIterator(int index) {
+        return new ListIterator<F>() {
+            ListIterator<F> itr = list.listIterator();
 
             @Override
             public boolean hasNext() {
@@ -221,7 +221,7 @@ public class ObservableList<E> extends Observable implements List<E> {
             }
 
             @Override
-            public E next() {
+            public F next() {
                 return itr.next();
             }
 
@@ -231,7 +231,7 @@ public class ObservableList<E> extends Observable implements List<E> {
             }
 
             @Override
-            public E previous() {
+            public F previous() {
                 return itr.previous();
             }
 
@@ -252,41 +252,41 @@ public class ObservableList<E> extends Observable implements List<E> {
             }
 
             @Override
-            public void set(E e) {
-                itr.set(e);
+            public void set(F f) {
+                itr.set(f);
                 notifyObs(true);
             }
 
             @Override
-            public void add(E e) {
-                itr.add(e);
+            public void add(F f) {
+                itr.add(f);
                 notifyObs(true);
             }
         };
     }
 
     @Override
-    public List<E> subList(int fromIndex, int toIndex) {
+    public List<F> subList(int fromIndex, int toIndex) {
         return new ObservableList<>(list.subList(fromIndex, toIndex));
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> filter) {
+    public boolean removeIf(Predicate<? super F> filter) {
         return notifyObs(list.removeIf(filter));
     }
 
     @Override
-    public Stream<E> stream() {
+    public Stream<F> stream() {
         return list.stream();
     }
 
     @Override
-    public Stream<E> parallelStream() {
+    public Stream<F> parallelStream() {
         return list.parallelStream();
     }
 
     @Override
-    public void forEach(Consumer<? super E> action) {
+    public void forEach(Consumer<? super F> action) {
         list.forEach(action);
     }
 }

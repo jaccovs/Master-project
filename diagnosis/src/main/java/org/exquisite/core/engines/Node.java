@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @author Dietmar
  */
-public class Node<T> {
+public class Node<F> {
 
     private static long generationOrderCounter = 0;
     public final long generationOrder = generationOrderCounter++;
@@ -23,19 +23,19 @@ public class Node<T> {
     /**
      * Quick reference for finding children for this node.
      */
-    private Map<T, Node<T>> children = new HashMap<>();
+    private Map<F, Node<F>> children = new HashMap<>();
     /**
      * The label of the arc leading here
      */
-    private T arcLabel = null;
+    private F arcLabel = null;
     /**
      * The nodeLabel at the node
      */
-    private Set<T> nodeLabel = null;
+    private Set<F> nodeLabel = null;
     /**
      * Labels of the path to here
      */
-    private Set<T> pathLabels;
+    private Set<F> pathLabels;
     /**
      * Status of the node
      */
@@ -44,17 +44,17 @@ public class Node<T> {
      * The node/s that this node is a child of. (null if this node is the root node)
      * Changed this to a list as there may be cases where a node could be a child of multiple parent nodes.
      */
-    private List<Node<T>> parents = null;
+    private List<Node<F>> parents = null;
 
     /**
      * Constructor for the root node.
      *
      * @param conflict - the initial nodeLabel set returned from call to qx...
      */
-    public static <T> Node<T> createRoot(Set<T> conflict) {
+    public static <F> Node<F> createRoot(Set<F> conflict) {
         generationOrderCounter = 0;
 
-        Node<T> root = new Node<>();
+        Node<F> root = new Node<>();
         root.nodeLabel = conflict;
         return root;
     }
@@ -73,7 +73,7 @@ public class Node<T> {
      * @param parent   - the parent for the newly constructed node.
      * @param arcLabel - the label from the parent that immediately points here.
      */
-    public Node(Node<T> parent, T arcLabel, CostsEstimator<T> estimator) {
+    public Node(Node<F> parent, F arcLabel, CostsEstimator<F> estimator) {
         assert(parent!=null);
         this.parents = new ArrayList<>(1);
         this.parents.add(parent);
@@ -87,7 +87,7 @@ public class Node<T> {
     /**
      * A simple copy of the nodeLabel
      */
-    public Node(Node<T> orig) {
+    public Node(Node<F> orig) {
         this.parents = null;
         this.arcLabel = null;
         this.nodeLabel = orig.nodeLabel;
@@ -102,11 +102,11 @@ public class Node<T> {
         this.status = status;
     }
 
-    public Set<T> getNodeLabel() {
+    public Set<F> getNodeLabel() {
         return nodeLabel;
     }
 
-    public void setNodeLabel(Set<T> nodeLabel) {
+    public void setNodeLabel(Set<F> nodeLabel) {
         this.nodeLabel = nodeLabel;
     }
 
@@ -127,7 +127,7 @@ public class Node<T> {
      *
      * @param parent node
      */
-    public void addParent(Node<T> parent) {
+    public void addParent(Node<F> parent) {
         if (isRoot()) {
             throw new IllegalArgumentException("The root node cannot have parents.");
         } else {
@@ -141,7 +141,7 @@ public class Node<T> {
      * @param child - the node that is to be a child.
      * @param arc   - the arc from this node to the child node.
      */
-    public void addChild(Node<T> child, T arc) {
+    public void addChild(Node<F> child, F arc) {
         this.children.put(arc, child);
         child.addParent(this);
     }
@@ -154,7 +154,7 @@ public class Node<T> {
         return "NODE: nodeLabel: " + this.nodeLabel + "\nStatus?:" + this.status;
     }
 
-    public String toString(Function<Set<T>, String> stringConverter) {
+    public String toString(Function<Set<F>, String> stringConverter) {
         return "NODE: nodeLabel: " + stringConverter.apply(this.nodeLabel) + "\nStatus?:" + this.status;
     }
 
@@ -168,14 +168,14 @@ public class Node<T> {
     }
 
 
-    public List<Node<T>> getParents() {
+    public List<Node<F>> getParents() {
         return this.parents;
     }
 
     /**
      * @return a set of labels on one of the paths from the current node to the root
      */
-    public Set<T> getPathLabels() {
+    public Set<F> getPathLabels() {
         if (pathLabels != null)
             return pathLabels;
         pathLabels = new HashSet<>(getNodeLevel());
@@ -189,15 +189,15 @@ public class Node<T> {
      * @param node for which a path has to be computed
      * @param path of labels to be computed
      */
-    private void getPath(Node<T> node, Set<T> path) {
-        List<Node<T>> parents = node.getParents();
+    private void getPath(Node<F> node, Set<F> path) {
+        List<Node<F>> parents = node.getParents();
         if (parents != null && !parents.isEmpty()) {
             getPath(parents.get(0), path);
             path.add(node.arcLabel);
         }
     }
 
-    public Map<T, Node<T>> getChildren() {
+    public Map<F, Node<F>> getChildren() {
         return children;
     }
 

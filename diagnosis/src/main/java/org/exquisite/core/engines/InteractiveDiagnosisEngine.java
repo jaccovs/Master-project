@@ -1,11 +1,12 @@
 package org.exquisite.core.engines;
 
+import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.costestimators.CostsEstimator;
-import org.exquisite.core.costestimators.SimpleCostsEstimator;
 import org.exquisite.core.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
     /**
      * Inner engine is used to calculate the tests.diagnosis candidates.
      */
-    private IDiagnosisEngine<F> innerEngine;
+    private AbstractDiagnosisEngine<F> innerEngine;
 
     /**
      * Query computation algorithm used in the interactive session
@@ -66,7 +67,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
      */
     private QueryAnswering<F> queryAnswering;
 
-    public InteractiveDiagnosisEngine(IDiagnosisEngine<F> innerEngine,
+    public InteractiveDiagnosisEngine(AbstractDiagnosisEngine<F> innerEngine,
                                       QueryComputation<F> queryComputation,
                                       QueryAnswering<F> queryAnswering,
                                       CostsEstimator<F> estimator) {
@@ -79,9 +80,11 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
 
     public InteractiveDiagnosisEngine(ISolver<F> solver, QueryAnswering<F> queryAnswering) {
         super(solver);
-        this.costsEstimator = new SimpleCostsEstimator<>();
         this.innerEngine = new HSTreeEngine<>(solver);
-        this.queryComputation = new SimpleQC<>();
+        DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
+        this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
+        QPartitionQualityMeasure<F> qPartitionQualityMeasure = null; // TODO use implementing classes
+        this.queryComputation = new HeuristicQC<>(qPartitionQualityMeasure, this.innerEngine);
         this.queryAnswering = queryAnswering;
     }
 

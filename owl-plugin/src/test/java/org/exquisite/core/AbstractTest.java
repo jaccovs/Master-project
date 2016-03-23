@@ -50,10 +50,10 @@ class AbstractTest {
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory);
 
         for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-            diagnosisModel.getCorrectStatements().addAll(ontology.getClassAssertionAxioms(ind));
-            diagnosisModel.getCorrectStatements().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
         }
-        diagnosisModel.getPossiblyFaultyStatements().removeAll(diagnosisModel.getCorrectStatements());
+        diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }

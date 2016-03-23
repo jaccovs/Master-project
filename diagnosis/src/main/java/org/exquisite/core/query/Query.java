@@ -11,55 +11,19 @@ import java.util.Set;
  *
  * @author Schmitz
  */
-public class Query<Formula> {
-    /**
-     * Diagnoses that are supported by the query
-     */
-    public Set<Diagnosis<Formula>> dx = new HashSet<>();
+public class Query<F> {
 
-    /**
-     * Diagnoses that are not supported by the query
-     */
-    public Set<Diagnosis<Formula>> dnx = new HashSet<>();
-    /**
-     * Diagnoses that are unaffected by the query
-     */
-    public Set<Diagnosis<Formula>> dz = new HashSet<>();
+    public Set<F> formulas;
 
-    public Set<Formula> formulas;
+    public QPartition<F> qPartition;
 
-    public BigDecimal score = BigDecimal.valueOf(Double.MAX_VALUE);
-
-    public BigDecimal difference = new BigDecimal(Double.MAX_VALUE);
-
-    public boolean isVerified = false;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Query query1 = (Query) o;
-
-        if (!dnx.equals(query1.dnx)) return false;
-        if (!dx.equals(query1.dx)) return false;
-        if (!dz.equals(query1.dz)) return false;
-        //if (!query.equals(query1.query)) return false;
-
-        return true;
+    public Query() {
+        this.qPartition = new QPartition<>();
+        this.formulas = new HashSet<>();
     }
 
-    @Override
-    public int hashCode() {
-        int result = dx.hashCode();
-        result = 31 * result + dnx.hashCode();
-        result = 31 * result + dz.hashCode();
-        //result = 31 * result + query.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Query: " + formulas + ", dx:" + dx + ", dnx:" + dnx + ", dz:" + dz;
+    public Query(Set<F> formulas, QPartition<F> qPartition) {
+        this.qPartition = qPartition;
+        this.formulas = formulas;
     }
 }

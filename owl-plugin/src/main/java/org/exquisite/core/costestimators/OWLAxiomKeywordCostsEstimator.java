@@ -56,7 +56,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     }
 
     public OWLAxiomKeywordCostsEstimator(DiagnosisModel<OWLLogicalAxiom> model) {
-        this(new LinkedHashSet<>(model.getPossiblyFaultyStatements()));
+        this(new LinkedHashSet<>(model.getPossiblyFaultyFormulas()));
     }
 
     public static int getMaxLengthKeyword() {
@@ -75,7 +75,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             for (OWLLogicalAxiom axiom : formulas) {
                 probability = probability.multiply(getFormulaCosts(axiom));
             }
-        Collection<OWLLogicalAxiom> activeFormulas = new ArrayList<OWLLogicalAxiom>(searchable.getKnowledgeBase().getFaultyFormulas());
+        Collection<OWLLogicalAxiom> activeFormulas = new ArrayList<OWLLogicalAxiom>(searchable.getKnowledgeBase().getPossiblyFaultyFormulas());
         activeFormulas.removeAll(formulas);
         for (OWLLogicalAxiom axiom : activeFormulas) {
             probability = probability.multiply(BigDecimal.ONE.subtract(getFormulaCosts(axiom)));
@@ -180,7 +180,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     private void updateAxiomProbabilities() {
         Map<OWLLogicalAxiom, BigDecimal> axiomsProbs = new HashMap<>();
         ManchesterOWLSyntaxOWLObjectRendererImpl impl = new ManchesterOWLSyntaxOWLObjectRendererImpl();
-        Collection<OWLLogicalAxiom> activeFormulas = getFaultyFormulas();
+        Collection<OWLLogicalAxiom> activeFormulas = getPossiblyFaultyFormulas();
         BigDecimal sum = BigDecimal.ZERO;
         for (OWLLogicalAxiom axiom : activeFormulas) {
             String renderedAxiom = impl.render(axiom);

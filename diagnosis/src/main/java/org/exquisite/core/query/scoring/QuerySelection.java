@@ -13,9 +13,9 @@ import java.util.Set;
  * Time: 08:44
  * To change this template use File | Settings | File Templates.
  */
-public interface QuerySelection<Formula> {
+public interface QuerySelection<F> {
 
-    BigDecimal getScore(Query<Formula> query);
+    BigDecimal getScore(Query<F> query);
 
-    void normalize(Set<Diagnosis<Formula>> diagnosises);
+    void normalize(Set<Diagnosis<F>> diagnosises);
 }

@@ -123,6 +123,11 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
 
     public void updateDisplayedOntologyAxioms() { // TODO
+
+        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
+        Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<OWLLogicalAxiom>();
+        copySet(ontology.getLogicalAxioms(),ontologyAxMinusBg);
+        ontologyAxiomList.updateList(ontologyAxMinusBg,ontology);
         /*
         SearchCreator searchCreator = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
         Set<OWLLogicalAxiom> bgAxioms = searchCreator.getSearch().getSearchable().

@@ -294,7 +294,7 @@
             theory.getKnowledgeBase().addEntailedTest(query.getAxioms());
             try {
                 search.start();
-            } catch (NoConflictException e) {
+            } catch (NoConflictException f) {
             }
             Collection<Diag> res = new TreeSet<Diag>();
             for (Collection<OWLLogicalAxiom> col : search.getDiagnoses()) {
@@ -440,7 +440,7 @@
             theory.getKnowledgeBase().addEntailedTest(query.getAxioms());
             try {
                 search.start();
-            } catch (NoConflictException e) {
+            } catch (NoConflictException f) {
             }
             Collection<Diag> res = new TreeSet<Diag>();
             for (Collection<OWLLogicalAxiom> col : search.getDiagnoses()) {

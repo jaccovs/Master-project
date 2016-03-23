@@ -12,9 +12,9 @@ import java.util.Set;
  *
  * @author Dietmar
  */
-public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
+public class Diagnosis<F> implements Comparable<Diagnosis<F>> {
 
-    private final Set<T> formulas;
+    private final Set<F> formulas;
 
     /**
      * A probability measure for the tests.diagnosis.
@@ -24,19 +24,19 @@ public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
     /**
      * A list of constraints that follows from this tests.diagnosis.
      */
-    private Set<T> entailments = null;
+    private Set<F> entailments = null;
 
 
-    public Diagnosis(Collection<T> formulas) {
+    public Diagnosis(Collection<F> formulas) {
         this(formulas, BigDecimal.ZERO);
     }
 
-    public Diagnosis(Collection<T> formulas, BigDecimal measure) {
+    public Diagnosis(Collection<F> formulas, BigDecimal measure) {
         this.formulas = new HashSet<>(formulas);
         this.measure = measure;
     }
 
-    public Set<T> getFormulas() {
+    public Set<F> getFormulas() {
         return formulas;
     }
 
@@ -48,11 +48,11 @@ public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
         this.measure = measure;
     }
 
-    public Set<T> getEntailments() {
+    public Set<F> getEntailments() {
         return this.entailments;
     }
 
-    public void setEntailments(Set<T> entailments) {
+    public void setEntailments(Set<F> entailments) {
         this.entailments = new HashSet<>(entailments);
     }
 
@@ -72,7 +72,7 @@ public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
         if (o == null) return false;
 
         if (o instanceof Diagnosis) {
-            Diagnosis<T> that = (Diagnosis<T>) o;
+            Diagnosis<F> that = (Diagnosis<F>) o;
             return formulas.equals(that.formulas);
         }
         return false;
@@ -88,7 +88,7 @@ public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
      * are indistinguishable w.r.t. the three criteria and <code>1</code> otherwise.
      */
     @Override
-    public int compareTo(Diagnosis<T> o) {
+    public int compareTo(Diagnosis<F> o) {
         if (this.equals(o)) {
             return 0;
         }
@@ -96,8 +96,8 @@ public class Diagnosis<T> implements Comparable<Diagnosis<T>> {
         if (res != 0) return res;
         res = Integer.compare(formulas.size(), o.formulas.size());
         if (res != 0) return res;
-        Iterator<T> it1 = formulas.iterator();
-        Iterator<T> it2 = o.formulas.iterator();
+        Iterator<F> it1 = formulas.iterator();
+        Iterator<F> it2 = o.formulas.iterator();
         for (; it1.hasNext(); ) {
             res = Integer.compare(it1.next().hashCode(), it2.next().hashCode());
             if (res != 0) return res;

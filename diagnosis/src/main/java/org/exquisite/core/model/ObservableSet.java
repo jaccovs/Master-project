@@ -13,11 +13,11 @@ import java.util.stream.Stream;
  * symbols, is not considered as the change of the set, but as a change of the object stored in the set. The latter
  * must be considered separately.
  */
-public class ObservableSet<E> extends Observable implements Set<E> {
+public class ObservableSet<F> extends Observable implements Set<F> {
 
-    private Set<E> set;
+    private Set<F> set;
 
-    private ObservableSet(Set<E> list) {
+    private ObservableSet(Set<F> list) {
         this.set = list;
     }
 
@@ -40,7 +40,7 @@ public class ObservableSet<E> extends Observable implements Set<E> {
     }
 
     @Override
-    public Spliterator<E> spliterator() {
+    public Spliterator<F> spliterator() {
         return set.spliterator();
     }
 
@@ -60,9 +60,9 @@ public class ObservableSet<E> extends Observable implements Set<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            Iterator<E> itr = set.iterator();
+    public Iterator<F> iterator() {
+        return new Iterator<F>() {
+            Iterator<F> itr = set.iterator();
 
             @Override
             public boolean hasNext() {
@@ -70,7 +70,7 @@ public class ObservableSet<E> extends Observable implements Set<E> {
             }
 
             @Override
-            public E next() {
+            public F next() {
                 return itr.next();
             }
 
@@ -94,10 +94,10 @@ public class ObservableSet<E> extends Observable implements Set<E> {
     }
 
     @Override
-    public boolean add(E e) {
+    public boolean add(F f) {
         setChanged();
         notifyObservers();
-        return set.add(e);
+        return set.add(f);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ObservableSet<E> extends Observable implements Set<E> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(Collection<? extends F> c) {
         setChanged();
         notifyObservers();
         return set.addAll(c);
@@ -153,7 +153,7 @@ public class ObservableSet<E> extends Observable implements Set<E> {
 
 
     @Override
-    public boolean removeIf(Predicate<? super E> filter) {
+    public boolean removeIf(Predicate<? super F> filter) {
         boolean b = set.removeIf(filter);
         if (b) {
             setChanged();
@@ -163,17 +163,17 @@ public class ObservableSet<E> extends Observable implements Set<E> {
     }
 
     @Override
-    public Stream<E> stream() {
+    public Stream<F> stream() {
         return set.stream();
     }
 
     @Override
-    public Stream<E> parallelStream() {
+    public Stream<F> parallelStream() {
         return set.parallelStream();
     }
 
     @Override
-    public void forEach(Consumer<? super E> action) {
+    public void forEach(Consumer<? super F> action) {
         set.forEach(action);
     }
 }

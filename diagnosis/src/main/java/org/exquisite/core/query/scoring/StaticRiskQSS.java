@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 
-public class StaticRiskQSS<T> extends MinScoreQSS<T> {
+public class StaticRiskQSS<F> extends MinScoreQSS<F> {
 
     protected double c;
     protected double numOfLeadingDiags;
@@ -28,7 +28,7 @@ public class StaticRiskQSS<T> extends MinScoreQSS<T> {
     }
 
 
-    protected Query<T> selectMinScorePartition(List<Query<T>> partitions, Query<T> currentBest) {
+    protected Query<F> selectMinScorePartition(List<Query<F>> partitions, Query<F> currentBest) {
         //return super.runPostprocessor(partitions, currentBest);
         return null;
     }
@@ -54,9 +54,9 @@ public class StaticRiskQSS<T> extends MinScoreQSS<T> {
         return num;
     }
 
-    protected LinkedList<Query<T>> getLeastCautiousNonHighRiskPartitions(int numOfDiagsToElim, List<Query<T>> partitions) {
-        LinkedList<Query<T>> leastCautiousNonHighRiskQueries = new LinkedList<Query<T>>();
-        for (Query<T> p : partitions) {
+    protected LinkedList<Query<F>> getLeastCautiousNonHighRiskPartitions(int numOfDiagsToElim, List<Query<F>> partitions) {
+        LinkedList<Query<F>> leastCautiousNonHighRiskQueries = new LinkedList<Query<F>>();
+        for (Query<F> p : partitions) {
             if (getMinNumOfElimDiags(p) == numOfDiagsToElim) {
                 leastCautiousNonHighRiskQueries.add(p);
             }
@@ -70,22 +70,22 @@ public class StaticRiskQSS<T> extends MinScoreQSS<T> {
         preprocessC();
     }
 
-    public Query<T> runPostprocessor(List<Query<T>> partitions, Query<T> currentBest) {
+    public Query<F> runPostprocessor(List<Query<F>> partitions, Query<F> currentBest) {
         int count = 0;
 
         //int numOfHittingSets = getPartitionSearcher().getNumOfHittingSets();
         preprocessBeforeRun(numOfHittingSets);
         int numOfDiagsToElim = convertCToNumOfDiags(c);
-        for (Query<T> partition : partitions) {
+        for (Query<F> partition : partitions) {
             if (count++ > partitions.size() * 0.05)
                 break;
-            if (!partition.isVerified && partition.dx.size() <= numOfHittingSets - numOfDiagsToElim)
+            if (!partition.qPartition.isVerified && partition.qPartition.dx.size() <= numOfHittingSets - numOfDiagsToElim)
                 break;
             //      getPartitionSearcher().verifyPartition(partition);
         }
 
 
-        Query<T> minScorePartition, lastQuery;
+        Query<F> minScorePartition, lastQuery;
 
         if (getMinNumOfElimDiags((minScorePartition = selectMinScorePartition(partitions, currentBest))) >= numOfDiagsToElim) {
             lastQuery = minScorePartition;
@@ -93,7 +93,7 @@ public class StaticRiskQSS<T> extends MinScoreQSS<T> {
         }
 
         for (; numOfDiagsToElim <= getMaxPossibleNumOfDiagsToEliminate(); numOfDiagsToElim++) {
-            LinkedList<Query<T>> leastCautiousNonHighRiskPartitions = getLeastCautiousNonHighRiskPartitions(numOfDiagsToElim, partitions);     // candidateQueries = X_min,k
+            LinkedList<Query<F>> leastCautiousNonHighRiskPartitions = getLeastCautiousNonHighRiskPartitions(numOfDiagsToElim, partitions);     // candidateQueries = X_min,k
             if (leastCautiousNonHighRiskPartitions.isEmpty()) {
                 continue;
             }

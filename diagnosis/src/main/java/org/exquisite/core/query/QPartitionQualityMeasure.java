@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * Created by wolfi, pr8 on 10.03.2016.
  */
-public interface QPartitionQualityMeasure<Formula> {
+public interface QPartitionQualityMeasure<F> {
 
     /**
      * TODO documentation
@@ -18,7 +18,7 @@ public interface QPartitionQualityMeasure<Formula> {
      * @param partition2 Partition 2
      * @return QPartition
      */
-    QPartition<Formula> updateBest(QPartition<Formula> partition1, QPartition<Formula> partition2, Set<Diagnosis<Formula>> hittingSets);
+    QPartition<F> updateBest(QPartition<F> partition1, QPartition<F> partition2, Set<Diagnosis<F>> hittingSets);
 
     /**
      * TODO documentation
@@ -26,17 +26,16 @@ public interface QPartitionQualityMeasure<Formula> {
      * @param qPartition qPartition object
      * @return Double value
      */
-    Double getHeuristics(QPartition<Formula> qPartition, Set<Diagnosis<Formula>> hittingSets);
+    Double getHeuristics(QPartition<F> qPartition, Set<Diagnosis<F>> hittingSets);
 
     /**
      * TODO documentation
      *
      * @param qPartition qPartition object
-     * @param threshold Threshold
      * @param hittingSets Diagnoses
      * @return Boolean value
      */
-    Boolean isOptimal(QPartition<Formula> qPartition, Double threshold, Set<Diagnosis<Formula>> hittingSets);
+    Boolean isOptimal(QPartition<F> qPartition, Set<Diagnosis<F>> hittingSets);
 
     /**
      * TODO documentation
@@ -44,5 +43,6 @@ public interface QPartitionQualityMeasure<Formula> {
      * @param qPartition qPartition
      * @param hittingSets Diagnoses
      */
-    void prune(QPartition<Formula> qPartition, Set<Diagnosis<Formula>> hittingSets);
+    void prune(QPartition<F> qPartition, Set<Diagnosis<F>> hittingSets);
+
 }

@@ -26,8 +26,8 @@ public abstract class TestConflictSearcher {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 
@@ -45,8 +45,8 @@ public abstract class TestConflictSearcher {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
 
@@ -61,8 +61,8 @@ public abstract class TestConflictSearcher {
         HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         DiagnosisModel<Integer> model = new DiagnosisModel<>();
-        model.setPossiblyFaultyStatements(getSet(1, 2, 3, 4, 5));
-        model.setCorrectStatements(Arrays.asList(6, 7));
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
         model.setNotEntailedExamples(Collections.singletonList(1));
 
         SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, Collections.emptyList());
