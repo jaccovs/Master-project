@@ -308,13 +308,6 @@ public class QPartition<Formula> {
                 ", dnx=" + dnx +
                 ", dz=" + dz +
                 ", canonicalQuery=" + canonicalQuery +
-                ", explicitEntailmentsQueries=" + explicitEntailmentsQueries +
-                ", enrichedQueries=" + enrichedQueries +
-                ", rejectedQueries=" + rejectedQueries +
-                ", diagsTraits=" + diagsTraits +
-                ", score=" + score +
-                ", difference=" + difference +
-                ", isVerified=" + isVerified +
                 '}';
     }
 }
