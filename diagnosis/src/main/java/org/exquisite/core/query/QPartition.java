@@ -9,7 +9,8 @@ import java.util.*;
 /**
  * A qPartition object of constraints that splits the diagnoses into the 3 parts dx, dnx, and dz.
  *
- * Created by pr8 and wolfi on 10.03.2015.
+ * @author wolfi
+ * @author patrick
  */
 public class QPartition<F> {
     /**
@@ -104,12 +105,18 @@ public class QPartition<F> {
         this.dz = dz;
         this.costEstimator = costestimator;
 
-        this.probDx = computeProbabibilty(this.dx);
-        this.probDnx = computeProbabibilty(this.dnx);
+        this.probDx = computeProbability(this.dx);
+        this.probDnx = computeProbability(this.dnx);
     }
 
 
-    private BigDecimal computeProbabibilty(Set<Diagnosis<F>> diags) {
+    /**
+     * Computes the probabilities for diagnoses diags using the costestimator.
+     *
+     * @param diags
+     * @return
+     */
+    private BigDecimal computeProbability(Set<Diagnosis<F>> diags) {
         BigDecimal sum = BigDecimal.ZERO;
         if (costEstimator!=null) {
             for (Diagnosis<F> d : diags) {
@@ -211,7 +218,7 @@ public class QPartition<F> {
      *
      * @return The set of initial successors of the QPartition partitionPk.
      */
-    public Collection<QPartition<F>> generateInitialSuccessors() {
+    private Collection<QPartition<F>> generateInitialSuccessors() {
         assert dx.isEmpty();
         assert dz.isEmpty();
 
@@ -237,7 +244,7 @@ public class QPartition<F> {
      *
      * @return Mapping from each diagnosis in dnx to it's traits. This mapping is stored in qPartition partitionPk.
      */
-    public Map<Diagnosis<F>,Set<F>> computeDiagsTraits() {
+    private Map<Diagnosis<F>,Set<F>> computeDiagsTraits() {
         assert !dx.isEmpty();
 
         //  compute the union of formulas of diagnoses dx of partitionPk

@@ -76,7 +76,7 @@ public class DiagnosisModel<F> extends Observable implements Observer {
 
 
     /**
-     * Getter for the correct statements
+     * Getter for the correct formulas (or background knowledge).
      *
      * @return
      */
@@ -85,7 +85,7 @@ public class DiagnosisModel<F> extends Observable implements Observer {
     }
 
     /**
-     * Sets the correct statements
+     * Sets the correct statements (or background knowledge).
      *
      * @param correctFormulas
      */
@@ -96,7 +96,7 @@ public class DiagnosisModel<F> extends Observable implements Observer {
     }
 
     /**
-     * Getter for the possibly faulty statements
+     * Getter for the possibly faulty formulas (or knowledge base).
      *
      * @return
      */
@@ -105,7 +105,7 @@ public class DiagnosisModel<F> extends Observable implements Observer {
     }
 
     /**
-     * Setter for the possibly faulty statements
+     * Setter for the possibly faulty formulas (or knowledge base).
      *
      * @param possiblyFaultyFormulas
      */

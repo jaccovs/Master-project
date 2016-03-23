@@ -3,6 +3,7 @@ package org.exquisite.core.engines;
 import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.query.qualitymeasures.IQPartitionQualityMeasure;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
@@ -25,6 +26,8 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  * diagnosis. This class depends on another engine that allows computation of diagnoses.
  *
  * @author Schmitz
+ * @author wolfi
+ * @author patrick
  */
 public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 
@@ -83,8 +86,8 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
-        QPartitionQualityMeasure<F> qPartitionQualityMeasure = null; // TODO use implementing classes
-        this.queryComputation = new HeuristicQC<>(qPartitionQualityMeasure, this.innerEngine);
+        IQPartitionQualityMeasure<F> partitionQualityMeasure = null; // TODO use implementing classes
+        this.queryComputation = new HeuristicQC<>(partitionQualityMeasure, this.innerEngine);
         this.queryAnswering = queryAnswering;
     }
 
