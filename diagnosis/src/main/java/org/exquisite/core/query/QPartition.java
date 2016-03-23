@@ -77,12 +77,12 @@ public class QPartition<F> {
     /**
      *
      */
-    public BigDecimal probDx;
+    public double probDx;
 
     /**
      *
      */
-    public BigDecimal probDnx;
+    public double probDnx;
 
     /**
      *
@@ -116,14 +116,14 @@ public class QPartition<F> {
      * @param diags
      * @return
      */
-    private BigDecimal computeProbability(Set<Diagnosis<F>> diags) {
+    private double computeProbability(Set<Diagnosis<F>> diags) {
         BigDecimal sum = BigDecimal.ZERO;
         if (costEstimator!=null) {
             for (Diagnosis<F> d : diags) {
                 sum = sum.add(costEstimator.getFormulasCosts(d.getFormulas()));
             }
         }
-        return sum;
+        return sum.doubleValue(); // TODO isn't double enough precision?
     }
     /**
      * Return the result of query computation.
@@ -151,26 +151,26 @@ public class QPartition<F> {
     public Collection<QPartition<F>> computeSuccessors() {
         assert dz.isEmpty();
 
-        Collection<QPartition<F>> sucs = new HashSet<>();                                                         // line 2: stores successors of Parition Pk by a minimal
+        Collection<QPartition<F>> sucs = new HashSet<>();                                                               // line 2: stores successors of Parition Pk by a minimal
         this.diagsTraits = new HashMap<>();                                                                             // line 3: stores tuples including a diagnosis and the trait of the eq. class w.r.t. it belongs to
-        Set<Set<Diagnosis<F>>> eqClasses = new HashSet<>();                                                       // line 4: set of sets of diagnoses, each set is eq. class with set-minimal trait
+        Set<Set<Diagnosis<F>>> eqClasses = new HashSet<>();                                                             // line 4: set of sets of diagnoses, each set is eq. class with set-minimal trait
 
         if (dx.isEmpty()) {                                                                                             // line 5: initial State, apply S_init
             sucs = generateInitialSuccessors();                                                                         // line 6-7:
         } else {                                                                                                        // line 8: Pk is canonical q-partition, apply Snext
             diagsTraits = computeDiagsTraits();                                                                         // line 9-11: compute trait of eq. class, enables to retrive ti for Di in operations below
-            Set<Diagnosis<F>> diags = new HashSet<>(dnx);                                                         // line 12: make a copy of dnx
-            Set<Diagnosis<F>> minTraitDiags = new HashSet<>();                                                    // line 13: to store one representative of each eq. class with set-minimial trait
+            Set<Diagnosis<F>> diags = new HashSet<>(dnx);                                                               // line 12: make a copy of dnx
+            Set<Diagnosis<F>> minTraitDiags = new HashSet<>();                                                          // line 13: to store one representative of each eq. class with set-minimial trait
             boolean sucsExist = false;                                                                                  // line 14: will be set to true if Pk is found to have some canonical successor q-partition
 
             while (!diags.isEmpty()) {                                                                                  // line 15:
-                Diagnosis<F> Di = getFirst(diags);                                                                // line 16: Di is first (any) element in diags and diags := diags - Di (getFirst removes Di from diags)
-                Set<Diagnosis<F>> necFollowers = new HashSet<>();                                                 // line 17: to store all necessary followers of Di
+                Diagnosis<F> Di = getFirst(diags);                                                                      // line 16: Di is first (any) element in diags and diags := diags - Di (getFirst removes Di from diags)
+                Set<Diagnosis<F>> necFollowers = new HashSet<>();                                                       // line 17: to store all necessary followers of Di
                 boolean diagOK = true;                                                                                  // line 18: will be set to false if Di is found to have a non-set-minimal trait
-                Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);                                   // prepare unification of diags with minTraitDiags
+                Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);                                         // prepare unification of diags with minTraitDiags
                 diagsAndMinTraitDiags.addAll(minTraitDiags);
                 Set<F> ti = diagsTraits.get(Di);
-                for (Diagnosis<F> Dj : diagsAndMinTraitDiags) {                                                   // line 19:
+                for (Diagnosis<F> Dj : diagsAndMinTraitDiags) {                                                         // line 19:
                     Set<F> tj = diagsTraits.get(Dj);
                     if (ti.containsAll(tj))                                                                             // line 20:
                         if (ti.equals(tj))                                                                              // line 21: equal trait, Di and Dj are same eq. class
@@ -179,7 +179,7 @@ public class QPartition<F> {
                             diagOK = false;                                                                             // line 24: eq. class of Di has a non-set-minimal trait
                 }
 
-                Set<Diagnosis<F>> eqCls = new HashSet<>(necFollowers);                                            // line 25:
+                Set<Diagnosis<F>> eqCls = new HashSet<>(necFollowers);                                                  // line 25:
                 eqCls.add(Di);                                                                                          // line 25:
 
                 if (!sucsExist && eqCls.equals(dnx))                                                                    // line 26: test only run in first iteration of while-loop
@@ -193,7 +193,7 @@ public class QPartition<F> {
                 diags.removeAll(necFollowers);                                                                          // line 32: delete all representatives for eq. class
             }
 
-            for (Set<Diagnosis<F>> E : eqClasses) {                                                               // line 33-34: construct all canonical successor q-partitions by means of eq.class
+            for (Set<Diagnosis<F>> E : eqClasses) {                                                                     // line 33-34: construct all canonical successor q-partitions by means of eq.class
                 Set<Diagnosis<F>> newDx = new HashSet<>(dx);
                 boolean hasBeenAdded = newDx.addAll(E);
                 assert hasBeenAdded;
