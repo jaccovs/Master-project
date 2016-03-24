@@ -2,7 +2,7 @@ package org.exquisite.core.query;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.scoring.MinScoreQSS;
-import org.exquisite.core.query.scoring.QuerySelection;
+import org.exquisite.core.query.scoring.IQuerySelection;
 import org.exquisite.core.DiagnosisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleQC.class);
 
-    private final QuerySelection<F> querySelection;
+    private final IQuerySelection<F> querySelection;
 
     private BigDecimal threshold = BigDecimal.ZERO;
     private Iterator<Query<F>> queriesIterator = null;
@@ -37,7 +37,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
         this(new MinScoreQSS<>());
     }
 
-    public SimpleQC(QuerySelection<F> querySelection) {
+    public SimpleQC(IQuerySelection<F> querySelection) {
         this.querySelection = querySelection;
     }
 
@@ -91,7 +91,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
         this.threshold = BigDecimal.valueOf(threshold);
     }
 
-    public QuerySelection<F> getQuerySelection() {
+    public IQuerySelection<F> getQuerySelection() {
         return querySelection;
     }
 

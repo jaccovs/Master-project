@@ -7,13 +7,12 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kostya
- * Date: 01.06.11
- * Time: 08:44
- * To change this template use File | Settings | File Templates.
+ * Query Selection interface
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
-public interface QuerySelection<F> {
+public interface IQuerySelection<F> {
 
     BigDecimal getScore(Query<F> query);
 

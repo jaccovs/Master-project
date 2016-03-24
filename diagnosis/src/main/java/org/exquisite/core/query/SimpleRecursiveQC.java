@@ -1,7 +1,7 @@
 package org.exquisite.core.query;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.query.scoring.QuerySelection;
+import org.exquisite.core.query.scoring.IQuerySelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class SimpleRecursiveQC<F> extends SimpleQC<F> {
         super();
     }
 
-    public SimpleRecursiveQC(QuerySelection<F> querySelection) {
+    public SimpleRecursiveQC(IQuerySelection<F> querySelection) {
         super(querySelection);
     }
 

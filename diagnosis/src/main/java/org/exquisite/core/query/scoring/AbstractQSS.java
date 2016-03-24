@@ -12,13 +12,11 @@ import java.util.Set;
 import static org.nevec.rjm.BigDecimalMath.log;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 10.02.12
- * Time: 11:22
- * To change this template use File | Settings | File Templates.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author pfleiss
  */
-public abstract class AbstractQSS<F> implements QuerySelection<F> {
+public abstract class AbstractQSS<F> implements IQuerySelection<F> {
 
     public final MathContext DEFAULT_MC = MathContext.DECIMAL128;
 
