@@ -16,5 +16,5 @@ public interface IQuerySelection<F> {
 
     BigDecimal getScore(Query<F> query);
 
-    void normalize(Set<Diagnosis<F>> diagnosises);
+    void normalize(Set<Diagnosis<F>> diagnoses);
 }

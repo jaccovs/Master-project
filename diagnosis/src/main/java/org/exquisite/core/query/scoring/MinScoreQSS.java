@@ -54,9 +54,9 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
         return "Entropy";
     }
 
-    public void normalize(Set<Diagnosis<F>> diagnosises) {
-        BigDecimal sum = sum(diagnosises);
-        for (Diagnosis<F> hs : diagnosises) {
+    public void normalize(Set<Diagnosis<F>> diagnoses) {
+        BigDecimal sum = sum(diagnoses);
+        for (Diagnosis<F> hs : diagnoses) {
             BigDecimal value = hs.getMeasure().divide(sum, DEFAULT_MC);
             hs.setMeasure(value);
         }

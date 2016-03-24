@@ -19,10 +19,10 @@ public class SplitInHalfQSS<F> extends MinScoreQSS<F> {
         return "Split";
     }
 
-    public void normalize(Set<Diagnosis<F>> diagnosises) {
-        BigDecimal size = new BigDecimal(Integer.toString(diagnosises.size()));
+    public void normalize(Set<Diagnosis<F>> diagnoses) {
+        BigDecimal size = new BigDecimal(Integer.toString(diagnoses.size()));
         if (size.compareTo(BigDecimal.ONE) > 0)
-            for (Diagnosis<F> hs : diagnosises) {
+            for (Diagnosis<F> hs : diagnoses) {
                 hs.setMeasure(BigDecimal.ONE.divide(size, DEFAULT_MC));
             }
     }
