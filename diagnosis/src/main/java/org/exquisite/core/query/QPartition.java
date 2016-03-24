@@ -8,6 +8,10 @@ import java.util.*;
 
 /**
  * A qPartition is a partition of the diagnoses set D induced by a query w.r.t. D into the 3 parts dx, dnx, and dz.
+ * <p>
+ *     A q-partition is a helpful instrument in deciding whether a set of logical formulas is a query or not. I will
+ *     facilitate an estimation of the impact a query answer has in terms of invalidation of minimal diagnoses.
+ * </p>
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author wolfi
