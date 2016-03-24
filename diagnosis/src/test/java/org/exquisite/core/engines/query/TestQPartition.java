@@ -52,6 +52,43 @@ public class TestQPartition<Formula> {
         expectedSuccessors.add(new QPartition<>(getSet(D3, D5, D6), getSet(D1, D2, D4), getSet(), null));
 
         assertEquals(expectedSuccessors, successors);
+
+        // case 3 : test example 1 from paper from root to the leafnodes
+        D1 = getDiagnosis(1, 2, 5);
+        D2 = getDiagnosis(1, 3, 5);
+        D3 = getDiagnosis(3, 4 ,5);
+
+        QPartition<Integer> rootPartition = new QPartition<>(getSet(), getSet(D1, D2, D3), getSet(), null);
+        Collection<QPartition<Integer>> L1_successors = rootPartition.computeSuccessors();
+
+        Collection<QPartition<Integer>> expected_L1_Successors = getSet(
+                new QPartition<>(getSet(D1), getSet(D2, D3), getSet(), null),
+                new QPartition<>(getSet(D2), getSet(D1, D3), getSet(), null),
+                new QPartition<>(getSet(D3), getSet(D1, D2), getSet(), null)
+        );
+        assertEquals(expected_L1_Successors, L1_successors); // check succesors of rootPartition
+
+        Collection<QPartition<Integer>>[] expected_L2_Successors = new Collection[] {
+                getSet(new QPartition<>(getSet(D1,D2), getSet(D3), getSet(), null)), // successors for q-partition {{D1},{D2,D3},{}}
+                getSet(new QPartition<>(getSet(D1,D2), getSet(D3), getSet(), null), new QPartition<>(getSet(D2, D3), getSet(D1), getSet(), null)), // successors for q-partition {{D2},{D1,D3},{}}
+                getSet(new QPartition<>(getSet(D2,D3), getSet(D1), getSet(), null)) // successors for q-partition {{D3},{D1,D2},{}}
+        } ;
+
+        int i = 0;
+        for (QPartition<Integer> L1_successor : L1_successors) {
+            Collection<QPartition<Integer>> L2_Successors = L1_successor.computeSuccessors();
+            assertEquals(expected_L2_Successors[i++], L2_Successors); // check successors of each L1 partition
+        }
+
+        // finally check each qPartition in nextExpectedSuccessors which are just these two partitions
+        qPartition = new QPartition<>(getSet(D1,D2), getSet(D3), getSet(), null);
+        successors = qPartition.computeSuccessors();
+        assertEquals(getSet(), successors); // no successor
+
+        qPartition = new QPartition<>(getSet(D2,D3), getSet(D1), getSet(), null);
+        successors = qPartition.computeSuccessors();
+        assertEquals(getSet(), successors); // no successor
+
     }
 
     /**
