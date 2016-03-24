@@ -1,5 +1,6 @@
 package org.exquisite.core.engines.query;
 
+import junit.framework.Assert;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 import org.junit.Test;
@@ -89,6 +90,15 @@ public class TestQPartition<Formula> {
         successors = qPartition.computeSuccessors();
         assertEquals(getSet(), successors); // no successor
 
+
+        // check that calling computeSuccesors with a q-partition with non-empty dz fails
+        try {
+            qPartition = new QPartition<>(getSet(D2, D3), getSet(D1), getSet(D4), null);
+            successors = qPartition.computeSuccessors();
+            fail();
+        } catch (AssertionError e) {
+            assertTrue(true);
+        }
     }
 
     /**
