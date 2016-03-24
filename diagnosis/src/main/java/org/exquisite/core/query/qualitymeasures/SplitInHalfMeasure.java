@@ -9,6 +9,8 @@ import java.util.Set;
 /**
  * A split-in-half (SPL) measure for q-partition selection.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ *
  * @author patrick
  * @author wolfi
  */

@@ -36,7 +36,7 @@ public class Utils {
      * Creates a new set of diagnoses representing the union of all sets given as parameter.
      *
      * @param sets Sets of diagnoses, they are unmodified after operation.
-     * @param <F> Formulas, Statements, Axioms, Sentences, etc.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
      * @return A new set of diagnoses representing the union of all sets of diagnoses.
      */
     public static <F> Set<Diagnosis<F>> union(Set<Diagnosis<F>>... sets) {

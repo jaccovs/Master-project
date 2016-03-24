@@ -13,6 +13,8 @@ import java.util.*;
 /**
  * Framework for a heuristic Query Computation Algorithm for interactive debugging.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ *
  * @author wolfi
  * @author patrick
  */
@@ -97,6 +99,7 @@ public class HeuristicQC<F> implements QueryComputation<F> {
 
         return null;
     }
+
 
     /**
      * TODO documentation

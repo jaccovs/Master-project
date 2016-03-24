@@ -5,8 +5,10 @@ import org.exquisite.core.query.QPartition;
 /**
  * An entropy-based (ENT) measure for q-partition selection.
  *
- * @author patrick
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ *
  * @author wolfi
+ * @author patrick
  */
 public class EntropyBasedMeasure<F> implements IQPartitionQualityMeasure<F> {
 

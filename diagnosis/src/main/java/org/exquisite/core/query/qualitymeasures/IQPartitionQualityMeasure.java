@@ -5,8 +5,10 @@ import org.exquisite.core.query.QPartition;
 /**
  * Partition Quality Measure interface.
  *
- * @author patrick
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ *
  * @author wolfi
+ * @author patrick
  */
 public interface IQPartitionQualityMeasure<F> {
 
