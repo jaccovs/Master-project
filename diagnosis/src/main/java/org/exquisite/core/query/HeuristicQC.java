@@ -4,7 +4,7 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.qualitymeasures.IQPartitionQualityMeasure;
+import org.exquisite.core.query.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
     private static Logger logger = LoggerFactory.getLogger(HeuristicQC.class);
 
-    private IQPartitionQualityMeasure IQPartitionQualityMeasure;
+    private IQPartitionRequirementsMeasure rm;
 
     private QPartition<F> qPartition = null;
 
@@ -30,8 +30,8 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
     private DiagnosisModel<F>  diagnosisModel;
 
-    public HeuristicQC(IQPartitionQualityMeasure partitionQualityMeasure, AbstractDiagnosisEngine<F> diagnosisEngine) {
-        this.IQPartitionQualityMeasure = partitionQualityMeasure;
+    public HeuristicQC(IQPartitionRequirementsMeasure qPartitionRequirementsMeasure, AbstractDiagnosisEngine<F> diagnosisEngine) {
+        this.rm = qPartitionRequirementsMeasure;
         this.diagnosisEngine = diagnosisEngine;
         this.diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
     }
@@ -39,7 +39,7 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
     @Override
     public void initialize(Set<Diagnosis<F>> diagnoses)
             throws DiagnosisException {
-        calcQuery(this.diagnosisModel, diagnoses, this.diagnosisModel.getFormulaWeights(), this.IQPartitionQualityMeasure);
+        calcQuery(this.diagnosisModel, diagnoses, this.diagnosisModel.getFormulaWeights(), this.rm);
     }
 
     @Override
@@ -63,28 +63,41 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
      * @param diagnosisModel
      * @param leadingDiagnoses
      * @param formulaWeights
-     * @param partitionQualityMeasure
+     * @param rm some requirements in order to guide the search faster towards a (nearly) optimal q-partitions.
      */
-    private void calcQuery(DiagnosisModel<F>  diagnosisModel, Set<Diagnosis<F>> leadingDiagnoses, Map<F, Float> formulaWeights, IQPartitionQualityMeasure partitionQualityMeasure) {
+    private void calcQuery(DiagnosisModel<F>  diagnosisModel, Set<Diagnosis<F>> leadingDiagnoses, Map<F, Float> formulaWeights, IQPartitionRequirementsMeasure rm) {
         List<F> kb = diagnosisModel.getPossiblyFaultyFormulas();
 
-        qPartition = findQPartition(leadingDiagnoses, formulaWeights, partitionQualityMeasure); // (2)
+        // we start with the search for an (nearly) optimal q-partition, such that a query associated with this
+        // q-partition can be extracted in the next step by selectQueryForQPartition
+        qPartition = findQPartition(leadingDiagnoses, formulaWeights, rm); // (2)
 
+        // after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
+        // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
+        // answered correctly.
         selectQueryForQPartition(leadingDiagnoses, qPartition); // (3)
 
+        // then in order to come up with a query that is as simple and easy to answer as possible for the
+        // respective user U, this query Q can optionally enriched by additional logical formulas by invoking
+        // a reasoner for entailments calculation.
         enrichQuery(qPartition, diagnosisModel); // (4)
 
+        // the previous step causes a larger pool of formulas to select from in the query optimization step
+        // which constructs a set-minimal query where most complex sentences in terms of the logical construct
+        // and term fault estimates are eliminated from Q and the most simple ones retained
         Query<F> q = optimizeQuery(qPartition); // (5)
     }
+
     /**
-     * TODO implement step (2) of Main Algorithm
+     * Searches for an (nearly) optimal q-partition completely without reasoner support for some requirements rm,
+     * a probability measure p and a set of leading diagnoses D as given input.
      *
      * @param diagnoses TODO documentation
      * @param formulaWeights TODO documentation
      * @param partitionQualityMeasure TODO documentation
-     * @return TODO documentation
+     * @return A suitable q-partition.
      */
-    private QPartition<F> findQPartition(Set<Diagnosis<F>> diagnoses, Map formulaWeights, IQPartitionQualityMeasure partitionQualityMeasure) {
+    private QPartition<F> findQPartition(Set<Diagnosis<F>> diagnoses, Map formulaWeights, IQPartitionRequirementsMeasure partitionQualityMeasure) {
         assert diagnoses.size() >= 2;
 
         QPartition<F> partition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), diagnosisEngine.getCostsEstimator());

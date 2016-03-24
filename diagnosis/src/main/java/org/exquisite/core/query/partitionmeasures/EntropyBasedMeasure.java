@@ -1,4 +1,4 @@
-package org.exquisite.core.query.qualitymeasures;
+package org.exquisite.core.query.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
@@ -7,10 +7,10 @@ import org.exquisite.core.query.QPartition;
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
- * @author wolfi
  * @author patrick
+ * @author wolfi
  */
-public class EntropyBasedMeasure<F> implements IQPartitionQualityMeasure<F> {
+public class EntropyBasedMeasure<F> implements IQPartitionRequirementsMeasure<F> {
 
     /**
      * A threshold value.
@@ -18,11 +18,12 @@ public class EntropyBasedMeasure<F> implements IQPartitionQualityMeasure<F> {
     private Double tm;
 
     /**
+     * Constructor of an entropy based requirements measure.
      *
-     * @param threshold A threshold value tm.
+     * @param optimalityThreshold Specify an optimality threshold for good enough optimality.
      */
-    public EntropyBasedMeasure(Double threshold) {
-        this.tm = threshold;
+    public EntropyBasedMeasure(Double optimalityThreshold) {
+        this.tm = optimalityThreshold;
     }
 
     @Override

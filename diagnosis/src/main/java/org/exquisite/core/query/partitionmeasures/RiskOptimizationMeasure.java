@@ -1,4 +1,4 @@
-package org.exquisite.core.query.qualitymeasures;
+package org.exquisite.core.query.partitionmeasures;
 
 import org.exquisite.core.Utils;
 import org.exquisite.core.model.Diagnosis;
@@ -14,7 +14,7 @@ import java.util.Set;
  * @author patrick
  * @author wolfi
  */
-public class RiskOptimizationMeasure<F> implements IQPartitionQualityMeasure<F> {
+public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasure<F> {
 
     private Double c;                       // TODO Datentyp nachfragen
 

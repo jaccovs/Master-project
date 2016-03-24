@@ -1,16 +1,16 @@
-package org.exquisite.core.query.qualitymeasures;
+package org.exquisite.core.query.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
 /**
- * Partition Quality Measure interface.
+ * Partition Requirements Measure interface to support a faster search for a (nearly) optimal q-partition.
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
- * @author wolfi
  * @author patrick
+ * @author wolfi
  */
-public interface IQPartitionQualityMeasure<F> {
+public interface IQPartitionRequirementsMeasure<F> {
 
     /**
      * Update best q-Partition.
