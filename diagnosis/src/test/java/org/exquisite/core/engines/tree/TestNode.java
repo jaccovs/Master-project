@@ -1,6 +1,6 @@
 package org.exquisite.core.engines.tree;
 
-import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.engines.Node;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestNode {
 
-    private CostsEstimator<Integer> costsEstimator = new CostsEstimator<Integer>() {
+    private ICostsEstimator<Integer> costsEstimator = new ICostsEstimator<Integer>() {
         @Override
         public BigDecimal getFormulasCosts(Collection<Integer> formulas) {
             return new BigDecimal(formulas.stream().mapToInt(Integer::valueOf).sum());

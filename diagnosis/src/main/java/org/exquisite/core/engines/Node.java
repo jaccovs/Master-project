@@ -1,6 +1,6 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -73,7 +73,7 @@ public class Node<F> {
      * @param parent   - the parent for the newly constructed node.
      * @param arcLabel - the label from the parent that immediately points here.
      */
-    public Node(Node<F> parent, F arcLabel, CostsEstimator<F> estimator) {
+    public Node(Node<F> parent, F arcLabel, ICostsEstimator<F> estimator) {
         assert(parent!=null);
         this.parents = new ArrayList<>(1);
         this.parents.add(parent);

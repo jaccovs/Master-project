@@ -16,9 +16,12 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
 
 /**
  * Simple query computation methods that implements a brute force approach to query computation. This approach simply
- * traverses all possible partitions of diagnoses into two sets and computes a query for each partition if it exists
+ * traverses all possible partitions of diagnoses into two sets and computes a query for each partition if it exists.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
-public class SimpleQC<F> implements QueryComputation<F> {
+public class SimpleQC<F> implements IQueryComputation<F> {
 
     private static Logger logger = LoggerFactory.getLogger(SimpleQC.class);
 

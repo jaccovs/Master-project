@@ -14,6 +14,9 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.getCounter;
 
 /**
  * Simple query computation that implements recursive brute force computation method
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
 public class SimpleRecursiveQC<F> extends SimpleQC<F> {
 

@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 /**
- * Set estimator returns the size of the input set of formulas as an estimation
+ * Set estimator returns the size of the input set of formulas as an estimation.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
-public class SetCostsEstimator<F> implements CostsEstimator<F> {
+public class SetCostsEstimator<F> implements ICostsEstimator<F> {
 
     /**
      * @param formulas set of formulas

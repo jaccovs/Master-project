@@ -4,7 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A query represented by a set of  formulas that splits the diagnoses into the 3 parts dx, dnx, and dz.
+ * A query is a set of logical formulas presented to the user.
+ * The query is represented by the set of formulas that splits the diagnoses into a pPartition containing 3 sets of
+ * diagnoses: dx, dnx, and dz.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
  * @author Schmitz
  * @author wolfi

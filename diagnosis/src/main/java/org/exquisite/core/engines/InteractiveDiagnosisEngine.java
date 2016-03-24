@@ -7,7 +7,7 @@ import org.exquisite.core.query.qualitymeasures.IQPartitionQualityMeasure;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
-import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.query.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +52,12 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
     /**
      * Query computation algorithm used in the interactive session
      */
-    private QueryComputation<F> queryComputation;
+    private IQueryComputation<F> queryComputation;
 
     /**
      * Estimator of the costs for a set of statements
      */
-    private CostsEstimator<F> costsEstimator;
+    private ICostsEstimator<F> costsEstimator;
 
     /**
      * Threshold that allows to stop computations if one of the diagnoses is above it.
@@ -68,12 +68,12 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
     /**
      * An interface that must be implemented by the front-ends allowing a user to answer a query
      */
-    private QueryAnswering<F> queryAnswering;
+    private IQueryAnswering<F> queryAnswering;
 
     public InteractiveDiagnosisEngine(AbstractDiagnosisEngine<F> innerEngine,
-                                      QueryComputation<F> queryComputation,
-                                      QueryAnswering<F> queryAnswering,
-                                      CostsEstimator<F> estimator) {
+                                      IQueryComputation<F> queryComputation,
+                                      IQueryAnswering<F> queryAnswering,
+                                      ICostsEstimator<F> estimator) {
         super(innerEngine.getSolver());
         this.costsEstimator = estimator;
         this.innerEngine = innerEngine;
@@ -81,7 +81,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.queryAnswering = queryAnswering;
     }
 
-    public InteractiveDiagnosisEngine(ISolver<F> solver, QueryAnswering<F> queryAnswering) {
+    public InteractiveDiagnosisEngine(ISolver<F> solver, IQueryAnswering<F> queryAnswering) {
         super(solver);
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();

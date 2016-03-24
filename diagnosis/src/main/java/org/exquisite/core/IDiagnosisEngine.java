@@ -1,6 +1,5 @@
 package org.exquisite.core;
 
-
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 
@@ -9,6 +8,7 @@ import java.util.Set;
 /**
  * Defines an interface for tests.diagnosis engine implementations.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author David
  */
 public interface IDiagnosisEngine<F> {

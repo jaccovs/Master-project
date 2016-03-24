@@ -1,18 +1,20 @@
 package org.exquisite.core.query;
 
-import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.model.Diagnosis;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * A qPartition object of constraints that splits the diagnoses into the 3 parts dx, dnx, and dz.
+ * A qPartition is a partition of the diagnoses set D induced by a query w.r.t. D into the 3 parts dx, dnx, and dz.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author wolfi
  * @author patrick
  */
 public class QPartition<F> {
+
     /**
      * Diagnoses that are supported by the query
      */
@@ -31,7 +33,6 @@ public class QPartition<F> {
     /**
      * Uniquely defined query for a given Q-Partition, used in the search for Q-Partitions.
      */
-
     private Set<F> canonicalQuery;
 
     /**
@@ -72,7 +73,7 @@ public class QPartition<F> {
     /**
      *
      */
-    public CostsEstimator<F> costEstimator = null;
+    public ICostsEstimator<F> costEstimator = null;
 
     /**
      *
@@ -99,7 +100,7 @@ public class QPartition<F> {
      * @param dz Diagnoses that are unaffected by the query.
      * @param  costestimator Costestimator.
      */
-    public QPartition(Set<Diagnosis<F>> dx, Set<Diagnosis<F>> dnx, Set<Diagnosis<F>> dz, CostsEstimator<F> costestimator) {
+    public QPartition(Set<Diagnosis<F>> dx, Set<Diagnosis<F>> dnx, Set<Diagnosis<F>> dz, ICostsEstimator<F> costestimator) {
         this.dx = dx;
         this.dnx = dnx;
         this.dz = dz;

@@ -6,7 +6,7 @@ import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.conflictsearch.IConflictSearcher;
 import org.exquisite.core.conflictsearch.QuickXPlain;
-import org.exquisite.core.costestimators.CostsEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.costestimators.SimpleCostsEstimator;
 
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
 
     private ISolver<F> solver;
     private IConflictSearcher<F> searcher;
-    private CostsEstimator<F> costsEstimator;
+    private ICostsEstimator<F> costsEstimator;
     private Set<Set<F>> conflicts = new HashSet<>();
     private Set<Diagnosis<F>> diagnoses = new HashSet<>();
 
@@ -82,12 +82,12 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
         return diagnoses;
     }
 
-    public CostsEstimator<F> getCostsEstimator() {
+    public ICostsEstimator<F> getCostsEstimator() {
         return costsEstimator;
     }
 
     public void setCostsEstimator(
-            CostsEstimator<F> costsEstimator) {
+            ICostsEstimator<F> costsEstimator) {
         this.costsEstimator = costsEstimator;
     }
 

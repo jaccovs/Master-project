@@ -4,16 +4,14 @@ package org.exquisite.core.costestimators;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: kostya
- * Date: 28.11.12
- * Time: 09:56
- * To change this template use File | Settings | File Templates.
+ * Abstract cost estimator.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
-public abstract class AbstractCostEstimator<F> implements CostsEstimator<F> {
+public abstract class AbstractCostEstimator<F> implements ICostsEstimator<F> {
 
     private final Collection<F> possiblyFaultyFormulas;
 

@@ -7,7 +7,9 @@ import java.util.Collection;
 /**
  * A cost estimator used to calculate the formula costs depending on the formula weights.
  *
- * Created by wolfi on 23.03.2016.
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author patrick
+ * @author wolfi
  */
 public class FormulaWeightsCostEstimator<F> extends AbstractCostEstimator<F> {
 

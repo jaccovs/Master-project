@@ -5,7 +5,7 @@ import org.exquisite.core.query.QPartition;
 /**
  * An entropy-based (ENT) measure for q-partition selection.
  *
- * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
  * @author wolfi
  * @author patrick

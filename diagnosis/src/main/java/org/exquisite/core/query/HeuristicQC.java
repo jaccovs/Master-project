@@ -13,12 +13,12 @@ import java.util.*;
 /**
  * Framework for a heuristic Query Computation Algorithm for interactive debugging.
  *
- * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
  * @author wolfi
  * @author patrick
  */
-public class HeuristicQC<F> implements QueryComputation<F> {
+public class HeuristicQC<F> implements IQueryComputation<F> {
 
     private static Logger logger = LoggerFactory.getLogger(HeuristicQC.class);
 

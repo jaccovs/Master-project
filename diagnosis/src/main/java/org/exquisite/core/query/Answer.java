@@ -4,7 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by kostya on 04.12.2015.
+ * Answer given by the user. An answer represents formulas that are supported, not supported and unaffected.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
 public class Answer<F> {
 
@@ -17,6 +20,7 @@ public class Answer<F> {
      * Formulas that are not supported by the answer
      */
     public Set<F> negative = new HashSet<>();
+
     /**
      * Formulas that are unaffected by the answer
      */

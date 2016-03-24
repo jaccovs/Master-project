@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 /**
- * Simple costs estimator that returns 1 for any input set of formulas
+ * Simple costs estimator that returns 1 for any input set of formulas.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author kostya
  */
-public class SimpleCostsEstimator<F> implements CostsEstimator<F> {
+public class SimpleCostsEstimator<F> implements ICostsEstimator<F> {
 
     /**
      * @param formulas set of formulas

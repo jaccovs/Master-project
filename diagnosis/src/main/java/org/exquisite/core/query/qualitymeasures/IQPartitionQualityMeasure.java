@@ -5,7 +5,7 @@ import org.exquisite.core.query.QPartition;
 /**
  * Partition Quality Measure interface.
  *
- * @param <F> Formulas, Statements, Axioms, Logical Sentences, etc.
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
  * @author wolfi
  * @author patrick

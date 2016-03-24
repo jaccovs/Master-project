@@ -19,7 +19,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
-        implements CostsEstimator<OWLLogicalAxiom> {
+        implements ICostsEstimator<OWLLogicalAxiom> {
 
     public final static ManchesterOWLSyntax[] keywords = {ManchesterOWLSyntax.SOME,
             ManchesterOWLSyntax.ONLY,
