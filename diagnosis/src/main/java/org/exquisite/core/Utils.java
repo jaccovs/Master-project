@@ -39,10 +39,24 @@ public class Utils {
      * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
      * @return A new set of diagnoses representing the union of all sets of diagnoses.
      */
+    @SafeVarargs
     public static <F> Set<Diagnosis<F>> union(Set<Diagnosis<F>>... sets) {
         // TODO add assertion that no intersection is allowed ?
         Set<Diagnosis<F>> union = new HashSet<>();
         for (Set<Diagnosis<F>> set: sets) union.addAll(set);
         return union;
+    }
+
+    /**
+     * Removes and returns the first element from a collection.
+     *
+     * @param collection a collection.
+     * @param <T> any type.
+     * @return The first found and removed element in the collection.
+     */
+    public static <T> T getFirstElem(Collection<T> collection) {
+        T t = collection.iterator().next();
+        collection.remove(t);
+        return t;
     }
 }

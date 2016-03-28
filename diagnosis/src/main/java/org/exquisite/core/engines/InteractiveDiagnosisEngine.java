@@ -86,7 +86,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
-        IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(0.05);
+        IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(new BigDecimal(0.05));
         this.queryComputation = new HeuristicQC<>(partitionQualityMeasure, this.innerEngine);
         this.queryAnswering = queryAnswering;
     }

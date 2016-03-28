@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query;
+package org.exquisite.core.engines.query.qc.simple;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.perfmeasures.PerfMeasurementManager;

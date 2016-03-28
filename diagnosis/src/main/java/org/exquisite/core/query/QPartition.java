@@ -1,9 +1,11 @@
 package org.exquisite.core.query;
 
+import org.exquisite.core.Utils;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.model.Diagnosis;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 
 /**
@@ -82,12 +84,12 @@ public class QPartition<F> {
     /**
      *
      */
-    public double probDx;
+    public BigDecimal probDx;
 
     /**
      *
      */
-    public double probDnx;
+    public BigDecimal probDnx;
 
     /**
      *
@@ -110,10 +112,38 @@ public class QPartition<F> {
         this.dz = dz;
         this.costEstimator = costestimator;
 
-        this.probDx = computeProbability(this.dx);
-        this.probDnx = computeProbability(this.dnx);
+        computeProbabilities();
     }
 
+    private void computeProbabilities() {
+
+        // when the measures of diagnosis are correctly set (sum must equal 1) for all diagnoses, we prefer them
+        BigDecimal sumDx = BigDecimal.ZERO;
+        BigDecimal sumDnx = BigDecimal.ZERO;
+
+        for (Diagnosis d: dx)
+            sumDx = sumDx.add(d.getMeasure());
+
+        for (Diagnosis d: dnx)
+            sumDnx = sumDnx.add(d.getMeasure());
+
+        //if (sumDx.add(sumDnx).doubleValue() == 1){
+        if (sumDx.add(sumDnx).compareTo(BigDecimal.ONE) == 0) {
+            probDx = sumDx;
+            probDnx = sumDnx;
+            return;
+        }
+
+        this.probDx = computeProbability(dx);
+        this.probDnx = computeProbability(dnx);
+
+        // otherwise we set the probabilities of diagnoses using the formula weights (if possible)
+        final BigDecimal s = probDx.add(probDnx);
+        if (s.compareTo(BigDecimal.ZERO) != 0) {
+            this.probDx = this.probDx.divide(s, MathContext.DECIMAL128);
+            this.probDnx = this.probDnx.divide(s, MathContext.DECIMAL128);
+        }
+    }
 
     /**
      * Computes the probabilities for diagnoses diags using the costestimator.
@@ -121,15 +151,14 @@ public class QPartition<F> {
      * @param diags
      * @return
      */
-    private double computeProbability(Set<Diagnosis<F>> diags) {
+    private BigDecimal computeProbability(Set<Diagnosis<F>> diags) {
         BigDecimal sum = BigDecimal.ZERO;
-        if (costEstimator!=null) {
-            for (Diagnosis<F> d : diags) {
+        if (costEstimator!=null)
+            for (Diagnosis<F> d : diags)
                 sum = sum.add(costEstimator.getFormulasCosts(d.getFormulas()));
-            }
-        }
-        return sum.doubleValue(); // TODO isn't double enough precision?
+        return sum;
     }
+
     /**
      * Return the result of query computation.
      *
@@ -169,7 +198,7 @@ public class QPartition<F> {
             boolean sucsExist = false;                                                                                  // line 14: will be set to true if Pk is found to have some canonical successor q-partition
 
             while (!diags.isEmpty()) {                                                                                  // line 15:
-                Diagnosis<F> Di = getFirst(diags);                                                                      // line 16: Di is first (any) element in diags and diags := diags - Di (getFirst removes Di from diags)
+                Diagnosis<F> Di = Utils.getFirstElem(diags);                                                                      // line 16: Di is first (any) element in diags and diags := diags - Di (getFirstElem removes Di from diags)
                 Set<Diagnosis<F>> necFollowers = new HashSet<>();                                                       // line 17: to store all necessary followers of Di
                 boolean diagOK = true;                                                                                  // line 18: will be set to false if Di is found to have a non-set-minimal trait
                 Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);                                         // prepare unification of diags with minTraitDiags
@@ -266,20 +295,6 @@ public class QPartition<F> {
         return diagsTraits;
     }
 
-    /**
-     * Removes and returns the first diagnosis from diags.
-     *
-     * @param diags Set of diagnosis.
-     * @param <Formula> A formula from diagnosis.
-     * @return The first diagnosis in the set (side effect: it will be removed from the set).
-     */
-    private static <Formula> Diagnosis<Formula> getFirst(Set<Diagnosis<Formula>> diags) {
-        assert !diags.isEmpty();
-
-        Diagnosis<Formula> diagnosis = diags.iterator().next();
-        diags.remove(diagnosis);
-        return diagnosis;
-    }
 
     @Override
     public boolean equals(Object o) {

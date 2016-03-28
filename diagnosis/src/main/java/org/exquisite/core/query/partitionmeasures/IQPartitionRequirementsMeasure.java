@@ -2,6 +2,8 @@ package org.exquisite.core.query.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
+import java.math.BigDecimal;
+
 /**
  * Partition Requirements Measure interface to support a faster search for a (nearly) optimal q-partition.
  *
@@ -11,6 +13,8 @@ import org.exquisite.core.query.QPartition;
  * @author wolfi
  */
 public interface IQPartitionRequirementsMeasure<F> {
+
+    final static BigDecimal HALF = new BigDecimal("0.5");
 
     /**
      * Update best q-Partition.
@@ -47,6 +51,6 @@ public interface IQPartitionRequirementsMeasure<F> {
      * @param p A partition p.
      * @return A heuristic measure.
      */
-    double getHeuristics(QPartition<F> p);
+    BigDecimal getHeuristics(QPartition<F> p);
 
 }
