@@ -48,15 +48,15 @@ public class Utils {
     }
 
     /**
-     * Removes and returns the first element from a collection.
-     *
+     * Returns the first element from a collection. If parameter removeIt is <code>true</code>, the element is also removed from the collection.
      * @param collection a collection.
+     * @param removeIt If parameter removeIt is <code>true</code>, the element is also removed from the collection, otherwise the element will remain in collection.
      * @param <T> any type.
-     * @return The first found and removed element in the collection.
+     * @return The first element in the collection.
      */
-    public static <T> T getFirstElem(Collection<T> collection) {
+    public static <T> T getFirstElem(Collection<T> collection, boolean removeIt) {
         T t = collection.iterator().next();
-        collection.remove(t);
+        if (removeIt) collection.remove(t);
         return t;
     }
 }

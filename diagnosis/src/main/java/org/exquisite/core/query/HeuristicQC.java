@@ -122,17 +122,17 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
                 pBest = optimalPartition.partition;
             else
                 return optimalPartition;
-            sucs.remove(p1);
+            assert sucs.remove(p1);
         }
         return new OptimalPartition(pBest, false);
     }
 
     public QPartition<F> bestSuc(Collection<QPartition<F>> sucs, IQPartitionRequirementsMeasure rm) {
-        QPartition<F> sBest = Utils.getFirstElem(sucs);
+        QPartition<F> sBest = Utils.getFirstElem(sucs, false);
         BigDecimal heurSBest = rm.getHeuristics(sBest);
         for (QPartition<F> s : sucs) {
             BigDecimal heurS = rm.getHeuristics(s);
-            if (heurS.compareTo(heurSBest) < 0) { // (heurS < heurSBest) {
+            if (heurS.compareTo(heurSBest) < 0) { // (heurS < heurSBest)
                 sBest = s;
                 heurSBest = heurS;
             }

@@ -198,7 +198,7 @@ public class QPartition<F> {
             boolean sucsExist = false;                                                                                  // line 14: will be set to true if Pk is found to have some canonical successor q-partition
 
             while (!diags.isEmpty()) {                                                                                  // line 15:
-                Diagnosis<F> Di = Utils.getFirstElem(diags);                                                                      // line 16: Di is first (any) element in diags and diags := diags - Di (getFirstElem removes Di from diags)
+                Diagnosis<F> Di = Utils.getFirstElem(diags, true);                                                      // line 16: Di is first (any) element in diags and diags := diags - Di (getFirstElem removes Di from diags)
                 Set<Diagnosis<F>> necFollowers = new HashSet<>();                                                       // line 17: to store all necessary followers of Di
                 boolean diagOK = true;                                                                                  // line 18: will be set to false if Di is found to have a non-set-minimal trait
                 Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);                                         // prepare unification of diags with minTraitDiags
@@ -295,7 +295,6 @@ public class QPartition<F> {
         return diagsTraits;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -303,37 +302,17 @@ public class QPartition<F> {
 
         QPartition<?> that = (QPartition<?>) o;
 
-        if (isVerified != that.isVerified) return false;
-        if (!dx.equals(that.dx)) return false;
-        if (!dnx.equals(that.dnx)) return false;
-        if (!dz.equals(that.dz)) return false;
-        if (canonicalQuery != null ? !canonicalQuery.equals(that.canonicalQuery) : that.canonicalQuery != null)
-            return false;
-        if (explicitEntailmentsQueries != null ? !explicitEntailmentsQueries.equals(that.explicitEntailmentsQueries) : that.explicitEntailmentsQueries != null)
-            return false;
-        if (enrichedQueries != null ? !enrichedQueries.equals(that.enrichedQueries) : that.enrichedQueries != null)
-            return false;
-        if (rejectedQueries != null ? !rejectedQueries.equals(that.rejectedQueries) : that.rejectedQueries != null)
-            return false;
-        if (diagsTraits != null ? !diagsTraits.equals(that.diagsTraits) : that.diagsTraits != null) return false;
-        if (score != null ? !score.equals(that.score) : that.score != null) return false;
-        return difference != null ? difference.equals(that.difference) : that.difference == null;
+        if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
+        if (dnx != null ? !dnx.equals(that.dnx) : that.dnx != null) return false;
+        return dz != null ? dz.equals(that.dz) : that.dz == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = dx.hashCode();
-        result = 31 * result + dnx.hashCode();
-        result = 31 * result + dz.hashCode();
-        result = 31 * result + (canonicalQuery != null ? canonicalQuery.hashCode() : 0);
-        result = 31 * result + (explicitEntailmentsQueries != null ? explicitEntailmentsQueries.hashCode() : 0);
-        result = 31 * result + (enrichedQueries != null ? enrichedQueries.hashCode() : 0);
-        result = 31 * result + (rejectedQueries != null ? rejectedQueries.hashCode() : 0);
-        result = 31 * result + (diagsTraits != null ? diagsTraits.hashCode() : 0);
-        result = 31 * result + (score != null ? score.hashCode() : 0);
-        result = 31 * result + (difference != null ? difference.hashCode() : 0);
-        result = 31 * result + (isVerified ? 1 : 0);
+        int result = dx != null ? dx.hashCode() : 0;
+        result = 31 * result + (dnx != null ? dnx.hashCode() : 0);
+        result = 31 * result + (dz != null ? dz.hashCode() : 0);
         return result;
     }
 
@@ -343,7 +322,8 @@ public class QPartition<F> {
                 "dx=" + dx +
                 ", dnx=" + dnx +
                 ", dz=" + dz +
-                ", canonicalQuery=" + canonicalQuery +
+                ", probDx=" + probDx +
+                ", probDnx=" + probDnx +
                 '}';
     }
 }

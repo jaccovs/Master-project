@@ -30,7 +30,20 @@ public class TestHeuristicQC {
 
     private AbstractDiagnosisEngine<Integer> engine;
 
-    private static final BigDecimal THRESHOLD = new BigDecimal("0.15"); // TODO teste unterschiedliche Thresholds! 0.05 Endlosschleife, 0.5 bekommt man die Rootpartition
+    /**
+     * Standard threshold value for ENT, SPL and RIO
+     */
+    private static final BigDecimal THRESHOLD = new BigDecimal("0.05");
+
+    /**
+     * min/max threshold used in test for multiple thresholds for ENT,SPL and RIO
+     *
+     * TODO ENT: ab 0.5 bekommt man die Rootpartition! 0..49 OK
+     * TODO SPL: bei 0.0 und 1.0 bekommt man die Rootpartition, 1..99 OK!
+     * TODO RIO: bei 0.0 und ab 0.67 (cautious) bekommt man die Rootpartition!
+     * TODO Threshold - Werte von 0.01 bis 0.49 sind für alle kein Problem
+     */
+    private static final int MIN = 1, MAX = 49;
 
     @Before
     public void initialize() {
@@ -76,44 +89,93 @@ public class TestHeuristicQC {
     @Test
     public void testFindQPartitionENTEqualWeights() {
         HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(THRESHOLD),engine);
-        testFindQPartition(gc);
+        testFindQPartition(gc, THRESHOLD.toString());
     }
 
-    @Test
+    @Test(timeout=2000)
     public void testFindQPartitionENTUnEqualWeights() {
         Map<Integer, Float> formulaWeights = engine.getSolver().getDiagnosisModel().getFormulaWeights();
         for (Integer i: formulaWeights.keySet()) formulaWeights.put(i,(float)i);
 
         HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(THRESHOLD),(AbstractDiagnosisEngine) engine);
-        testFindQPartition(gc);
+        testFindQPartition(gc, THRESHOLD.toString());
     }
 
     @Test
     public void testFindQPartitionSPL() {
         HeuristicQC<Integer> gc = new HeuristicQC<>(new SplitInHalfMeasure<>(THRESHOLD),(AbstractDiagnosisEngine) engine);
-        testFindQPartition(gc);
+        testFindQPartition(gc, THRESHOLD.toString());
     }
 
     @Test
     public void testFindQPartitionRIO() {
         HeuristicQC<Integer> gc = new HeuristicQC<>(new RiskOptimizationMeasure<>(THRESHOLD, THRESHOLD, THRESHOLD),(AbstractDiagnosisEngine) engine);
-        testFindQPartition(gc);
+        testFindQPartition(gc, THRESHOLD.toString());
     }
 
-    private void testFindQPartition(HeuristicQC<Integer> gc) {
-        try {
-            Set<Diagnosis<Integer>> diagnoses = gc.getDiagnosisEngine().calculateDiagnoses();
-            QPartition rootPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), this.engine.getCostsEstimator());
-
-            QPartition<Integer> qPartition = gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
-
-            assertNotNull(qPartition);
-            assertTrue(BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0);
-            assertFalse("optimal q-partition must not equal the root partition", qPartition.equals(rootPartition));
-
-        } catch (DiagnosisException e) {
-            fail();
+    @Test
+    public void testFindQPartitionENTManyThresholds() {
+        for (int i = MIN; i <= MAX; i++) {
+            BigDecimal tm = new BigDecimal(""+((((double) i)/100.0)*100)/100);
+            HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(tm),(AbstractDiagnosisEngine) engine);
+            testFindQPartition(gc, tm.toString());
         }
+    }
+
+    @Test
+    public void testFindQPartitionSPLManyThresholds() {
+        for (int i = MIN; i <= MAX; i++) {
+            BigDecimal tm = new BigDecimal(""+((((double) i)/100.0)*100)/100);
+            HeuristicQC<Integer> gc = new HeuristicQC<>(new SplitInHalfMeasure<>(tm),(AbstractDiagnosisEngine) engine);
+            testFindQPartition(gc, tm.toString());
+        }
+    }
+
+    @Test
+    public void testFindQPartitionRIOManyThresholds() {
+        for (int i = MIN; i <= MAX; i++) {
+            for (int j = MIN; j <= MAX; j++) {
+                for (int k = MIN; k <= MAX; k++) {
+                    BigDecimal entropyThreshold = new BigDecimal(""+((((double) i)/100.0)*100)/100);
+                    BigDecimal cardinalityThreshold = new BigDecimal(""+((((double) j)/100.0)*100)/100);
+                    BigDecimal cautious = new BigDecimal(""+((((double) k)/100.0)*100)/100);
+                    HeuristicQC<Integer> gc = new HeuristicQC<>(new RiskOptimizationMeasure<>(entropyThreshold,cardinalityThreshold, cautious),(AbstractDiagnosisEngine) engine);
+                    testFindQPartition(gc, entropyThreshold.toString()+'/'+cardinalityThreshold.toString()+'/'+cautious.toString());
+                }
+            }
+        }
+    }
+
+
+
+    private void testFindQPartition(HeuristicQC<Integer> gc, String threshold) {
+
+        /**
+         * do not calculate diagnoses again and again.
+         */
+        Diagnosis<Integer> D1 = new Diagnosis<>(getSet(1, 2, 5));
+        Diagnosis<Integer> D2 = new Diagnosis<>(getSet(1, 3, 5));
+        Diagnosis<Integer> D3 = new Diagnosis<>(getSet(3, 4, 5));
+
+        /*
+        D1.setMeasure(new BigDecimal("0.25"));
+        D2.setMeasure(new BigDecimal("0.40"));
+        D3.setMeasure(new BigDecimal("0.35"));
+        */
+
+        Set<Diagnosis<Integer>> diagnoses = getSet(D1,D2,D3);
+
+        //Set<Diagnosis<Integer>> diagnoses = gc.getDiagnosisEngine().calculateDiagnoses();
+
+        QPartition rootPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), this.engine.getCostsEstimator());
+
+        QPartition<Integer> qPartition = gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
+
+        assertNotNull("qPartition is null for threshold " + threshold,qPartition);
+        assertTrue("sum of probDx and probDnx does not equal one for threshold " + threshold, BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0);
+        assertFalse("optimal q-partition must not equal the root partition for threshold " + threshold, qPartition.equals(rootPartition));
+
+
     }
 
 }

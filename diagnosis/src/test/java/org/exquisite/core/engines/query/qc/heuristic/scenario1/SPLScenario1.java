@@ -29,7 +29,7 @@ public class SPLScenario1 extends TestScenario1 {
         try {
             QPartition<Integer> qPartition = qc.findQPartition(calculateDiagnoses(), qc.getPartitionRequirementsMeasure());
             //QPartition<Integer> expectedP = new QPartition<>(getSet(D1,D2,D3), getSet(D4,D5,D6), getSet(), getEngine().getCostsEstimator());
-            QPartition<Integer> expectedP = new QPartition<>(getSet(D3,D4,D5), getSet(D1,D2,D6), getSet(), getEngine().getCostsEstimator());
+            QPartition<Integer> expectedP = new QPartition<>(getSet(D2,D4,D5), getSet(D1,D3,D6), getSet(), getEngine().getCostsEstimator());
             assertEquals(expectedP, qPartition);
         } catch (DiagnosisException e) {
             fail();
