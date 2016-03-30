@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 import static org.exquisite.core.TestUtils.getSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -26,14 +27,18 @@ public class RIOScenario1 extends TestScenario1 {
         return new HeuristicQC<>(new RiskOptimizationMeasure(tEnt, tCard, c), getEngine());
     }
 
-    @Test
-    public void testFindQPartition() {
-        try {
-            QPartition<Integer> qPartition = qc.findQPartition(calculateDiagnoses(), qc.getPartitionRequirementsMeasure());
-            QPartition<Integer> expectedP = new QPartition<>(getSet(D3,D4,D2), getSet(D1,D5,D6), getSet(), getEngine().getCostsEstimator());
-            assertEquals(expectedP, qPartition);
-        } catch (DiagnosisException e) {
-            fail();
-        }
+    @Override
+    protected String getExpectedProbDnx() {
+        return "0.46";
+    }
+
+    @Override
+    protected String getExpectedProbDx() {
+        return "0.54";
+    }
+
+    @Override
+    protected QPartition<Integer> getExpectedQPartition() {
+        return new QPartition<>(getSet(D3,D4,D2), getSet(D1,D5,D6), getSet(), getEngine().getCostsEstimator());
     }
 }

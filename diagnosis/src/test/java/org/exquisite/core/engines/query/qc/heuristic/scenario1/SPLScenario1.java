@@ -24,15 +24,18 @@ public class SPLScenario1 extends TestScenario1 {
         return new HeuristicQC<>(new SplitInHalfMeasure<>(tEnt), getEngine());
     }
 
-    @Test
-    public void testFindQPartition() {
-        try {
-            QPartition<Integer> qPartition = qc.findQPartition(calculateDiagnoses(), qc.getPartitionRequirementsMeasure());
-            //QPartition<Integer> expectedP = new QPartition<>(getSet(D1,D2,D3), getSet(D4,D5,D6), getSet(), getEngine().getCostsEstimator());
-            QPartition<Integer> expectedP = new QPartition<>(getSet(D2,D4,D5), getSet(D1,D3,D6), getSet(), getEngine().getCostsEstimator());
-            assertEquals(expectedP, qPartition);
-        } catch (DiagnosisException e) {
-            fail();
-        }
+    @Override
+    protected String getExpectedProbDnx() {
+        return "0.19";
+    }
+
+    @Override
+    protected String getExpectedProbDx() {
+        return "0.81";
+    }
+
+    @Override
+    protected QPartition<Integer> getExpectedQPartition() {
+        return new QPartition<>(getSet(D2,D4,D5), getSet(D1,D3,D6), getSet(), getEngine().getCostsEstimator());
     }
 }

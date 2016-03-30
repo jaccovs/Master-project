@@ -3,26 +3,26 @@ package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.query.HeuristicQC;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.EntropyBasedMeasure;
+import org.exquisite.core.query.partitionmeasures.RiskOptimizationMeasure;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
 import static org.exquisite.core.TestUtils.getSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by wolfi on 25.03.2016.
  */
-public class ENTScenario1 extends TestScenario1 {
+public class RIO2Scenario1 extends TestScenario1 {
 
     public BigDecimal tEnt = new BigDecimal("0.05");
+    public BigDecimal tCard = BigDecimal.ZERO;
+    public BigDecimal c = new BigDecimal("0.3");
 
     @Override
     public HeuristicQC<Integer> getHeuristicQC() {
-        return new HeuristicQC<>(new EntropyBasedMeasure<>(tEnt), getEngine());
+        return new HeuristicQC<>(new RiskOptimizationMeasure(tEnt, tCard, c), getEngine());
     }
 
     @Override

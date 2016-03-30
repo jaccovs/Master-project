@@ -79,4 +79,26 @@ public abstract class AbstractTestHeuristicQC {
         }
     }
 
+    @Test
+    public void testFindQPartition() {
+        try {
+            QPartition<Integer> qPartition = qc.findQPartition(calculateDiagnoses(), qc.getPartitionRequirementsMeasure());
+            QPartition<Integer> expectedP = getExpectedQPartition();
+
+            assertTrue("expected probdx " + getExpectedProbDx() + " does not match " + qPartition.probDx, new BigDecimal(getExpectedProbDx()).compareTo(qPartition.probDx) == 0);
+            assertTrue("expected probdx " + getExpectedProbDnx() + " does not match " + qPartition.probDnx, new BigDecimal(getExpectedProbDnx()).compareTo(qPartition.probDnx) == 0);
+            assertTrue(expectedP.probDx.compareTo(qPartition.probDx) == 0);
+            assertTrue(expectedP.probDnx.compareTo(qPartition.probDnx) == 0);
+            assertEquals(expectedP, qPartition);
+        } catch (DiagnosisException e) {
+            fail();
+        }
+    }
+
+    protected abstract String getExpectedProbDnx();
+
+    protected abstract String getExpectedProbDx();
+
+    protected abstract QPartition<Integer> getExpectedQPartition();
+
 }
