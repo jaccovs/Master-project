@@ -29,7 +29,7 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
 
     @Override
     public QPartition<F> updateBest(QPartition<F> p, QPartition<F> pBest) {
-        final double halfSizeOfD = ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
+        final double halfSizeOfD = getHalfSizeOfD(p);
         if (Math.abs(((double)p.dx.size()) - halfSizeOfD) < Math.abs(((double)pBest.dx.size()) - halfSizeOfD))
             return p;
         return pBest;
@@ -37,27 +37,31 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
 
     @Override
     public boolean isOptimal(QPartition<F> pBest) {
-        //final Set<Diagnosis<F>> D = Utils.union(pBest.dx, pBest.dnx, pBest.dz);
-        final double halfSizeOfD = ((double)(pBest.dx.size() + pBest.dnx.size() + pBest.dz.size())) / 2.0d;
-
-
+        final double halfSizeOfD = getHalfSizeOfD(pBest);
         return Math.abs(pBest.dx.size() - Math.floor(halfSizeOfD)) <= this.tm.doubleValue();
     }
 
     @Override
     public boolean prune(QPartition<F> p, QPartition<F> pBest) {
-        //final Set<Diagnosis<F>> D = Utils.union(p.dx, p.dnx, p.dz);
-        final double halfSizeOfD = ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
-
+        final double halfSizeOfD = getHalfSizeOfD(p);
         return p.dx.size() >= Math.floor(halfSizeOfD);
     }
 
     @Override
     public BigDecimal getHeuristics(QPartition<F> p) {
-        //final double halfSizeOfD = ((double)Utils.union(p.dx, p.dnx, p.dz).size()) / 2.0d;
-        final double halfSizeOfD = ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
-
+        final double halfSizeOfD = getHalfSizeOfD(p);
         return new BigDecimal(Math.abs(((double)p.dx.size()) - halfSizeOfD));
+    }
+
+    /**
+     * Sum up all diagnoses in dx, dnx and dz and return the half of it.
+     *
+     * @param p A q-parttion.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+     * @return Half of the size of diagnoses in dx, dnx and dz.
+     */
+    public static <F> double getHalfSizeOfD(QPartition<F> p) {
+        return ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
     }
 
 }

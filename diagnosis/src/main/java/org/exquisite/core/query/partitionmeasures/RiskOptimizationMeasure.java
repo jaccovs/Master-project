@@ -1,11 +1,8 @@
 package org.exquisite.core.query.partitionmeasures;
 
-import org.exquisite.core.Utils;
-import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 /**
  * A risk optimization(RIO) -based requirements measure for q-partition selection.
@@ -38,8 +35,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public QPartition<F> updateBest(QPartition<F> p, QPartition<F> pBest) {
-        final Set<Diagnosis<F>> D = Utils.union(p.dx, p.dnx, p.dz);
-        final int n = (int) Math.ceil(this.c.doubleValue() * D.size()); // TODO test extensively that this works
+        final int n = getN(p, c);
         final int pDxSize = p.dx.size();
         final int pBestDxSize = pBest.dx.size();
 
@@ -58,8 +54,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public boolean isOptimal(QPartition<F> pBest) {
-        final Set<Diagnosis<F>> D = Utils.union(pBest.dx, pBest.dnx, pBest.dz);
-        final int n = (int) Math.ceil(this.c.doubleValue() * D.size());
+        final int n = getN(pBest, this.c);
         final int pDxSize = pBest.dx.size();
 
         return (pDxSize >= n)
@@ -69,8 +64,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public boolean prune(QPartition<F> p, QPartition<F> pBest) {
-        final Set<Diagnosis<F>> D = Utils.union(p.dx, p.dnx, p.dz);
-        final int n = (int) Math.ceil(this.c.doubleValue() * D.size());
+        final int n = getN(p, this.c);
 
         if (p.dx.size() == n)
             return true;
@@ -86,11 +80,33 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public BigDecimal getHeuristics(QPartition<F> p) {
-        final Set<Diagnosis<F>> D = Utils.union(p.dx, p.dnx, p.dz);
-        final int n = (int) Math.ceil(this.c.doubleValue() * D.size()); // to be accepted by RIO, D+ must include at least n diagnoses
+        final int n = getN(p, this.c); // to be accepted by RIO, D+ must include at least n diagnoses
         final int numDiagsToAdd = n - p.dx.size(); // #  of diagnoses to be added to D+ to achieve |D+| = n
-        double avgProb = p.probDnx.doubleValue() / p.dnx.size(); // average probability of diagnoses that might be added to D+
+        final double avgProb = p.probDnx.doubleValue() / p.dnx.size(); // average probability of diagnoses that might be added to D+
 
         return new BigDecimal(Math.abs(p.probDx.doubleValue() + numDiagsToAdd * avgProb - 0.5));
+    }
+
+    /**
+     * Sum up all diagnoses in dx, dnx and dz and return the size of it.
+     *
+     * @param p A q-parttion.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+     * @return The size of diagnoses in dx, dnx and dz.
+     */
+    public static <F> double getSizeOfD(QPartition<F> p) {
+        return ((double)(p.dx.size() + p.dnx.size() + p.dz.size()));
+    }
+
+    /**
+     *
+     *
+     * @param p
+     * @param c
+     * @param <F>
+     * @return
+     */
+    private static <F> int getN(QPartition<F> p, BigDecimal c) {
+        return (int) Math.ceil(c.doubleValue() * getSizeOfD(p));
     }
 }
