@@ -90,6 +90,9 @@ public abstract class AbstractTestHeuristicQC {
             assertTrue(expectedP.probDx.compareTo(qPartition.probDx) == 0);
             assertTrue(expectedP.probDnx.compareTo(qPartition.probDnx) == 0);
             assertEquals(expectedP, qPartition);
+
+            assertFalse(qPartition.diagsTraits.isEmpty());
+            assertEquals(qPartition.dnx.size(), qPartition.diagsTraits.keySet().size());
         } catch (DiagnosisException e) {
             fail();
         }

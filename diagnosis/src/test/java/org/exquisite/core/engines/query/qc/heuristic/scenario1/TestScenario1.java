@@ -3,14 +3,18 @@ package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.query.qc.heuristic.AbstractTestHeuristicQC;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.query.HeuristicQC;
+import org.exquisite.core.query.QPartition;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.exquisite.core.TestUtils.getDiagnosis;
 import static org.exquisite.core.TestUtils.getSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Created by wolfi on 25.03.2016.
@@ -45,6 +49,54 @@ public abstract class TestScenario1 extends AbstractTestHeuristicQC {
         assertEquals(0.04, D6.getMeasure().doubleValue(), delta);
 
         return getSet(D1, D2, D3, D4, D5, D6);
+    }
+
+    @Test
+    public void testGetSetOfMinTraits() {
+        try {
+            calculateDiagnoses();
+
+            testGetSetOfMinTraitsHelper(
+                    new QPartition<>(getSet(D1), getSet(D2,D3,D4,D5,D6), getSet(), null),
+                    getSet(getSet(5), getSet(6), getSet(7), getSet(1, 4, 7), getSet(4, 7)),
+                    getSet(getSet(5), getSet(6), getSet(7)));
+
+            testGetSetOfMinTraitsHelper(
+                    new QPartition<>(getSet(D2), getSet(D1,D3,D4,D5,D6), getSet(), null),
+                    getSet(getSet(3), getSet(6), getSet(7), getSet(1, 4, 7), getSet(3, 4, 7)),
+                    getSet(getSet(3), getSet(6), getSet(7)));
+
+            testGetSetOfMinTraitsHelper(
+                    new QPartition<>(getSet(D1, D2), getSet(D3,D4,D5,D6), getSet(), null),
+                    getSet(getSet(6), getSet(7), getSet(1, 4, 7), getSet(4, 7)),
+                    getSet(getSet(6), getSet(7)));
+
+            testGetSetOfMinTraitsHelper(
+                    new QPartition<>(getSet(D6), getSet(D1,D2,D3,D4,D5), getSet(), null),
+                    getSet(getSet(2), getSet(2,5), getSet(2,6), getSet(2), getSet(1)),
+                    getSet(getSet(1), getSet(2)));
+
+            testGetSetOfMinTraitsHelper(
+                    null,
+                    getSet(getSet(1,2,3), getSet(3,5), getSet(3,5,7), getSet(1,4), getSet(4,7)),
+                    getSet(getSet(1,2,3), getSet(3,5), getSet(1,4), getSet(4,7)));
+
+        } catch (DiagnosisException e) {
+            fail();
+        }
+
+    }
+
+    private void testGetSetOfMinTraitsHelper(QPartition<Integer> qPartition, Set<Set<Integer>> expectedDiagTraitValues, Set<Set<Integer>> expectedSetOfMinTraits) {
+        if (qPartition != null) {
+            qPartition.computeDiagsTraits();
+            Set<Set<Integer>> actualDiagTraitValues = new HashSet<>();
+            actualDiagTraitValues.addAll(qPartition.diagsTraits.values());
+            assertEquals(expectedDiagTraitValues, actualDiagTraitValues);
+        }
+
+        Set<Set<Integer>> setOfMinTraits = HeuristicQC.getSetOfMinTraits(expectedDiagTraitValues);
+        assertEquals(expectedSetOfMinTraits, setOfMinTraits); // TODO implement method and test
     }
 
 }

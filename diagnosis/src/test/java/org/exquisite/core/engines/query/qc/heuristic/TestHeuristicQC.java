@@ -95,7 +95,7 @@ public class TestHeuristicQC {
     @Test(timeout=2000)
     public void testFindQPartitionENTUnEqualWeights() {
         Map<Integer, Float> formulaWeights = engine.getSolver().getDiagnosisModel().getFormulaWeights();
-        for (Integer i: formulaWeights.keySet()) formulaWeights.put(i,(float)i);
+        for (Integer i: formulaWeights.keySet()) formulaWeights.put(i,(1f/(float)(i+1)));
 
         HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(THRESHOLD),(AbstractDiagnosisEngine) engine);
         testFindQPartition(gc, THRESHOLD.toString());
@@ -146,8 +146,6 @@ public class TestHeuristicQC {
         }
     }
 
-
-
     private void testFindQPartition(HeuristicQC<Integer> gc, String threshold) {
 
         /**
@@ -174,7 +172,6 @@ public class TestHeuristicQC {
         assertNotNull("qPartition is null for threshold " + threshold,qPartition);
         assertTrue("sum of probDx and probDnx does not equal one for threshold " + threshold, BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0);
         assertFalse("optimal q-partition must not equal the root partition for threshold " + threshold, qPartition.equals(rootPartition));
-
 
     }
 

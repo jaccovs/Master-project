@@ -14,6 +14,9 @@ import java.math.BigDecimal;
  */
 public interface IQPartitionRequirementsMeasure<F> {
 
+    /**
+     * Value of 0.5 as BigDecimal.
+     */
     final static BigDecimal HALF = new BigDecimal("0.5");
 
     /**

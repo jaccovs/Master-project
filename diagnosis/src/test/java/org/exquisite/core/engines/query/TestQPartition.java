@@ -137,4 +137,49 @@ public class TestQPartition<Formula> {
         }
     }
 
+    @Test
+    public void testComputeDiagsTraits() {
+
+        Diagnosis<Integer> D1 = getDiagnosis(3, 4);
+        Diagnosis<Integer> D2 = getDiagnosis(4, 5);
+        Diagnosis<Integer> D3 = getDiagnosis(6, 7);
+        Diagnosis<Integer> D4 = getDiagnosis(1, 4);
+        Diagnosis<Integer> D5 = getDiagnosis(1, 2);
+        Diagnosis<Integer> D6 = getDiagnosis(2, 3);
+
+        QPartition<Integer> qPartition = new QPartition<>(getSet(D5, D6), getSet(D1, D2, D3, D4), getSet(), null);
+
+        // check some preconditions
+        assertFalse(qPartition.dx.isEmpty());
+        assertFalse(qPartition.dnx.isEmpty());
+        assertTrue(qPartition.dz.isEmpty());
+
+        // check 1:
+        Map<Diagnosis<Integer>, Set<Integer>> diagsTraits = qPartition.computeDiagsTraits();
+
+        // result should map diags in dnx to their traits, so the size of the result must match the size of dnx
+        assertEquals(qPartition.dnx.size(), diagsTraits.keySet().size());
+
+        Map<Diagnosis<Integer>, Set<Integer>> expectedTraits = new HashMap<>();
+        expectedTraits.put(D1, getSet(4));
+        expectedTraits.put(D2, getSet(4, 5));
+        expectedTraits.put(D3, getSet(6, 7));
+        expectedTraits.put(D4, getSet(4));
+
+        assertEquals(expectedTraits, diagsTraits);
+
+        // check 2: empty dnx
+        qPartition = new QPartition<>(getSet(D1, D2, D3, D4, D5, D6), getSet(), getSet(), null);
+
+        // check some preconditions
+        assertFalse(qPartition.dx.isEmpty());
+        assertTrue(qPartition.dnx.isEmpty());
+        assertTrue(qPartition.dz.isEmpty());
+
+
+        diagsTraits = qPartition.computeDiagsTraits();
+        assertTrue(diagsTraits.isEmpty());
+
+    }
+
 }

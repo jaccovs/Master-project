@@ -278,7 +278,7 @@ public class QPartition<F> {
      *
      * @return Mapping from each diagnosis in dnx to it's traits. This mapping is stored in qPartition partitionPk.
      */
-    private Map<Diagnosis<F>,Set<F>> computeDiagsTraits() {
+    public Map<Diagnosis<F>,Set<F>> computeDiagsTraits() {
         assert !dx.isEmpty();
 
         //  compute the union of formulas of diagnoses dx of partitionPk

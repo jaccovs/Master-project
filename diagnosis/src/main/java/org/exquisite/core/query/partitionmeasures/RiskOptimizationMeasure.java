@@ -55,10 +55,10 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
     @Override
     public boolean isOptimal(QPartition<F> pBest) {
         final int n = getN(pBest, this.c);
-        final int pDxSize = pBest.dx.size();
+        final int dxSize = pBest.dx.size();
 
-        return (pDxSize >= n)
-                && (pDxSize - n <= this.tCard.doubleValue())
+        return (dxSize >= n)
+                && (dxSize - n <= this.tCard.doubleValue()) // TODO precision!
                 && pBest.probDx.subtract(HALF).abs().compareTo(tEnt) <= 0; // (Math.abs(pBest.probDx - 0.5) <= this.tEnt.doubleValue());
     }
 
@@ -106,7 +106,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
      * @param <F>
      * @return
      */
-    private static <F> int getN(QPartition<F> p, BigDecimal c) {
+    public static <F> int getN(QPartition<F> p, BigDecimal c) {
         return (int) Math.ceil(c.doubleValue() * getSizeOfD(p));
     }
 }
