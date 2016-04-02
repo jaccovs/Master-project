@@ -1,4 +1,4 @@
-package org.exquisite.core.query.partitionmeasures;
+package org.exquisite.core.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
@@ -60,7 +60,7 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
      * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
      * @return Half of the size of diagnoses in dx, dnx and dz.
      */
-    public static <F> double getHalfSizeOfD(QPartition<F> p) {
+    private static <F> double getHalfSizeOfD(QPartition<F> p) {
         return ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
     }
 

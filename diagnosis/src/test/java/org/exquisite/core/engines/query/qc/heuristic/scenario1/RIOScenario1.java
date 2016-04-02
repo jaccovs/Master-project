@@ -1,26 +1,21 @@
 package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 
-import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.query.HeuristicQC;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.RiskOptimizationMeasure;
-import org.junit.Test;
+import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.RiskOptimizationMeasure;
 
 import java.math.BigDecimal;
 
 import static org.exquisite.core.TestUtils.getSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
- * Created by wolfi on 25.03.2016.
+ * @author wolfi
  */
 public class RIOScenario1 extends TestScenario1 {
 
-    public BigDecimal tEnt = new BigDecimal("0.05");
-    public BigDecimal tCard = BigDecimal.ZERO;
-    public BigDecimal c = new BigDecimal("0.4");
+    private BigDecimal tEnt = new BigDecimal("0.05");
+    private BigDecimal tCard = BigDecimal.ZERO;
+    private BigDecimal c = new BigDecimal("0.4");
 
     @Override
     public HeuristicQC<Integer> getHeuristicQC() {

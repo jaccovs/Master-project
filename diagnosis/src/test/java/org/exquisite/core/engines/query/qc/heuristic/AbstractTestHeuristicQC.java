@@ -6,7 +6,7 @@ import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.HeuristicQC;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.exquisite.core.TestUtils.getSet;
 import static org.junit.Assert.*;
 
 /**
- * Created by wolfi on 25.03.2016.
+ * @author wolfi
  */
 public abstract class AbstractTestHeuristicQC {
 
@@ -35,7 +35,7 @@ public abstract class AbstractTestHeuristicQC {
     public abstract Set<Diagnosis<Integer>> calculateDiagnoses() throws DiagnosisException;
 
 
-    public AbstractDiagnosisEngine<Integer> getEngine() {
+    protected AbstractDiagnosisEngine<Integer> getEngine() {
         Set<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
 
         Map<Integer, Float> formulaWeights = new HashMap<>();

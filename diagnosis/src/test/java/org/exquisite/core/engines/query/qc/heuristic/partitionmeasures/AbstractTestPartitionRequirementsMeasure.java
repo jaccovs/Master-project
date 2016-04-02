@@ -1,8 +1,8 @@
-package org.exquisite.core.engines.query.partitionmeasures;
+package org.exquisite.core.engines.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.IQPartitionRequirementsMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,16 +16,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by wolfi on 26.03.2016.
+ * Abstract class for implementing test classes of the requirements measures.
+ *
+ * @author wolfi
  */
 public abstract class AbstractTestPartitionRequirementsMeasure {
 
-    protected static QPartition<Integer> root;
+    static QPartition<Integer> root;
     protected static Diagnosis<Integer> D1, D2, D3, D4, D5, D6;
-    protected static Collection<QPartition<Integer>> sucs = new HashSet<>();
-    protected static double delta = 0.000000000001;
-    protected static BigDecimal HALF = new BigDecimal("0.5");
-    IQPartitionRequirementsMeasure rm = getMeasure();
+    static Collection<QPartition<Integer>> sucs = new HashSet<>();
+    private static final double DELTA = 0.000000000001;
+    static BigDecimal HALF = new BigDecimal("0.5");
+    IQPartitionRequirementsMeasure<Integer> rm = getMeasure();
 
     @BeforeClass
     public static void init() {
@@ -43,16 +45,14 @@ public abstract class AbstractTestPartitionRequirementsMeasure {
         D5.setMeasure(new BigDecimal("0.05"));
         D6.setMeasure(new BigDecimal("0.01"));
 
-        double d1Measure = D1.getMeasure().doubleValue();
-        double d2Measure = D2.getMeasure().doubleValue();
-        double d3Measure = D3.getMeasure().doubleValue();
-        double d4Measure = D4.getMeasure().doubleValue();
-        double d5Measure = D5.getMeasure().doubleValue();
-        double d6Measure = D6.getMeasure().doubleValue();
+        assertEquals(0.14, D1.getMeasure().doubleValue(), DELTA);
+        assertEquals(0.1,  D2.getMeasure().doubleValue(), DELTA);
+        assertEquals(0.3,  D3.getMeasure().doubleValue(), DELTA);
+        assertEquals(0.4,  D4.getMeasure().doubleValue(), DELTA);
+        assertEquals(0.05, D5.getMeasure().doubleValue(), DELTA);
+        assertEquals(0.01, D6.getMeasure().doubleValue(), DELTA);
 
-        assertEquals(0.14, d1Measure, delta);
-
-        root = new QPartition(getSet(), getSet(D1,D2,D3,D4,D5,D6), getSet(), null);
+        root = new QPartition<>(getSet(), getSet(D1,D2,D3,D4,D5,D6), getSet(), null);
         sucs = root.computeSuccessors();
 
         for (QPartition<Integer> p: sucs) {
@@ -65,7 +65,7 @@ public abstract class AbstractTestPartitionRequirementsMeasure {
         }
     }
 
-    public abstract IQPartitionRequirementsMeasure getMeasure();
+    public abstract IQPartitionRequirementsMeasure<Integer> getMeasure();
 
     @Test
     public abstract void testUpdateBest();
@@ -77,5 +77,5 @@ public abstract class AbstractTestPartitionRequirementsMeasure {
     public abstract void testPrune();
 
     @Test
-    public abstract void getHeuristics();
+    public abstract void testGetHeuristics();
 }

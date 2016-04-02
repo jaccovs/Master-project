@@ -1,6 +1,5 @@
 package org.exquisite.core.engines.query;
 
-import junit.framework.Assert;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 import org.junit.Test;
@@ -13,10 +12,10 @@ import static org.junit.Assert.*;
 
 /**
  * A JUnit Testcase for QPartition.
- * <p>
- * Created by wolfi on 17.03.2016.
+ *
+ * @author wolfi
  */
-public class TestQPartition<Formula> {
+public class TestQPartition {
 
     @Test
     public void testComputeSuccessors() {

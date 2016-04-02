@@ -1,16 +1,23 @@
-package org.exquisite.core.query;
+package org.exquisite.core.query.qc.heuristic;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.Utils;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.partitionmeasures.IQPartitionRequirementsMeasure;
+import org.exquisite.core.query.IQueryComputation;
+import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.Query;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
+import org.exquisite.core.query.qc.heuristic.sortcriteria.MinQueryCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Framework for a heuristic Query Computation Algorithm for knowledge base debugging.
@@ -153,7 +160,7 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
         Set<Set<F>> setOfMinTraits = getSetOfMinTraits(qPartition.diagsTraits.values());
 
-        Collection<Set<F>> result = HS.hs(setOfMinTraits,1000,1,1,new MinQueryCardinality());
+        Set<Set<F>> result = HittingSet.hittingSet(setOfMinTraits,1000,1,1,new MinQueryCardinality());
         if (result.isEmpty()) return null;
         return result.iterator().next();
     }
@@ -161,7 +168,7 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
     /**
      * Compute the set of set-minimal traits.
      *
-     * @param setOfDiagTraits Set of diag traits that might contain supersets.
+     * @param setOfDiagTraits Set of traits that might contain supersets.
      * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
      * @return A set-minimal set of traits.
      */
@@ -228,51 +235,6 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
         public OptimalPartition(QPartition partition, Boolean isOptimal) {
             this.partition = partition;
             this.isOptimal = isOptimal;
-        }
-    }
-
-    static class HS<F> {
-
-        public enum Label {
-            CLOSED, VALID
-        }
-
-        public static class A<F> {
-            //Query<F> node;
-            F node;
-
-        }
-
-        public static <F,T> Collection<Set<F>> hs(Set<Set<F>> setOfMinTraits, long t, int min, int max, Comparator<Set<F>> p) {
-            long tStart = System.currentTimeMillis();
-
-            Set<Set<F>> Ccalc = setOfMinTraits;
-
-            Collection<Set<F>> Dcalc = new HashSet<>();
-
-            Queue<Set<F>> Q = new PriorityQueue<>(p);
-            Q.add(new HashSet<F>());
-
-            assert Q.size() == 1;
-
-            do {
-                Set<F> node = Utils.getFirstElem(Dcalc, true);
-            } while(!true);
-
-            return Dcalc;
-        }
-
-        /*
-        public static <F> Label label(F node, ) {
-            return null;
-        }
-        */
-    }
-
-    class MinQueryCardinality implements Comparator<Set<F>> {
-        @Override
-        public int compare(Set<F> o1, Set<F> o2) {
-            return o1.size() - o2.size();
         }
     }
 

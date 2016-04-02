@@ -1,10 +1,10 @@
-package org.exquisite.core.engines.query.qc.simple;
+package org.exquisite.core.engines.query.qc;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.perfmeasures.PerfMeasurementManager;
 import org.exquisite.core.query.Query;
-import org.exquisite.core.query.SimpleQC;
-import org.exquisite.core.query.SimpleRecursiveQC;
+import org.exquisite.core.query.qc.SimpleQC;
+import org.exquisite.core.query.qc.SimpleRecursiveQC;
 import org.exquisite.core.query.scoring.MinScoreQSS;
 import org.junit.Before;
 import org.junit.Test;

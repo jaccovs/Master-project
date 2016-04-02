@@ -6,11 +6,11 @@ import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.HeuristicQC;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.EntropyBasedMeasure;
-import org.exquisite.core.query.partitionmeasures.RiskOptimizationMeasure;
-import org.exquisite.core.query.partitionmeasures.SplitInHalfMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.EntropyBasedMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.RiskOptimizationMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.SplitInHalfMeasure;
 import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
 
 /**
  * A general test case for Heuristic query computation.
- * <p>
- * Created by wolfi on 15.03.2016.
+ *
+ * @author wolfi
  */
 public class TestHeuristicQC {
 
@@ -75,9 +75,9 @@ public class TestHeuristicQC {
             assertTrue(!diagnoses.isEmpty());
 
             Set<Diagnosis<Integer>> expectedDiagnoses = getSet(
-                    new Diagnosis<Integer>(getSet(1, 2, 5)),
-                    new Diagnosis<Integer>(getSet(1, 3, 5)),
-                    new Diagnosis<Integer>(getSet(3, 4, 5))
+                    new Diagnosis<>(getSet(1, 2, 5)),
+                    new Diagnosis<>(getSet(1, 3, 5)),
+                    new Diagnosis<>(getSet(3, 4, 5))
             );
 
             assertEquals(expectedDiagnoses, diagnoses);

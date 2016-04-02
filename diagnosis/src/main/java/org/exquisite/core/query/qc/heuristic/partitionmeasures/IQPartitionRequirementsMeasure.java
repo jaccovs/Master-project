@@ -1,4 +1,4 @@
-package org.exquisite.core.query.partitionmeasures;
+package org.exquisite.core.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 

@@ -1,4 +1,4 @@
-package org.exquisite.core.query.partitionmeasures;
+package org.exquisite.core.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
@@ -21,11 +21,11 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
     private BigDecimal tEnt;
 
     /**
+     * RiskOptimizationMeasure constructor.
      *
-     *
-     * @param entropyThreshold
-     * @param cardinalityThreshold
-     * @param cautious
+     * @param entropyThreshold A threshold for entropy.
+     * @param cardinalityThreshold A threshold for cardinality.
+     * @param cautious A cautious parameter.
      */
     public RiskOptimizationMeasure(BigDecimal entropyThreshold, BigDecimal cardinalityThreshold, BigDecimal cautious) {
         this.tEnt = entropyThreshold;
@@ -46,7 +46,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
             if (pAbs < pBestAbs)
                 return p;
             else if (pAbs == pBestAbs)
-                if (HALF.subtract(p.probDx).abs().compareTo(HALF.subtract(pBest.probDx).abs()) < 0) //if (Math.abs(0.5 - p.probDx) < Math.abs(0.5 - pBest.probDx))
+                if (HALF.subtract(p.probDx).abs().compareTo(HALF.subtract(pBest.probDx).abs()) < 0) // if (Math.abs(0.5 - p.probDx) < Math.abs(0.5 - pBest.probDx))
                     return p;
         }
         return pBest;
@@ -58,7 +58,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
         final int dxSize = pBest.dx.size();
 
         return (dxSize >= n)
-                && (dxSize - n <= this.tCard.doubleValue()) // TODO precision!
+                && (new BigDecimal(Double.toString(dxSize - n)).compareTo(this.tCard) <= 0) // && (dxSize - n <= this.tCard.doubleValue())
                 && pBest.probDx.subtract(HALF).abs().compareTo(tEnt) <= 0; // (Math.abs(pBest.probDx - 0.5) <= this.tEnt.doubleValue());
     }
 
@@ -82,31 +82,23 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
     public BigDecimal getHeuristics(QPartition<F> p) {
         final int n = getN(p, this.c); // to be accepted by RIO, D+ must include at least n diagnoses
         final int numDiagsToAdd = n - p.dx.size(); // #  of diagnoses to be added to D+ to achieve |D+| = n
-        final double avgProb = p.probDnx.doubleValue() / p.dnx.size(); // average probability of diagnoses that might be added to D+
+        final double avgProb = p.probDnx.doubleValue() / p.dnx.size(); // average probability of diagnoses that might be added to D+ // TODO loss of precision
 
-        return new BigDecimal(Math.abs(p.probDx.doubleValue() + numDiagsToAdd * avgProb - 0.5));
+        return new BigDecimal(Math.abs(p.probDx.doubleValue() + numDiagsToAdd * avgProb - 0.5)); // TODO loss of precision
     }
 
     /**
-     * Sum up all diagnoses in dx, dnx and dz and return the size of it.
+     * Sum up all diagnoses in dx, dnx and dz and return the size of it and returns the value as double.
      *
      * @param p A q-parttion.
      * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
-     * @return The size of diagnoses in dx, dnx and dz.
+     * @return The size of diagnoses in dx, dnx and dz as double.
      */
-    public static <F> double getSizeOfD(QPartition<F> p) {
+    private static <F> double getSizeOfD(QPartition<F> p) {
         return ((double)(p.dx.size() + p.dnx.size() + p.dz.size()));
     }
 
-    /**
-     *
-     *
-     * @param p
-     * @param c
-     * @param <F>
-     * @return
-     */
-    public static <F> int getN(QPartition<F> p, BigDecimal c) {
-        return (int) Math.ceil(c.doubleValue() * getSizeOfD(p));
+    private static <F> int getN(QPartition<F> p, BigDecimal c) {
+        return (int) Math.ceil(c.doubleValue() * getSizeOfD(p)); // TODO loss of precision
     }
 }

@@ -1,8 +1,8 @@
-package org.exquisite.core.engines.query.partitionmeasures;
+package org.exquisite.core.engines.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.EntropyBasedMeasure;
-import org.exquisite.core.query.partitionmeasures.IQPartitionRequirementsMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.EntropyBasedMeasure;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 
 import java.math.BigDecimal;
 
@@ -12,12 +12,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by wolfi on 26.03.2016.
+ * Test case for EntropyBasedMeasure.
+ *
+ * @author wolfi
  */
 public class TestEntropyBasedMeasure extends AbstractTestPartitionRequirementsMeasure {
 
     @Override
-    public IQPartitionRequirementsMeasure getMeasure() {
+    public IQPartitionRequirementsMeasure<Integer> getMeasure() {
         return new EntropyBasedMeasure<>(new BigDecimal("0.05"));
     }
 
@@ -109,10 +111,10 @@ public class TestEntropyBasedMeasure extends AbstractTestPartitionRequirementsMe
             assertFalse(rm.isOptimal(p));
 
         // threshold 0.05
-        assertFalse(rm.isOptimal(new QPartition(getSet(D4,D6),getSet(D1,D2,D3,D5),getSet(),null)));
-        assertTrue(rm.isOptimal(new QPartition(getSet(D4,D5),getSet(D1,D2,D3,D6),getSet(),null)));
-        assertTrue(rm.isOptimal(new QPartition(getSet(D4,D5,D6),getSet(D1,D2,D3),getSet(),null)));
-        assertTrue(rm.isOptimal(new QPartition(getSet(D2,D4,D5),getSet(D1,D3,D6),getSet(),null)));
+        assertFalse(rm.isOptimal(new QPartition<>(getSet(D4,D6),getSet(D1,D2,D3,D5),getSet(),null)));
+        assertTrue(rm.isOptimal(new QPartition<>(getSet(D4,D5),getSet(D1,D2,D3,D6),getSet(),null)));
+        assertTrue(rm.isOptimal(new QPartition<>(getSet(D4,D5,D6),getSet(D1,D2,D3),getSet(),null)));
+        assertTrue(rm.isOptimal(new QPartition<>(getSet(D2,D4,D5),getSet(D1,D3,D6),getSet(),null)));
     }
 
     @Override
@@ -131,19 +133,19 @@ public class TestEntropyBasedMeasure extends AbstractTestPartitionRequirementsMe
         for (QPartition<Integer> p : sucs)
             assertFalse(rm.prune(p, null));
 
-        assertFalse(rm.prune(new QPartition(getSet(D4,D6),getSet(D1,D2,D3,D5),getSet(),null),null));
-        assertFalse(rm.prune(new QPartition(getSet(D4,D5),getSet(D1,D2,D3,D6),getSet(),null),null));
-        assertFalse(rm.prune(new QPartition(getSet(D4,D5,D6),getSet(D1,D2,D3),getSet(),null),null));
-        assertTrue(rm.prune(new QPartition(getSet(D2,D4),getSet(D1,D3,D5,D6),getSet(),null),null));
-        assertTrue(rm.prune(new QPartition(getSet(D2,D4,D5),getSet(D1,D3,D6),getSet(),null),null));
+        assertFalse(rm.prune(new QPartition<>(getSet(D4,D6),getSet(D1,D2,D3,D5),getSet(),null),null));
+        assertFalse(rm.prune(new QPartition<>(getSet(D4,D5),getSet(D1,D2,D3,D6),getSet(),null),null));
+        assertFalse(rm.prune(new QPartition<>(getSet(D4,D5,D6),getSet(D1,D2,D3),getSet(),null),null));
+        assertTrue(rm.prune(new QPartition<>(getSet(D2,D4),getSet(D1,D3,D5,D6),getSet(),null),null));
+        assertTrue(rm.prune(new QPartition<>(getSet(D2,D4,D5),getSet(D1,D3,D6),getSet(),null),null));
 
-        assertTrue(rm.prune(new QPartition(getSet(D1,D2,D3,D4,D5,D6),getSet(),getSet(),null),null));
+        assertTrue(rm.prune(new QPartition<>(getSet(D1,D2,D3,D4,D5,D6),getSet(),getSet(),null),null));
 
 
     }
 
     @Override
-    public void getHeuristics() {
+    public void testGetHeuristics() {
 
         /*
         D1.setMeasure(new BigDecimal(0.14));
@@ -158,16 +160,16 @@ public class TestEntropyBasedMeasure extends AbstractTestPartitionRequirementsMe
         for (QPartition<Integer> p : sucs)
             assertTrue(rm.getHeuristics(p).compareTo(rm.getHeuristics(root)) < 0);
 
-        assertTrue(rm.getHeuristics(new QPartition<Integer>(getSet(D1),getSet(D2,D3,D4,D5,D6),getSet(),null))
-                .compareTo(rm.getHeuristics(new QPartition<Integer>(getSet(D2),getSet(D1,D3,D4,D5,D6),getSet(),null))) < 0);
-        assertTrue(rm.getHeuristics(new QPartition<Integer>(getSet(D2),getSet(D1,D3,D4,D5,D6),getSet(),null))
-                .compareTo(rm.getHeuristics(new QPartition<Integer>(getSet(D3),getSet(D1,D2,D4,D5,D6),getSet(),null))) > 0);
-        assertTrue(rm.getHeuristics(new QPartition<Integer>(getSet(D3),getSet(D1,D2,D4,D5,D6),getSet(),null))
-                .compareTo(rm.getHeuristics(new QPartition<Integer>(getSet(D4),getSet(D1,D2,D3,D5,D6),getSet(),null))) > 0);
-        assertTrue(rm.getHeuristics(new QPartition<Integer>(getSet(D4),getSet(D1,D2,D3,D5,D6),getSet(),null))
-                .compareTo(rm.getHeuristics(new QPartition<Integer>(getSet(D5),getSet(D1,D2,D3,D4,D6),getSet(),null))) < 0);
-        assertTrue(rm.getHeuristics(new QPartition<Integer>(getSet(D5),getSet(D1,D2,D3,D4,D6),getSet(),null))
-                .compareTo(rm.getHeuristics(new QPartition<Integer>(getSet(D6),getSet(D1,D2,D3,D4,D5),getSet(),null))) < 0);
+        assertTrue(rm.getHeuristics(new QPartition<>(getSet(D1),getSet(D2,D3,D4,D5,D6),getSet(),null))
+                .compareTo(rm.getHeuristics(new QPartition<>(getSet(D2),getSet(D1,D3,D4,D5,D6),getSet(),null))) < 0);
+        assertTrue(rm.getHeuristics(new QPartition<>(getSet(D2),getSet(D1,D3,D4,D5,D6),getSet(),null))
+                .compareTo(rm.getHeuristics(new QPartition<>(getSet(D3),getSet(D1,D2,D4,D5,D6),getSet(),null))) > 0);
+        assertTrue(rm.getHeuristics(new QPartition<>(getSet(D3),getSet(D1,D2,D4,D5,D6),getSet(),null))
+                .compareTo(rm.getHeuristics(new QPartition<>(getSet(D4),getSet(D1,D2,D3,D5,D6),getSet(),null))) > 0);
+        assertTrue(rm.getHeuristics(new QPartition<>(getSet(D4),getSet(D1,D2,D3,D5,D6),getSet(),null))
+                .compareTo(rm.getHeuristics(new QPartition<>(getSet(D5),getSet(D1,D2,D3,D4,D6),getSet(),null))) < 0);
+        assertTrue(rm.getHeuristics(new QPartition<>(getSet(D5),getSet(D1,D2,D3,D4,D6),getSet(),null))
+                .compareTo(rm.getHeuristics(new QPartition<>(getSet(D6),getSet(D1,D2,D3,D4,D5),getSet(),null))) < 0);
 
     }
 

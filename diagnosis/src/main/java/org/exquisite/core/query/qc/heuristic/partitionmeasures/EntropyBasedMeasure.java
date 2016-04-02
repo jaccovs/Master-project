@@ -1,4 +1,4 @@
-package org.exquisite.core.query.partitionmeasures;
+package org.exquisite.core.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
 
@@ -29,24 +29,24 @@ public class EntropyBasedMeasure<F> implements IQPartitionRequirementsMeasure<F>
     }
 
     @Override
-    public QPartition updateBest(QPartition p, QPartition pBest) {
+    public QPartition<F> updateBest(QPartition<F> p, QPartition<F> pBest) {
         if (p.probDx.subtract(HALF).abs().compareTo(pBest.probDx.subtract(HALF).abs()) < 0) // (Math.abs(p.probDx - 0.5) < Math.abs(pBest.probDx - 0.5))
             return p;
         return pBest;
     }
 
     @Override
-    public boolean isOptimal(QPartition pBest) {
+    public boolean isOptimal(QPartition<F> pBest) {
         return pBest.probDx.subtract(HALF).abs().compareTo(tm) <= 0; // Math.abs(pBest.probDx - 0.5) <= this.tm;
     }
 
     @Override
-    public boolean prune(QPartition p, QPartition pBest) {
+    public boolean prune(QPartition<F> p, QPartition<F> pBest) {
         return p.probDx.compareTo(HALF) >= 0; // p.probDx >= 0.5;
     }
 
     @Override
-    public BigDecimal getHeuristics(QPartition p) {
+    public BigDecimal getHeuristics(QPartition<F> p) {
         return p.probDx.subtract(HALF).abs(); // Math.abs(p.probDx - 0.5);
     }
 }

@@ -1,23 +1,19 @@
 package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 
-import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.query.HeuristicQC;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.partitionmeasures.SplitInHalfMeasure;
-import org.junit.Test;
+import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.partitionmeasures.SplitInHalfMeasure;
 
 import java.math.BigDecimal;
 
 import static org.exquisite.core.TestUtils.getSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
- * Created by wolfi on 25.03.2016.
+ * @author wolfi
  */
 public class SPLScenario1 extends TestScenario1 {
 
-    public BigDecimal tEnt = BigDecimal.ZERO;
+    private BigDecimal tEnt = BigDecimal.ZERO;
 
     @Override
     public HeuristicQC<Integer> getHeuristicQC() {
