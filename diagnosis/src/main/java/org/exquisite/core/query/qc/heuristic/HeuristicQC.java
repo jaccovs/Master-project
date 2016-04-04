@@ -2,6 +2,7 @@ package org.exquisite.core.query.qc.heuristic;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.Utils;
+import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.IQueryComputation;
@@ -10,9 +11,7 @@ import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Framework for a heuristic Query Computation Algorithm for knowledge base debugging.
@@ -41,8 +40,22 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
     @Override
     public Query<F> next() {
-        Set<F> nextQuery = queriesIterator.next();
-        return new Query<>(nextQuery, qPartition);
+        Set<F> originalQuery = queriesIterator.next();
+        Set<F> query = originalQuery;
+        if (config.enrichQueries) {
+
+            // then in order to come up with a query that is as simple and easy to answer as possible for the
+            // respective user U, this query Q can optionally enriched by additional logical formulas by invoking
+            // a reasoner for entailments calculation.
+            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, this.config.diagnosisEngine.getSolver().getDiagnosisModel()); // (4)
+
+            // the previous step causes a larger pool of formulas to select from in the query optimization step
+            // which constructs a set-minimal query where most complex sentences in terms of the logical construct
+            // and term fault estimates are eliminated from Q and the most simple ones retained
+            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, this.config.diagnosisEngine, this.config.getDiagnosisEngine().getSolver().getDiagnosisModel().getFormulaWeights()); // (5)
+            query = optimizedQuery;
+        }
+        return new Query<>(query, qPartition);
 
     }
 
@@ -74,26 +87,20 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
         // answered correctly.
         Set<Set<F>> queries = selectQueryForQPartition(qPartition); // (3)
 
-        if (config.enrichQueries) {
-
-            // then in order to come up with a query that is as simple and easy to answer as possible for the
-            // respective user U, this query Q can optionally enriched by additional logical formulas by invoking
-            // a reasoner for entailments calculation.
-            enrichQuery(qPartition, this.config.diagnosisEngine.getSolver().getDiagnosisModel()); // (4)
-
-            // the previous step causes a larger pool of formulas to select from in the query optimization step
-            // which constructs a set-minimal query where most complex sentences in terms of the logical construct
-            // and term fault estimates are eliminated from Q and the most simple ones retained
-            Query<F> q = optimizeQuery(qPartition); // (5)
-        }
-
         queriesIterator = queries.iterator();
     }
 
+    /**
+     * Searches for an (nearly) optimal q-partition completely without reasoner support for some requirements rm,
+     * a probability measure p and a set of leading diagnoses D as given input.
+     *
+     * @param leadingDiagnoses The leading diagnoses.
+     * @param rm A partition requirements measure to find the (nearly) optimal q-partition.
+     * @return A (nearly) optimal q-partition.
+     */
     private QPartition<F> findQPartition(Set<Diagnosis<F>> leadingDiagnoses, IQPartitionRequirementsMeasure rm) {
         return QPartitionOperations.findQPartition(leadingDiagnoses, rm, this.config.diagnosisEngine.getCostsEstimator());
     }
-
 
     /**
      * A q query Q with qPartition(Q) is calculated such that Q is optimal as to some criterion such as minimum
@@ -116,20 +123,82 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
      * @param qPartition TODO documentation
      * @param diagnosisModel TODO documentation
      */
-    private void enrichQuery(QPartition<F> qPartition, DiagnosisModel diagnosisModel) {
-        // TODO implement (4) of main algorithm
+    private Set<F> enrichQuery(Set<F> nextQuery, QPartition<F> qPartition, DiagnosisModel diagnosisModel) {
+        Set<F> unionOfLeadingDiagnoses = setUnion(qPartition.dx, qPartition.dnx, qPartition.dz);
+
+        Set<F> set1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas()); // K
+        boolean hasBeenRemoved = set1.removeAll(unionOfLeadingDiagnoses);  // K\UD
+        assert hasBeenRemoved;
+        set1.addAll(diagnosisModel.getCorrectFormulas()); // (K\UD) u Q u B
+        set1.addAll(diagnosisModel.getEntailedExamples()); // (K\UD) u Q u B u UP
+
+        Set<F> set2 = new HashSet<>(set1);
+
+        set1.addAll(nextQuery); // (K\UD) U Q
+
+        //Set<F> qImplicit = getEntailments(set1).removeAll(getEntailments(set2)).removeAll(nextQuery);
+        Set<F> qImplicit = getEntailments(set1);
+        qImplicit.removeAll(getEntailments(set2));
+        qImplicit.removeAll(nextQuery);
+
+        Set<F> result = new HashSet<>(nextQuery);
+        result.addAll(qImplicit);
+        return result;
     }
 
     /**
      * TODO documentation
      *
+     *
+     * @param enrichedQuery
+     * @param originalQuery
      * @param qPartition TODO documentation
-     * @return TODO documentation
+     * @param diagnosisEngine
+     * @param formulaWeights  @return TODO documentation
      */
-    private Query<F> optimizeQuery(QPartition<F> qPartition) {
-        // TODO implement (5) of main algorithm
-        return null;
+    private Set<F> optimizeQuery(Set<F> enrichedQuery, Set<F> originalQuery, QPartition<F> qPartition, AbstractDiagnosisEngine<F> diagnosisEngine, Map<F,Double> formulaWeights) {
+
+        List<F> sortedFormulas = sort(enrichedQuery, originalQuery, formulaWeights);
+        return new HashSet<>(new MinQ().minQ(new ArrayList<F>(sortedFormulas.size()), new ArrayList<F>(sortedFormulas.size()), sortedFormulas, qPartition, diagnosisEngine));
     }
+
+    /**
+     *
+     * @param enrichedQuery enriched query (Q')
+     * @param originalQuery original query (Q)
+     * @param formulaWeights
+     * @return
+     */
+    private List<F> sort(final Set<F> enrichedQuery, final Set<F> originalQuery, final Map<F,Double> formulaWeights) {
+        Set<F> qImplicit = new HashSet<>(enrichedQuery);
+        qImplicit.removeAll(originalQuery);
+
+        List<F> result = new ArrayList<>(qImplicit);
+
+        List<F> sortedQuery = new ArrayList<>(originalQuery);
+        sortedQuery.sort((o1, o2) -> formulaWeights.get(o1).compareTo(formulaWeights.get(o2)));
+
+        result.addAll(sortedQuery);
+        return result;
+    }
+
+    /**
+     * TODO
+     * @param set1
+     * @return
+     */
+    private Set<F> getEntailments(Set<F> set1) {
+        return null; // TODO reasoner Aufruf
+    }
+
+    private static <F> Set<F> setUnion(Set<Diagnosis<F>>... set) {
+        Set<F> unitedFormulas = new HashSet<>();
+        for (Set<Diagnosis<F>> s : set)
+            for (Diagnosis<F> d : s)
+                unitedFormulas.addAll(d.getFormulas());
+        return unitedFormulas;
+    }
+
 
     public HeuristicQCConfiguration getConfig() {
         return config;

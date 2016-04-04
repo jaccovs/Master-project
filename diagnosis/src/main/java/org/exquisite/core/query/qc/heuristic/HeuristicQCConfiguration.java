@@ -21,7 +21,7 @@ public class HeuristicQCConfiguration<F> {
 
     private static final int DEFAULT_MIN_QUERIES = 1;
 
-    private static final int DEFAULT_MAX_QUERIES = 10;
+    private static final int DEFAULT_MAX_QUERIES = 1;
 
     private static final ISortCriterion DEFAULT_SORT_CRITIERION = new MinQueryCardinality<>();
 
