@@ -2,6 +2,7 @@ package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.SplitInHalfMeasure;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public class SPLScenario1 extends TestScenario1 {
 
     @Override
     public HeuristicQC<Integer> getHeuristicQC() {
-        return new HeuristicQC<>(new SplitInHalfMeasure<>(tEnt), getEngine());
+        return new HeuristicQC<>(new HeuristicQCConfiguration<>(getEngine(), new SplitInHalfMeasure<>(tEnt)));
     }
 
     @Override

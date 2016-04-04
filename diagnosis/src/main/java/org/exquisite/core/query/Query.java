@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * A query is a set of logical formulas presented to the user.
  * <p>
- * The query is represented by the set of formulas that splits the diagnoses into a pPartition containing 3 sets of
+ * The query is represented by the set of formulas that splits the diagnoses into a q-partition containing 3 sets of
  * (minimal) diagnoses: dx, dnx, and dz.
  * </p>
  * <p>

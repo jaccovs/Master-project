@@ -4,6 +4,7 @@ import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.*;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
@@ -87,8 +88,9 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
-        IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(new BigDecimal(0.05));
-        this.queryComputation = new HeuristicQC<>(partitionQualityMeasure, this.innerEngine);
+        //IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(new BigDecimal(0.05));
+        HeuristicQCConfiguration config = new HeuristicQCConfiguration(this.innerEngine);
+        this.queryComputation = new HeuristicQC<>(config);
         this.queryAnswering = queryAnswering;
     }
 

@@ -8,7 +8,8 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.qc.heuristic.HeuristicQC;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.qc.heuristic.OptimalQPartitionFinder;
+import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
+import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.RiskOptimizationMeasure;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.SplitInHalfMeasure;
@@ -89,7 +90,7 @@ public class TestHeuristicQC {
 
     @Test
     public void testFindQPartitionENTEqualWeights() {
-        HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(THRESHOLD),engine);
+        HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new EntropyBasedMeasure<>(THRESHOLD)));
         testFindQPartition(gc, THRESHOLD.toString());
     }
 
@@ -98,19 +99,19 @@ public class TestHeuristicQC {
         Map<Integer, Float> formulaWeights = engine.getSolver().getDiagnosisModel().getFormulaWeights();
         for (Integer i: formulaWeights.keySet()) formulaWeights.put(i,(1f/(float)(i+1)));
 
-        HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(THRESHOLD),(AbstractDiagnosisEngine) engine);
+        HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new EntropyBasedMeasure<>(THRESHOLD)));
         testFindQPartition(gc, THRESHOLD.toString());
     }
 
     @Test
     public void testFindQPartitionSPL() {
-        HeuristicQC<Integer> gc = new HeuristicQC<>(new SplitInHalfMeasure<>(THRESHOLD),(AbstractDiagnosisEngine) engine);
+        HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new SplitInHalfMeasure<>(THRESHOLD)));
         testFindQPartition(gc, THRESHOLD.toString());
     }
 
     @Test
     public void testFindQPartitionRIO() {
-        HeuristicQC<Integer> gc = new HeuristicQC<>(new RiskOptimizationMeasure<>(THRESHOLD, THRESHOLD, THRESHOLD),(AbstractDiagnosisEngine) engine);
+        HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new RiskOptimizationMeasure<>(THRESHOLD, THRESHOLD, THRESHOLD)));
         testFindQPartition(gc, THRESHOLD.toString());
     }
 
@@ -118,7 +119,7 @@ public class TestHeuristicQC {
     public void testFindQPartitionENTManyThresholds() {
         for (int i = MIN; i <= MAX; i++) {
             BigDecimal tm = new BigDecimal(""+((((double) i)/100.0)*100)/100);
-            HeuristicQC<Integer> gc = new HeuristicQC<>(new EntropyBasedMeasure<>(tm),(AbstractDiagnosisEngine) engine);
+            HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new EntropyBasedMeasure<>(tm)));
             testFindQPartition(gc, tm.toString());
         }
     }
@@ -127,7 +128,7 @@ public class TestHeuristicQC {
     public void testFindQPartitionSPLManyThresholds() {
         for (int i = MIN; i <= MAX; i++) {
             BigDecimal tm = new BigDecimal(""+((((double) i)/100.0)*100)/100);
-            HeuristicQC<Integer> gc = new HeuristicQC<>(new SplitInHalfMeasure<>(tm),(AbstractDiagnosisEngine) engine);
+            HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new SplitInHalfMeasure<>(tm)));
             testFindQPartition(gc, tm.toString());
         }
     }
@@ -140,7 +141,7 @@ public class TestHeuristicQC {
                     BigDecimal entropyThreshold = new BigDecimal(""+((((double) i)/100.0)*100)/100);
                     BigDecimal cardinalityThreshold = new BigDecimal(""+((((double) j)/100.0)*100)/100);
                     BigDecimal cautious = new BigDecimal(""+((((double) k)/100.0)*100)/100);
-                    HeuristicQC<Integer> gc = new HeuristicQC<>(new RiskOptimizationMeasure<>(entropyThreshold,cardinalityThreshold, cautious),(AbstractDiagnosisEngine) engine);
+                    HeuristicQC<Integer> gc = new HeuristicQC<>(new HeuristicQCConfiguration<>(engine, new RiskOptimizationMeasure<>(entropyThreshold,cardinalityThreshold, cautious)));
                     testFindQPartition(gc, entropyThreshold.toString()+'/'+cardinalityThreshold.toString()+'/'+cautious.toString());
                 }
             }
@@ -168,7 +169,7 @@ public class TestHeuristicQC {
 
         QPartition rootPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), this.engine.getCostsEstimator());
 
-        QPartition<Integer> qPartition = OptimalQPartitionFinder.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure(), this.engine.getCostsEstimator()); //gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
+        QPartition<Integer> qPartition = QPartitionOperations.findQPartition(diagnoses, gc.getConfig().getRm(), this.engine.getCostsEstimator()); //gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
 
         assertNotNull("qPartition is null for threshold " + threshold,qPartition);
         assertTrue("sum of probDx and probDnx does not equal one for threshold " + threshold, BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0);

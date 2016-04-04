@@ -2,6 +2,7 @@ package org.exquisite.core.engines.query.qc.heuristic.partitionmeasures;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public abstract class AbstractTestPartitionRequirementsMeasure {
         assertEquals(0.01, D6.getMeasure().doubleValue(), DELTA);
 
         root = new QPartition<>(getSet(), getSet(D1,D2,D3,D4,D5,D6), getSet(), null);
-        sucs = root.computeSuccessors();
+        sucs = QPartitionOperations.computeSuccessors(root);
 
         for (QPartition<Integer> p: sucs) {
             assertTrue(p.probDx.compareTo(BigDecimal.ZERO) > 0);

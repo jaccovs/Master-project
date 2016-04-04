@@ -5,7 +5,7 @@ import org.exquisite.core.Utils;
 import org.exquisite.core.engines.query.qc.heuristic.AbstractTestHeuristicQC;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.QPartitionOperations;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -105,7 +105,7 @@ public abstract class TestScenario1 extends AbstractTestHeuristicQC {
 
     private void testGetSetOfMinTraitsHelper(QPartition<Integer> qPartition, Set<Set<Integer>> expectedDiagTraitValues, Set<Set<Integer>> expectedSetOfMinTraits) {
         if (qPartition != null) {
-            qPartition.computeDiagsTraits();
+            qPartition.diagsTraits = QPartitionOperations.computeDiagsTraits(qPartition);
             Set<Set<Integer>> actualDiagTraitValues = new HashSet<>();
             actualDiagTraitValues.addAll(qPartition.diagsTraits.values());
             assertEquals(expectedDiagTraitValues, actualDiagTraitValues);
