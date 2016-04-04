@@ -23,8 +23,8 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
     public BigDecimal getScore(Query<F> query) {
         if (query == null || query.qPartition.dx.isEmpty())
             return BigDecimal.valueOf(Double.MAX_VALUE);
-        if (query.qPartition.score.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) < 0)
-            return query.qPartition.score;
+        if (query.score.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) < 0)
+            return query.score;
         BigDecimal pX = sum(query.qPartition.dx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
         BigDecimal pNX = sum(query.qPartition.dnx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
 
@@ -39,7 +39,7 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
 
         }
 
-        query.qPartition.score = sc;
+        query.score = sc;
         return sc;
     }
 

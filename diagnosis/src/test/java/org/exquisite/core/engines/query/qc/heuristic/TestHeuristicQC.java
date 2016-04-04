@@ -8,6 +8,7 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.qc.heuristic.HeuristicQC;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.qc.heuristic.OptimalQPartitionFinder;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.RiskOptimizationMeasure;
 import org.exquisite.core.query.qc.heuristic.partitionmeasures.SplitInHalfMeasure;
@@ -167,7 +168,7 @@ public class TestHeuristicQC {
 
         QPartition rootPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), this.engine.getCostsEstimator());
 
-        QPartition<Integer> qPartition = gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
+        QPartition<Integer> qPartition = OptimalQPartitionFinder.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure(), this.engine.getCostsEstimator()); //gc.findQPartition(diagnoses, gc.getPartitionRequirementsMeasure());
 
         assertNotNull("qPartition is null for threshold " + threshold,qPartition);
         assertTrue("sum of probDx and probDnx does not equal one for threshold " + threshold, BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0);

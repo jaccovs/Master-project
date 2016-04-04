@@ -64,21 +64,6 @@ public class QPartition<F> {
     /**
      *
      */
-    public BigDecimal score = BigDecimal.valueOf(Double.MAX_VALUE);
-
-    /**
-     *
-     */
-    public BigDecimal difference = new BigDecimal(Double.MAX_VALUE);
-
-    /**
-     *
-     */
-    public boolean isVerified = false;
-
-    /**
-     *
-     */
     public ICostsEstimator<F> costEstimator = null;
 
     /**
@@ -166,11 +151,11 @@ public class QPartition<F> {
      */
     public Query<F> getQuery() {
         if (!enrichedQueries.isEmpty()) {
-            return new Query(enrichedQueries.iterator().next(),this);
+            return new Query<>(enrichedQueries.iterator().next(),this);
         } else if (!explicitEntailmentsQueries.isEmpty()) {
-            return new Query(explicitEntailmentsQueries.iterator().next(),this);
+            return new Query<>(explicitEntailmentsQueries.iterator().next(),this);
         } else {
-            return new Query(canonicalQuery,this);
+            return new Query<>(canonicalQuery,this);
         }
     }
 

@@ -1,5 +1,6 @@
 package org.exquisite.core.query;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +45,22 @@ public class Query<F> {
      * A partition representing the diagnoses split into the 3 parts dx, dnx and dz.
      */
     public QPartition<F> qPartition;
+
+    /**
+     *
+     */
+    public BigDecimal score = BigDecimal.valueOf(Double.MAX_VALUE);
+
+    /**
+     *
+     */
+    public BigDecimal difference = new BigDecimal(Double.MAX_VALUE);
+
+    /**
+     *
+     */
+    public boolean isVerified = false;
+
 
     public Query() {
         this.qPartition = new QPartition<>();

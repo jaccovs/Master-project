@@ -1,6 +1,7 @@
 package org.exquisite.core.engines.query.qc.heuristic.scenario1;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.Utils;
 import org.exquisite.core.engines.query.qc.heuristic.AbstractTestHeuristicQC;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
@@ -81,6 +82,21 @@ public abstract class TestScenario1 extends AbstractTestHeuristicQC {
                     getSet(getSet(1,2,3), getSet(3,5), getSet(3,5,7), getSet(1,4), getSet(4,7)),
                     getSet(getSet(1,2,3), getSet(3,5), getSet(1,4), getSet(4,7)));
 
+            testGetSetOfMinTraitsHelper(
+                    null,
+                    getSet(getSet(1,2,3), getSet(1,2,3), getSet(1,2,3), getSet(1,2,3), getSet(1,2,3)),
+                    getSet(getSet(1,2,3)));
+
+            testGetSetOfMinTraitsHelper(
+                    null,
+                    getSet(getSet(), getSet(), getSet(), getSet(), getSet()),
+                    getSet(getSet()));
+
+            testGetSetOfMinTraitsHelper(
+                    null,
+                    getSet(getSet(1,2,3), getSet(1,2,3), getSet(3,5,7), getSet(3,7), getSet(5,7),getSet(3,5),getSet(3,5,7)),
+                    getSet(getSet(1,2,3), getSet(3,5), getSet(3,7), getSet(5,7)));
+
         } catch (DiagnosisException e) {
             fail();
         }
@@ -95,7 +111,7 @@ public abstract class TestScenario1 extends AbstractTestHeuristicQC {
             assertEquals(expectedDiagTraitValues, actualDiagTraitValues);
         }
 
-        Set<Set<Integer>> setOfMinTraits = HeuristicQC.getSetOfMinTraits(expectedDiagTraitValues);
+        Set<Set<Integer>> setOfMinTraits = Utils.removeSuperSets(expectedDiagTraitValues);
         assertEquals(expectedSetOfMinTraits, setOfMinTraits);
     }
 

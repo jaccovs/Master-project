@@ -79,7 +79,7 @@ public class StaticRiskQSS<F> extends MinScoreQSS<F> {
         for (Query<F> partition : partitions) {
             if (count++ > partitions.size() * 0.05)
                 break;
-            if (!partition.qPartition.isVerified && partition.qPartition.dx.size() <= numOfHittingSets - numOfDiagsToElim)
+            if (!partition.isVerified && partition.qPartition.dx.size() <= numOfHittingSets - numOfDiagsToElim)
                 break;
             //      getPartitionSearcher().verifyPartition(partition);
         }

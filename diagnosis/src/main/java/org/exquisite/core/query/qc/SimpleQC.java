@@ -47,7 +47,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
     public void initialize(Set<Diagnosis<F>> diagnoses)
             throws DiagnosisException {
         Set<Query<F>> queries = new TreeSet<>((Comparator<Query<F>>) (o1, o2) -> {
-            int res = o1.qPartition.score.compareTo(o2.qPartition.score);
+            int res = o1.score.compareTo(o2.score);
             if (res == 0) res = compare(o1.formulas.size(), o2.formulas.size());
             if (res == 0) {
                 Iterator<F> it1 = o1.formulas.iterator();
@@ -129,7 +129,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
                     (Collectors.toSet());
 
             Query<F> query = createQuery(kb, dx, remainingDiagnoses);
-            if (query != null && query.qPartition.score.compareTo(getThreshold()) < 0) {
+            if (query != null && query.score.compareTo(getThreshold()) < 0) {
                 queries.add(query);
                 if (logger.isDebugEnabled())
                     logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n remainingDiagnoses:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz);
@@ -175,7 +175,7 @@ public class SimpleQC<F> implements IQueryComputation<F> {
                     query.qPartition.dz.add(hs);
             }
         }
-        query.qPartition.score = getQuerySelection().getScore(query);
+        query.score = getQuerySelection().getScore(query);
         return query;
     }
 

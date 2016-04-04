@@ -47,7 +47,7 @@ public class SimpleRecursiveQC<F> extends SimpleQC<F> {
             if (dx.isEmpty() || dnx.isEmpty())
                 return;
             Query<F> query = createQuery(kb, dx, dnx);
-            if (query != null && query.qPartition.score.compareTo(getThreshold()) < 0) {
+            if (query != null && query.score.compareTo(getThreshold()) < 0) {
                 queries.add(query);
                 if (logger.isDebugEnabled())
                     logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n dnx:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz);

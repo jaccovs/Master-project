@@ -4,6 +4,7 @@ import org.exquisite.core.model.Diagnosis;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -58,5 +59,36 @@ public class Utils {
         T t = collection.iterator().next();
         if (removeIt) collection.remove(t);
         return t;
+    }
+
+    /**
+     * Removes all super sets from the collection of sets resulting in a collection of proper sets.
+     *
+     * @param collectionOfSets A collection of sets that may contain super sets.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+     * @return A super set - free collection of sets.
+     */
+    public static <F> Set<Set<F>> removeSuperSets(final Collection<Set<F>> collectionOfSets) {
+        Set<Set<F>> sets = new HashSet<>(collectionOfSets);
+        Set<Set<F>> result = new HashSet<>();
+
+        while (!sets.isEmpty()) {
+            Set<F> set = Utils.getFirstElem(sets, true);
+            boolean isSetMinimal = true;
+            for (Iterator<Set<F>> it = sets.iterator(); isSetMinimal && it.hasNext();) {
+                Set<F> t = it.next();
+                isSetMinimal &= !set.containsAll(t);
+            }
+
+            for (Iterator<Set<F>> it = result.iterator(); isSetMinimal && it.hasNext();) {
+                Set<F> t = it.next();
+                isSetMinimal &= !set.containsAll(t);
+            }
+
+            if (isSetMinimal)
+                result.add(set);
+        }
+
+        return result;
     }
 }
