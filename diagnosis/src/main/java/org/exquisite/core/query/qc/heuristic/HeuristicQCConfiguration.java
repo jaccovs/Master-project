@@ -12,37 +12,51 @@ import java.math.BigDecimal;
  * A configuration template used for the heuristic query computation in HeuristicQC. It serves as a container of
  * necessary information used during query computation.
  *
+ * The configuration can be manipulated via getter and/or setter methods. Proper use of initialize(), reset(), hasNext()
+ * and next() in HeuristicGQ is required for this manipulation.
+ *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author wolfi
  */
 public class HeuristicQCConfiguration<F> {
 
+    /* ******************************* DEFAULT VALUES ********************************** */
+    /** Default timeout of 1 second */
     private static final long DEFAULT_TIMEOUT = 1000;
 
+    /** Default is find at least 1 query */
     private static final int DEFAULT_MIN_QUERIES = 1;
 
+    /** Default is to find maximal 1 query */
     private static final int DEFAULT_MAX_QUERIES = 1;
 
+    /** Default sort criterion is MinQueryCardinality which guarantees a breath first search returning those queries with fewest formulas */
     private static final ISortCriterion DEFAULT_SORT_CRITIERION = new MinQueryCardinality<>();
 
+    /** Default Requirements Measure used for finding optimal q-partition from a diagnosis */
     private static final IQPartitionRequirementsMeasure DEFAULT_REQUIREMENTS_MEASURE = new EntropyBasedMeasure(new BigDecimal("0.05"));
 
+    /** Shall the query be enriched via (expensive) reasoner calls after finding optimal q-partition and query selection step? Default is No.*/
     private static final boolean DEFAULT_ENRICH_QUERIES = false;
 
 
-    protected AbstractDiagnosisEngine<F> diagnosisEngine;
+    /* *************************** Member variables ************************************ */
 
-    protected IQPartitionRequirementsMeasure rm;
+    AbstractDiagnosisEngine<F> diagnosisEngine;
 
-    protected ISortCriterion sortCriterion;
+    IQPartitionRequirementsMeasure rm;
 
-    protected long timeout;
+    ISortCriterion sortCriterion;
 
-    protected int minQueries;
+    long timeout;
 
-    protected int maxQueries;
+    int minQueries;
 
-    protected boolean enrichQueries;
+    int maxQueries;
+
+    boolean enrichQueries;
+
+    /* *************************** Constructor ************************************ */
 
     public HeuristicQCConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine) {
         this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES);

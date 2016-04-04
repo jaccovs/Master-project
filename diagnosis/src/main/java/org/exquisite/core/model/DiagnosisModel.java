@@ -10,7 +10,7 @@ import java.util.*;
 public class DiagnosisModel<F> extends Observable implements Observer {
 
     /**
-     * Weights of constraints
+     * Weights of formulas.
      */
     private Map<F, Float> formulaWeights = new HashMap<>();
     /**
@@ -30,12 +30,12 @@ public class DiagnosisModel<F> extends Observable implements Observer {
      */
     private List<F> inconsistentExamples = ObservableList.observableArrayList();
     /**
-     * List of statements, that should not be entailed
+     * List of formulas, that should not be entailed.
      */
     private List<F> notEntailedExamples = ObservableList.observableArrayList();
 
     /**
-     * List of statements, that should be entailed
+     * List of formulas, that should be entailed.
      */
     private List<F> entailedExamples = ObservableList.observableArrayList();
 

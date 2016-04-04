@@ -25,25 +25,25 @@ public class QPartition<F> {
     /**
      * Diagnoses that are supported by the query
      */
-    public Set<Diagnosis<F>> dx = new HashSet<>();
+    public Set<Diagnosis<F>> dx;
 
     /**
      * Diagnoses that are not supported by the query
      */
-    public Set<Diagnosis<F>> dnx = new HashSet<>();
+    public Set<Diagnosis<F>> dnx;
 
     /**
      * Diagnoses that are unaffected by the query
      */
-    public Set<Diagnosis<F>> dz = new HashSet<>();
+    public Set<Diagnosis<F>> dz;
 
     /**
      * Traits, used in Algorithm 2 (Computing successor in D+-Partitioning)
      */
-    public Map<Diagnosis<F>,Set<F>> diagsTraits = new HashMap<>();
+    public Map<Diagnosis<F>,Set<F>> diagsTraits;
 
     /**
-     * A cost estimator for compuation of probabilities.
+     * A cost estimator for computation of probabilities.
      */
     public ICostsEstimator<F> costEstimator = null;
 
@@ -70,13 +70,14 @@ public class QPartition<F> {
      * @param dx Diagnoses that are supported by the query.
      * @param dnx Diagnoses that are not supported by the query.
      * @param dz Diagnoses that are unaffected by the query.
-     * @param  costestimator Costestimator.
+     * @param costestimator A cost estimator used for computation of probabilities probDx and probDnx.
      */
     public QPartition(Set<Diagnosis<F>> dx, Set<Diagnosis<F>> dnx, Set<Diagnosis<F>> dz, ICostsEstimator<F> costestimator) {
         this.dx = dx;
         this.dnx = dnx;
         this.dz = dz;
         this.costEstimator = costestimator;
+        this.diagsTraits = new HashMap<>();
 
         computeProbabilities();
     }
@@ -84,8 +85,9 @@ public class QPartition<F> {
     /**
      * Computes the probabilities of dx and dnx.
      * Prefers the measure values of the diagnoses in dx and dnx. If these are not set or do not equal 1 and a
-     * costestimator has been set, we compute the probabilties by using the cost estimator.
-     * Call this method if dx, dnx, dz or costestimator are modified.
+     * cost estimator has been set, we compute the probabilities by using the cost estimator.
+     *
+     * IMPORTANT: A modifier of dx, dnx and dz has to call this method to calculate new probabilities.
      */
     public void computeProbabilities() {
 
@@ -141,7 +143,6 @@ public class QPartition<F> {
         if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
         if (dnx != null ? !dnx.equals(that.dnx) : that.dnx != null) return false;
         return dz != null ? dz.equals(that.dz) : that.dz == null;
-
     }
 
     @Override

@@ -20,17 +20,17 @@ public class HittingSet {
      * A set S that has a non-empty intersection with every set in a collection of sets C is called a hitting set of C.
      * If no element can be removed from S without violating the hitting set property, S is considered to be minimal.
      *
-     * Find at least min and at most max hitting sets for set of minimum traits.
+     * Find at least min and at most max hitting sets for a collection of sets of formulas.
      * The algorithm stops if timeout threshold (given in milliseconds) exceeds.
-     * If maximum is large enough this algorithm finds all existing hitting sets.
+     * If maximum and timeout are large enough this algorithm finds all existing minimal hitting sets.
      *
-     * @param collectionOfSets set of minimum traits.
-     * @param timeout timeout in milliseconds, the algorithm shall search for.
+     * @param collectionOfSets A collection of sets (e.g. diag traits). The collection has to be free of super sets!
+     * @param timeout The timeout in milliseconds, the algorithm has time to search for.
      * @param min minimal count of hitting sets.
      * @param max maximal count of hitting sets.
      * @param sortCriterion A sort criterion which hitting sets are preferred.
      * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
-     * @return Set of hitting sets.
+     * @return Set of at least min minimal hitting sets and at most max minimal hitting sets if timeout does not exceed.
      */
     public static <F> Set<Set<F>> hittingSet(final Set<Set<F>> collectionOfSets, final long timeout, final int min, final int max, final ISortCriterion<Set<F>> sortCriterion) {
         assert (min <= max);

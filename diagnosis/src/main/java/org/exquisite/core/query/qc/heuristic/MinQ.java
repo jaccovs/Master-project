@@ -8,7 +8,9 @@ import org.exquisite.core.query.QPartition;
 import java.util.*;
 
 /**
+ * QuickXPlain algorithm used for calculation of optimized query in HeuristicQC. TODO: TEST
  *
+ * @author patrick
  * @author wolfi
  */
 public class MinQ<F>  {
@@ -16,7 +18,7 @@ public class MinQ<F>  {
     protected Split split = Split.Half;
 
     // Mapping from the technical report Algorithm 8 Query Optimization
-    //                                    QB         X          Q
+    //                             QB         X          Q
     protected List<F> minQ(List<F> b, List<F> d, List<F> c, QPartition qpartition, AbstractDiagnosisEngine<F> dpi) {
         if (!d.isEmpty() && isQPartConst(b, qpartition, dpi))
             return new ArrayList<>(0);
