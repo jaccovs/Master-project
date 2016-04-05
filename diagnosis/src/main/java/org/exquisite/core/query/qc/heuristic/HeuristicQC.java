@@ -35,6 +35,8 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
     @Override
     public void initialize(Set<Diagnosis<F>> diagnoses) throws DiagnosisException {
+        queriesIterator = null;
+        qPartition = null;
         calcQuery(diagnoses);
     }
 
