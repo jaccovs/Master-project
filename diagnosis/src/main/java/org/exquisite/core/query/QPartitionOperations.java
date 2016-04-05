@@ -3,7 +3,7 @@ package org.exquisite.core.query;
 import org.exquisite.core.Utils;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.query.qc.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 
 import java.math.BigDecimal;
 import java.util.*;

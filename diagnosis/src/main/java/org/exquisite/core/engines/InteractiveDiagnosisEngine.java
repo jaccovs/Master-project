@@ -10,8 +10,8 @@ import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.IQueryAnswering;
 import org.exquisite.core.query.IQueryComputation;
 import org.exquisite.core.query.Query;
-import org.exquisite.core.query.qc.heuristic.HeuristicQC;
-import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
+import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
+import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
 import org.exquisite.core.solver.ISolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,8 +91,8 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
         //IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(new BigDecimal(0.05));
-        HeuristicQCConfiguration config = new HeuristicQCConfiguration(this.innerEngine);
-        this.queryComputation = new HeuristicQC<>(config);
+        HeuristicConfiguration config = new HeuristicConfiguration(this.innerEngine);
+        this.queryComputation = new HeuristicQueryComputation<>(config);
         this.queryAnswering = queryAnswering;
     }
 

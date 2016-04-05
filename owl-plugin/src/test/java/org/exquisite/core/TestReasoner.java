@@ -6,7 +6,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.IQueryAnswering;
 import org.exquisite.core.query.Query;
-import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -63,7 +63,7 @@ public class TestReasoner extends AbstractTest {
                 return answer;
             }
         });
-        ((HeuristicQC<OWLLogicalAxiom>)engine.getQueryComputation()).getConfig().setEnrichQueries(true);
+        ((HeuristicQueryComputation<OWLLogicalAxiom>)engine.getQueryComputation()).getConfig().setEnrichQueries(true);
 
 
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = engine.calculateDiagnoses();
