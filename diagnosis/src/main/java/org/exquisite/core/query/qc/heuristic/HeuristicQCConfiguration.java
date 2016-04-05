@@ -124,4 +124,12 @@ public class HeuristicQCConfiguration<F> {
     public void setMaxQueries(int maxQueries) {
         this.maxQueries = maxQueries;
     }
+
+    public boolean isEnrichQueries() {
+        return enrichQueries;
+    }
+
+    public void setEnrichQueries(boolean enrichQueries) {
+        this.enrichQueries = enrichQueries;
+    }
 }
