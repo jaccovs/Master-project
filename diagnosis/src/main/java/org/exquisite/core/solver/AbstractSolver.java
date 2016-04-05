@@ -107,7 +107,7 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
     }
 
     public void checkDiagnosisModel() {
-        if (this.diagnosisModel.getConsistentExamples().stream().
+        if (this.diagnosisModel.getCorrectFormulas().stream().
                 anyMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)))
             throw new RuntimeException("Intersection of correct and faulty statements is not empty!");
         if (!isConsistent(Collections.emptySet()))
