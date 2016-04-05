@@ -41,7 +41,7 @@ public class QuickXPlain<F> implements IConflictSearcher<F> {
     }
 
     protected List<F> quickXPlain(List<F> b, List<F> d, List<F> c) {
-        if (!d.isEmpty() && !solver.isConsistent(b))
+        if (!d.isEmpty() && !verifyConsistency(b))
             return new ArrayList<>(0);
         if (c.size() == 1)
             return new ArrayList<>(c);
@@ -59,6 +59,16 @@ public class QuickXPlain<F> implements IConflictSearcher<F> {
 
         d1.addAll(d2);
         return d1;
+    }
+
+    /**
+     * Verifies if a set of formulas is consistent.
+     *
+     * @param formulas Set of formulas.
+     * @return <code>true</code> if set is constistent, <code>false</code> otherwise.
+     */
+    protected boolean verifyConsistency(List<F> formulas) {
+        return solver.isConsistent(formulas);
     }
 
     void replace(List<F> b, List<F> remove, List<F> add) {

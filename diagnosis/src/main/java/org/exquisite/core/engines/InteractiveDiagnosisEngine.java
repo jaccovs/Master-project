@@ -1,16 +1,18 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
-import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.qc.heuristic.HeuristicQC;
-import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
-import org.exquisite.core.query.qc.heuristic.partitionmeasures.*;
-import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
-import org.exquisite.core.query.*;
+import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.query.Answer;
+import org.exquisite.core.query.IQueryAnswering;
+import org.exquisite.core.query.IQueryComputation;
+import org.exquisite.core.query.Query;
+import org.exquisite.core.query.qc.heuristic.HeuristicQC;
+import org.exquisite.core.query.qc.heuristic.HeuristicQCConfiguration;
+import org.exquisite.core.solver.ISolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,9 +99,9 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
 
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
 
+        // TODO check if the set of diagnoses can be always computed and the set of conflicts updated
         Set<Diagnosis<F>> diagnoses = new HashSet<>(this.diagnosesPerQuery);
         Set<Set<F>> conflicts = new HashSet<>();
-        Set<F> partialDiagnosis = new HashSet<>();
 
         start(TIMER_INTERACTIVE_SESSION);
         do {
@@ -109,10 +111,11 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
             start(TIMER_INTERACTIVE_DIAGNOSES);
             int maxNumberOfDiagnoses = this.diagnosesPerQuery - diagnoses.size();
             if (maxNumberOfDiagnoses > 0) {
-                conflicts = removeHitConflicts(conflicts, partialDiagnosis);
+                conflicts = removeHitConflicts(conflicts, diagnoses);
                 innerEngine.setConflicts(conflicts);
                 innerEngine.setMaxNumberOfDiagnoses(maxNumberOfDiagnoses);
                 diagnoses.addAll(innerEngine.calculateDiagnoses());
+                conflicts.addAll(innerEngine.getConflicts());
             }
             stop(TIMER_INTERACTIVE_DIAGNOSES);
 
@@ -129,6 +132,8 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
                     Answer<F> answer = this.queryAnswering.getAnswer(query);
                     getDiagnosisModel().getEntailedExamples().addAll(answer.positive);
                     getDiagnosisModel().getNotEntailedExamples().addAll(answer.negative);
+                    // TODO check if every element of the set of diagnoses is still a diagnosis according to the definition
+                    // TODO minimize conflicts wrt the updated DiagnosisModel
                 }
             }
         } while (diagnoses.size() > 1 || belowThreshold(diagnoses));
@@ -154,13 +159,18 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         return true;
     }
 
-    private Set<Set<F>> removeHitConflicts(Set<Set<F>> conflicts, Set<F> partialDiagnosis) {
+    private Set<Set<F>> removeHitConflicts(Set<Set<F>> conflicts, Set<Diagnosis<F>> diagnoses) {
         Iterator<Set<F>> iterator = conflicts.iterator();
         while (iterator.hasNext()) {
             Set<F> next = iterator.next();
-            if (hasIntersection(next, partialDiagnosis))
-                iterator.remove();
+            for (Diagnosis<F> diagnosis : diagnoses)
+                if (hasIntersection(next, diagnosis.getFormulas()))
+                    iterator.remove();
         }
         return conflicts;
+    }
+
+    public IQueryComputation<F> getQueryComputation() {
+        return queryComputation;
     }
 }

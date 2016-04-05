@@ -59,6 +59,7 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
         }
         return new Query<>(query, qPartition);
 
+
     }
 
     @Override
@@ -174,7 +175,8 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
      * @return open
      */
     private Set<F> getEntailments(Set<F> set) {
-        return new HashSet<>(); // TODO reasoner Aufruf
+        Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);
+        return entailments;
     }
 
     /**
@@ -195,12 +197,14 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
 
         List<F> sortedFormulas = sort(enrichedQuery, originalQuery, diagnosisEngine.getSolver().getDiagnosisModel().getFormulaWeights());
 
-        return new HashSet<F>(new MinQ<F>().minQ(
-                new ArrayList<F>(sortedFormulas.size()),
-                new ArrayList<F>(sortedFormulas.size()),
-                sortedFormulas,
-                qPartition,
-                diagnosisEngine));
+        Set<F> optimizedQuery = new HashSet<F>(new MinQ<F>().minQ(
+                                               new ArrayList<F>(sortedFormulas.size()),
+                                               new ArrayList<F>(sortedFormulas.size()),
+                                               sortedFormulas,
+                                               qPartition,
+                                               diagnosisEngine));
+
+        return optimizedQuery;
     }
 
     /**
@@ -217,7 +221,14 @@ public class HeuristicQC<F> implements IQueryComputation<F> {
         List<F> result = new ArrayList<>(qImplicit);
 
         List<F> sortedQuery = new ArrayList<>(originalQuery); // sort originalQuery ascending by natural order
-        sortedQuery.sort((o1, o2) -> formulaWeights.get(o1).compareTo(formulaWeights.get(o2)));
+        sortedQuery.sort((o1, o2) -> {
+            Float aFloat = formulaWeights.get(o1);
+            Float anotherFloat = formulaWeights.get(o2);
+            if (aFloat != null && anotherFloat != null)
+                return aFloat.compareTo(anotherFloat);
+            else
+                return 0;
+        });
 
         result.addAll(sortedQuery); // append the sorted list
         return result;

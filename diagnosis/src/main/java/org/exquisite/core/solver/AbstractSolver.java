@@ -1,5 +1,6 @@
 package org.exquisite.core.solver;
 
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.DiagnosisModel;
 
 import java.util.*;
@@ -111,7 +112,7 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
                 anyMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)))
             throw new RuntimeException("Intersection of correct and faulty statements is not empty!");
         if (!isConsistent(Collections.emptySet()))
-            throw new RuntimeException("Inconsistent diagnosis model!");
+            throw new DiagnosisRuntimeException("Inconsistent diagnosis model!");
     }
 
     private boolean violatesExample(Collection<F> examples, boolean expectedResult) {
