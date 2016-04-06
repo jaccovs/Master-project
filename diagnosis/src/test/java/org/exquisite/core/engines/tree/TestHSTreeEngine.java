@@ -4,7 +4,9 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.solver.FCClause;
 import org.exquisite.core.solver.SimpleConflictSubsetSolver;
+import org.exquisite.core.solver.SimpleFCSat;
 import org.junit.Test;
 
 import java.util.*;
@@ -76,5 +78,26 @@ public class TestHSTreeEngine {
         Set<Diagnosis<Integer>> diagnoses = hs.calculateDiagnoses();
         // the only diagnosis is "2,4,5"
         assertEquals(diagnoses, getSet(getDiagnosis(2, 4, 5)));
+    }
+
+    @Test
+    public void testEngine4() throws DiagnosisException {
+        DiagnosisModel<FCClause> model = new DiagnosisModel<>();
+        // A-1, B-2, C-3, D-4
+        // A->B. B->C. C->D.
+        HashSet<FCClause> clauses = getSet(new FCClause(-1,2), new FCClause(-2, 3), new FCClause(-3, 4));
+        SimpleFCSat solver = new SimpleFCSat(model);
+
+        model.setPossiblyFaultyFormulas(clauses);
+        model.setCorrectFormulas(Collections.singletonList(new FCClause(1)));
+        // "4" must not be entailed
+        model.setNotEntailedExamples(Collections.singletonList(new FCClause(4)));
+        // component 2 is correct
+        model.setEntailedExamples(Collections.singletonList(new FCClause(2)));
+
+        HSTreeEngine<FCClause> hs = new HSTreeEngine<>(solver);
+        Set<Diagnosis<FCClause>> diagnoses = hs.calculateDiagnoses();
+        // the only diagnosis is "2,4,5"
+        assertEquals(diagnoses, getSet(getDiagnosis(new FCClause(-2,3)), getDiagnosis(new FCClause(-3,4))));
     }
 }

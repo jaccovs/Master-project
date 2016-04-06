@@ -16,9 +16,8 @@ public class SimpleFCSat extends AbstractSolver<FCClause> {
     private Boolean isConsistent = null;
 
 
-    public SimpleFCSat(DiagnosisModel<FCClause> model, Set<FCClause> clauses) {
+    public SimpleFCSat(DiagnosisModel<FCClause> model) {
         super(model);
-        this.clauses.addAll(clauses);
     }
 
     @Override
@@ -63,10 +62,12 @@ public class SimpleFCSat extends AbstractSolver<FCClause> {
     protected boolean isConsistent() {
         if (isConsistent != null) return isConsistent;
 
+        if (clauses.isEmpty()) return true;
+
         this.derived = null;
         int maxSymbol = clauses.stream().max(Comparator.comparing(cl -> cl.maxSymbol)).get().maxSymbol;
         ArrayList<Integer> symbols = new ArrayList<>(Collections.nCopies(maxSymbol, 0));
-        List<FCClause> cls = new ArrayList<>(clauses);
+        List<FCClause> cls = clauses.stream().map(FCClause::new).collect(Collectors.toList());
         while (true) {
             cls.parallelStream().filter(FCClause::isUnit).map(cl -> cl.iterator().next()).forEach(
                     symbol -> {

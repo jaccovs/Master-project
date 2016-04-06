@@ -20,8 +20,8 @@ public class TestSimpleFCSat {
         // A. -A v B. -B v A. -D v C.
         HashSet<FCClause> clauses = getSet(new FCClause(1), new FCClause(-1, 2), new FCClause(-2, 1),
                 new FCClause(-4, 3));
-        SimpleFCSat fc = new SimpleFCSat(model, clauses);
-        assertTrue(fc.isConsistent());
+        SimpleFCSat fc = new SimpleFCSat(model);
+        assertTrue(fc.isConsistent(clauses));
         assertEquals(fc.calculateEntailments(), getSet(new FCClause(1), new FCClause(2)));
     }
 
@@ -30,8 +30,8 @@ public class TestSimpleFCSat {
         DiagnosisModel<FCClause> model = new DiagnosisModel<>();
         HashSet<FCClause> clauses = getSet(new FCClause(1), new FCClause(-1, 2),
                 new FCClause(-1, 3), new FCClause(-2, -3));
-        SimpleFCSat fc = new SimpleFCSat(model, clauses);
-        assertFalse(fc.isConsistent());
+        SimpleFCSat fc = new SimpleFCSat(model);
+        assertFalse(fc.isConsistent(clauses));
     }
 
     @Test
@@ -39,8 +39,8 @@ public class TestSimpleFCSat {
         DiagnosisModel<FCClause> model = new DiagnosisModel<>();
         HashSet<FCClause> clauses = getSet(new FCClause(1), new FCClause(-1, 2),
                 new FCClause(-1, 3));
-        SimpleFCSat fc = new SimpleFCSat(model, clauses);
-        assertTrue(fc.isConsistent());
+        SimpleFCSat fc = new SimpleFCSat(model);
+        assertTrue(fc.isConsistent(clauses));
         fc.isEntailed(getSet(new FCClause(-3, 2)));
     }
 }
