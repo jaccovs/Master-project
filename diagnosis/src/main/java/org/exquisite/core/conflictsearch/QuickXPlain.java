@@ -9,7 +9,15 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QXP
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
- * A general interface for conflict searchers, like QuickXPlain, MergeXPlain or Progression
+ * Implementation of QuickXPlain.
+ *
+ * <ul>
+ *     <li>Ulrich Junker. 2004. QUICKXPLAIN: preferred explanations and relaxations for over-constrained problems.
+ *     In Proceedings of the 19th national conference on Artifical intelligence (AAAI'04), Anthony G. Cohn (Ed.).
+ *     AAAI Press 167-172.</li>
+ * </ul>
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public class QuickXPlain<F> implements IConflictSearcher<F> {
 

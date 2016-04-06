@@ -1,7 +1,8 @@
-package org.exquisite.core.query;
+package org.exquisite.core.query.querycomputation;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.query.Query;
 
 import java.util.Set;
 

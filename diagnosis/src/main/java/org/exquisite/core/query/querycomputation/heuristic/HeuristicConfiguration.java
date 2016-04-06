@@ -9,11 +9,11 @@ import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQuery
 import java.math.BigDecimal;
 
 /**
- * A configuration template used for the heuristic query computation in HeuristicQueryComputation. It serves as a container of
- * necessary information used during query computation.
+ * A configuration used for the heuristic query computation in class HeuristicQueryComputation.
+ * It serves as a container of necessary information used during query computation.
  *
- * The configuration can be manipulated via getter and/or setter methods. Proper use of initialize(), reset(), hasNext()
- * and next() in HeuristicGQ is required for this manipulation.
+ * The configuration can be manipulated via getter and/or setter methods. However keep in mind that proper use of
+ * initialize(), reset(), hasNext() and next() in class HeuristicQueryComputation is required for this manipulation.
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author wolfi
@@ -21,23 +21,29 @@ import java.math.BigDecimal;
 public class HeuristicConfiguration<F> {
 
     /* ******************************* DEFAULT VALUES ********************************** */
-    /** Default timeout of 1 second */
+    /** Default timeout of 1 second (=1000 ms) for query calculation */
     private static final long DEFAULT_TIMEOUT = 1000;
 
-    /** Default is find at least 1 query */
+    /** By default find at least 1 query */
     private static final int DEFAULT_MIN_QUERIES = 1;
 
-    /** Default is to find maximal 1 query */
+    /** By default find maximal 1 query */
     private static final int DEFAULT_MAX_QUERIES = 1;
 
-    /** Default sort criterion is MinQueryCardinality which guarantees a breath first search returning those queries with fewest formulas */
+    /**
+     * Default sort criterion is MinQueryCardinality which guarantees a breath first search returning those queries
+     * with fewest formulas first.
+     * */
     private static final ISortCriterion DEFAULT_SORT_CRITIERION = new MinQueryCardinality<>();
 
     /** Default Requirements Measure used for finding optimal q-partition from a diagnosis */
     private static final IQPartitionRequirementsMeasure DEFAULT_REQUIREMENTS_MEASURE = new EntropyBasedMeasure(new BigDecimal("0.05"));
 
-    /** Shall the query be enriched via (expensive) reasoner calls after finding optimal q-partition and query selection step? Default is No.*/
-    private static final boolean DEFAULT_ENRICH_QUERIES = false;
+    /**
+     * Shall the computed query be enriched and optimized after the search for an optimal q-partition and after a query selection step?
+     * Default is <code>true</code>. Keep in mind that this will execute expensive calls to a reasoner.
+     */
+    private static final boolean DEFAULT_ENRICH_QUERIES = true;
 
 
     /* *************************** Member variables ************************************ */

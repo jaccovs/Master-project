@@ -10,11 +10,9 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 10.02.12
- * Time: 11:19
- * To change this template use File | Settings | File Templates.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author pfleiss
  */
 public class MinScoreQSS<F> extends AbstractQSS<F> {
 

@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * A data structure for the tests.diagnosis formulas.
- * Will add weights etc later on
+ * A data structure representing a diagnoses.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Dietmar
  */
 public class Diagnosis<F> implements Comparable<Diagnosis<F>> {

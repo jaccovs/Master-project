@@ -15,6 +15,8 @@ import java.util.Set;
 /**
  * Abstract engine that implements some factories, like conflict searchers, etc. and stores basic configuration
  * properties.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 

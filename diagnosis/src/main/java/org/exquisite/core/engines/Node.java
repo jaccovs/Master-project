@@ -9,6 +9,7 @@ import java.util.function.Function;
 /**
  * A class representing a tree node
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Dietmar
  */
 public class Node<F> {

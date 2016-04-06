@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * A common interface for the different solvers.
  * Note that solvers must not modify any of the input parameters!
- *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Thomas
  */
 public interface ISolver<F> {

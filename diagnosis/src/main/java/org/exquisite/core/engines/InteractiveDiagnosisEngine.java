@@ -8,7 +8,7 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.IQueryAnswering;
-import org.exquisite.core.query.IQueryComputation;
+import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
@@ -29,8 +29,10 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  * A diagnosis engine that interacts with a user or any of the query answering interface to find the one correct
  * diagnosis. This class depends on another engine that allows computation of diagnoses.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Schmitz
  * @author wolfi
+ * @author kostya
  * @author patrick
  */
 public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
@@ -90,8 +92,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
-        //IQPartitionRequirementsMeasure<F> partitionQualityMeasure = new EntropyBasedMeasure<>(new BigDecimal(0.05));
-        HeuristicConfiguration config = new HeuristicConfiguration(this.innerEngine);
+        HeuristicConfiguration<F> config = new HeuristicConfiguration<>(this.innerEngine);
         this.queryComputation = new HeuristicQueryComputation<>(config);
         this.queryAnswering = queryAnswering;
     }

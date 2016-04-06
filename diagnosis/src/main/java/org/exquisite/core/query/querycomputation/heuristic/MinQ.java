@@ -8,7 +8,8 @@ import org.exquisite.core.query.QPartition;
 import java.util.*;
 
 /**
- * QuickXPlain algorithm used for calculation of optimized query in HeuristicQueryComputation. TODO: TEST
+ * QuickXPlain algorithm used for calculation of optimized query in HeuristicQueryComputation.
+ * TODO: REUSE QuickXPlain!
  *
  * @author patrick
  * @author wolfi

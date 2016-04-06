@@ -1,7 +1,6 @@
 package org.exquisite.core.query.querycomputation;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.query.IQueryComputation;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.scoring.MinScoreQSS;
 import org.exquisite.core.query.scoring.IQuerySelection;

@@ -9,8 +9,9 @@ import org.exquisite.core.solver.ISolver;
 import java.util.Set;
 
 /**
- * Todo tests and documentation.
+ * Inverse diagnosis engine using InverseQuickXPlain.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author kostya
  * @author patrick
  * @author wolfi
@@ -34,9 +35,10 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             return diagnoses;
 
         Set<Set<F>> newDiagnoses = inverseQuickXPlain.findConflicts(this.getDiagnosisModel().getPossiblyFaultyFormulas());
+        assert newDiagnoses.size() == 1; // InverseQuickXPlain just finds one diagnosis
 
         for (Set<F> diagnosis : newDiagnoses) {
-            diagnoses.add(new Diagnosis<F>(diagnosis));
+            diagnoses.add(new Diagnosis<>(diagnosis));
 
             for (F formula : diagnosis) {
                 DiagnosisModel<F> model = getSolver().getDiagnosisModel();
@@ -51,7 +53,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
                     model.getCorrectFormulas().remove(formula);
                     model.getPossiblyFaultyFormulas().add(formula);
                 }
-
             }
         }
         return diagnoses;

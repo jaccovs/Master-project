@@ -1,6 +1,5 @@
 package org.exquisite.core.engines;
 
-
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
@@ -17,7 +16,9 @@ import static org.exquisite.core.Utils.hasIntersection;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
 /**
- * A basic class that is extended by all tree-like conflictsearch engines
+ * A basic class that is extended by all tree-like conflictsearch engines.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 

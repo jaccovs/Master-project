@@ -1,7 +1,7 @@
 package org.exquisite.core;
 
 /**
- * @author wolfi
+ * @author kostya
  */
 public class DiagnosisRuntimeException extends RuntimeException{
 

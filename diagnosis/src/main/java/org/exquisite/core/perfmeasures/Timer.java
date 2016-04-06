@@ -6,7 +6,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * Simple class for measuring time in experiments. The timings of time measueremnts are stored in an array and can be
+ * Simple class for measuring time in experiments. The timings of time measurements are stored in an array and can be
  * retrieved using getTimings method.
  */
 public class Timer extends Counter {

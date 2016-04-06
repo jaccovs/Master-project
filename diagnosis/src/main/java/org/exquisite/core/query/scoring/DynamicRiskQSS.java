@@ -1,13 +1,11 @@
 package org.exquisite.core.query.scoring;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pr8
- * Date: 13.02.12
- * Time: 20:55
- * To change this template use File | Settings | File Templates.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author patrick
  */
-public class DynamicRiskQSS extends StaticRiskQSS {
+public class DynamicRiskQSS<F> extends StaticRiskQSS<F> {
 
     double cMin;
     double cMax;

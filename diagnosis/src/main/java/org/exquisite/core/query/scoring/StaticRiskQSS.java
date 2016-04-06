@@ -7,14 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pr8
- * Date: 13.02.12
- * Time: 19:20
- * To change this template use File | Settings | File Templates.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
+ * @author patrick
  */
-
-
 public class StaticRiskQSS<F> extends MinScoreQSS<F> {
 
     protected double c;

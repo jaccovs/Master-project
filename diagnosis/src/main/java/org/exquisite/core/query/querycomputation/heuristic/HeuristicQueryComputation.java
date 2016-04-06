@@ -5,7 +5,7 @@ import org.exquisite.core.Utils;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.IQueryComputation;
+import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.Query;
@@ -14,7 +14,7 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQP
 import java.util.*;
 
 /**
- * Framework for a heuristic Query Computation Algorithm for knowledge base debugging.
+ * A heuristic query computation algorithm for interactive knowledge base debugging.
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  *
@@ -42,24 +42,22 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
     @Override
     public Query<F> next() {
-        Set<F> originalQuery = queriesIterator.next();
+        Set<F> originalQuery = queriesIterator.next(); // (next) query computed in steps (1) and (2) -> see calcQuery()
         Set<F> query = originalQuery;
         if (config.enrichQueries) {
 
-            // in order to come up with a query that is as simple and easy to answer as possible for the
+            // (3) in order to come up with a query that is as simple and easy to answer as possible for the
             // respective user U, the query can optionally enriched by additional logical formulas by invoking
             // a reasoner for entailments calculation.
-            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel()); // (3)
+            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
 
-            // the previous step causes a larger pool of formulas to select from in the query optimization step
+            // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
-            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine); // (4)
+            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
             query = optimizedQuery;
         }
         return new Query<>(query, qPartition);
-
-
     }
 
     @Override
@@ -81,15 +79,16 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      */
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
 
-        // we start with the search for an (nearly) optimal q-partition, such that a query associated with this
+        // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
         // q-partition can be extracted in the next step by selectQueriesForQPartition
-        qPartition = findQPartition(leadingDiagnoses, this.config.rm); // (1)
+        qPartition = findQPartition(leadingDiagnoses, this.config.rm);
 
-        // after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
+        // (2) after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
         // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
         // answered correctly.
-        Set<Set<F>> queries = selectQueriesForQPartition(qPartition); // (2)
+        Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
 
+        // creates an iterator on the queries to be used in hasNext() and next()
         queriesIterator = queries.iterator();
     }
 
@@ -146,13 +145,12 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     private Set<F> enrichQuery(final Set<F> query, final QPartition<F> qPartition, final DiagnosisModel<F> diagnosisModel) {
         Set<F> unionOfLeadingDiagnoses = setUnion(qPartition.dx, qPartition.dnx, qPartition.dz);
 
-        // step 1
-        Set<F> set1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas()); // K
-        boolean hasBeenRemoved = set1.removeAll(unionOfLeadingDiagnoses);  // K\UD
-        assert hasBeenRemoved;
-
-        set1.addAll(diagnosisModel.getCorrectFormulas()); // (K\UD) u B
-        set1.addAll(diagnosisModel.getEntailedExamples()); // (K\UD) u B u UP
+        // step 1: calculate: Q_impl := [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
+        Set<F> set1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
+        boolean hasBeenRemoved = set1.removeAll(unionOfLeadingDiagnoses);
+        assert hasBeenRemoved; // assertion that something has been removed
+        set1.addAll(diagnosisModel.getCorrectFormulas());
+        set1.addAll(diagnosisModel.getEntailedExamples());
 
         Set<F> set2 = new HashSet<>(set1); // copy of (K\UD) u B u UP
 
@@ -162,17 +160,16 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         qImplicit.removeAll(getEntailments(set2)); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)]
         qImplicit.removeAll(query); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
 
-        // step 2
+        // step 2: Q <- Q u Q_impl
         Set<F> result = new HashSet<>(query);
         result.addAll(qImplicit);
         return result;
     }
 
     /**
-     * Call a reasoner to calculate all entailments.
-     *
-     * @param set set of formulas.
-     * @return open
+     * Calls a reasoner to calculate entailments given a set of formulas. Expensive!
+     * @param set
+     * @return Entailed formulas
      */
     private Set<F> getEntailments(Set<F> set) {
         Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);

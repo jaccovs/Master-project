@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * strategies for efficient fault localization. Web Semantics: Science, Services and Agents on the World Wide Web,
  * 12-13, 88–103</li>
  * </ul>
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
 

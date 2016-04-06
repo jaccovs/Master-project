@@ -9,13 +9,19 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QXP
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
- * MergeXPlain algorithm that searches for multiple conflicts at once
+ * MergeXPlain algorithm that searches for multiple conflicts at once.
+ * <ul>
+ *     <li>Shchekotykhin, K., Jannach, D., Schmitz, T.: MergeXplain: Fast Computation of Multiple Conflicts for
+ *     Diagnosis, International Joint Conference on Artificial Intelligence (IJCAI 2015),
+ *     Buenos Aires, 2015, pp. 3221-3228</li>
+ * </ul>
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public class MergeXPlain<F> extends QuickXPlain<F> {
 
     public MergeXPlain(ISolver<F> solver) {
         super(solver);
-
     }
 
     @Override

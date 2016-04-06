@@ -11,8 +11,9 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_CON
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
- * The class that calculates the HS-Dag
+ * The class that calculates the HS-Dag.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Dietmar
  */
 public class HSDAGEngine<F> extends HSTreeEngine<F> {

@@ -3,8 +3,9 @@ package org.exquisite.core.model;
 import java.util.*;
 
 /**
- * Contains the knowledge base for constraint problems
+ * Contains the knowledge base for constraint problems.
  *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  * @author Dietmar
  */
 public class DiagnosisModel<F> extends Observable implements Observer {
@@ -13,22 +14,27 @@ public class DiagnosisModel<F> extends Observable implements Observer {
      * Weights of formulas.
      */
     private Map<F, Float> formulaWeights = new HashMap<>();
+
     /**
      * The set of formulas which we assume to be always correct (background knowledge)
      */
     private List<F> correctFormulas = ObservableList.observableArrayList();
+
     /**
      * The set of the statements which could be faulty = KB (knowledge base).
      */
     private List<F> possiblyFaultyFormulas = ObservableList.observableArrayList();
+
     /**
-     * The positive examples
+     * The positive examples.
      */
     private List<F> consistentExamples = ObservableList.observableArrayList();
+
     /**
      * The negative examples
      */
     private List<F> inconsistentExamples = ObservableList.observableArrayList();
+
     /**
      * List of formulas, that should not be entailed.
      */

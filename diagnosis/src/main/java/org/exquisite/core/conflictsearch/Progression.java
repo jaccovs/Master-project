@@ -9,7 +9,9 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QXP
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
- * A general interface for conflict searchers, like QuickXPlain, MergeXPlain or Progression
+ * Progression. TODO compare with quickxplain
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public class Progression<F> implements IConflictSearcher<F> {
 
