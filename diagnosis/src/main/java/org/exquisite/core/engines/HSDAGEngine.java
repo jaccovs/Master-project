@@ -135,4 +135,12 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
     public Set<Set<F>> getConflicts() {
         return conflicts.keySet();
     }
+
+    @Override
+    protected boolean addConflicts(Set<Set<F>> conflicts) {
+        for (Set<F> conflict : conflicts) {
+            this.conflicts.put(conflict, new LinkedList<>());
+        }
+        return true;
+    }
 }

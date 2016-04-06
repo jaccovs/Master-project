@@ -15,6 +15,7 @@ import java.util.*;
 import static org.exquisite.core.TestUtils.getDiagnosis;
 import static org.exquisite.core.TestUtils.getSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author wolfi
@@ -129,9 +130,7 @@ public abstract class AbstractDiagnosisEngineTest {
         // component 2 is correct
         model.setEntailedExamples(Collections.singletonList(new FCClause(2)));
 
-        //HSTreeEngine<FCClause> hs = new HSTreeEngine<>(solver);
         Set<Diagnosis<FCClause>> diagnoses = getDiagnosisEngine(solver).calculateDiagnoses();
-        // the only diagnosis is "2,4,5"
         assertEquals(getSet(getDiagnosis(new FCClause(-2,3)), getDiagnosis(new FCClause(-3,4))), diagnoses);
     }
 
@@ -184,5 +183,46 @@ public abstract class AbstractDiagnosisEngineTest {
         ISolver<Integer> solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
         Set<Diagnosis<Integer>> diagnoses = getDiagnosisEngine(solver).calculateDiagnoses();
         assertEquals(getSet(getDiagnosis(2), getDiagnosis(3, 5)), diagnoses);
+    }
+
+    @Test
+    public void testEngineExamplePatrickWithSimpleFCSat() throws DiagnosisException {
+        DiagnosisModel<FCClause> model = new DiagnosisModel<>();
+
+        // Example elaborated by Patrick Rodler for his paper, however no diagnoses can be computed with used ISolver.
+        // therefore we added a clause 1 into the KB.
+        //
+        // Domain: A=1, B=2, C=3, E=4, F=5, G=6, H=7, K=9, L=10
+        //
+        // KB (possibly faulty):                    H->-G. E->F. A->-F. K->E. C->B. H->C
+        // Background (correct formulas):           H->A, B->K
+        // EntailedExamples (user answered yes ):   H,C->L
+        // NotEntailedExamples (user answered no):  F->L, E->-G, H->F
+        Set<FCClause> clauses = getSet(
+                new FCClause(-7,-6),    // H ->-G
+                new FCClause(-5, 7),    // F -> H
+                new FCClause(-4, 5),    // E -> F
+                new FCClause(-1, -5),   // A ->-F
+                new FCClause(-9, 4),    // K -> E
+                new FCClause(-3, 2),    // C -> B
+                new FCClause(-7, 3),    // H -> C
+
+                new FCClause(1)         // this fact causes non-emtpy diagnoses (this fact however is not in the example of Patrick)
+                );
+        ISolver<FCClause> solver = new SimpleFCSat(model);
+        // Knowledge Base
+        model.setPossiblyFaultyFormulas(clauses);
+        // Background
+        model.setCorrectFormulas(getSet(new FCClause(-7,1), new FCClause(-2, 9))); // H->A, B->K
+        // Positive
+        model.setEntailedExamples(Collections.singletonList(new FCClause(-7, -3, 10))); // H,C->L
+        // Negative
+        model.setNotEntailedExamples(getSet(new FCClause(-5, 10), new FCClause(-4, -6), new FCClause(-7, 5))); // F->L, E->-G, H->F
+
+        Set<Diagnosis<FCClause>> diagnoses = getDiagnosisEngine(solver).calculateDiagnoses();
+
+        System.out.println(diagnoses);
+
+        assertEquals(getSet(getDiagnosis(new FCClause(1)),getDiagnosis(new FCClause(-1,-5))), diagnoses);
     }
 }

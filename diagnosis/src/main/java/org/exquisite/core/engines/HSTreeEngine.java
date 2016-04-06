@@ -64,33 +64,36 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
         start(TIMER_DIAGNOSIS_SESSION);
-        // generate root if there is none
-        if (!hasRoot()) {
-            Set<Set<F>> conflicts = getSearcher().findConflicts(getDiagnosisModel().getPossiblyFaultyFormulas());
-            if (conflicts == null || conflicts.isEmpty()) {
-                logger.debug("The provided diagnosis model is correct");
-                return getDiagnoses();
+        try {
+            // generate root if there is none
+            if (!hasRoot()) {
+                Set<Set<F>> conflicts = getSearcher().findConflicts(getDiagnosisModel().getPossiblyFaultyFormulas());
+                if (conflicts == null || conflicts.isEmpty()) {
+                    logger.debug("The provided diagnosis model is correct");
+                    return getDiagnoses();
+                }
+                addConflicts(conflicts);
+                Node<F> root = Node.createRoot(selectConflict(conflicts));
+
+                incrementCounter(COUNTER_CONSTRUCTED_NODES);
+                logger.debug("Initializing the tree with the root {}", root);
+
+                expand(root);
             }
-            getConflicts().addAll(conflicts);
-            Node<F> root = Node.createRoot(selectConflict(conflicts));
 
-            incrementCounter(COUNTER_CONSTRUCTED_NODES);
-            logger.debug("Initializing the tree with the root {}", root);
-
-            expand(root);
+            while (hasNodesToExpand()) {
+                Node<F> node = getNextNode();
+                if (skipNode(node)) continue;
+                logger.debug("Processing node {}", node);
+                label(node);
+                if (node.getStatus() == Node.Status.Open)
+                    expand(node);
+                if (stopComputations()) return getDiagnoses();
+            }
+            return getDiagnoses();
+        } finally {
+            stop(TIMER_DIAGNOSIS_SESSION);
         }
-
-        while (hasNodesToExpand()) {
-            Node<F> node = getNextNode();
-            if (skipNode(node)) continue;
-            logger.debug("Processing node {}", node);
-            label(node);
-            if (node.getStatus() == Node.Status.Open)
-                expand(node);
-            if (stopComputations()) return getDiagnoses();
-        }
-        stop(TIMER_DIAGNOSIS_SESSION);
-        return getDiagnoses();
     }
 
     /**
@@ -249,5 +252,9 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
 
     protected TreeSet<Node<F>> getOpenNodes() {
         return openNodes;
+    }
+
+    protected boolean addConflicts(Set<Set<F>> conflicts) {
+        return getConflicts().addAll(conflicts);
     }
 }

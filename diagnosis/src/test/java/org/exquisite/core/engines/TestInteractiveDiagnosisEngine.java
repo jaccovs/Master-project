@@ -8,6 +8,7 @@ import org.exquisite.core.solver.ISolver;
 import org.junit.Ignore;
 
 /**
+ * TODO InteractiveDiagnosisEngine does not work correctly yet, therefore we ignore this test case
  * @author wolfi
  */
 @Ignore public class TestInteractiveDiagnosisEngine extends AbstractDiagnosisEngineTest {
