@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic;
+package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
@@ -6,7 +6,6 @@ import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.solver.SimpleConflictSubsetSolver;

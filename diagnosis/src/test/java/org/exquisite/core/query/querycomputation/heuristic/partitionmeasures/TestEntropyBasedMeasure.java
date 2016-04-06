@@ -1,8 +1,6 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic.partitionmeasures;
+package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 
 import java.math.BigDecimal;
 

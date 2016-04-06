@@ -1,10 +1,8 @@
-package org.exquisite.core.engines.query.querycomputation;
+package org.exquisite.core.query.querycomputation;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.perfmeasures.PerfMeasurementManager;
 import org.exquisite.core.query.Query;
-import org.exquisite.core.query.querycomputation.SimpleQueryComputation;
-import org.exquisite.core.query.querycomputation.SimpleRecursiveQueryComputation;
 import org.exquisite.core.query.scoring.MinScoreQSS;
 import org.junit.Before;
 import org.junit.Test;

@@ -30,6 +30,16 @@ public class TestInverseQuickXPlain extends TestConflictSearcher {
     }
 
     @Test
+    public void testIQXP2() throws DiagnosisException {
+        super.testSearcher2();
+    }
+
+    @Override
+    protected Set<Integer> getExpectedSetTestSearcher2() {
+        return getSet(2,5);
+    }
+
+    @Test
     public void testIQXPBackgroundKnowledge() throws DiagnosisException {
         super.testSearcherBackgroundKnowledge();
     }

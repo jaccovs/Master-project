@@ -19,7 +19,6 @@ public abstract class TestConflictSearcher {
     public void testSearcher() throws DiagnosisException {
         List<Set<Integer>> conflicts = new LinkedList<>();
         Set<Integer> testConflict = getSet(2, 3, 4);
-//        HashSet<Integer> testConflict = getSet(1, 2);
 
         conflicts.add(testConflict);
 
@@ -44,6 +43,34 @@ public abstract class TestConflictSearcher {
     protected Set<Integer> getExpectedSetTestSearcher() {
         return getSet(2, 3, 4);
     }
+
+    public void testSearcher2() throws DiagnosisException {
+        List<Set<Integer>> conflicts = new LinkedList<>();
+        conflicts.add(getSet(2, 3));
+        conflicts.add(getSet(5, 6));
+
+        HashSet<Integer> domain = getSet(1, 2, 3, 4, 5, 6, 7);
+
+        DiagnosisModel<Integer> model = new DiagnosisModel<>();
+        model.setPossiblyFaultyFormulas(getSet(1, 2, 3, 4, 5));
+        model.setCorrectFormulas(Arrays.asList(6, 7));
+
+        SimpleConflictSubsetSolver solver = new SimpleConflictSubsetSolver(model, domain, conflicts);
+
+        IConflictSearcher<Integer> qx = getSearcher(solver);
+        Set<Set<Integer>> qxout = qx.findConflicts(domain);
+        assertEquals(qxout.size(), getExpectedSizeTestSearcher2());
+        assertTrue(qxout.contains(getExpectedSetTestSearcher2()));
+    }
+
+    protected int getExpectedSizeTestSearcher2() {
+        return 1;
+    }
+
+    protected Set<Integer> getExpectedSetTestSearcher2() {
+        return getSet(2,3);
+    }
+
 
     public void testSearcherBackgroundKnowledge() throws DiagnosisException {
         List<Set<Integer>> conflicts = new LinkedList<>();

@@ -17,14 +17,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestMergeXPlain extends TestConflictSearcher {
 
+    @Override
+    public IConflictSearcher<Integer> getSearcher(ISolver<Integer> solver) {
+        return new MergeXPlain<>(solver);
+    }
+
     @Test
     public void testMXP() throws DiagnosisException {
         super.testSearcher();
     }
 
+    @Test
+    public void testMXP2() throws DiagnosisException {
+        super.testSearcher2();
+    }
+
     @Override
-    public IConflictSearcher<Integer> getSearcher(ISolver<Integer> solver) {
-        return new MergeXPlain<>(solver);
+    protected int getExpectedSizeTestSearcher2() {
+        return 2;
+    }
+
+    @Override
+    protected Set<Integer> getExpectedSetTestSearcher2() {
+        return getSet(5); // also getSet(2,3) is ok
     }
 
     @Test

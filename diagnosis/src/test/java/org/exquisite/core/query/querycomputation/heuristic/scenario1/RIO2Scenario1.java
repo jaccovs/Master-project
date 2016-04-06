@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic.scenario1;
+package org.exquisite.core.query.querycomputation.heuristic.scenario1;
 
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
@@ -12,11 +12,11 @@ import static org.exquisite.core.TestUtils.getSet;
 /**
  * @author wolfi
  */
-public class RIOScenario1 extends TestScenario1 {
+public class RIO2Scenario1 extends TestScenario1 {
 
     private BigDecimal tEnt = new BigDecimal("0.05");
     private BigDecimal tCard = BigDecimal.ZERO;
-    private BigDecimal c = new BigDecimal("0.4");
+    private BigDecimal c = new BigDecimal("0.3");
 
     @Override
     public HeuristicQueryComputation<Integer> getHeuristicQC() {
@@ -25,16 +25,16 @@ public class RIOScenario1 extends TestScenario1 {
 
     @Override
     protected String getExpectedProbDnx() {
-        return "0.46";
+        return "0.52";
     }
 
     @Override
     protected String getExpectedProbDx() {
-        return "0.54";
+        return "0.48";
     }
 
     @Override
     protected QPartition<Integer> getExpectedQPartition() {
-        return new QPartition<>(getSet(D3,D4,D2), getSet(D1,D5,D6), getSet(), getEngine().getCostsEstimator());
+        return new QPartition<>(getSet(D5,D4), getSet(D1,D2,D3,D6), getSet(), getEngine().getCostsEstimator());
     }
 }

@@ -1,9 +1,8 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic.partitionmeasures;
+package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.QPartitionOperations;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

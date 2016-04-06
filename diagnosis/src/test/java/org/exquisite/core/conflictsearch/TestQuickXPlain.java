@@ -27,6 +27,11 @@ public class TestQuickXPlain extends TestConflictSearcher {
     }
 
     @Test
+    public void testQXP2() throws DiagnosisException {
+        super.testSearcher2();
+    }
+
+    @Test
     public void testQXPBackgroundKnowledge() throws DiagnosisException {
         super.testSearcherBackgroundKnowledge();
     }

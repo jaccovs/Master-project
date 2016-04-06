@@ -1,16 +1,16 @@
 package tests.interactivity;
 
 import org.exquisite.core.engines.InteractiveDiagnosisEngine;
-import org.exquisite.core.engines.query.QueryComputation;
+import org.exquisite.core.query.QueryComputation;
 import org.exquisite.datamodel.ExquisiteEnums.EngineType;
 import org.exquisite.datamodel.ExcelExquisiteSession;
 import org.exquisite.diagnosis.DiagnosisException;
 import org.exquisite.diagnosis.EngineFactory;
 import org.exquisite.core.IDiagnosisEngine;
-import org.exquisite.core.engines.query.CKK;
+import org.exquisite.core.query.CKK;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
-import org.exquisite.core.engines.query.scoring.QSSFactory;
-import org.exquisite.core.engines.query.scoring.Scoring;
+import org.exquisite.core.query.scoring.QSSFactory;
+import org.exquisite.core.query.scoring.Scoring;
 import org.exquisite.diagnosis.models.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.diagnosis.parallelsearch.SearchStrategies;

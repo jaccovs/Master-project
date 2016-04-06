@@ -1,6 +1,5 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic;
+package org.exquisite.core.query.querycomputation.heuristic;
 
-import org.exquisite.core.query.querycomputation.heuristic.HittingSet;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFormulaWeights;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;

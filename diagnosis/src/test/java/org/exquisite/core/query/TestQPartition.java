@@ -1,8 +1,6 @@
-package org.exquisite.core.engines.query;
+package org.exquisite.core.query;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.query.QPartition;
-import org.exquisite.core.query.QPartitionOperations;
 import org.junit.Test;
 
 import java.util.*;

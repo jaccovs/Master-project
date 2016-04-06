@@ -1,9 +1,9 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic.scenario1;
+package org.exquisite.core.query.querycomputation.heuristic.scenario1;
 
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.RiskOptimizationMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
 
 import java.math.BigDecimal;
 
@@ -12,15 +12,13 @@ import static org.exquisite.core.TestUtils.getSet;
 /**
  * @author wolfi
  */
-public class RIO2Scenario1 extends TestScenario1 {
+public class ENTScenario1 extends TestScenario1 {
 
     private BigDecimal tEnt = new BigDecimal("0.05");
-    private BigDecimal tCard = BigDecimal.ZERO;
-    private BigDecimal c = new BigDecimal("0.3");
 
     @Override
     public HeuristicQueryComputation<Integer> getHeuristicQC() {
-        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new RiskOptimizationMeasure(tEnt, tCard, c)));
+        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new EntropyBasedMeasure<>(tEnt)));
     }
 
     @Override

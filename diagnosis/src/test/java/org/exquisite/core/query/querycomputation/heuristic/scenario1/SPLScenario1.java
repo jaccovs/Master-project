@@ -1,4 +1,4 @@
-package org.exquisite.core.engines.query.querycomputation.heuristic.scenario1;
+package org.exquisite.core.query.querycomputation.heuristic.scenario1;
 
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
