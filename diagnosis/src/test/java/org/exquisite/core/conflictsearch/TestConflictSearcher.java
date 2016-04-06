@@ -33,8 +33,16 @@ public abstract class TestConflictSearcher {
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);
-        assertEquals(qxout.size(), 1);
-        assertTrue(qxout.contains(testConflict));
+        assertEquals(qxout.size(), getExpectedSizeTestSearcher());
+        assertTrue(qxout.contains(getExpectedSetTestSearcher()));
+    }
+
+    protected int getExpectedSizeTestSearcher() {
+        return 1;
+    }
+
+    protected Set<Integer> getExpectedSetTestSearcher() {
+        return getSet(2, 3, 4);
     }
 
     public void testSearcherBackgroundKnowledge() throws DiagnosisException {
@@ -52,9 +60,18 @@ public abstract class TestConflictSearcher {
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);
-        assertEquals(qxout.size(), 1);
-        assertTrue(qxout.contains(getSet(2, 3)));
+        assertEquals(qxout.size(), getExpectedSizeTestSearcherBackgroundKnowledge());
+        assertTrue(qxout.contains(getExpectedSetTestSearcherBackgroundKnowledge()));
     }
+
+    protected int getExpectedSizeTestSearcherBackgroundKnowledge() {
+        return 1;
+    }
+
+    protected Set<Integer> getExpectedSetTestSearcherBackgroundKnowledge() {
+        return getSet(2, 3);
+    }
+
 
     public void testSearcherExamples() throws DiagnosisException {
 
@@ -69,8 +86,16 @@ public abstract class TestConflictSearcher {
 
         IConflictSearcher<Integer> qx = getSearcher(solver);
         Set<Set<Integer>> qxout = qx.findConflicts(domain);
-        assertEquals(qxout.size(), 1);
-        assertTrue(qxout.contains(getSet(1)));
+        assertEquals(qxout.size(), getExpectedSizeTestSearcherExamples());
+        assertTrue(qxout.contains(getExpectedSetTestSearcherExamples()));
+    }
+
+    protected int getExpectedSizeTestSearcherExamples() {
+        return 1;
+    }
+
+    protected Set<Integer> getExpectedSetTestSearcherExamples() {
+        return getSet(1);
     }
 
     protected abstract IConflictSearcher<Integer> getSearcher(ISolver<Integer> solver);
