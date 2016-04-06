@@ -89,7 +89,7 @@ public class DiagnosisModel<F> extends Observable implements Observer {
      *
      * @param correctFormulas
      */
-    public void setCorrectFormulas(List<F> correctFormulas) {
+    public void setCorrectFormulas(Collection<F> correctFormulas) {
         this.correctFormulas = ObservableList.observableList(correctFormulas, this);
         setChanged();
         notifyObservers(this.correctFormulas);
