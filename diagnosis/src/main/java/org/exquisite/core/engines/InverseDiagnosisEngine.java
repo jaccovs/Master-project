@@ -35,7 +35,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             return diagnoses;
 
         Set<Set<F>> newDiagnoses = inverseQuickXPlain.findConflicts(this.getDiagnosisModel().getPossiblyFaultyFormulas());
-        assert newDiagnoses.size() == 1; // InverseQuickXPlain just finds one diagnosis
+        assert newDiagnoses.size() <= 1; // InverseQuickXPlain just finds zero or one diagnosis
 
         for (Set<F> diagnosis : newDiagnoses) {
             diagnoses.add(new Diagnosis<>(diagnosis));
