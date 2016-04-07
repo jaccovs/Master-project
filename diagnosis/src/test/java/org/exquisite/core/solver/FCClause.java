@@ -21,7 +21,7 @@ public class FCClause extends HashSet<Integer> {
 
         if (clause.stream().filter(i -> i == 0).count() > 0)
             throw new IllegalArgumentException(clause.toString() + " has an invalid symbol 0");
-        maxSymbol = Math.abs(clause.stream().max(Comparator.comparing(Math::abs)).get());
+        maxSymbol = clause.stream().map(Math::abs).max(Comparator.naturalOrder()).get();
     }
 
     public FCClause(Integer... symbol) {
