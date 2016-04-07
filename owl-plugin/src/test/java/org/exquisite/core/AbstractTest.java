@@ -17,7 +17,7 @@ import java.io.File;
 
 class AbstractTest {
 
-    private ManchesterOWLSyntaxParser parser;
+    protected ManchesterOWLSyntaxParser parser;
 
     OWLLogicalAxiom parse(String axiom) {
         this.parser.setStringToParse(axiom);
@@ -45,7 +45,7 @@ class AbstractTest {
         return createReasoner(ontology);
     }
 
-    private ExquisiteOWLReasoner createReasoner(OWLOntology ontology) throws OWLOntologyCreationException, DiagnosisException {
+    protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology) throws OWLOntologyCreationException, DiagnosisException {
         ReasonerFactory reasonerFactory = new ReasonerFactory();
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory);
 
