@@ -1,7 +1,6 @@
 package org.exquisite.core;
 
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
-import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.Query;
