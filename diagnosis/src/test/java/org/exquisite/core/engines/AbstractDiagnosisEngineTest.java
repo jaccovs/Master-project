@@ -194,22 +194,24 @@ public abstract class AbstractDiagnosisEngineTest {
         //
         // Domain: A=1, B=2, C=3, E=4, F=5, G=6, H=7, K=9, L=10
         //
-        // KB (possibly faulty):                    H->-G. E->F. A->-F. K->E. C->B. H->C
-        // Background (correct formulas):           H->A, B->K
-        // EntailedExamples (user answered yes ):   H,C->L
-        // NotEntailedExamples (user answered no):  F->L, E->-G, H->F
+        // -: not
+        // KB (possibly faulty):                    H->-G. E->F. A->-F. K->E. C->B. H->C.
+        // Background (correct formulas):           H->A. B->K.
+        // EntailedExamples (user answered yes ):   H,C->L.
+        // NotEntailedExamples (user answered no):  F->L. E->-G. H->F.
         Set<FCClause> clauses = getSet(
-                new FCClause(-7,-6),    // H ->-G
-                new FCClause(-5, 7),    // F -> H
-                new FCClause(-4, 5),    // E -> F
-                new FCClause(-1, -5),   // A ->-F
-                new FCClause(-9, 4),    // K -> E
-                new FCClause(-3, 2),    // C -> B
-                new FCClause(-7, 3),    // H -> C
-
-                new FCClause(1)         // this fact causes non-emtpy diagnoses (this fact however is not in the example of Patrick)
-                );
+                new FCClause(-7,-6),    // H ->-G <=> -H v -G == -7 v -6
+                new FCClause(-5, 7),    // F -> H <=> -F v  H == -5 v  7
+                new FCClause(-4, 5),    // E -> F <=> -E v  F == -4 v  5
+                new FCClause(-1, -5),   // A ->-F <=> -A v -F == -1 v -5
+                new FCClause(-9, 4),    // K -> E <=> -K v  E == -9 v  4
+                new FCClause(-3, 2),    // C -> B <=> -C v  B == -3 v  2
+                new FCClause(-7, 3)     // H -> C <=> -H v  C == -7 v  3
+        );
         ISolver<FCClause> solver = new SimpleFCSat(model);
+
+        assertTrue(solver.isConsistent(clauses));
+
         // Knowledge Base
         model.setPossiblyFaultyFormulas(clauses);
         // Background
@@ -219,10 +221,15 @@ public abstract class AbstractDiagnosisEngineTest {
         // Negative
         model.setNotEntailedExamples(getSet(new FCClause(-5, 10), new FCClause(-4, -6), new FCClause(-7, 5))); // F->L, E->-G, H->F
 
-        Set<Diagnosis<FCClause>> diagnoses = getDiagnosisEngine(solver).calculateDiagnoses();
+        final Set<Diagnosis<FCClause>> diagnoses = getDiagnosisEngine(solver).calculateDiagnoses();
 
-        System.out.println(diagnoses);
+        assertEquals(getSet(), diagnoses); // no diagnoses since not atomic clause is given
 
-        assertEquals(getSet(getDiagnosis(new FCClause(1)),getDiagnosis(new FCClause(-1,-5))), diagnoses);
+
+        model.getPossiblyFaultyFormulas().add(new FCClause(1)); // add an atomic clause
+
+        final Set<Diagnosis<FCClause>> diagnoses2 = getDiagnosisEngine(solver).calculateDiagnoses();
+        assertEquals(getSet(getDiagnosis(new FCClause(1)),getDiagnosis(new FCClause(-1,-5))), diagnoses2);
+
     }
 }
