@@ -46,9 +46,9 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
                 try {
                     model.getCorrectFormulas().add(formula);
                     diagnoses = recDepthFirstSearch(inverseQuickXPlain, diagnoses);
-                } catch (DiagnosisRuntimeException e) {
+                } catch (DiagnosisRuntimeException | DiagnosisException e) {
                     // this exception occurs only if we added an inconsistent set of formulas to the CorrectFormulas
-                    return diagnoses;
+                    // checkInput() may throw this DiagnosisException
                 } finally {
                     model.getCorrectFormulas().remove(formula);
                     model.getPossiblyFaultyFormulas().add(formula);
