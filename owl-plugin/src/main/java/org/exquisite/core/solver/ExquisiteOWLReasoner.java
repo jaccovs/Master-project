@@ -98,8 +98,8 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                 Set<OWLEntity> entities = classes.stream()
                         .map(o -> (OWLEntity) o).collect(Collectors.toSet());
 
-                possiblyFaulty = extractor.extract(entities).stream().map(o -> (OWLLogicalAxiom) o).
-                        collect(Collectors.toSet());
+                possiblyFaulty = extractor.extract(entities).stream().filter(OWLLogicalAxiom.class::isInstance).
+                        map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
 
                 // instantiate unsat classes thus reducing the incoherency to inconsistency
                 for (OWLClass cl : classes) {
