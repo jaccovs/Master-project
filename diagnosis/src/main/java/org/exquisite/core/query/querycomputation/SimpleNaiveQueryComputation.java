@@ -1,7 +1,7 @@
 package org.exquisite.core.query.querycomputation;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.IDiagnosisEngine;
+import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.scoring.IQuerySelection;

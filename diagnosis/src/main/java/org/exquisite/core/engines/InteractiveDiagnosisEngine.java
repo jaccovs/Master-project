@@ -1,7 +1,6 @@
 package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.model.Diagnosis;

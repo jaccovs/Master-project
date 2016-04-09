@@ -1,6 +1,5 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.IQueryAnswering;
 import org.exquisite.core.query.Query;

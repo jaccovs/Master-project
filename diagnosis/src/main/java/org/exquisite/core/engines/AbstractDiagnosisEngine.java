@@ -3,7 +3,6 @@ package org.exquisite.core.engines;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
-import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.conflictsearch.IConflictSearcher;
 import org.exquisite.core.conflictsearch.QuickXPlain;
 import org.exquisite.core.costestimators.ICostsEstimator;

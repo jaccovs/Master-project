@@ -1,7 +1,6 @@
 package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.FCClause;

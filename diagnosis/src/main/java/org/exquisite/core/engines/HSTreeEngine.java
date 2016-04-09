@@ -3,7 +3,6 @@ package org.exquisite.core.engines;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.IDiagnosisEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

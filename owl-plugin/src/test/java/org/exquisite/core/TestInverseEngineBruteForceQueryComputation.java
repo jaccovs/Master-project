@@ -1,12 +1,10 @@
 package org.exquisite.core;
 
+import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.SimpleNaiveQueryComputation;
-import org.exquisite.core.query.querycomputation.SimpleQueryComputation;
-import org.exquisite.core.query.scoring.MinScoreQSS;
 import org.exquisite.core.query.scoring.SplitInHalf1QSS;
-import org.exquisite.core.query.scoring.SplitInHalfQSS;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 

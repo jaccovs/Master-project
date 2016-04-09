@@ -1,5 +1,6 @@
-package org.exquisite.core;
+package org.exquisite.core.engines;
 
+import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 
