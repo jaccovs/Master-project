@@ -37,6 +37,17 @@ public class TestReasoner extends AbstractTest {
 
     }
 
+    @Test
+    public void testKoala() throws OWLOntologyCreationException, DiagnosisException {
+
+        File ontology = new File(ClassLoader.getSystemResource("ontologies/koala.owl").getFile());
+        ExquisiteOWLReasoner reasoner = createReasoner(ontology);
+
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = reasoner.getDiagnosisModel();
+        boolean b = reasoner.isConsistent(diagnosisModel.getPossiblyFaultyFormulas());
+
+    }
+
     // deactivated test case to simulate interactive diagnosisengine with heuristic query computation and answering, currently infinite loop
     public void testECAIWithHeuristicGC() throws OWLOntologyCreationException, DiagnosisException {
         File ontology = new File(ClassLoader.getSystemResource("ontologies/ecai2010.owl").getFile());

@@ -1,17 +1,19 @@
 package org.exquisite.core;
 
-import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
-import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
-import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
+import org.exquisite.core.query.querycomputation.SimpleNaiveQueryComputation;
+import org.exquisite.core.query.querycomputation.SimpleQueryComputation;
+import org.exquisite.core.query.scoring.MinScoreQSS;
+import org.exquisite.core.query.scoring.SplitInHalf1QSS;
+import org.exquisite.core.query.scoring.SplitInHalfQSS;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 /**
  * @author wolfi
  */
-public class TestInverseEngineHeuristicQueryComputation extends AbstractTestQueryComputation {
+public class TestInverseEngineBruteForceQueryComputation extends AbstractTestQueryComputation {
 
     @Override
     protected IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine(ExquisiteOWLReasoner reasoner) {
@@ -20,7 +22,6 @@ public class TestInverseEngineHeuristicQueryComputation extends AbstractTestQuer
 
     @Override
     protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine) {
-        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine);
-        return new HeuristicQueryComputation<>(config);
+        return new SimpleNaiveQueryComputation<>(engine, new SplitInHalf1QSS<>()); //new MinScoreQSS<>());
     }
 }

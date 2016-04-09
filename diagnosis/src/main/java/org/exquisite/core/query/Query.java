@@ -71,4 +71,25 @@ public class Query<F> {
         this.qPartition = qPartition;
         this.formulas = formulas;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Query<?> query = (Query<?>) o;
+
+        if (formulas != null ? !formulas.equals(query.formulas) : query.formulas != null) return false;
+        if (qPartition != null ? !qPartition.equals(query.qPartition) : query.qPartition != null) return false;
+        return score != null ? score.equals(query.score) : query.score == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = formulas != null ? formulas.hashCode() : 0;
+        result = 31 * result + (qPartition != null ? qPartition.hashCode() : 0);
+        result = 31 * result + (score != null ? score.hashCode() : 0);
+        return result;
+    }
 }

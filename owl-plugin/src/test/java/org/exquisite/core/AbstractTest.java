@@ -47,7 +47,7 @@ class AbstractTest {
 
     protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology) throws OWLOntologyCreationException, DiagnosisException {
         ReasonerFactory reasonerFactory = new ReasonerFactory();
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory);
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, false, false);
 
         for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
@@ -57,4 +57,6 @@ class AbstractTest {
 
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }
+
+
 }

@@ -3,7 +3,9 @@ package org.exquisite.core;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.Query;
+import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.InferenceType;
+import utils.OWLUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -24,24 +27,24 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author wolfi
  */
-abstract public class AbstractTestHeuristicQueryComputation<T> extends AbstractTest {
+abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
 
     protected static Map<Set<String>,BigDecimal> mapping = new HashMap<>();
 
     @BeforeClass
     public static void init() {
-        mapping.put(getSet("A", "C", "E", "F", "M", "X", "Z"),  new BigDecimal("0.01"));
-        mapping.put(getSet("C", "F", "H", "M", "X", "Z"),       new BigDecimal("0.33"));
-        mapping.put(getSet("E", "F", "H", "K", "X"),            new BigDecimal("0.14"));
-        mapping.put(getSet("B", "C", "F", "H", "X"),            new BigDecimal("0.07"));
-        mapping.put(getSet("E", "F", "H", "M", "X"),            new BigDecimal("0.41"));
-        mapping.put(getSet("A", "C", "F", "G", "H", "M", "Z"),  new BigDecimal("0.04"));
+        mapping.put(getSet("A", "C", "E", "F", "M", "X", "Z"),  new BigDecimal("0.04"));
+        mapping.put(getSet("C", "F", "H", "M", "X", "Z"),       new BigDecimal("0.07"));
+        mapping.put(getSet("E", "F", "H", "K", "X"),            new BigDecimal("0.33"));
+        mapping.put(getSet("B", "C", "F", "H", "X"),            new BigDecimal("0.14"));
+        mapping.put(getSet("E", "F", "H", "M", "X"),            new BigDecimal("0.01"));
+        mapping.put(getSet("A", "C", "F", "G", "H", "M", "Z"),  new BigDecimal("0.41"));
     }
 
     @Test
     public void testHeuristicQueryComputation() throws OWLOntologyCreationException, DiagnosisException {
         File ontology = new File(ClassLoader.getSystemResource("ontologies/running_example_annotated.owl").getFile());
-        ExquisiteOWLReasoner2 reasoner = (ExquisiteOWLReasoner2)createReasoner(ontology);
+        ExquisiteOWLReasoner reasoner = createReasoner(ontology);
 
         IDiagnosisEngine<OWLLogicalAxiom> engine = getDiagnosisEngine(reasoner);// new InverseDiagnosisEngine<>(reasoner); // new HSTreeEngine<>(reasoner);
         engine.setMaxNumberOfDiagnoses(9);
@@ -53,7 +56,7 @@ abstract public class AbstractTestHeuristicQueryComputation<T> extends AbstractT
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
             System.out.println(" ----");
             for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                System.out.println(axiom.getAxiomWithoutAnnotations());
+                System.out.println(OWLUtils.getString(axiom));
             }
         }
 
@@ -65,55 +68,48 @@ abstract public class AbstractTestHeuristicQueryComputation<T> extends AbstractT
         System.out.println("Start Query computation");
         final long nanoTime = System.nanoTime();
 
-        // Query configuration
-        HeuristicConfiguration config = new HeuristicConfiguration((AbstractDiagnosisEngine)engine);
-        // config.setMinQueries(2);
-        // config.setMaxQueries(4);
-        // config.setTimeout(10000);
-        reasoner.setEntailmentTypes(InferenceType.DISJOINT_CLASSES,
-                InferenceType.CLASS_HIERARCHY,
-                InferenceType.OBJECT_PROPERTY_HIERARCHY,
-                InferenceType.DATA_PROPERTY_HIERARCHY,
-                InferenceType.CLASS_ASSERTIONS,
-                InferenceType.OBJECT_PROPERTY_ASSERTIONS,
-                InferenceType.DATA_PROPERTY_ASSERTIONS,
-                InferenceType.SAME_INDIVIDUAL,
-                InferenceType.DIFFERENT_INDIVIDUALS);
+        reasoner.setEntailmentTypes(InferenceType.DISJOINT_CLASSES, InferenceType.CLASS_HIERARCHY);
 
         // query computation
-        HeuristicQueryComputation<OWLLogicalAxiom> queryComputation = new HeuristicQueryComputation<>(config);
+        IQueryComputation<OWLLogicalAxiom> queryComputation = getQueryComputation(engine); // new HeuristicQueryComputation<>(config);
         queryComputation.initialize(diagnoses);
 
         int i = 1;
         while (queryComputation.hasNext()) {
             Query<OWLLogicalAxiom> query = queryComputation.next();
-            System.out.println("query " + i + ": ");
+            System.out.println("query " + (i++) + ": score = " + query.score);
             for (OWLLogicalAxiom formula : query.formulas) {
-                System.out.println("\t-> " + formula);
+                System.out.println("\t-> " + OWLUtils.getString(formula));
+            }
+
+            query.qPartition.computeProbabilities();
+
+            System.out.println("dx - partition: " + query.qPartition.probDx);
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : query.qPartition.dx) {
+                System.out.println("\t-> " + OWLUtils.getString(diagnosis) + " : " + diagnosis.getMeasure());
+            }
+
+            System.out.println("dnx - partition: " + query.qPartition.probDnx);
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : query.qPartition.dnx) {
+                System.out.println("\t-> " + OWLUtils.getString(diagnosis) + " : " + diagnosis.getMeasure());
+            }
+
+            System.out.println("dz - partition: ");
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : query.qPartition.dz) {
+                System.out.println("\t-> " + OWLUtils.getString(diagnosis) + " : " + diagnosis.getMeasure());
             }
         }
 
-        assertTrue(i >= config.getMinQueries());
-        assertTrue(i <= config.getMaxQueries());
+        //assertTrue(i >= config.getMinQueries());
+        //assertTrue(i <= config.getMaxQueries());
 
         System.out.println((double)((System.nanoTime()-nanoTime) / (double)1000000000L) + " seconds");
     }
 
     abstract protected IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine(ExquisiteOWLReasoner reasoner);
 
-    @Override
-    protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology) throws OWLOntologyCreationException, DiagnosisException {
-        ReasonerFactory reasonerFactory = new ReasonerFactory();
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner2.generateDiagnosisModel(ontology, reasonerFactory);
+    abstract protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine);
 
-        for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
-        }
-        diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
-
-        return new ExquisiteOWLReasoner2(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
-    }
 
     protected void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {

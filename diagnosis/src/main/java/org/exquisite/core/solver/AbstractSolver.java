@@ -108,10 +108,21 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
         this.formulasCache = checkFormulas;
     }
 
-    public void checkDiagnosisModel() {
-        if (this.diagnosisModel.getCorrectFormulas().stream().
-                anyMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)))
-            throw new RuntimeException("Intersection of correct and faulty statements is not empty!");
+    /**
+     * Verifies requirements to the diagnosis model such as (i) correct formulas with entailed test cases is consistent
+     * and correct formulas with entailed tests do not entail any of the not-entailed tests.
+     *
+     * @throws DiagnosisRuntimeException if the diagnosis model violates some of the requirements. We throw a
+     * {@link RuntimeException} since the observer pattern in java does not allow us to throw a normal exprection
+     * or return a value.
+     */
+    void checkDiagnosisModel() {
+        assert(this.diagnosisModel.getCorrectFormulas().stream().
+                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
+        assert(this.diagnosisModel.getEntailedExamples().stream().
+                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
+        assert(this.diagnosisModel.getNotEntailedExamples().stream().
+                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         if (!isConsistent(Collections.emptySet()))
             throw new DiagnosisRuntimeException("Inconsistent diagnosis model!");
     }

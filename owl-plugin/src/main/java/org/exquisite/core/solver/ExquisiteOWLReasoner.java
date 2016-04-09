@@ -38,12 +38,8 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      */
     public ExquisiteOWLReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory)
             throws OWLOntologyCreationException, DiagnosisException {
-        super(generateDiagnosisModel(ontology, reasonerFactory));
-        OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        OWLOntology debugOntology = manager.createOntology(
-                IRI.create("http://ainf.aau.at/debug_ontology#" + System.nanoTime()));
-
-        this.reasoner = reasonerFactory.createReasoner(debugOntology);
+        this(generateDiagnosisModel(ontology, reasonerFactory, false, false),
+                ontology.getOWLOntologyManager(), reasonerFactory);
     }
 
     /**
@@ -63,6 +59,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                 IRI.create("http://ainf.aau.at/debug_ontology#" + System.nanoTime()));
 
         this.reasoner = reasonerFactory.createReasoner(debugOntology);
+        checkDiagnosisModel();
     }
 
     /**
@@ -75,23 +72,50 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      *
      * @param ontology        for which a diagnosis model must be generated
      * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
+     * @param extractModule
      * @return a diagnosis model
      * @throws OWLOntologyCreationException
      * @throws DiagnosisException
      */
     public static DiagnosisModel<OWLLogicalAxiom> generateDiagnosisModel(OWLOntology ontology,
-                                                                         OWLReasonerFactory reasonerFactory)
+                                                                         OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency)
             throws OWLOntologyCreationException, DiagnosisException {
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
         OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
         Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
+
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
+        for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
+            Set<OWLAnnotationProperty> propertiesInSignature = axiom.getAnnotationPropertiesInSignature();
+            if (propertiesInSignature != null && propertiesInSignature.iterator().hasNext()) {
+                OWLAnnotationProperty property = propertiesInSignature.iterator().next();
+                if (property.isComment()) {
+                    OWLAnnotationValue annotationValue = axiom.getAnnotations(propertiesInSignature.iterator().next()).iterator().next().getValue();
+
+                    String comment = (((OWLLiteral) annotationValue).getLiteral());
+                    switch (comment) {
+                        case "B":
+                            dm.getCorrectFormulas().add(axiom);
+                            break;
+                        case "P":
+                            dm.getEntailedExamples().add(axiom);
+                            break;
+                        case "N":
+                            dm.getNotEntailedExamples().add(axiom);
+                            break;
+                        default:
+                    }
+                }
+            }
+        }
 
         // in case the ontology is consistent we assume that the user wants to debug the incoherency.
         if (reasoner.isConsistent()) {
             reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
             Set<OWLClass> classes = reasoner.getBottomClassNode().getEntities();
-            if (classes.size() > 1) {
+            classes.remove(manager.getOWLDataFactory().getOWLNothing());
+
+            if (extractModule && classes.size() > 1) {
                 SyntacticLocalityModuleExtractor extractor = new SyntacticLocalityModuleExtractor(manager,
                         ontology, ModuleType.STAR);
 
@@ -101,7 +125,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                 possiblyFaulty = extractor.extract(entities).stream().filter(OWLLogicalAxiom.class::isInstance).
                         map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
 
-                // instantiate unsat classes thus reducing the incoherency to inconsistency
+            } else
+                possiblyFaulty.addAll(ontology.getLogicalAxioms());
+
+            // instantiate unsat classes thus reducing the incoherency to inconsistency
+            if (reduceIncoherencyToInconsistency) {
                 for (OWLClass cl : classes) {
                     OWLDataFactory df = manager.getOWLDataFactory();
                     OWLIndividual ind = df.getOWLAnonymousIndividual();
@@ -111,7 +139,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         } else
             possiblyFaulty.addAll(ontology.getLogicalAxioms());
 
+        // make sure that all sets are disjoint
         possiblyFaulty.removeAll(dm.getCorrectFormulas());
+        possiblyFaulty.removeAll(dm.getEntailedExamples());
+        possiblyFaulty.removeAll(dm.getNotEntailedExamples());
+
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
         return dm;
     }
