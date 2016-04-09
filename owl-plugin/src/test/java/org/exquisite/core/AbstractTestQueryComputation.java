@@ -1,19 +1,15 @@
 package org.exquisite.core;
 
-import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
-import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
-import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.core.solver.ExquisiteOWLReasoner2;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.semanticweb.HermiT.ReasonerFactory;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import utils.OWLUtils;
 
@@ -22,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * @author wolfi
