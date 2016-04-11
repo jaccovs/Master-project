@@ -45,7 +45,7 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
      * diagnosis model.
      */
     @Override
-    public boolean isConsistent(Collection<F> formulas) {
+    public boolean isConsistent(Collection<F> formulas) { // TODO count+timer isConsitent(formulas)
         synchronizeCache(formulas);
 
         if (!isConsistent())

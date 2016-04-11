@@ -1,8 +1,12 @@
 package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
+import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.Query;
+import org.exquisite.core.query.scoring.MinScoreQSS;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * An entropy-based (ENT) requirements measure for q-partition selection.
@@ -48,5 +52,15 @@ public class EntropyBasedMeasure<F> implements IQPartitionRequirementsMeasure<F>
     @Override
     public BigDecimal getHeuristics(QPartition<F> p) {
         return p.probDx.subtract(HALF).abs(); // Math.abs(p.probDx - 0.5);
+    }
+
+    @Override
+    public BigDecimal getScore(Query<F> query) {
+        return new MinScoreQSS<F>().getScore(query);
+    }
+
+    @Override
+    public void normalize(Set<Diagnosis<F>> diagnoses) {
+        new MinScoreQSS<F>().normalize(diagnoses);
     }
 }

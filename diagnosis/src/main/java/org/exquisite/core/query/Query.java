@@ -80,8 +80,7 @@ public class Query<F> {
         Query<?> query = (Query<?>) o;
 
         if (formulas != null ? !formulas.equals(query.formulas) : query.formulas != null) return false;
-        if (qPartition != null ? !qPartition.equals(query.qPartition) : query.qPartition != null) return false;
-        return score != null ? score.equals(query.score) : query.score == null;
+        return qPartition != null ? qPartition.equals(query.qPartition) : query.qPartition == null;
 
     }
 
@@ -89,7 +88,6 @@ public class Query<F> {
     public int hashCode() {
         int result = formulas != null ? formulas.hashCode() : 0;
         result = 31 * result + (qPartition != null ? qPartition.hashCode() : 0);
-        result = 31 * result + (score != null ? score.hashCode() : 0);
         return result;
     }
 }

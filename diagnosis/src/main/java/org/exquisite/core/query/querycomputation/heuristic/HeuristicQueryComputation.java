@@ -49,15 +49,19 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
             // (3) in order to come up with a query that is as simple and easy to answer as possible for the
             // respective user U, the query can optionally enriched by additional logical formulas by invoking
             // a reasoner for entailments calculation.
-            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
+            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel()); // TODO Dauer enrichQuery
 
             // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
-            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
+            // TODO SIZE of queries vor minimieren
+            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine); // TODO Dauer optimizeQuery
+            // TODO SIZE of queries nach minimieren
             query = optimizedQuery;
         }
-        return new Query<>(query, qPartition);
+        Query<F> nextQuery = new Query<>(query, qPartition);
+        nextQuery.score = config.getRm().getScore(nextQuery);
+        return nextQuery;
     }
 
     @Override
@@ -81,12 +85,15 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
         // q-partition can be extracted in the next step by selectQueriesForQPartition
-        qPartition = findQPartition(leadingDiagnoses, this.config.rm);
+        qPartition = findQPartition(leadingDiagnoses, this.config.rm); // TODO Dauer findQPartition
+
+        // TODO Nr of DiagTraits
+        // TODO cnt size of traits for each trait
 
         // (2) after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
         // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
         // answered correctly.
-        Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
+        Set<Set<F>> queries = selectQueriesForQPartition(qPartition); // TODO Dauer selectQueriesForQPartition
 
         // creates an iterator on the queries to be used in hasNext() and next()
         queriesIterator = queries.iterator();

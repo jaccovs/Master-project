@@ -1,6 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
+import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.QPartition;
@@ -20,7 +21,7 @@ public class MinQ<F>  {
 
     // Mapping from the technical report Algorithm 8 Query Optimization
     //                             QB         X          Q
-    protected List<F> minQ(List<F> b, List<F> d, List<F> c, QPartition qpartition, AbstractDiagnosisEngine<F> dpi) {
+    public List<F> minQ(List<F> b, List<F> d, List<F> c, QPartition qpartition, IDiagnosisEngine<F> dpi) {
         if (!d.isEmpty() && isQPartConst(b, qpartition, dpi))
             return new ArrayList<>(0);
         if (c.size() == 1)
@@ -71,7 +72,7 @@ public class MinQ<F>  {
 
     public enum Split {Half, One}
 
-    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, AbstractDiagnosisEngine<F> dpi) {
+    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, IDiagnosisEngine<F> dpi) { // TODO count und dauer isQPartConst
         DiagnosisModel<F> diagnosisModel = dpi.getSolver().getDiagnosisModel();
 
         for (Diagnosis<F> dr : qpartition.dnx) {

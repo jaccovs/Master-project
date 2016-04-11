@@ -26,8 +26,16 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
         BigDecimal pX = sum(query.qPartition.dx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
         BigDecimal pNX = sum(query.qPartition.dnx).add(sum(query.qPartition.dz).divide(BigDecimal.valueOf(2), DEFAULT_MC));
 
-        BigDecimal t1 = pX.multiply(log2(pX));
-        BigDecimal t2 = pNX.multiply(log2(pNX));
+        double pXdouble = pX.doubleValue();
+        double pNXdouble = pNX.doubleValue();
+
+
+        double logPXDouble = pXdouble == 0 ? 0 : Math.log(pXdouble);
+        BigDecimal t1 = new BigDecimal(new Double(pXdouble * (logPXDouble / Math.log(2))).toString()); //pX.multiply(log2(pX));
+
+        double logPNXDouble = pNXdouble == 0 ? 0 : Math.log(pNXdouble);
+        String val = new Double(pNXdouble * (logPNXDouble / Math.log(2))).toString();
+        BigDecimal t2 = new BigDecimal(val);//pNX.multiply(log2(pNX));
 
         BigDecimal sc = t1.add(t2.add(sum(query.qPartition.dz).add(BigDecimal.ONE)));
 

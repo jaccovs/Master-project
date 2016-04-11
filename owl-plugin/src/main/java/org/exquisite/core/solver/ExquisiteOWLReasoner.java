@@ -203,7 +203,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      * Uses underlying OWL reasoner to compute a set of entailments of formulas stored in the reasoner. The types of
      * computed entailments must be defined prior to calling this method using {@link #setEntailmentTypes(InferenceType...)}
      */
-    protected Set<OWLLogicalAxiom> calculateEntailments() {
+    protected Set<OWLLogicalAxiom> calculateEntailments() { // TODO count+timer calculateEntailments()
 
         this.reasoner.precomputeInferences(this.interenceTypes);
         OWLOntology ontology = this.reasoner.getRootOntology();
@@ -214,7 +214,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     }
 
     @Override
-    protected boolean isEntailed(Collection<OWLLogicalAxiom> entailments) {
+    protected boolean isEntailed(Collection<OWLLogicalAxiom> entailments) { // TODO count+timer isEntailed()
         return this.reasoner.isEntailed(new HashSet<OWLAxiom>(entailments));
     }
 
@@ -239,6 +239,6 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
     @Override
     protected boolean isConsistent() {
-        return this.reasoner.isConsistent();
+        return this.reasoner.isConsistent(); // TODO count+timer isConsistent()
     }
 }

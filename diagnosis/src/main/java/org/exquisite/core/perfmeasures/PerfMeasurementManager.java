@@ -13,6 +13,7 @@ public class PerfMeasurementManager {
     public static final String TIMER_DIAGNOSIS_SESSION = "diagnosis.session";
     public static final String TIMER_INTERACTIVE_SESSION = "interactive.session";
     public static final String TIMER_INTERACTIVE_DIAGNOSES = "interactive.diagnoses";
+    public static final String TIMER_INVERSE_SESSION = "inverse.session";
 
     public static final String COUNTER_PROPAGATION = "propagation.count";
     public static final String COUNTER_CONSTRUCTED_NODES = "constructed.nodes";

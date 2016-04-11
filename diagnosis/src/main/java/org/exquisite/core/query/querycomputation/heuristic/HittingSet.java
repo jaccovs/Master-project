@@ -50,6 +50,7 @@ public class HittingSet {
                 setMinimalQueries.add(node);
             else if (L.label == Label.L.FORMULAS)
                 for (F formula : L.formulas) {
+                    // TODO add 1 to CNT_GENERATED_HS_NODES
                     Set<F> newSet = new HashSet<>(node);
                     newSet.add(formula);
                     queue.add(newSet);
@@ -60,6 +61,7 @@ public class HittingSet {
     }
 
     private static <F> Label<F> label(final Set<F> node, final Set<Set<F>> setOfMinTraits, final Set<Set<F>> setMinimalQueries, final Queue<Set<F>> queue) {
+        // TODO add 1 to CNT_EXPANDED_HS_NODES
         for (Set<F> nd : setMinimalQueries)
             if (node.containsAll(nd))
                 return CLOSED_LABEL;

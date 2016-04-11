@@ -8,6 +8,10 @@ import org.exquisite.core.solver.ISolver;
 
 import java.util.Set;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.TIMER_INVERSE_SESSION;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.start;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.stop;
+
 /**
  * Inverse diagnosis engine using InverseQuickXPlain.
  *
@@ -24,8 +28,13 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
-        InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
-        return recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses());
+        start(TIMER_INVERSE_SESSION);
+        try {
+            InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
+            return recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses());
+        } finally {
+            stop(TIMER_INVERSE_SESSION);
+        }
     }
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses) throws DiagnosisException {

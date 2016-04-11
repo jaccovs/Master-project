@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY university.owl "http://www.mindswap.org/ontologies/debugging/university.owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&university.owl;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about=""/>
+
+<!-- Classes -->
+  <owl:Class rdf:about="#AIStudent">
+    <rdfs:subClassOf rdf:resource="#CS_Student"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#hasAdvisor"/>
+        <owl:someValuesFrom rdf:resource="#ProfessorInHCIorAI"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#HCIStudent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#AI_Dept">
+    <owl:intersectionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#CS_Department"/>
+      <owl:Restriction>
+        <owl:hasValue rdf:resource="#AI"/>
+        <owl:onProperty rdf:resource="#hasResearchArea"/>
+      </owl:Restriction>
+    </owl:intersectionOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#AssistantProfessor">
+    <rdfs:subClassOf rdf:resource="#TeachingFaculty"/>
+    <owl:disjointWith rdf:resource="#Lecturer"/>
+    <owl:disjointWith rdf:resource="#Professor"/>
+    <owl:intersectionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#TeachingFaculty"/>
+      <owl:Restriction rdf:nodeID="b14">
+        <owl:hasValue rdf:datatype="&xsd;boolean">false</owl:hasValue>
+        <owl:onProperty rdf:resource="#hasTenure"/>
+      </owl:Restriction>
+    </owl:intersectionOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CS_Course">
+    <rdfs:subClassOf rdf:resource="#Course"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#offeredIn"/>
+        <owl:someValuesFrom rdf:resource="#CS_Department"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CS_Department">
+    <rdfs:subClassOf rdf:resource="#Department"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#affiliatedWith"/>
+        <owl:someValuesFrom rdf:resource="#CS_Library"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#EE_Department"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CS_Library">
+    <rdfs:subClassOf rdf:resource="#Library"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#affiliatedWith"/>
+        <owl:someValuesFrom rdf:resource="#EE_Library"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CS_Student">
+    <rdfs:subClassOf rdf:resource="#Student"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#CS_Course"/>
+        <owl:onProperty rdf:resource="#takesCourse"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#CS_StudentTakingCourses">
+    <rdfs:subClassOf rdf:resource="#CS_Student"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+        <owl:onProperty rdf:resource="#takesCourse"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Course"/>
+  <owl:Class rdf:about="#Department"/>
+  <owl:Class rdf:about="#EE_Course">
+    <rdfs:subClassOf rdf:resource="#Course"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#offeredIn"/>
+        <owl:someValuesFrom rdf:resource="#EE_Department"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#EE_Department">
+    <rdfs:subClassOf rdf:resource="#Department"/>
+    <owl:disjointWith rdf:resource="#CS_Department"/>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#affiliatedWith"/>
+        <owl:someValuesFrom rdf:resource="#EE_Library"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+
+  <owl:Class rdf:about="#EE_Library">
+    <rdfs:subClassOf rdf:resource="#Library"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Faculty">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#FacultyPhoneBook">
+    <rdfs:subClassOf rdf:resource="#PhoneBook"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#FrenchUniversity"/>
+  <owl:Class rdf:about="#HCIStudent">
+    <rdfs:subClassOf rdf:resource="#CS_Student"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#hasAdvisor"/>
+        <owl:someValuesFrom rdf:resource="#ProfessorInHCIorAI"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#AIStudent"/>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Lecturer">
+    <rdfs:subClassOf rdf:resource="#TeachingFaculty"/>
+    <owl:disjointWith rdf:resource="#AssistantProfessor"/>
+    <owl:disjointWith rdf:resource="#Professor"/>
+    <owl:intersectionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#TeachingFaculty"/>
+      <rdf:Description rdf:nodeID="b14"/>
+    </owl:intersectionOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#Library"/>
+  <owl:Class rdf:about="#Person"/>
+  <owl:Class rdf:about="#PhoneBook"/>
+  <owl:Class rdf:about="#Professor">
+    <rdfs:subClassOf rdf:resource="#TeachingFaculty"/>
+    <owl:disjointWith rdf:resource="#AssistantProfessor"/>
+    <owl:disjointWith rdf:resource="#Lecturer"/>
+    <owl:intersectionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="#TeachingFaculty"/>
+      <owl:Restriction>
+        <owl:hasValue rdf:datatype="&xsd;boolean">true</owl:hasValue>
+        <owl:onProperty rdf:resource="#hasTenure"/>
+      </owl:Restriction>
+    </owl:intersectionOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ProfessorInHCIorAI">
+    <rdfs:subClassOf rdf:resource="#Professor"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#AIStudent"/>
+        <owl:onProperty rdf:resource="#advisorOf"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#HCIStudent"/>
+        <owl:onProperty rdf:resource="#advisorOf"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#ResearchArea"/>
+  <owl:Class rdf:about="#Schedule"/>
+  <owl:Class rdf:about="#Student">
+    <rdfs:subClassOf rdf:resource="#Person"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+        <owl:onProperty rdf:resource="#hasDegree"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#TeachingFaculty">
+    <rdfs:subClassOf rdf:resource="#Faculty"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="#hasResearchArea"/>
+        <owl:someValuesFrom rdf:resource="#ResearchArea"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#University"/>
+  <owl:Class rdf:about="#UniversityPhoneBook">
+    <rdfs:subClassOf rdf:resource="#PhoneBook"/>
+  </owl:Class>
+
+<!-- Datatypes -->
+  <rdfs:Datatype rdf:about="&xsd;boolean"/>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="#hasTenure">
+    <rdfs:domain rdf:resource="#TeachingFaculty"/>
+    <rdfs:range rdf:resource="&xsd;boolean"/>
+  </owl:DatatypeProperty>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="#advisorOf">
+    <owl:inverseOf rdf:resource="#hasAdvisor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#affiliatedWith">
+    <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasAdvisor">
+    <owl:inverseOf rdf:resource="#advisorOf"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasDegree"/>
+  <owl:ObjectProperty rdf:about="#hasDepartment"/>
+  <owl:ObjectProperty rdf:about="#hasResearchArea"/>
+  <owl:ObjectProperty rdf:about="#memberOf"/>
+  <owl:ObjectProperty rdf:about="#offeredIn"/>
+  <owl:ObjectProperty rdf:about="#offersCourse"/>
+  <owl:ObjectProperty rdf:about="#takesCourse"/>
+  <owl:ObjectProperty rdf:about="#worksFor"/>
+
+<!-- Instances -->
+  <owl:Thing rdf:about="#AI"/>
+  <owl:Thing rdf:about="#Graphics"/>
+  <owl:Thing rdf:about="#HCI"/>
+  <owl:Thing rdf:about="#Network"/>
+  <owl:Restriction>
+    <rdfs:subClassOf rdf:resource="#University"/>
+    <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+    <owl:onProperty rdf:resource="#hasDepartment"/>
+  </owl:Restriction>
+</rdf:RDF>

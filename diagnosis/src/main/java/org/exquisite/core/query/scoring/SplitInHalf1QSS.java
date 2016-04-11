@@ -19,7 +19,10 @@ public class SplitInHalf1QSS<F> implements IQuerySelection<F> {
 
     @Override
     public BigDecimal getScore(Query<F> query) {
-        return new BigDecimal("" + Math.abs(query.qPartition.dx.size()-query.qPartition.dnx.size()) + query.qPartition.dz.size());
+        Integer absDxMinusDnx = Math.abs(query.qPartition.dx.size()-query.qPartition.dnx.size());
+        Integer scoreInteger = absDxMinusDnx + query.qPartition.dz.size();
+        BigDecimal score = new BigDecimal(scoreInteger.toString());
+        return score;
     }
 
     @Override

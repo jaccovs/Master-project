@@ -1,8 +1,11 @@
 package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
+import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.Query;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * A risk optimization(RIO) -based requirements measure for q-partition selection.
@@ -100,5 +103,15 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     private static <F> int getN(QPartition<F> p, BigDecimal c) {
         return (int) Math.ceil(c.doubleValue() * getSizeOfD(p)); // TODO loss of precision
+    }
+
+    @Override
+    public BigDecimal getScore(Query<F> query) {
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public void normalize(Set<Diagnosis<F>> diagnoses) {
+
     }
 }

@@ -44,10 +44,12 @@ public class QPartitionOperations {
         QPartition<F> pBest = rm.updateBest(p,pb);
         if (rm.isOptimal(pBest))
             return new OptimalPartition<>(pBest, true);
-        if (rm.prune(p,pBest))
+        if (rm.prune(p,pBest)) // TODO ADD 1 to CNT_PRUNING_OPERATIONS; and; ADD 1 to CNT_BACKTRACKING_OPERATIONS
             return new OptimalPartition<>(pBest, false);
 
+        // TODO add 1 to CNT_EXPANDED_QPARTITIONS (ALLE Ps, FÜR DIE NACHFOLGER GEBILDET WURDEN)
         Collection<QPartition<F>> sucs = computeSuccessors(p);
+        // TODO add sucs.size() (CNT_GENERATED_QPARTITIONS)
         while (!sucs.isEmpty()) {
             QPartition<F> p1 = bestSuc(sucs, rm);
             OptimalPartition optimalPartition = findQPartitionRek(p1, pBest, rm);
@@ -57,7 +59,7 @@ public class QPartitionOperations {
                 return optimalPartition;
             assert sucs.remove(p1);
         }
-        return new OptimalPartition<>(pBest, false);
+        return new OptimalPartition<>(pBest, false); // TODO ADD 1 to CNT_BACKTRACKING_OPERATIONS
     }
 
     private static <F> QPartition<F> bestSuc(Collection<QPartition<F>> sucs, IQPartitionRequirementsMeasure<F> rm) {

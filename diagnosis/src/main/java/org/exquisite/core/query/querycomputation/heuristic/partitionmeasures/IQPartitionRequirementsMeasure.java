@@ -1,6 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.scoring.IQuerySelection;
 
 import java.math.BigDecimal;
 
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
  * @author patrick
  * @author wolfi
  */
-public interface IQPartitionRequirementsMeasure<F> {
+public interface IQPartitionRequirementsMeasure<F> extends IQuerySelection<F> {
 
     /**
      * Value of 0.5 as BigDecimal.

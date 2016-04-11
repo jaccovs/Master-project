@@ -1,8 +1,12 @@
 package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 
+import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.Query;
+import org.exquisite.core.query.scoring.SplitInHalf1QSS;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * A split-in-half (SPL) - based requirements measure for q-partition selection.
@@ -64,4 +68,13 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
         return ((double)(p.dx.size() + p.dnx.size() + p.dz.size())) / 2.0d;
     }
 
+    @Override
+    public BigDecimal getScore(Query<F> query) {
+        return new SplitInHalf1QSS<F>().getScore(query);
+    }
+
+    @Override
+    public void normalize(Set<Diagnosis<F>> diagnoses) {
+        new SplitInHalf1QSS<F>().normalize(diagnoses);
+    }
 }
