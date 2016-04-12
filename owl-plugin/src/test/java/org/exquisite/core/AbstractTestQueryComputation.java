@@ -62,10 +62,16 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         setDiagnosesMeasures(diagnoses);
 
         System.out.println(" ----");
-        System.out.println("Start Query computation");
-        final long nanoTime = System.nanoTime();
 
         reasoner.setEntailmentTypes(InferenceType.DISJOINT_CLASSES, InferenceType.CLASS_HIERARCHY);
+
+        final long nanoTime = System.nanoTime();
+        startQueryGeneration(reasoner, engine, diagnoses);
+        System.out.println((double)((System.nanoTime()-nanoTime) / (double)1000000000L) + " seconds");
+    }
+
+    protected void startQueryGeneration(ExquisiteOWLReasoner reasoner, IDiagnosisEngine<OWLLogicalAxiom> engine, Set<Diagnosis<OWLLogicalAxiom>> diagnoses) throws DiagnosisException {
+        System.out.println("Start Query computation");
 
         // query computation
         IQueryComputation<OWLLogicalAxiom> queryComputation = getQueryComputation(engine);
@@ -98,8 +104,6 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         }
 
         assertTrue(i>=1);
-
-        System.out.println((double)((System.nanoTime()-nanoTime) / (double)1000000000L) + " seconds");
     }
 
     abstract protected IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine(ExquisiteOWLReasoner reasoner);

@@ -40,9 +40,8 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
         BigDecimal sc = t1.add(t2.add(sum(query.qPartition.dz).add(BigDecimal.ONE)));
 
         if (sc.compareTo(BigDecimal.ZERO) < 0) {
-            logger.error("Score is less than 0! sc=" + sc);
+            logger.warn("Score is less than 0! sc=" + sc);
             sc = BigDecimal.ZERO;
-
         }
 
         query.score = sc;

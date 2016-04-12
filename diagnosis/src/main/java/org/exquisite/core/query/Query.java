@@ -90,4 +90,14 @@ public class Query<F> {
         result = 31 * result + (qPartition != null ? qPartition.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Query{");
+        sb.append("formulas=").append(formulas);
+        sb.append(",\nqPartition=").append(qPartition);
+        sb.append(",\nscore=").append(score);
+        sb.append('}');
+        return sb.toString();
+    }
 }

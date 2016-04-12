@@ -3,6 +3,7 @@ package org.exquisite.core.query.querycomputation.heuristic.partitionmeasures;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.Query;
+import org.exquisite.core.query.scoring.RIOQSS;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -107,11 +108,11 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public BigDecimal getScore(Query<F> query) {
-        return BigDecimal.ZERO;
+        return new RIOQSS<F>(this.c).getScore(query);
     }
 
     @Override
     public void normalize(Set<Diagnosis<F>> diagnoses) {
-
+        new RIOQSS<F>(this.c).normalize(diagnoses);
     }
 }

@@ -50,7 +50,7 @@ abstract public class AbstractEval {
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }
 
-    @Test
+    //@Test
     public void evalQueryComputation() throws OWLOntologyCreationException, DiagnosisException {
         File ontology = new File(ClassLoader.getSystemResource(getOntology()).getFile());
         ExquisiteOWLReasoner reasoner = createReasoner(ontology);
