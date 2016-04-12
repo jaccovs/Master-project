@@ -90,8 +90,7 @@ public class QPartition<F> {
      * IMPORTANT: A modifier of dx, dnx and dz has to call this method to calculate new probabilities.
      */
     public void computeProbabilities() {
-
-        // when the measures of diagnosis are correctly set (sum must equal 1) for all diagnoses, we prefer them
+        // when measures of diagnosis are given, we prefer them
         BigDecimal sumDx = BigDecimal.ZERO;
         BigDecimal sumDnx = BigDecimal.ZERO;
 
@@ -101,22 +100,37 @@ public class QPartition<F> {
         for (Diagnosis d: dnx)
             sumDnx = sumDnx.add(d.getMeasure());
 
-        //if (sumDx.add(sumDnx).doubleValue() == 1){
-        if (sumDx.add(sumDnx).compareTo(BigDecimal.ONE) == 0) {
+        BigDecimal sumDxAndDnx = sumDx.add(sumDnx);
+        if (sumDxAndDnx.compareTo(BigDecimal.ZERO) == 0) { // prefer diagnoses measures, if defined, but
+            sumDx = computeProbability(dx);                // when not defined, use formula weights, if possible
+            sumDnx = computeProbability(dnx);
+            sumDxAndDnx = sumDx.add(sumDnx);
+        }
+
+        if (sumDxAndDnx.compareTo(BigDecimal.ONE) == 0) {   // sum already equals ONE
             probDx = sumDx;
             probDnx = sumDnx;
-            return;
+        } else if (sumDxAndDnx.compareTo(BigDecimal.ZERO) > 0) { // normalize to the sum of ONE
+            // check if one of the two sums equals ZERO, to prevent divide operation (possible loss of precision)
+            if (sumDx.compareTo(BigDecimal.ZERO) == 0) {
+                probDx = BigDecimal.ZERO;
+                probDnx = BigDecimal.ONE;
+            } else if (sumDnx.compareTo(BigDecimal.ZERO) == 0) {
+                probDx = BigDecimal.ONE;
+                probDnx = BigDecimal.ZERO;
+            } else {
+                probDx = sumDx.divide(sumDxAndDnx, MathContext.DECIMAL128);
+                probDnx = BigDecimal.ONE.subtract(probDx);
+            }
+        } else {
+            probDx = BigDecimal.ZERO;
+            probDnx = BigDecimal.ZERO;
         }
 
-        this.probDx = computeProbability(dx);
-        this.probDnx = computeProbability(dnx);
-
-        // otherwise we set the probabilities of diagnoses using the formula weights (if possible)
-        final BigDecimal s = probDx.add(probDnx);
-        if (s.compareTo(BigDecimal.ZERO) != 0) {
-            this.probDx = this.probDx.divide(s, MathContext.DECIMAL128);
-            this.probDnx = this.probDnx.divide(s, MathContext.DECIMAL128);
-        }
+        // assert that the sum probDx + probDnx is either ONE or ZERO (if neither measures of diags or formula weights are given)
+        final boolean equalsOne = this.probDx.add(this.probDnx).compareTo(BigDecimal.ONE) == 0;
+        final boolean equalsZero = this.probDx.add(this.probDnx).compareTo(BigDecimal.ZERO) == 0;
+        assert equalsOne || equalsZero;
     }
 
     /**
