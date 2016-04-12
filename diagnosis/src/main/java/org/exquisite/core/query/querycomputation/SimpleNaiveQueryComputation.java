@@ -26,14 +26,13 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
     private static Logger logger = LoggerFactory.getLogger(SimpleNaiveQueryComputation.class);
 
     private final IQuerySelection<F> querySelection;
+
     private final IDiagnosisEngine<F> engine;
 
-//    private BigDecimal threshold = new BigDecimal("0.05"); //BigDecimal.ZERO;
     private Iterator<Query<F>> queriesIterator = null;
 
 
     private Map<Diagnosis<F>, Set<F>> kbWithoutDiagEntailments = new HashMap<>();
-
 
     /**
      * Default constructor that sets query selection strategy to MinScoreQSS
@@ -96,15 +95,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
     public void reset() {
         this.queriesIterator = null;
     }
-/*
-    public BigDecimal getThreshold() {
-        return this.threshold;
-    }
 
-    public void setThreshold(double threshold) {
-        this.threshold = BigDecimal.valueOf(threshold);
-    }
-*/
     public IQuerySelection<F> getQuerySelection() {
         return querySelection;
     }
@@ -123,7 +114,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
         if (start < 1 || start > range)
             throw new IllegalArgumentException("Incorrect start value!");
 
-        int cntInSet = 0, cntNotInSet = 0, cntQueriesNotNull = 0, cntQueries = 0;
+        //int cntInSet = 0, cntNotInSet = 0, cntQueriesNotNull = 0, cntQueries = 0;
         for (; start < range; start = getNext(start)) {
             Set<Diagnosis<F>> dx = new LinkedHashSet<>();
 
@@ -141,26 +132,26 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
             Set<Diagnosis<F>> remainingDiagnoses = diagnoses.stream().filter(d -> !dx.contains(d)).collect
                     (Collectors.toSet());
 
-            Query<F> query = createQuery(kb, dx, remainingDiagnoses);
+            Query<F> query = createQuery(dx, remainingDiagnoses);
 
             //if (query != null && query.score.compareTo(getThreshold()) < 0) {
-            cntQueries++;
+            //cntQueries++;
 
             if (query != null) {
-                cntQueriesNotNull++;
+                //cntQueriesNotNull++;
                 boolean isNotYetInSet = queries.add(query);
 
+                /*
                 if (isNotYetInSet)
                     cntNotInSet++;
                 else
                     cntInSet++;
-
-                if (logger.isDebugEnabled())
-                    logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n remainingDiagnoses:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz + "\n score: " + query.score);
+                */
+                //if (logger.isDebugEnabled()) logger.debug("Created query: \n dx:" + query.qPartition.dx + "\n remainingDiagnoses:" + query.qPartition.dnx + "\n dz:" + query.qPartition.dz + "\n score: " + query.score);
             }
 
         }
-        System.out.println("countNotInSet: " + cntNotInSet + ", countInSet: " + cntInSet + ", cntQueries: " + cntQueries + ", cntQueriesNotNull: " + cntQueriesNotNull);
+        //if (logger.isDebugEnabled()) logger.debug("countNotInSet: " + cntNotInSet + ", countInSet: " + cntInSet + ", cntQueries: " + cntQueries + ", cntQueriesNotNull: " + cntQueriesNotNull);
         return start;
     }
 
@@ -168,16 +159,13 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
         return i + 1;
     }
 
-    public Query<F> createQuery(final Collection<F> kb, Collection<Diagnosis<F>> dx, Collection<Diagnosis<F>> remainingDiagnoses) {
+    public Query<F> createQuery(Collection<Diagnosis<F>> dx, Collection<Diagnosis<F>> remainingDiagnoses) {
 
         if (dx.isEmpty() || remainingDiagnoses.isEmpty())
             throw new IllegalArgumentException("Input sets of diagnoses must not be empty!");
 
         Query<F> query = new Query<>();
         query.qPartition.dx.addAll(dx.stream().collect(Collectors.toList()));
-        if (logger.isDebugEnabled())
-            logger.debug("Creating a query with dx: " + dx);
-
 
         Set<F> ent = new HashSet<>();
 
@@ -201,8 +189,6 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
         if (ent.isEmpty()) return null;
 
         query.formulas = Collections.unmodifiableSet(ent);
-        if (logger.isDebugEnabled())
-            logger.debug("Common entailments: " + query.formulas);
 
         // query the rest of diagnoses
         for (Diagnosis<F> hs : remainingDiagnoses) {
@@ -215,7 +201,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
                     query.qPartition.dz.add(hs);
             }
         }
-        query.score = getQuerySelection().getScore(query);
+        query.score = querySelection.getScore(query);
         return query;
     }
 
@@ -231,7 +217,6 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
         boolean result =  this.engine.getSolver().isConsistent(set);
         return result;
     }
-
 
     private void calculateKBWithoutDiagEntailments(Collection<F> kb, Set<Diagnosis<F>> diagnoses) {
         for (Diagnosis<F> diagnosis:diagnoses)

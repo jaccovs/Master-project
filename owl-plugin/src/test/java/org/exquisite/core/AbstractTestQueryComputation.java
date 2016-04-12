@@ -44,11 +44,11 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         ExquisiteOWLReasoner reasoner = createReasoner(ontology);
 
         IDiagnosisEngine<OWLLogicalAxiom> engine = getDiagnosisEngine(reasoner);
-        engine.setMaxNumberOfDiagnoses(9);
+        engine.setMaxNumberOfDiagnoses(2);
 
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = engine.calculateDiagnoses();
         System.out.println(diagnoses.size() + " diags found");
-        assertEquals(6, diagnoses.size());
+        assertEquals(2, diagnoses.size());
 
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
             System.out.println(" ----");
@@ -68,6 +68,7 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         final long nanoTime = System.nanoTime();
         startQueryGeneration(reasoner, engine, diagnoses);
         System.out.println((double)((System.nanoTime()-nanoTime) / (double)1000000000L) + " seconds");
+        engine.resetEngine();
     }
 
     protected void startQueryGeneration(ExquisiteOWLReasoner reasoner, IDiagnosisEngine<OWLLogicalAxiom> engine, Set<Diagnosis<OWLLogicalAxiom>> diagnoses) throws DiagnosisException {
@@ -104,6 +105,7 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         }
 
         assertTrue(i>=1);
+        queryComputation.reset();
     }
 
     abstract protected IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine(ExquisiteOWLReasoner reasoner);

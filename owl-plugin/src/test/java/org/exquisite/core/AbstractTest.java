@@ -25,12 +25,16 @@ class AbstractTest {
     }
 
     ExquisiteOWLReasoner createReasoner(File file) throws OWLOntologyCreationException, DiagnosisException {
+        return createReasoner(file, false, false);
+    }
+
+    ExquisiteOWLReasoner createReasoner(File file, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
         OWLOntologyManager man = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = man.loadOntologyFromOntologyDocument(file);
 
         parser = new ManchesterOWLSyntaxParserImpl(new OWLAPIConfigProvider(), man.getOWLDataFactory());
 
-        return createReasoner(ontology);
+        return createReasoner(ontology, extractModule, reduceIncoherencyToInconsistency);
     }
 
     ExquisiteOWLReasoner createReasoner(String... axioms) throws OWLOntologyCreationException, DiagnosisException {
@@ -42,12 +46,13 @@ class AbstractTest {
             man.addAxiom(ontology, parse(axiom));
         }
 
-        return createReasoner(ontology);
+        return createReasoner(ontology, false, false);
     }
 
-    protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology) throws OWLOntologyCreationException, DiagnosisException {
+
+    protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
         ReasonerFactory reasonerFactory = new ReasonerFactory();
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, false, false);
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, extractModule, reduceIncoherencyToInconsistency);
 
         for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
