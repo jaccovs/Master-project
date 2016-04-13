@@ -45,4 +45,9 @@ public class MinSumFormulaWeights<F> implements ISortCriterion<Set<F>> {
         else
             return comparison;
     }
+
+    @Override
+    public String toString() {
+        return "MinSum";
+    }
 }

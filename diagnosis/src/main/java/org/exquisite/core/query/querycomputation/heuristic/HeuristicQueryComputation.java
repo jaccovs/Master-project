@@ -291,4 +291,27 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public void setConfig(HeuristicConfiguration config) {
         this.config = config;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("HeuristicQueryComputation{");
+        sb.append("config=").append(config);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HeuristicQueryComputation<?> that = (HeuristicQueryComputation<?>) o;
+
+        return config != null ? config.equals(that.config) : that.config == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return config != null ? config.hashCode() : 0;
+    }
 }

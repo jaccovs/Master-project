@@ -77,4 +77,9 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
     public void normalize(Set<Diagnosis<F>> diagnoses) {
         new SplitInHalf1QSS<F>().normalize(diagnoses);
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("SPL(").append(tm).append(')').toString();
+    }
 }

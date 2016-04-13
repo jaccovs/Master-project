@@ -63,4 +63,9 @@ public class EntropyBasedMeasure<F> implements IQPartitionRequirementsMeasure<F>
     public void normalize(Set<Diagnosis<F>> diagnoses) {
         new MinScoreQSS<F>().normalize(diagnoses);
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("ENT(").append(tm).append(')').toString();
+    }
 }

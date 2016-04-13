@@ -66,4 +66,9 @@ public class Timer extends Counter {
             total += t;
         return total;
     }
+
+    @Override
+    public String toString() {
+        return Double.toString((double)total()/1000000000.0)+"s"; // convert to seconds
+    }
 }

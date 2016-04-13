@@ -138,4 +138,48 @@ public class HeuristicConfiguration<F> {
     public void setEnrichQueries(boolean enrichQueries) {
         this.enrichQueries = enrichQueries;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("HeuristicConfiguration{");
+        sb.append("diagnosisEngine=").append(diagnosisEngine);
+        sb.append(", rm=").append(rm);
+        sb.append(", sortCriterion=").append(sortCriterion);
+        sb.append(", timeout=").append(timeout);
+        sb.append(", minQueries=").append(minQueries);
+        sb.append(", maxQueries=").append(maxQueries);
+        sb.append(", enrichQueries=").append(enrichQueries);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HeuristicConfiguration<?> that = (HeuristicConfiguration<?>) o;
+
+        if (timeout != that.timeout) return false;
+        if (minQueries != that.minQueries) return false;
+        if (maxQueries != that.maxQueries) return false;
+        if (enrichQueries != that.enrichQueries) return false;
+        if (diagnosisEngine != null ? !diagnosisEngine.equals(that.diagnosisEngine) : that.diagnosisEngine != null)
+            return false;
+        if (rm != null ? !rm.equals(that.rm) : that.rm != null) return false;
+        return sortCriterion != null ? sortCriterion.equals(that.sortCriterion) : that.sortCriterion == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = diagnosisEngine != null ? diagnosisEngine.hashCode() : 0;
+        result = 31 * result + (rm != null ? rm.hashCode() : 0);
+        result = 31 * result + (sortCriterion != null ? sortCriterion.hashCode() : 0);
+        result = 31 * result + (int) (timeout ^ (timeout >>> 32));
+        result = 31 * result + minQueries;
+        result = 31 * result + maxQueries;
+        result = 31 * result + (enrichQueries ? 1 : 0);
+        return result;
+    }
 }

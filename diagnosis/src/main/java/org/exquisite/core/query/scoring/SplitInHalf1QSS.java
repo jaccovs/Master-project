@@ -14,7 +14,7 @@ import java.util.Set;
 public class SplitInHalf1QSS<F> implements IQuerySelection<F> {
 
     public String toString() {
-        return "Split1";
+        return "SPL";
     }
 
     @Override

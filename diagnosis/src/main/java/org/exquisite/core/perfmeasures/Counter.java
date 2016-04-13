@@ -19,4 +19,9 @@ public class Counter extends PerfMeasurement {
         this.value = this.value + step;
         return value();
     }
+
+    @Override
+    public String toString() {
+        return Long.toString(value);
+    }
 }

@@ -115,4 +115,9 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
     public void normalize(Set<Diagnosis<F>> diagnoses) {
         new RIOQSS<F>(this.c).normalize(diagnoses);
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("RIO(").append(",ent:").append(tEnt).append(",card:").append(tCard).append("cautious:").append(c).append(')').toString();
+    }
 }
