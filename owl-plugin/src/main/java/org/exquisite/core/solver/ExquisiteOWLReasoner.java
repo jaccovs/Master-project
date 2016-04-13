@@ -11,6 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -259,5 +260,10 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         } finally {
             stop(TIMER_SOLVER_ISCONSISTENT);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ExquisiteOWLReasoner";
     }
 }

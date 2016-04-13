@@ -8,6 +8,8 @@ import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputa
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.RiskOptimizationMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.SplitInHalfMeasure;
+import org.exquisite.core.query.scoring.MinScoreQSS;
+import org.exquisite.core.query.scoring.RIOQSS;
 import org.exquisite.core.query.scoring.SplitInHalf1QSS;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
@@ -23,12 +25,9 @@ import java.util.List;
 class Configuration {
     private static String[] ontologies = {"ontologies/Economy-SDA.owl", "ontologies/Transportation-SDA.owl", "ontologies/University.owl"};
 
-    private static Integer[] diagnoseSizes = {10, 20, 30};
+    private static Integer[] diagnoseSizes = {4, 5};
 
     private static List<IQueryComputation<OWLLogicalAxiom>> queryComputers;
-
-    private static Integer iterations = 5;
-
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -45,7 +44,7 @@ class Configuration {
     }
 
     static Integer getIterations() {
-        return iterations;
+        return 3;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -95,6 +94,21 @@ class Configuration {
         queryComputers.add(new HeuristicQueryComputation<>(c));
 
         // SimpleNaive with SPL
-        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new SplitInHalf1QSS<OWLLogicalAxiom>()));
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new SplitInHalf1QSS<>()));
+
+        // SimpleNaive with ENT
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new MinScoreQSS<>()));
+
+        // SimpleNaive with RIO(0.1)
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.1"))));
+
+        // SimpleNaive with RIO(0.2)
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.2"))));
+
+        // SimpleNaive with RIO(0.3)
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.3"))));
+
+        // SimpleNaive with RIO(0.4)
+        queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.4"))));
     }
 }
