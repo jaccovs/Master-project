@@ -6,6 +6,8 @@ import org.exquisite.core.model.DiagnosisModel;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
+
 /**
  * This is a default implementation of a solver that provides methods for handling of test cases, etc. Extend this
  * class if you use standard test cases, as defined in the literature:
@@ -45,30 +47,37 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
      * diagnosis model.
      */
     @Override
-    public boolean isConsistent(Collection<F> formulas) { // TODO count+timer isConsitent(formulas)
-        synchronizeCache(formulas);
+    public boolean isConsistent(Collection<F> formulas) {
+        start(TIMER_SOLVER_ISCONSISTENT_FORMULAS);
+        incrementCounter(COUNTER_SOLVER_ISCONSISTENT_FORMULAS);
+        try {
+            synchronizeCache(formulas);
 
-        if (!isConsistent())
-            return false;
-
-        // check non-entailed examples
-        for (F example : diagnosisModel.getNotEntailedExamples()) {
-            if (isEntailed(Collections.singleton(example))) {
+            if (!isConsistent())
                 return false;
+
+            // check non-entailed examples
+            for (F example : diagnosisModel.getNotEntailedExamples()) {
+                if (isEntailed(Collections.singleton(example))) {
+                    return false;
+                }
             }
-        }
 
-        // check consistent examples
-        if (violatesExample(diagnosisModel.getConsistentExamples(), true))
-            return false;
-
-        // check negative examples
-        if (!supportsNegation()) {
-            if (violatesExample(diagnosisModel.getInconsistentExamples(), false))
+            // check consistent examples
+            if (violatesExample(diagnosisModel.getConsistentExamples(), true))
                 return false;
+
+            // check negative examples
+            if (!supportsNegation()) {
+                if (violatesExample(diagnosisModel.getInconsistentExamples(), false))
+                    return false;
+            }
+
+            return true;
+        } finally {
+            stop(TIMER_SOLVER_ISCONSISTENT_FORMULAS);
         }
 
-        return true;
     }
 
     /**

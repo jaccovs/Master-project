@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
+
 /**
  * Simple query computation methods that implements a brute force approach to query computation. This approach simply
  * traverses all possible partitions of diagnoses into two sets and computes a query for each partition if it exists.
@@ -66,7 +69,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
         Collection<F> kb = this.engine.getSolver().getDiagnosisModel().getPossiblyFaultyFormulas();
         calculateKBWithoutDiagEntailments(kb, diagnoses);
         computeQueries(kb, new ArrayList<>(diagnoses), queries);
-        // TODO zaehle wieviele Queries zurückgegeben werden // queries.size() Queries in Pool
+        incrementCounter(COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE, queries.size()); // zaehle wieviele Queries zurückgegeben werden // queries.size() Queries in Pool
         this.queriesIterator = queries.iterator();
     }
 

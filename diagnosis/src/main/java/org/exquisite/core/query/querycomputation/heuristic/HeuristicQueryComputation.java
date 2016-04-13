@@ -13,6 +13,8 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQP
 
 import java.util.*;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
+
 /**
  * A heuristic query computation algorithm for interactive knowledge base debugging.
  *
@@ -49,14 +51,14 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
             // (3) in order to come up with a query that is as simple and easy to answer as possible for the
             // respective user U, the query can optionally enriched by additional logical formulas by invoking
             // a reasoner for entailments calculation.
-            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel()); // TODO Dauer enrichQuery
+            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
 
             // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
-            // TODO SIZE of queries vor minimieren
-            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine); // TODO Dauer optimizeQuery
-            // TODO SIZE of queries nach minimieren
+            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE, enrichedQuery.size()); // SIZE of queries vor minimieren
+            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
+            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
             query = optimizedQuery;
         }
         Query<F> nextQuery = new Query<>(query, qPartition);
@@ -85,15 +87,17 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
         // q-partition can be extracted in the next step by selectQueriesForQPartition
-        qPartition = findQPartition(leadingDiagnoses, this.config.rm); // TODO Dauer findQPartition
+        qPartition = findQPartition(leadingDiagnoses, this.config.rm);
 
-        // TODO Nr of DiagTraits
-        // TODO cnt size of traits for each trait
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS, qPartition.diagsTraits.size()); // Nr of DiagTraits
+        int count = 0;
+        for (Set<F> set : qPartition.diagsTraits.values()) count+=set.size();
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS_SIZE, count); // cnt size of traits for each trait
 
         // (2) after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
         // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
         // answered correctly.
-        Set<Set<F>> queries = selectQueriesForQPartition(qPartition); // TODO Dauer selectQueriesForQPartition
+        Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
 
         // creates an iterator on the queries to be used in hasNext() and next()
         queriesIterator = queries.iterator();
@@ -108,7 +112,12 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @return A (nearly) optimal q-partition.
      */
     private QPartition<F> findQPartition(Set<Diagnosis<F>> leadingDiagnoses, IQPartitionRequirementsMeasure rm) {
-        return QPartitionOperations.findQPartition(leadingDiagnoses, rm, config.diagnosisEngine.getCostsEstimator());
+        start(TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION);
+        try {
+            return QPartitionOperations.findQPartition(leadingDiagnoses, rm, config.diagnosisEngine.getCostsEstimator());
+        } finally {
+            stop(TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION);
+        }
     }
 
     /**
@@ -122,10 +131,13 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @param qPartition A (nearly) optimal q-partion computed in findQPartition (1).
      */
     private Set<Set<F>> selectQueriesForQPartition(QPartition<F> qPartition) {
-
-        Set<Set<F>> setOfMinTraits = Utils.removeSuperSets(qPartition.diagsTraits.values());
-
-        return HittingSet.hittingSet(setOfMinTraits, config.timeout, config.minQueries, config.maxQueries, config.sortCriterion);
+        start(TIMER_QUERYCOMPUTATION_HEURISTIC_SELECTQUERIES);
+        try {
+            Set<Set<F>> setOfMinTraits = Utils.removeSuperSets(qPartition.diagsTraits.values());
+            return HittingSet.hittingSet(setOfMinTraits, config.timeout, config.minQueries, config.maxQueries, config.sortCriterion);
+        } finally {
+            stop(TIMER_QUERYCOMPUTATION_HEURISTIC_SELECTQUERIES);
+        }
     }
 
     /**
@@ -150,27 +162,32 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @return An new query enriched by addition logical formulas by invoking a reasoner for entailments calculation.
      */
     private Set<F> enrichQuery(final Set<F> query, final QPartition<F> qPartition, final DiagnosisModel<F> diagnosisModel) {
-        Set<F> unionOfLeadingDiagnoses = setUnion(qPartition.dx, qPartition.dnx, qPartition.dz);
+        start(TIMER_QUERYCOMPUTATION_HEURISTIC_ENRICHQUERY);
+        try {
+            Set<F> unionOfLeadingDiagnoses = setUnion(qPartition.dx, qPartition.dnx, qPartition.dz);
 
-        // step 1: calculate: Q_impl := [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
-        Set<F> set1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
-        boolean hasBeenRemoved = set1.removeAll(unionOfLeadingDiagnoses);
-        assert hasBeenRemoved; // assertion that something has been removed
-        set1.addAll(diagnosisModel.getCorrectFormulas());
-        set1.addAll(diagnosisModel.getEntailedExamples());
+            // step 1: calculate: Q_impl := [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
+            Set<F> set1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
+            boolean hasBeenRemoved = set1.removeAll(unionOfLeadingDiagnoses);
+            assert hasBeenRemoved; // assertion that something has been removed
+            set1.addAll(diagnosisModel.getCorrectFormulas());
+            set1.addAll(diagnosisModel.getEntailedExamples());
 
-        Set<F> set2 = new HashSet<>(set1); // copy of (K\UD) u B u UP
+            Set<F> set2 = new HashSet<>(set1); // copy of (K\UD) u B u UP
 
-        set1.addAll(query); // (K\UD) u B u UP u Q
+            set1.addAll(query); // (K\UD) u B u UP u Q
 
-        Set<F> qImplicit = getEntailments(set1); // E((K\UD) u Q u B u UP)
-        qImplicit.removeAll(getEntailments(set2)); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)]
-        qImplicit.removeAll(query); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
+            Set<F> qImplicit = getEntailments(set1); // E((K\UD) u Q u B u UP)
+            qImplicit.removeAll(getEntailments(set2)); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)]
+            qImplicit.removeAll(query); // [E((K\UD) u Q u B u UP) \ E((K\UD) u B u UP)] \ Q
 
-        // step 2: Q <- Q u Q_impl
-        Set<F> result = new HashSet<>(query);
-        result.addAll(qImplicit);
-        return result;
+            // step 2: Q <- Q u Q_impl
+            Set<F> result = new HashSet<>(query);
+            result.addAll(qImplicit);
+            return result;
+        } finally {
+            stop(TIMER_QUERYCOMPUTATION_HEURISTIC_ENRICHQUERY);
+        }
     }
 
     /**
@@ -198,17 +215,19 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
                                  final Set<F> originalQuery,
                                  final QPartition<F> qPartition,
                                  final AbstractDiagnosisEngine<F> diagnosisEngine) {
-
-        List<F> sortedFormulas = sort(enrichedQuery, originalQuery, diagnosisEngine.getSolver().getDiagnosisModel().getFormulaWeights());
-
-        Set<F> optimizedQuery = new HashSet<F>(new MinQ<F>().minQ(
-                                               new ArrayList<F>(sortedFormulas.size()),
-                                               new ArrayList<F>(sortedFormulas.size()),
-                                               sortedFormulas,
-                                               qPartition,
-                                               diagnosisEngine));
-
-        return optimizedQuery;
+        start(TIMER_QUERYCOMPUTATION_HEURISTIC_OPTIMIZEQUERY);
+        try {
+            List<F> sortedFormulas = sort(enrichedQuery, originalQuery, diagnosisEngine.getSolver().getDiagnosisModel().getFormulaWeights());
+            Set<F> optimizedQuery = new HashSet<F>(new MinQ<F>().minQ(
+                                                   new ArrayList<F>(sortedFormulas.size()),
+                                                   new ArrayList<F>(sortedFormulas.size()),
+                                                   sortedFormulas,
+                                                   qPartition,
+                                                   diagnosisEngine));
+            return optimizedQuery;
+        } finally {
+            stop(TIMER_QUERYCOMPUTATION_HEURISTIC_OPTIMIZEQUERY);
+        }
     }
 
     /**

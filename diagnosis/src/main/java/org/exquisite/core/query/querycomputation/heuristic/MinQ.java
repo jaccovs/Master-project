@@ -8,6 +8,8 @@ import org.exquisite.core.query.QPartition;
 
 import java.util.*;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
+
 /**
  * QuickXPlain algorithm used for calculation of optimized query in HeuristicQueryComputation.
  * TODO: REUSE QuickXPlain!
@@ -72,31 +74,37 @@ public class MinQ<F>  {
 
     public enum Split {Half, One}
 
-    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, IDiagnosisEngine<F> dpi) { // TODO count und dauer isQPartConst
-        DiagnosisModel<F> diagnosisModel = dpi.getSolver().getDiagnosisModel();
+    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, IDiagnosisEngine<F> dpi) {
+        start(TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
+        try {
+            DiagnosisModel<F> diagnosisModel = dpi.getSolver().getDiagnosisModel();
 
-        for (Diagnosis<F> dr : qpartition.dnx) {
-            Set<F> kr1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
-            kr1.removeAll(dr.getFormulas());
-            kr1.addAll(diagnosisModel.getCorrectFormulas());
-            kr1.addAll(diagnosisModel.getEntailedExamples());
+            for (Diagnosis<F> dr : qpartition.dnx) {
+                Set<F> kr1 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
+                kr1.removeAll(dr.getFormulas());
+                kr1.addAll(diagnosisModel.getCorrectFormulas());
+                kr1.addAll(diagnosisModel.getEntailedExamples());
 
-            kr1.addAll(q);
+                kr1.addAll(q);
 
-            if (dpi.getSolver().isConsistent(kr1)) {
-                return false;
+                if (dpi.getSolver().isConsistent(kr1)) {
+                    return false;
+                }
             }
-        }
 
-        for (Diagnosis<F> dr : qpartition.dz) {
-            Set<F> kr2 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
-            kr2.removeAll(dr.getFormulas());
-            kr2.addAll(diagnosisModel.getCorrectFormulas());
-            kr2.addAll(diagnosisModel.getEntailedExamples());
-            if (dpi.getSolver().isEntailed(kr2, q))
-                return false;
+            for (Diagnosis<F> dr : qpartition.dz) {
+                Set<F> kr2 = new HashSet<>(diagnosisModel.getPossiblyFaultyFormulas());
+                kr2.removeAll(dr.getFormulas());
+                kr2.addAll(diagnosisModel.getCorrectFormulas());
+                kr2.addAll(diagnosisModel.getEntailedExamples());
+                if (dpi.getSolver().isEntailed(kr2, q))
+                    return false;
+            }
+            return true;
+        } finally {
+            stop(TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
         }
-        return true;
     }
 
 }

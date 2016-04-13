@@ -1,9 +1,14 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.Utils;
+import org.exquisite.core.perfmeasures.PerfMeasurementManager;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.ISortCriterion;
 
 import java.util.*;
+
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_HS_NODES;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_HS_NODES;
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCounter;
 
 /**
  * Hitting set algorithm.
@@ -50,7 +55,7 @@ public class HittingSet {
                 setMinimalQueries.add(node);
             else if (L.label == Label.L.FORMULAS)
                 for (F formula : L.formulas) {
-                    // TODO add 1 to CNT_GENERATED_HS_NODES
+                    incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_HS_NODES); // add 1 to CNT_GENERATED_HS_NODES
                     Set<F> newSet = new HashSet<>(node);
                     newSet.add(formula);
                     queue.add(newSet);
@@ -61,7 +66,7 @@ public class HittingSet {
     }
 
     private static <F> Label<F> label(final Set<F> node, final Set<Set<F>> setOfMinTraits, final Set<Set<F>> setMinimalQueries, final Queue<Set<F>> queue) {
-        // TODO add 1 to CNT_EXPANDED_HS_NODES
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_HS_NODES);// add 1 to CNT_EXPANDED_HS_NODES
         for (Set<F> nd : setMinimalQueries)
             if (node.containsAll(nd))
                 return CLOSED_LABEL;

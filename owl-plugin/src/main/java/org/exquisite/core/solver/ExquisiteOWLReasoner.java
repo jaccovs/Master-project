@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
+
 /**
  * Created by kostya on 17-Mar-16.
  */
@@ -203,19 +205,30 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      * Uses underlying OWL reasoner to compute a set of entailments of formulas stored in the reasoner. The types of
      * computed entailments must be defined prior to calling this method using {@link #setEntailmentTypes(InferenceType...)}
      */
-    protected Set<OWLLogicalAxiom> calculateEntailments() { // TODO count+timer calculateEntailments()
+    protected Set<OWLLogicalAxiom> calculateEntailments() {
+        start(TIMER_SOLVER_CALCULATE_ENTAILMENTS);
+        incrementCounter(COUNTER_SOLVER_CALCULATE_ENTAILMENTS);
+        try {
+            this.reasoner.precomputeInferences(this.interenceTypes);
+            OWLOntology ontology = this.reasoner.getRootOntology();
 
-        this.reasoner.precomputeInferences(this.interenceTypes);
-        OWLOntology ontology = this.reasoner.getRootOntology();
-
-        return this.axiomGenerators.stream().flatMap(inferredAxiomGenerator ->
-                inferredAxiomGenerator.createAxioms(ontology.getOWLOntologyManager().getOWLDataFactory(), reasoner).stream()).
-                map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
+            return this.axiomGenerators.stream().flatMap(inferredAxiomGenerator ->
+                    inferredAxiomGenerator.createAxioms(ontology.getOWLOntologyManager().getOWLDataFactory(), reasoner).stream()).
+                    map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
+        } finally {
+            stop(TIMER_SOLVER_CALCULATE_ENTAILMENTS);
+        }
     }
 
     @Override
-    protected boolean isEntailed(Collection<OWLLogicalAxiom> entailments) { // TODO count+timer isEntailed()
-        return this.reasoner.isEntailed(new HashSet<OWLAxiom>(entailments));
+    protected boolean isEntailed(Collection<OWLLogicalAxiom> entailments) {
+        start(TIMER_SOLVER_ISENTAILED);
+        incrementCounter(COUNTER_SOLVER_ISENTAILED);
+        try {
+            return this.reasoner.isEntailed(new HashSet<OWLAxiom>(entailments));
+        } finally {
+            stop(TIMER_SOLVER_ISENTAILED);
+        }
     }
 
     @Override
@@ -239,6 +252,12 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
     @Override
     protected boolean isConsistent() {
-        return this.reasoner.isConsistent(); // TODO count+timer isConsistent()
+        start(TIMER_SOLVER_ISCONSISTENT);
+        incrementCounter(COUNTER_SOLVER_ISCONSISTENT);
+        try {
+            return this.reasoner.isConsistent();
+        } finally {
+            stop(TIMER_SOLVER_ISCONSISTENT);
+        }
     }
 }

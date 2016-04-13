@@ -8,6 +8,8 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQP
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
+
 /**
  * Class which offers operations for q-partition instances such as searching for a (nearly) optimal q-partition from a
  * set of diagnoses given some q-partition requirements measures and some cost estimators. Or computation of successor
@@ -44,12 +46,16 @@ public class QPartitionOperations {
         QPartition<F> pBest = rm.updateBest(p,pb);
         if (rm.isOptimal(pBest))
             return new OptimalPartition<>(pBest, true);
-        if (rm.prune(p,pBest)) // TODO ADD 1 to CNT_PRUNING_OPERATIONS; and; ADD 1 to CNT_BACKTRACKING_OPERATIONS
-            return new OptimalPartition<>(pBest, false);
 
-        // TODO add 1 to CNT_EXPANDED_QPARTITIONS (ALLE Ps, FÜR DIE NACHFOLGER GEBILDET WURDEN)
+        if (rm.prune(p,pBest)) {// ADD 1 to CNT_PRUNING_OPERATIONS; and; ADD 1 to CNT_BACKTRACKING_OPERATIONS
+            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_BACKTRACKINGS);
+            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_PRUNINGS);
+            return new OptimalPartition<>(pBest, false);
+        }
+
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_QPARTITIONS); // add 1 to CNT_EXPANDED_QPARTITIONS (ALLE Ps, FÜR DIE NACHFOLGER GEBILDET WURDEN)
         Collection<QPartition<F>> sucs = computeSuccessors(p);
-        // TODO add sucs.size() (CNT_GENERATED_QPARTITIONS)
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_QPARTITIONS, sucs.size()); // add sucs.size() (CNT_GENERATED_QPARTITIONS)
         while (!sucs.isEmpty()) {
             QPartition<F> p1 = bestSuc(sucs, rm);
             OptimalPartition optimalPartition = findQPartitionRek(p1, pBest, rm);
@@ -59,7 +65,8 @@ public class QPartitionOperations {
                 return optimalPartition;
             assert sucs.remove(p1);
         }
-        return new OptimalPartition<>(pBest, false); // TODO ADD 1 to CNT_BACKTRACKING_OPERATIONS
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_BACKTRACKINGS); // ADD 1 to CNT_BACKTRACKING_OPERATIONS
+        return new OptimalPartition<>(pBest, false);
     }
 
     private static <F> QPartition<F> bestSuc(Collection<QPartition<F>> sucs, IQPartitionRequirementsMeasure<F> rm) {
@@ -192,8 +199,8 @@ public class QPartitionOperations {
         // compute trait of using unionDxFormulas
         for (Diagnosis<F> diag_dnx : qPartition.dnx) {
             Set<F> traits = new HashSet<>(diag_dnx.getFormulas());    // initialize traits with the formulas of diag_dnx ...
-            traits.removeAll(unitedDxFormulas);                             // ... and remove all formulas that occurred in dx of partionPk
-            diagsTraits.put(diag_dnx, traits);                              // enables to retrieve trait ti for diagnosis di in later operations
+            traits.removeAll(unitedDxFormulas);                       // ... and remove all formulas that occurred in dx of partionPk
+            diagsTraits.put(diag_dnx, traits);                        // enables to retrieve trait ti for diagnosis di in later operations
         }
         return diagsTraits;
     }
