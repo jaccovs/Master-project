@@ -6,6 +6,8 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
@@ -29,7 +31,21 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         start(TIMER_INVERSE_DIAGNOSES);
         try {
             InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
+
+            final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
+            final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
+
             Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses());
+
+            // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
+            // therefore we restore the original order.
+
+            assert correctFormulasCopy.size() == getSolver().getDiagnosisModel().getCorrectFormulas().size();
+            assert possiblyFaultyFormulasCopy.size() == getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().size();
+
+            getSolver().getDiagnosisModel().setPossiblyFaultyFormulas(possiblyFaultyFormulasCopy);
+            getSolver().getDiagnosisModel().setCorrectFormulas(correctFormulasCopy);
+
             incrementCounter(COUNTER_INVERSE_DIAGNOSES);
             return diagnoses;
         } finally {
@@ -65,5 +81,10 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             }
         }
         return diagnoses;
+    }
+
+    @Override
+    public String toString() {
+        return "InverseDiagnosisEngine";
     }
 }

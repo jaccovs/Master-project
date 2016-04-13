@@ -141,15 +141,14 @@ public class HeuristicConfiguration<F> {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("HeuristicConfiguration{");
-        sb.append("diagnosisEngine=").append(diagnosisEngine);
+        final StringBuilder sb = new StringBuilder("diagnosisEngine=");
+        sb.append(diagnosisEngine);
         sb.append(", rm=").append(rm);
         sb.append(", sortCriterion=").append(sortCriterion);
         sb.append(", timeout=").append(timeout);
         sb.append(", minQueries=").append(minQueries);
         sb.append(", maxQueries=").append(maxQueries);
         sb.append(", enrichQueries=").append(enrichQueries);
-        sb.append('}');
         return sb.toString();
     }
 

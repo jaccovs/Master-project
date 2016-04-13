@@ -13,14 +13,8 @@ public class RIOQSS<F> implements IQuerySelection<F> {
 
     private BigDecimal c;
 
-    //private BigDecimal tCard;
-
-    //private BigDecimal tEnt;
-
     public RIOQSS(BigDecimal c) {
         this.c = c;
-        //this.tCard = tCard;
-        //this.tEnt = tEnt;
     }
 
     @Override
@@ -55,5 +49,10 @@ public class RIOQSS<F> implements IQuerySelection<F> {
             num--;
         }
         return num;
+    }
+
+    @Override
+    public String toString() {
+        return "RIO(" + c + ')';
     }
 }

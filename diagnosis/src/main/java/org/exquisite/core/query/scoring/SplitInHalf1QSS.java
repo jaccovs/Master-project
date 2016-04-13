@@ -13,10 +13,6 @@ import java.util.Set;
  */
 public class SplitInHalf1QSS<F> implements IQuerySelection<F> {
 
-    public String toString() {
-        return "SPL";
-    }
-
     @Override
     public BigDecimal getScore(Query<F> query) {
         Integer absDxMinusDnx = Math.abs(query.qPartition.dx.size()-query.qPartition.dnx.size());
@@ -28,6 +24,10 @@ public class SplitInHalf1QSS<F> implements IQuerySelection<F> {
     @Override
     public void normalize(Set<Diagnosis<F>> diagnoses) {
         throw new RuntimeException();
+    }
+
+    public String toString() {
+        return "SPL";
     }
 
 }

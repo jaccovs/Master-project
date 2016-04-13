@@ -294,10 +294,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("HeuristicQueryComputation{");
-        sb.append("config=").append(config);
-        sb.append('}');
-        return sb.toString();
+        return new StringBuilder("HeuristicQueryComputation{").append(config).append('}').toString();
     }
 
     @Override

@@ -118,6 +118,6 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
 
     @Override
     public String toString() {
-        return new StringBuilder("RIO(").append(",ent:").append(tEnt).append(",card:").append(tCard).append("cautious:").append(c).append(')').toString();
+        return new StringBuilder("RIO(").append("ent:").append(tEnt).append(",card:").append(tCard).append(",cautious:").append(c).append(')').toString();
     }
 }

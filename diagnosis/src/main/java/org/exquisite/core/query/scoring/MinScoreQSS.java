@@ -55,10 +55,6 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
         return sum;
     }
 
-    public String toString() {
-        return "Entropy";
-    }
-
     public void normalize(Set<Diagnosis<F>> diagnoses) {
         BigDecimal sum = sum(diagnoses);
         for (Diagnosis<F> hs : diagnoses) {
@@ -66,6 +62,10 @@ public class MinScoreQSS<F> extends AbstractQSS<F> {
             hs.setMeasure(value);
         }
 
+    }
+
+    public String toString() {
+        return "ENT";
     }
 
 }
