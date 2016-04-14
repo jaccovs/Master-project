@@ -1,16 +1,13 @@
 package org.exquisite.evals.conferences.ecai2016;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.perfmeasures.*;
-import org.exquisite.core.perfmeasures.Timer;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.core.solver.ISolver;
 import org.exquisite.utils.OWLUtils;
 import org.junit.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
@@ -21,7 +18,6 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static junit.framework.Assert.*;
@@ -31,22 +27,23 @@ import static junit.framework.Assert.*;
  */
 public class Evaluation {
 
-    private String TIMER_DIAGNOSES_CALCULATION = "Diag: time to calculate leading diagnoses";
-    private String TIMER_QUERY_CALCULATION = "Time for query computation";
+    protected static String TIMER_DIAGNOSES_CALCULATION = "time.calculation.diagnoses";
+    protected static String TIMER_QUERY_CALCULATION = "time.query.computation";
 
-    //@Test // TODO ACTIVATE TEST BY UNCOMMENTING THE ANNOTATION
+    @Test // TODO ACTIVATE TEST BY UNCOMMENTING THE ANNOTATION
     public void eval() throws OWLOntologyCreationException, DiagnosisException {
         CSVWriter w = new CSVWriter();
-        Iteration i = new Iteration();
+
+        final int TOTALSTEPS = Configuration.getOntologies().size() * Configuration.getDiagnoseSizes().size() * Configuration.getIterations() * Configuration.getNrOfQueryComputers();
+        int step = 0;
+        long start = System.currentTimeMillis();
+
         try {
             w.open();
             w.writeConfiguration();
-            w.writeHeader(i);
-            for (String ontologyFile : Configuration.getOntologies()) {
-                i.ontologyFile = ontologyFile;
 
+            for (String ontologyFile : Configuration.getOntologies()) {
                 ExquisiteOWLReasoner solver = createSolver(ontologyFile, false, true);
-                i.solver = solver;
 
                 System.out.println("created solver " + solver + " with ontology " + ontologyFile);
                 assertFalse(solver.isConsistent(solver.getDiagnosisModel().getPossiblyFaultyFormulas()));
@@ -54,7 +51,7 @@ public class Evaluation {
                 solver.setEntailmentTypes(InferenceType.DISJOINT_CLASSES, InferenceType.CLASS_HIERARCHY);
 
                 final InverseDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(solver);
-                i.engine = diagnosisEngine;
+
                 Configuration.createQueryComputers(diagnosisEngine);
 
                 System.out.println("created diagnosis engine: " + diagnosisEngine);
@@ -66,17 +63,21 @@ public class Evaluation {
 
                     List<OWLLogicalAxiom> list = new ArrayList<>(diagnosisEngine.getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
 
+                    Statistics statistics = new Statistics(maxNumberOfDiagnoses, ontologyFile);
+
+                    w.writeHeader(Iteration.getHeader());
+
                     for (int iteration = 1; iteration <= Configuration.getIterations(); iteration++) {
 
-                        System.out.println("Iteration: " + iteration);
-                        i.iteration = iteration;
 
-                        System.out.print("shuffling kb ... ");
+
+                        System.out.println("Iteration: " + iteration );
+
+
                         Collections.shuffle(list, new Random(iteration)); // shuffle with seed
                         List<OWLLogicalAxiom> originalShuffleResult = new ArrayList<>(list);
                         assertFalse(list.equals(diagnosisEngine.getSolver().getDiagnosisModel().getPossiblyFaultyFormulas()));
                         diagnosisEngine.getSolver().getDiagnosisModel().setPossiblyFaultyFormulas(list);
-                        System.out.println("done");
 
                         PerfMeasurementManager.reset();
 
@@ -88,21 +89,19 @@ public class Evaluation {
 
                         System.out.println("calculated " + diagnoses.size() + " diagnoses");
                         System.out.println("diagnoses: " + OWLUtils.getString(diagnoses));
-                        System.out.println("counters: " + PerfMeasurementManager.getCounters());
-                        System.out.println("timers: " + PerfMeasurementManager.getTimers());
+                        final Map<String, Counter> diagcounters = Collections.unmodifiableMap(PerfMeasurementManager.getCounters());
+                        System.out.println("counters: " + diagcounters);
+                        final Map<String, org.exquisite.core.perfmeasures.Timer> diagtimers = Collections.unmodifiableMap(PerfMeasurementManager.getTimers());
+                        System.out.println("timers: " + diagtimers);
                         System.out.println();
 
-                        i.diagnosesSize = diagnoses.size();
-                        i.diagnoses = diagnoses;
-                        i.diagnosesCounters = Collections.unmodifiableMap(PerfMeasurementManager.getCounters());
-                        i.diagnosesTimers = Collections.unmodifiableMap(PerfMeasurementManager.getTimers());
+
 
                         assertEquals(maxNumberOfDiagnoses, diagnoses.size());
                         setMeasures(diagnoses, iteration);
 
                         for (IQueryComputation queryComputation : Configuration.getQueryComputers()) {
                             System.out.println(queryComputation);
-                            i.qc = queryComputation;
 
                             PerfMeasurementManager.reset();
 
@@ -116,24 +115,48 @@ public class Evaluation {
                             System.out.println("query: " + OWLUtils.getString(query));
                             System.out.println("counters: " + PerfMeasurementManager.getCounters());
                             System.out.println("timers: " + PerfMeasurementManager.getTimers());
-                            System.out.println();
 
+
+                            Iteration i = new Iteration();
+                            i.iteration = iteration;
+                            i.ontologyFile = ontologyFile;
+                            i.solver = solver;
+                            i.engine = diagnosisEngine;
+                            i.diagnosesSize = diagnoses.size();
+                            i.diagnoses = diagnoses;
+                            i.diagnosesCounters = diagcounters;
+                            i.diagnosesTimers = diagtimers;
+                            i.qc = queryComputation;
                             i.query = query;
                             i.queryCounters = Collections.unmodifiableMap(PerfMeasurementManager.getCounters());
                             i.queryTimers = Collections.unmodifiableMap(PerfMeasurementManager.getTimers());
 
                             w.writeIteration(i);
+
+
+                            final long now = System.currentTimeMillis();
+                            long predictedEnd = (now - start) * TOTALSTEPS / ++step;
+                            System.out.println("Progress: (" + (step) + "/" + TOTALSTEPS + "), predicted end: " + new Date(now + predictedEnd));
+                            System.out.println();
+
+                            statistics.addIteration(queryComputation, i);
                         }
 
                         diagnosisEngine.resetEngine();
                     }
+
+                    w.writeStatistics(statistics);
                 }
             }
+            w.close(null);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             fail(e.getMessage());
-        } finally {
-            w.close();
+            w.close(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+            w.close(e);
         }
     }
 
@@ -196,146 +219,5 @@ public class Evaluation {
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }
 
-    class Iteration {
 
-        String ontologyFile;
-        public ISolver<OWLLogicalAxiom> solver;
-        public IDiagnosisEngine<OWLLogicalAxiom> engine;
-        public int iteration;
-        public int diagnosesSize;
-        public Map<String, Counter> diagnosesCounters;
-        public Map<String, Timer> diagnosesTimers;
-        public Set<Diagnosis<OWLLogicalAxiom>> diagnoses;
-        public IQueryComputation qc;
-        public Query<OWLLogicalAxiom> query;
-        public Map<String, Counter> queryCounters;
-        public Map<String, Timer> queryTimers;
-
-
-        String getHeader() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Ontology").append(';');
-            sb.append("Solver").append(';');
-            sb.append("Engine").append(';');
-            sb.append("Iteration").append(';');
-            sb.append("DiagSize").append(';');
-            sb.append("Diagnoses").append(';');
-
-            // Diagnose Zeit- und Countangaben
-            sb.append(TIMER_DIAGNOSES_CALCULATION).append(';');
-            sb.append("Diag: # calls to solver.isConsistent()").append(';');
-            sb.append("Diag: Time used for solver.isConsistent()").append(';');
-            sb.append("Diag: # calls to solver.isConsistent(Formulas)").append(';');
-            sb.append("Diag: Time used for solver.isConsistent(Formulas)").append(';');
-
-            // Query Computation
-            sb.append("QueryComputation").append(';');
-            sb.append("Query").append(';');
-            sb.append("QueryScore").append(';');
-            sb.append("dx").append(';');
-            sb.append("dnx").append(';');
-            sb.append("dz").append(';');
-            sb.append("probDx").append(';');
-            sb.append("probDnx").append(';');
-            sb.append(TIMER_QUERY_CALCULATION).append(';');
-
-            // counters for query computation
-            sb.append(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_SOLVER_ISENTAILED).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_SOLVER_CALCULATE_ENTAILMENTS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_QPARTITIONS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_QPARTITIONS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_BACKTRACKINGS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_PRUNINGS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS_SIZE).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_HS_NODES).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_HS_NODES).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE).append(';');
-            sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE).append(';');
-
-            // timers
-            sb.append(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT_FORMULAS).append(';');
-            sb.append(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT).append(';');
-            sb.append(PerfMeasurementManager.TIMER_SOLVER_ISENTAILED).append(';');
-            sb.append(PerfMeasurementManager.TIMER_SOLVER_CALCULATE_ENTAILMENTS).append(';');
-            sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST).append(';');
-            sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION).append(';');
-            sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_SELECTQUERIES).append(';');
-            sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_ENRICHQUERY).append(';');
-            sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_OPTIMIZEQUERY).append(';');
-
-            sb.append("Timestamp").append(';');
-            return sb.toString();
-        }
-        String getLine() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(ontologyFile).append(';');
-            sb.append(solver).append(';');
-            sb.append(engine).append(';');
-            sb.append(iteration).append(';');
-            sb.append(diagnosesSize).append(';');
-            sb.append(OWLUtils.getString(diagnoses)).append(';');
-
-            // Diagnose Zeit- und Countangaben
-            sb.append(diagnosesTimers.get(TIMER_DIAGNOSES_CALCULATION)).append(';');
-            sb.append(diagnosesCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT)).append(';');
-            sb.append(diagnosesTimers.get(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT)).append(';');
-            sb.append(diagnosesCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
-            sb.append(diagnosesTimers.get(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
-
-            // Query Computation
-            sb.append(qc).append(';');
-            sb.append(OWLUtils.getString(query)).append(';');
-            sb.append(query.score).append(';');
-            sb.append(OWLUtils.getString(query.qPartition.dx)).append(';');
-            sb.append(OWLUtils.getString(query.qPartition.dnx)).append(';');
-            sb.append(OWLUtils.getString(query.qPartition.dz)).append(';');
-            sb.append(query.qPartition.probDx).append(';');
-            sb.append(query.qPartition.probDnx).append(';');
-            sb.append(queryTimers.get(TIMER_QUERY_CALCULATION)).append(';');
-
-            // counters for query computation
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISENTAILED)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_CALCULATE_ENTAILMENTS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_QPARTITIONS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_QPARTITIONS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_BACKTRACKINGS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_PRUNINGS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS_SIZE)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_HS_NODES)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_HS_NODES)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE)).append(';');
-            sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE)).append(';');
-
-            // timers
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_SOLVER_ISCONSISTENT)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_SOLVER_ISENTAILED)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_SOLVER_CALCULATE_ENTAILMENTS)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_SELECTQUERIES)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_ENRICHQUERY)).append(';');
-            sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_OPTIMIZEQUERY)).append(';');
-
-            sb.append(getCurrentTime()).append(';');
-            return sb.toString();
-        }
-
-        String getCurrentTime() {
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            return sdf.format(cal.getTime());
-        }
-
-    }
 }

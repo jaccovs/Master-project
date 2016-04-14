@@ -94,10 +94,32 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         for (Set<F> set : qPartition.diagsTraits.values()) count+=set.size();
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS_SIZE, count); // cnt size of traits for each trait
 
+        // canonical query
+        Set<F> canonicalQuery = new HashSet<>();
+        Set<F> unionOfDxDiagnoses = new HashSet<>();
+        for (Diagnosis<F> diagnosis : leadingDiagnoses) {
+            canonicalQuery.addAll(diagnosis.getFormulas());
+            if (qPartition.dx.contains(diagnosis)) {
+                unionOfDxDiagnoses.addAll(diagnosis.getFormulas());
+            }
+        }
+        canonicalQuery.removeAll(unionOfDxDiagnoses);
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_CANONICAL_QUERIES_SIZE, canonicalQuery.size());
+
         // (2) after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
         // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
         // answered correctly.
         Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
+
+
+
+        assert getCounters().get(COUNTER_SOLVER_ISCONSISTENT_FORMULAS) == null;
+        assert getCounters().get(COUNTER_SOLVER_ISCONSISTENT) == null;
+        assert getCounters().get(COUNTER_SOLVER_ISENTAILED) == null;
+        assert getCounters().get(COUNTER_SOLVER_CALCULATE_ENTAILMENTS) == null;
+
+
+        incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_ENRICHMENT, queries.iterator().next().size());
 
         // creates an iterator on the queries to be used in hasNext() and next()
         queriesIterator = queries.iterator();

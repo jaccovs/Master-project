@@ -25,7 +25,7 @@ import java.util.List;
 class Configuration {
     private static String[] ontologies = {"ontologies/Economy-SDA.owl", "ontologies/Transportation-SDA.owl", "ontologies/University.owl"};
 
-    private static Integer[] diagnoseSizes = {4, 5};
+    private static Integer[] diagnoseSizes = {5, 10, 12, 14, 16, 20, 25};
 
     private static List<IQueryComputation<OWLLogicalAxiom>> queryComputers;
 
@@ -42,6 +42,10 @@ class Configuration {
     static Collection<IQueryComputation<OWLLogicalAxiom>> getQueryComputers() {
         return queryComputers;
     }
+
+    static Integer getNrOfQueryComputers() {
+        return 16;
+    };
 
     static Integer getIterations() {
         return 3;
@@ -110,5 +114,6 @@ class Configuration {
 
         // SimpleNaive with RIO(0.4)
         queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.4"))));
+
     }
 }
