@@ -296,7 +296,7 @@ public class Evaluation {
             sb.append(OWLUtils.getString(query.qPartition.dz)).append(';');
             sb.append(query.qPartition.probDx).append(';');
             sb.append(query.qPartition.probDnx).append(';');
-            sb.append(queryCounters.get(TIMER_QUERY_CALCULATION)).append(';');
+            sb.append(queryTimers.get(TIMER_QUERY_CALCULATION)).append(';');
 
             // counters for query computation
             sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
