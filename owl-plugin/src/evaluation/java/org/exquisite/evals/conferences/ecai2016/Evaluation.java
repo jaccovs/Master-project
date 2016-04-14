@@ -32,6 +32,7 @@ import static junit.framework.Assert.*;
 public class Evaluation {
 
     private String TIMER_DIAGNOSES_CALCULATION = "Diag: time to calculate leading diagnoses";
+    private String TIMER_QUERY_CALCULATION = "Time for query computation";
 
     //@Test // TODO ACTIVATE TEST BY UNCOMMENTING THE ANNOTATION
     public void eval() throws OWLOntologyCreationException, DiagnosisException {
@@ -105,12 +106,12 @@ public class Evaluation {
 
                             PerfMeasurementManager.reset();
 
-                            PerfMeasurementManager.start("time query computation");
+                            PerfMeasurementManager.start(TIMER_QUERY_CALCULATION);
                             queryComputation.initialize(diagnoses);
                             assertTrue(queryComputation.hasNext());
                             Query<OWLLogicalAxiom> query = queryComputation.next();
                             queryComputation.reset();
-                            PerfMeasurementManager.stop("time query computation");
+                            PerfMeasurementManager.stop(TIMER_QUERY_CALCULATION);
 
                             System.out.println("query: " + OWLUtils.getString(query));
                             System.out.println("counters: " + PerfMeasurementManager.getCounters());
@@ -236,6 +237,7 @@ public class Evaluation {
             sb.append("dz").append(';');
             sb.append("probDx").append(';');
             sb.append("probDnx").append(';');
+            sb.append(TIMER_QUERY_CALCULATION).append(';');
 
             // counters for query computation
             sb.append(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS).append(';');
@@ -294,6 +296,7 @@ public class Evaluation {
             sb.append(OWLUtils.getString(query.qPartition.dz)).append(';');
             sb.append(query.qPartition.probDx).append(';');
             sb.append(query.qPartition.probDnx).append(';');
+            sb.append(queryCounters.get(TIMER_QUERY_CALCULATION)).append(';');
 
             // counters for query computation
             sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_SOLVER_ISCONSISTENT_FORMULAS)).append(';');
