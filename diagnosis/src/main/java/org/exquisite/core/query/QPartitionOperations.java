@@ -44,7 +44,7 @@ public class QPartitionOperations {
 
     private static <F> OptimalPartition<F> findQPartitionRek(QPartition<F> p, QPartition<F> pb, IQPartitionRequirementsMeasure<F> rm) {
         QPartition<F> pBest = rm.updateBest(p,pb);
-        if (rm.isOptimal(pBest))
+        if (rm.isOptimal(pBest) && pBest.dx.size() != 0) // do not accept root q-partititons (dx.size() == 0) as optimal partitions
             return new OptimalPartition<>(pBest, true);
 
         if (rm.prune(p,pBest)) {// ADD 1 to CNT_PRUNING_OPERATIONS; and; ADD 1 to CNT_BACKTRACKING_OPERATIONS
