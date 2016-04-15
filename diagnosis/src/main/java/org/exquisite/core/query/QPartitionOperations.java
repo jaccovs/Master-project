@@ -34,7 +34,7 @@ public class QPartitionOperations {
         QPartition<F> partition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), costsEstimator);
         QPartition<F> bestPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), costsEstimator);
 
-        OptimalPartition optimalPartition = findQPartitionRek(partition, bestPartition, rm);
+        OptimalPartition optimalPartition = findQPartitionRek(partition, bestPartition, rm, new HashSet<>());
 
         if (optimalPartition.partition.diagsTraits.isEmpty())
             optimalPartition.partition.diagsTraits = QPartitionOperations.computeDiagsTraits(optimalPartition.partition);
@@ -42,7 +42,8 @@ public class QPartitionOperations {
         return optimalPartition.partition;
     }
 
-    private static <F> OptimalPartition<F> findQPartitionRek(QPartition<F> p, QPartition<F> pb, IQPartitionRequirementsMeasure<F> rm) {
+    private static <F> OptimalPartition<F> findQPartitionRek(QPartition<F> p, QPartition<F> pb, IQPartitionRequirementsMeasure<F> rm, Set<Diagnosis<F>> alreadyUsedDiagsOnLeft) {
+        Set<Diagnosis<F>> alreadyUsedTraits = new HashSet<>(alreadyUsedDiagsOnLeft);
         QPartition<F> pBest = rm.updateBest(p,pb);
         if (rm.isOptimal(pBest) && pBest.dx.size() != 0) // do not accept root q-partititons (dx.size() == 0) as optimal partitions
             return new OptimalPartition<>(pBest, true);
@@ -54,11 +55,15 @@ public class QPartitionOperations {
         }
 
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_EXPANDED_QPARTITIONS); // add 1 to CNT_EXPANDED_QPARTITIONS (ALLE Ps, FÜR DIE NACHFOLGER GEBILDET WURDEN)
-        Collection<QPartition<F>> sucs = computeSuccessors(p);
+        Collection<QPartition<F>> sucs = computeSuccessors(p, alreadyUsedDiagsOnLeft);
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_GENERATED_QPARTITIONS, sucs.size()); // add sucs.size() (CNT_GENERATED_QPARTITIONS)
         while (!sucs.isEmpty()) {
-            QPartition<F> p1 = bestSuc(sucs, rm);
-            OptimalPartition optimalPartition = findQPartitionRek(p1, pBest, rm);
+            SuccessorPlusDiagRepresentativeForEqClass<F> successor = bestSuc(p, sucs, rm);
+            QPartition<F> p1 = successor.qPartition;
+            //QPartition<F> p1 = bestSuc(p, sucs, rm);
+            OptimalPartition optimalPartition = findQPartitionRek(p1, pBest, rm, alreadyUsedTraits);
+            alreadyUsedTraits.add(successor.diagnosis);
+
             if (!optimalPartition.isOptimal)
                 pBest = optimalPartition.partition;
             else
@@ -69,7 +74,7 @@ public class QPartitionOperations {
         return new OptimalPartition<>(pBest, false);
     }
 
-    private static <F> QPartition<F> bestSuc(Collection<QPartition<F>> sucs, IQPartitionRequirementsMeasure<F> rm) {
+    private static <F> SuccessorPlusDiagRepresentativeForEqClass<F> bestSuc(QPartition<F> p, Collection<QPartition<F>> sucs, IQPartitionRequirementsMeasure<F> rm) {
         QPartition<F> sBest = Utils.getFirstElem(sucs, false);
         BigDecimal heurSBest = rm.getHeuristics(sBest);
         for (QPartition<F> s : sucs) {
@@ -79,7 +84,11 @@ public class QPartitionOperations {
                 heurSBest = heurS;
             }
         }
-        return sBest;
+        Set<Diagnosis<F>> dxDiff = new HashSet<>(sBest.dx);
+        dxDiff.removeAll(p.dx);
+
+        Diagnosis<F> representativeOfEqClass = Utils.getFirstElem(dxDiff, false);
+        return new SuccessorPlusDiagRepresentativeForEqClass<F>(representativeOfEqClass,sBest);
     }
 
     /**
@@ -90,7 +99,7 @@ public class QPartitionOperations {
      *
      * @return The set of all canonical QPartitions sucs that result from Pk by a minimal D+-transformation.
      */
-    public static <F> Collection<QPartition<F>> computeSuccessors(QPartition<F> qPartition) {
+    public static <F> Collection<QPartition<F>> computeSuccessors(QPartition<F> qPartition, Set<Diagnosis<F>> alreadyUsedDiagsOnLeft) {
         assert qPartition.dz.isEmpty();
 
         Collection<QPartition<F>> sucs = new HashSet<>();                           // line 2: stores successors of Parition Pk by a minimal
@@ -105,8 +114,23 @@ public class QPartitionOperations {
             Set<Diagnosis<F>> minTraitDiags = new HashSet<>();                      // line 13: to store one representative of each eq. class with set-minimial trait
             boolean sucsExist = false;                                              // line 14: will be set to true if Pk is found to have some canonical successor q-partition
 
+            int counter = 0;
+
             while (!diags.isEmpty()) {                                              // line 15:
                 Diagnosis<F> Di = Utils.getFirstElem(diags, true);                  // line 16: Di is first (any) element in diags and diags := diags - Di (getFirstElem removes Di from diags)
+                final Set<F> traitOfDi = qPartition.diagsTraits.get(Di);
+                boolean diagAlreadyUsedAsSuccessor = false;
+
+                for (Diagnosis<F> alreadyUsedDiag : alreadyUsedDiagsOnLeft) {
+                    if (traitOfDi.equals(qPartition.diagsTraits.get(alreadyUsedDiag))) {
+                        counter++;
+                        assert counter <= alreadyUsedDiagsOnLeft.size();
+
+                        diagAlreadyUsedAsSuccessor = true;
+                        break; // stop for-loop
+                    }
+                }
+
                 Set<Diagnosis<F>> necFollowers = new HashSet<>();                   // line 17: to store all necessary followers of Di
                 boolean diagOK = true;                                              // line 18: will be set to false if Di is found to have a non-set-minimal trait
                 Set<Diagnosis<F>> diagsAndMinTraitDiags = new HashSet<>(diags);     // prepare unification of diags with minTraitDiags
@@ -129,7 +153,9 @@ public class QPartitionOperations {
                 sucsExist = true;                                                   // line 28: existence of equal or more than 1 canonical successor q-partition in Pk guaranteed
 
                 if (diagOK) {                                                       // line 29:
-                    eqClasses.add(eqCls);                                           // line 30:
+                    if (!diagAlreadyUsedAsSuccessor) {
+                        eqClasses.add(eqCls);                                       // line 30:
+                    }
                     minTraitDiags.add(Di);                                          // line 31: add one representative for eq. class
                 }
                 diags.removeAll(necFollowers);                                      // line 32: delete all representatives for eq. class
@@ -214,6 +240,16 @@ public class QPartitionOperations {
         OptimalPartition(QPartition<F> partition, Boolean isOptimal) {
             this.partition = partition;
             this.isOptimal = isOptimal;
+        }
+    }
+
+    private static class SuccessorPlusDiagRepresentativeForEqClass<F> {
+        private QPartition<F> qPartition;
+        private Diagnosis<F> diagnosis;
+
+        private SuccessorPlusDiagRepresentativeForEqClass(Diagnosis<F> diagnosis, QPartition<F> qPartition) {
+            this.diagnosis = diagnosis;
+            this.qPartition = qPartition;
         }
     }
 }
