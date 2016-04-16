@@ -53,7 +53,7 @@ public abstract class AbstractTestPartitionRequirementsMeasure {
         assertEquals(0.01, D6.getMeasure().doubleValue(), DELTA);
 
         root = new QPartition<>(getSet(), getSet(D1,D2,D3,D4,D5,D6), getSet(), null);
-        sucs = QPartitionOperations.computeSuccessors(root);
+        sucs = QPartitionOperations.computeSuccessors(root, new HashSet<>());
 
         for (QPartition<Integer> p: sucs) {
             assertTrue(p.probDx.compareTo(BigDecimal.ZERO) > 0);

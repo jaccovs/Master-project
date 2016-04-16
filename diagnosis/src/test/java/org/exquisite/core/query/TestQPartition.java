@@ -27,7 +27,7 @@ public class TestQPartition {
 
         // initial case: dx is empty -> we are at root, i.e. this must equal the generateInitialSuccessors
         QPartition<Integer> qPartition = new QPartition<>(getSet(), getSet(D1, D2, D3, D4, D5, D6), getSet(), null);
-        Collection<QPartition<Integer>> successors = QPartitionOperations.computeSuccessors(qPartition);
+        Collection<QPartition<Integer>> successors = QPartitionOperations.computeSuccessors(qPartition, new HashSet<>());
         checkRootSuccessors(qPartition, successors);
 
         // this must be the same result as calling initialSuccessors
@@ -43,7 +43,7 @@ public class TestQPartition {
 
         // case 2
         qPartition = new QPartition<>(getSet(D5, D6), getSet(D1, D2, D3, D4), getSet(), null);
-        successors = QPartitionOperations.computeSuccessors(qPartition);
+        successors = QPartitionOperations.computeSuccessors(qPartition, new HashSet<>());
 
         // create here the set of expected successors
         expectedSuccessors = new HashSet<>();
@@ -58,7 +58,7 @@ public class TestQPartition {
         D3 = getDiagnosis(3, 4 ,5);
 
         QPartition<Integer> rootPartition = new QPartition<>(getSet(), getSet(D1, D2, D3), getSet(), null);
-        Collection<QPartition<Integer>> L1_successors = QPartitionOperations.computeSuccessors(rootPartition);
+        Collection<QPartition<Integer>> L1_successors = QPartitionOperations.computeSuccessors(rootPartition, new HashSet<>());
 
         Collection<QPartition<Integer>> expected_L1_Successors = getSet(
                 new QPartition<>(getSet(D1), getSet(D2, D3), getSet(), null),
@@ -75,24 +75,24 @@ public class TestQPartition {
 
         int i = 0;
         for (QPartition<Integer> L1_successor : L1_successors) {
-            Collection<QPartition<Integer>> L2_Successors = QPartitionOperations.computeSuccessors(L1_successor);
+            Collection<QPartition<Integer>> L2_Successors = QPartitionOperations.computeSuccessors(L1_successor, new HashSet<>());
             assertEquals(expected_L2_Successors[i++], L2_Successors); // check successors of each L1 partition
         }
 
         // finally check each qPartition in nextExpectedSuccessors which are just these two partitions
         qPartition = new QPartition<>(getSet(D1,D2), getSet(D3), getSet(), null);
-        successors = QPartitionOperations.computeSuccessors(qPartition);
+        successors = QPartitionOperations.computeSuccessors(qPartition, new HashSet<>());
         assertEquals(getSet(), successors); // no successor
 
         qPartition = new QPartition<>(getSet(D2,D3), getSet(D1), getSet(), null);
-        successors = QPartitionOperations.computeSuccessors(qPartition);
+        successors = QPartitionOperations.computeSuccessors(qPartition, new HashSet<>());
         assertEquals(getSet(), successors); // no successor
 
 
         // check that calling computeSuccesors with a q-partition with non-empty dz fails
         try {
             qPartition = new QPartition<>(getSet(D2, D3), getSet(D1), getSet(D4), null);
-            successors = QPartitionOperations.computeSuccessors(qPartition);
+            successors = QPartitionOperations.computeSuccessors(qPartition, new HashSet<>());
             fail();
         } catch (AssertionError e) {
             assertTrue(true);
