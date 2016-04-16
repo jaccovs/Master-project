@@ -54,7 +54,7 @@ public class PerfMeasurementManager {
     public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_LABELED_HS_NODES = "count.querycomputation.heuristic.labeled.hs.nodes";
     public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_CANONICAL_QUERIES_SIZE = "size.querycomputation.heuristic.canonical.queries";
     public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_ENRICHMENT = "size.querycomputation.heuristic.queries.before.enrichment";
-    public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE = "size.querycomputation.heuristic.queries.before.minimize";
+    public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT = "size.querycomputation.heuristic.queries.after.enrichment";
     public static final String COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE = "size.querycomputation.heuristic.queries.after.minimize";
     public static final String COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE = "size.querycomputation.naive.querypool";
 

@@ -56,7 +56,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
             // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
-            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE, enrichedQuery.size()); // SIZE of queries vor minimieren
+            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
             Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
             query = optimizedQuery;
@@ -111,14 +111,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         // answered correctly.
         Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
 
-
-
-        assert getCounters().get(COUNTER_SOLVER_ISCONSISTENT_FORMULAS) == null;
-        assert getCounters().get(COUNTER_SOLVER_ISCONSISTENT) == null;
-        assert getCounters().get(COUNTER_SOLVER_ISENTAILED) == null;
-        assert getCounters().get(COUNTER_SOLVER_CALCULATE_ENTAILMENTS) == null;
-
-
+        assert queries.size() == 1;
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_ENRICHMENT, queries.iterator().next().size());
 
         // creates an iterator on the queries to be used in hasNext() and next()

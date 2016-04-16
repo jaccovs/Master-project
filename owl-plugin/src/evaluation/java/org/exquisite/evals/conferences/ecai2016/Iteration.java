@@ -91,7 +91,7 @@ public class Iteration {
         sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_LABELED_HS_NODES).append(';');
         sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_CANONICAL_QUERIES_SIZE).append(';');
         sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_ENRICHMENT).append(';');
-        sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE).append(';');
+        sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT).append(';');
         sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE).append(';');
         sb.append(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE).append(';');
         sb.append(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION).append(';');
@@ -160,7 +160,7 @@ public class Iteration {
         sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_LABELED_HS_NODES)).append(';');
         sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_CANONICAL_QUERIES_SIZE)).append(';');
         sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_ENRICHMENT)).append(';');
-        sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_BEFORE_MINIMIZE)).append(';');
+        sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT)).append(';');
         sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE)).append(';');
         sb.append(queryCounters.get(PerfMeasurementManager.COUNTER_QUERYCOMPUTATION_NAIVE_QUERYPOOL_SIZE)).append(';');
         sb.append(queryTimers.get(PerfMeasurementManager.TIMER_QUERYCOMPUTATION_HEURISTIC_FINDQPARTITION)).append(';');
