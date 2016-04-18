@@ -97,6 +97,9 @@ public class QPartitionOperations {
      * This method represents the implementation of Algorithm 7 of the original paper.
      * In the method body we refer each statement to the line of the Algorithm 7 in the original paper.
      *
+     * @param qPartition The q-partition whose successors this method is computing.
+     * @param alreadyUsedDiagsOnLeft The diagnoses already used on the left branch of the tree. We can omit those diags. Use empty set for root partitions.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
      * @return The set of all canonical QPartitions sucs that result from Pk by a minimal D+-transformation.
      */
     public static <F> Collection<QPartition<F>> computeSuccessors(QPartition<F> qPartition, Set<Diagnosis<F>> alreadyUsedDiagsOnLeft) {

@@ -18,6 +18,6 @@ public class MinQueryCardinality<F> implements ISortCriterion<Set<F>> {
 
     @Override
     public String toString() {
-        return ("Min");
+        return ("MinCard");
     }
 }

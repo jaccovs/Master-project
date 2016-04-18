@@ -4,12 +4,12 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.perfmeasures.*;
+import org.exquisite.core.perfmeasures.Counter;
+import org.exquisite.core.perfmeasures.PerfMeasurementManager;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.utils.OWLUtils;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -31,11 +31,10 @@ public class Evaluation {
     protected static String TIMER_DIAGNOSES_CALCULATION = "time.calculation.diagnoses";
     protected static String TIMER_QUERY_CALCULATION = "time.query.computation";
 
-    @Test // TODO ACTIVATE TEST BY UNCOMMENTING THE ANNOTATION
+    //@Test // TODO ACTIVATE TEST BY UNCOMMENTING THE ANNOTATION
     public void eval() throws OWLOntologyCreationException, DiagnosisException {
         CSVWriter w = new CSVWriter();
 
-        final int TOTALSTEPS = Configuration.getOntologies().size() * Configuration.getDiagnoseSizes().size() * Configuration.getIterations() * Configuration.getNrOfQueryComputers();
         int step = 0;
         long start = System.currentTimeMillis();
 
@@ -54,6 +53,7 @@ public class Evaluation {
                 final InverseDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(solver);
 
                 Configuration.createQueryComputers(diagnosisEngine);
+                final int TOTALSTEPS = Configuration.getOntologies().size() * Configuration.getDiagnoseSizes().size() * Configuration.getIterations() * Configuration.getQueryComputers().size();
 
                 System.out.println("created diagnosis engine: " + diagnosisEngine);
 
@@ -69,8 +69,6 @@ public class Evaluation {
                     w.writeHeader(Iteration.getHeader());
 
                     for (int iteration = 1; iteration <= Configuration.getIterations(); iteration++) {
-
-
 
                         System.out.println("Iteration: " + iteration );
 
@@ -96,11 +94,8 @@ public class Evaluation {
                         System.out.println("timers: " + diagtimers);
                         System.out.println();
 
-
-
-                        //assertEquals(maxNumberOfDiagnoses, diagnoses.size());
+                        assertTrue(maxNumberOfDiagnoses >= diagnoses.size());
                         setMeasures(diagnoses, iteration);
-                        //setDiagnosesMeasures(diagnoses);
 
                         for (IQueryComputation queryComputation : Configuration.getQueryComputers()) {
                             System.out.println(queryComputation);
@@ -135,10 +130,12 @@ public class Evaluation {
 
                             w.writeIteration(i);
 
-
+                            // predict time
                             final long now = System.currentTimeMillis();
-                            long predictedEnd = (now - start) * TOTALSTEPS / ++step;
-                            System.out.println("Progress: (" + (step) + "/" + TOTALSTEPS + "), predicted end: " + new Date(now + predictedEnd));
+                            final long timeRequiredUntilNow = (now - start);
+                            final double avgTimeRequiredPerStepUntilNow = timeRequiredUntilNow / ++step;
+                            long predictedTimeRequiredForRemainingSteps = (long)((TOTALSTEPS-step) * avgTimeRequiredPerStepUntilNow);
+                            System.out.println("Progress: (" + (step) + "/" + TOTALSTEPS + "), predicted end: " + new Date(now + predictedTimeRequiredForRemainingSteps));
                             System.out.println();
 
                             statistics.addIteration(queryComputation, i);
@@ -159,26 +156,6 @@ public class Evaluation {
             e.printStackTrace();
             fail(e.getMessage());
             w.close(e);
-        }
-    }
-
-    protected void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
-        for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-            Set<String> axiomsInDiagnoses = new HashSet<>();
-            for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                for (OWLClassExpression expression : axiom.getNestedClassExpressions()) {
-                    if (expression instanceof OWLClass) {
-                        final String s = ((OWLClass) expression).getIRI().getRemainder().get();
-                        axiomsInDiagnoses.add(s);
-                    }
-                }
-            }
-
-            BigDecimal measure = mapping.get(axiomsInDiagnoses);
-            if (measure != null) {
-                diagnosis.setMeasure(measure);
-                System.out.println("set measure " + measure + " for diagnosis " + axiomsInDiagnoses);
-            }
         }
     }
 
@@ -240,23 +217,5 @@ public class Evaluation {
 
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }
-
-    protected static Map<Set<String>,BigDecimal> mapping = new HashMap<>();
-
-    @BeforeClass
-    public static void init() {
-        mapping.put(getSet("A", "C", "E", "F", "M", "X", "Z"),  new BigDecimal("0.11"));
-        mapping.put(getSet("C", "F", "H", "M", "X", "Z"),       new BigDecimal("0.26"));
-        mapping.put(getSet("E", "F", "H", "K", "X"),            new BigDecimal("0.15"));
-        mapping.put(getSet("B", "C", "F", "H", "X"),            new BigDecimal("0.04"));
-        mapping.put(getSet("E", "F", "H", "M", "X"),            new BigDecimal("0.36"));
-        mapping.put(getSet("A", "C", "F", "G", "H", "M", "Z"),  new BigDecimal("0.08"));
-    }
-
-    @SafeVarargs
-    public static <T> HashSet<T> getSet(T... elements) {
-        return new HashSet<>(Arrays.asList(elements));
-    }
-
 
 }

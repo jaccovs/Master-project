@@ -21,7 +21,11 @@ public class Statistics {
         this.ontology = ontology;
     }
 
-    private Map<IQueryComputation, List<Iteration>> iterations = new HashMap<>();
+    private Map<IQueryComputation, List<Iteration>> iterations = new LinkedHashMap<>(16, 0.75f, false); // with last parameter we force FIFO
+
+    private List<Iteration> getIterations(IQueryComputation qc) {
+        return iterations.computeIfAbsent(qc, (key) -> new ArrayList<>());
+    }
 
     public void addIteration(IQueryComputation qc, Iteration iteration) {
         getIterations(qc).add(iteration);
@@ -37,7 +41,7 @@ public class Statistics {
 
     private String getHeader() {
 
-        StringBuilder sb = new StringBuilder("\nStatistics for ").append(ontology).append(" and ").append(diagnosesSize).append(" diagnoses:").append('\n');
+        StringBuilder sb = new StringBuilder("\nStatistics for ").append(ontology).append(" and ").append(diagnosesSize).append(" diagnoses and ").append(this.iterations.values().iterator().next().size()).append(" iterations: \n");
         sb.append("Query Computation;");
         // diagnoses
         sb.append("AVG ").append(Evaluation.TIMER_DIAGNOSES_CALCULATION).append(';');
@@ -132,7 +136,8 @@ public class Statistics {
             final Timer timer = it.diagnosesTimers.get(key);
             total += (timer!=null) ? timer.total() : 0;
         }
-        return Double.toString(((double)total/(double)iterations.size())/1000000000.0)+"s";
+        //return Double.toString(((double)total/(double)iterations.size())/1000000000.0)+"s";
+        return Double.toString(((double)total/(double)iterations.size())/1000000000.0);
     }
 
     private String computeAvgTimeQueries(final List<Iteration> iterations, final String key) {
@@ -142,7 +147,8 @@ public class Statistics {
             total += (timer!=null) ? timer.total() : 0;
         }
 
-        return Double.toString(((double)total/(double)iterations.size())/1000000000.0)+"s";
+        //return Double.toString(((double)total/(double)iterations.size())/1000000000.0)+"s";
+        return Double.toString(((double)total/(double)iterations.size())/1000000000.0);
     }
 
     private String computeAvgCountDiags(final List<Iteration> iterations, final String key) {
@@ -165,7 +171,4 @@ public class Statistics {
         return Double.toString((double)total/(double)iterations.size());
     }
 
-    private List<Iteration> getIterations(IQueryComputation qc) {
-        return iterations.computeIfAbsent(qc, (key) -> new ArrayList<>());
-    }
 }
