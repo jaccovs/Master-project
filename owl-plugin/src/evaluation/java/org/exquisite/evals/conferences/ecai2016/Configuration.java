@@ -26,7 +26,7 @@ class Configuration {
 
     private static String[] ontologies = {"ontologies/University.owl", "ontologies/Transportation-SDA.owl", "ontologies/Economy-SDA.owl"};
 
-    private static Integer[] diagnoseSizes = {3, 4, 5};
+    private static Integer[] diagnoseSizes = {10, 20, 30, 40, 50};
 
     private static List<IQueryComputation<OWLLogicalAxiom>> queryComputers;
 
@@ -93,7 +93,7 @@ class Configuration {
         // HeuristicQueryComputation with RIO(0.05,0,0.4)
         c = new HeuristicConfiguration<>(e, new RiskOptimizationMeasure<>(new BigDecimal("0.05"), BigDecimal.ZERO, new BigDecimal("0.4")));
         queryComputers.add(new HeuristicQueryComputation<>(c));
-
+/*
         // SimpleNaive with SPL
         queryComputers.add(new SimpleNaiveQueryComputation<>(e, new SplitInHalf1QSS<>()));
 
@@ -111,6 +111,6 @@ class Configuration {
 
         // SimpleNaive with RIO(0.4)
         queryComputers.add(new SimpleNaiveQueryComputation<>(e, new RIOQSS<>(new BigDecimal("0.4"))));
-
+*/
     }
 }
