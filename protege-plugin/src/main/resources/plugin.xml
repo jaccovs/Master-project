@@ -121,4 +121,9 @@
         <category value="Debugger"/>
     </extension>
 
+    <extension id="querydebugger.prefs" point="org.protege.editor.core.application.preferencespanel">
+        <label value="QueryDebugger"/>
+        <class value="org.exquisite.protege.ui.panel.QueryDebuggerPreferencesPanel"/>
+    </extension>
+
 </plugin>
