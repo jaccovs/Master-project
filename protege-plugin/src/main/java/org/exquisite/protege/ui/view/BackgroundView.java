@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.view;
 
+import org.exquisite.protege.model.configuration.SearchCreator;
 import org.exquisite.protege.ui.buttons.AddToBackgroundButton;
 import org.exquisite.protege.ui.buttons.CreateBackgroundAxiomButton;
 import org.exquisite.protege.ui.buttons.RemoveFromBackgroundButton;
@@ -128,11 +129,14 @@ public class BackgroundView extends AbstractQueryViewComponent {
         Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<OWLLogicalAxiom>();
         copySet(ontology.getLogicalAxioms(),ontologyAxMinusBg);
         ontologyAxiomList.updateList(ontologyAxMinusBg,ontology);
-        /*
+
+        System.out.println("updateDisplayedOntologyAxioms: " + getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator());
+
         SearchCreator searchCreator = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
+
+        /*
         Set<OWLLogicalAxiom> bgAxioms = searchCreator.getSearch().getSearchable().
                 getKnowledgeBase().getBackgroundFormulas();
-        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
 
         Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<OWLLogicalAxiom>();
         if (selectedEntity==null)

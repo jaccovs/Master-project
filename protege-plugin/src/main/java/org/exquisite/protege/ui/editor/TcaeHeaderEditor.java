@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.editor;
 
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.ErrorHandler;
+import org.exquisite.protege.model.error.ErrorHandler;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.list.TcaeListHeader;
 import org.protege.editor.owl.OWLEditorKit;
@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.util.Set;
-
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus.*;
 
 /**
  * Created with IntelliJ IDEA.

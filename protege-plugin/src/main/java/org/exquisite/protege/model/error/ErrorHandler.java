@@ -1,4 +1,6 @@
-package org.exquisite.protege.model;
+package org.exquisite.protege.model.error;
+
+import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 
 /**
  * Created with IntelliJ IDEA.

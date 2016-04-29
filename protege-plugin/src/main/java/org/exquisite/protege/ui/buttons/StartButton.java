@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
+import org.exquisite.protege.model.error.SearchErrorHandler;
 import org.exquisite.protege.ui.view.DiagnosesView;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class StartButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doCalculateDiagnosis(new SearchErrorHandler()); // TODO
+                        toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doCalculateDiagnosis(new SearchErrorHandler());
                     }
                 }
         );

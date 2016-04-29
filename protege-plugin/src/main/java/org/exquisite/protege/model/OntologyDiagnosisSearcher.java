@@ -1,7 +1,11 @@
 package org.exquisite.protege.model;
 
+import org.exquisite.protege.model.configuration.SearchCreator;
+import org.exquisite.protege.model.error.ErrorHandler;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.util.List;
 import java.util.Set;
@@ -20,18 +24,27 @@ public class OntologyDiagnosisSearcher {
 
     public static enum SearchStatus { IDLE, RUNNING }
 
+    private QuerySearchStatus querySearchStatus = QuerySearchStatus.IDLE;
+
+    private SearchCreator creator;
+
+
+    public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
+        OWLReasonerManager reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
+        OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
+
+        creator = new SearchCreator(ontology,reasonerMan);
+    }
+
+    public SearchCreator getSearchCreator() {
+        return creator;
+    }
+
     public void removeBackgroundAxioms(List selectedValues) {
     }
 
     public void addBackgroundAxioms(List selectedValues) {
 
-    }
-
-
-    private QuerySearchStatus querySearchStatus = QuerySearchStatus.IDLE;
-
-
-    public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
     }
 
     public void addChangeListener(EditorKitHook editorKitHook) {
@@ -51,6 +64,16 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
+    }
+
+    public void doCalculateDiagnosis(ErrorHandler errorHandler) {
+
+        int n = creator.getConfig().numOfLeadingDiags;
+        if (creator.getConfig().calcAllDiags)
+            n = -1;
+
+        System.out.println("Start with calculation of maximal " + n + " diagnoses ... ");
+        //new SearchThread(creator.getSearch(), n, errorHandler).execute(); //TODO
     }
 
 }
