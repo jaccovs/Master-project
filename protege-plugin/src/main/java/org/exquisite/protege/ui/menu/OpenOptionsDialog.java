@@ -16,7 +16,7 @@ public class OpenOptionsDialog extends ProtegeOWLAction {
 
     public void actionPerformed(ActionEvent e) {
 
-        PreferencesDialogPanel.showPreferencesDialog("QueryDebugger",getOWLEditorKit());
+        PreferencesDialogPanel.showPreferencesDialog("Exquisite QueryDebugger",getOWLEditorKit());
 
     }
 
