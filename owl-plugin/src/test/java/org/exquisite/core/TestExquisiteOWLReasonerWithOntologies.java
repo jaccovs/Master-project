@@ -1,11 +1,10 @@
 package org.exquisite.core;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
-import com.sun.xml.internal.fastinfoset.sax.SystemIdResolver;
-import org.exquisite.core.engines.*;
+import org.exquisite.core.engines.AbstractDiagnosisEngine;
+import org.exquisite.core.engines.IDiagnosisEngine;
+import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.SimpleNaiveQueryComputation;
@@ -17,7 +16,6 @@ import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.OWLUtils;
@@ -27,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import static junit.framework.Assert.*;
-import static junit.framework.Assert.assertEquals;
 
 /**
  * @author wolfi
