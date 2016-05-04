@@ -262,6 +262,6 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
     @Override
     public String toString() {
-        return "ExquisiteOWLReasoner";
+        return "ExquisiteOWLReasoner(" + reasoner + ")";
     }
 }
