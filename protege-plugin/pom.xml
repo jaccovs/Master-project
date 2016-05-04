@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+            <version>4.2.3</version>
+        </dependency>
+        <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-owl</artifactId>
             <version>${protege-version}</version>
@@ -117,7 +122,8 @@
 
                         <Require-Bundle>
                             org.protege.editor.owl,
-                            org.protege.editor.core.application
+                            org.protege.editor.core.application,
+                            org.semanticweb.owl.owlapi
                         </Require-Bundle>
                         <Private-Package>org.exquisite.protege.*</Private-Package>
                     </instructions>
