@@ -204,4 +204,18 @@ public class DiagnosisModel<F> extends Observable implements Observer {
     public void initialize() {
 
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("DiagnosisModel{");
+        sb.append(possiblyFaultyFormulas.size()).append(" possiblyFaultyFormulas=").append(new ArrayList<>(possiblyFaultyFormulas));
+        sb.append(',').append(correctFormulas.size()).append(" correctFormulas=").append(new ArrayList<>(correctFormulas));
+        sb.append(',').append(entailedExamples.size()).append(" entailedExamples=").append(new ArrayList<>(entailedExamples));
+        sb.append(',').append(notEntailedExamples.size()).append(" notEntailedExamples=").append(new ArrayList<>(notEntailedExamples));
+        sb.append(',').append(consistentExamples.size()).append(" consistentExamples=").append(new ArrayList<>(consistentExamples));
+        sb.append(',').append(inconsistentExamples.size()).append(" inconsistentExamples=").append(new ArrayList<>(inconsistentExamples));
+        sb.append(", formulaWeights=").append(formulaWeights);
+        sb.append('}');
+        return sb.toString();
+    }
 }
