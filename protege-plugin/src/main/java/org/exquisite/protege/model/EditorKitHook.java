@@ -38,7 +38,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     public void initialise() throws Exception {
         if (!initialized) {
-            ontologyDiagnosisSearcherMap = new LinkedHashMap<OWLOntology, OntologyDiagnosisSearcher>();
+            ontologyDiagnosisSearcherMap = new LinkedHashMap<>();
             getEditorKit().getModelManager().addListener(this);
             id = cnt;
             cnt++;
@@ -84,10 +84,11 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        logger.debug(this.getClass() + ".stateChanged");
         OWLOntology activeOntology = getEditorKit().getModelManager().getActiveOntology();
 
         OntologyDiagnosisSearcher activeSearcher = ontologyDiagnosisSearcherMap.get(activeOntology);
-        if (activeSearcher.equals((OntologyDiagnosisSearcher) e.getSource())) {
+        if (activeSearcher.equals(e.getSource())) {
             // something in the active ontology searcher has changed
             notifyActiveSearcherListeners(e);
         }

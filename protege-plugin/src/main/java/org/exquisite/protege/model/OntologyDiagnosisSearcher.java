@@ -1,19 +1,32 @@
 package org.exquisite.protege.model;
 
-import org.exquisite.protege.model.configuration.SearchCreator;
+import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.engines.IDiagnosisEngine;
+import org.exquisite.core.model.Diagnosis;
+import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.model.error.ErrorHandler;
+import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Set;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus.NO_ERROR;
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus.SOLVER_EXCEPTION;
 
 /**
  * Created by wolfi on 17.03.2016.
  */
 public class OntologyDiagnosisSearcher {
+
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDiagnosisSearcher.class.getName());
 
     public static enum TestCaseType {POSITIVE_TC, NEGATIVE_TC, ENTAILED_TC, NON_ENTAILED_TC}
 
@@ -26,31 +39,69 @@ public class OntologyDiagnosisSearcher {
 
     private QuerySearchStatus querySearchStatus = QuerySearchStatus.IDLE;
 
-    private SearchCreator creator;
+    private DiagnosisEngineFactory diagnosisEngineFactory;
+
+    private OWLReasonerManager reasonerMan;
+
+    private OWLOntology ontology;
+
+    private SearchStatus searchStatus = SearchStatus.IDLE;
+
+    private ErrorStatus errorStatus = NO_ERROR;
+
+    private Set<ChangeListener> changeListeners = new LinkedHashSet<>();
+
+    public Set<Diagnosis<OWLLogicalAxiom>> getDiagnoses() {
+        return diagnoses;
+    }
+
+    private Set<Diagnosis<OWLLogicalAxiom>> diagnoses = new HashSet<>();
 
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
-        OWLReasonerManager reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
-        OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
+        reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
+        ontology = editorKit.getModelManager().getActiveOntology();
 
-        creator = new SearchCreator(ontology,reasonerMan);
+
+        diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerMan);
     }
 
-    public SearchCreator getSearchCreator() {
-        return creator;
+    public DiagnosisEngineFactory getSearchCreator() {
+        return diagnosisEngineFactory;
     }
 
-    public void removeBackgroundAxioms(List selectedValues) {
+    protected List<OWLLogicalAxiom> extract(List<AxiomListItem> selectedValuesList) {
+        List<OWLLogicalAxiom> axioms = selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
+        return axioms;
     }
 
-    public void addBackgroundAxioms(List selectedValues) {
-
+    public void removeBackgroundAxioms(List<AxiomListItem> selectedValues) {
+        logger.debug("moving " + selectedValues + " from background to possiblyFaultyFormulas");
+        List<OWLLogicalAxiom> axioms = extract(selectedValues);
+        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas().removeAll(axioms);
+        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().addAll(axioms);
+        notifyListeners();
     }
 
-    public void addChangeListener(EditorKitHook editorKitHook) {
+    public void addBackgroundAxioms(List<AxiomListItem> selectedValues) {
+        logger.debug("moving " + selectedValues + " from possiblyFaultyFormulas to background");
+        List<OWLLogicalAxiom> axioms = extract(selectedValues);
+        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().removeAll(axioms);
+        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas().addAll(axioms);
+        notifyListeners();
     }
 
-    public void removeChangeListener(EditorKitHook editorKitHook) {
+    public void addChangeListener(ChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        changeListeners.remove(listener);
+    }
+
+    protected void notifyListeners() {
+        for (ChangeListener listener : changeListeners)
+            listener.stateChanged(new ChangeEvent(this));
     }
 
     public QuerySearchStatus getQuerySearchStatus() {
@@ -66,14 +117,84 @@ public class OntologyDiagnosisSearcher {
     public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
     }
 
+
     public void doCalculateDiagnosis(ErrorHandler errorHandler) {
-
-        int n = creator.getConfig().numOfLeadingDiags;
-        if (creator.getConfig().calcAllDiags)
+        int n = diagnosisEngineFactory.getConfig().numOfLeadingDiags;
+        if (diagnosisEngineFactory.getConfig().calcAllDiags)
             n = -1;
+        //new SearchThread(diagnosisEngineFactory.getDiagnosisEngine(), n, errorHandler).execute();
 
-        System.out.println("Start with calculation of maximal " + n + " diagnoses ... ");
-        //new SearchThread(creator.getSearch(), n, errorHandler).execute(); //TODO
+        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
+        diagnosisEngine.setMaxNumberOfDiagnoses(n);
+        try {
+            logger.debug("maxNumberOfDiagnoses: " + n);
+            logger.debug("diagnosisEngine: " + diagnosisEngine);
+            logger.debug("solver: " + diagnosisEngine.getSolver());
+            logger.debug("diagnosisModel: " + diagnosisEngine.getSolver().getDiagnosisModel());
+            logger.debug("start searching maximal " + n + " diagnoses ...");
+            diagnoses = diagnosisEngine.calculateDiagnoses();
+            logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
+            notifyListeners();
+        } catch (DiagnosisException e) {
+            errorHandler.errorHappend(SOLVER_EXCEPTION);
+        } finally {
+            diagnosisEngine.resetEngine();
+        }
+
     }
+/*
+    public class SearchThread extends SwingWorker<Object,Object> implements ChangeListener {
 
+        private IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine;
+
+        private int number;
+
+        private ErrorHandler errorHandler;
+
+        public SearchThread(IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine, int number, ErrorHandler errorHandler) {
+            this.number = number;
+            this.errorHandler = errorHandler;
+            this.diagnosisEngine = diagnosisEngine;
+        }
+
+        @Override
+        public Object doInBackground() {
+            //diagnosisEngine.addSearchListener(this);
+            searchStatus = SearchStatus.RUNNING;
+            publish(new Object());
+            try {
+                diagnosisEngine.setMaxNumberOfDiagnoses(number);
+                logger.debug("diagnosisEngine: " + diagnosisEngine);
+                logger.debug("solver: " + diagnosisEngine.getSolver());
+                logger.debug("diagnosisModel: " + diagnosisEngine.getSolver().getDiagnosisModel());
+                diagnoses = diagnosisEngine.calculateDiagnoses();
+                logger.debug("diagnoses: " + diagnoses);
+                errorStatus = NO_ERROR;
+            } catch (DiagnosisException e) {
+                errorStatus = SOLVER_EXCEPTION;
+            } finally {
+                diagnosisEngine.resetEngine();
+            }
+            searchStatus = SearchStatus.IDLE;
+            if (!errorStatus.equals(NO_ERROR))
+                errorHandler.errorHappend(errorStatus);
+
+            publish(new Object());
+            //diagnosisEngine.removeSearchListener(this);
+
+            return null;
+        }
+
+        @Override
+        protected void process(List<Object> chunks) {
+            notifyListeners();
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            publish(new Object());
+        }
+
+    }
+*/
 }

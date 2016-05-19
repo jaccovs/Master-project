@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.configuration.SearchCreator;
+import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.ui.buttons.AddToBackgroundButton;
 import org.exquisite.protege.ui.buttons.CreateBackgroundAxiomButton;
 import org.exquisite.protege.ui.buttons.RemoveFromBackgroundButton;
@@ -10,12 +10,12 @@ import org.protege.editor.core.ui.util.ComponentFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +25,8 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class BackgroundView extends AbstractQueryViewComponent {
+
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(BackgroundView.class.getName());
 
     private BasicAxiomList backgroundAxiomList;
 
@@ -123,22 +125,12 @@ public class BackgroundView extends AbstractQueryViewComponent {
     }
 
 
-    public void updateDisplayedOntologyAxioms() { // TODO
-
+    public void updateDisplayedOntologyAxioms() {
+        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
+        java.util.List<OWLLogicalAxiom> bgAxioms = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas();
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<OWLLogicalAxiom>();
-        copySet(ontology.getLogicalAxioms(),ontologyAxMinusBg);
-        ontologyAxiomList.updateList(ontologyAxMinusBg,ontology);
 
-        System.out.println("updateDisplayedOntologyAxioms: " + getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator());
-
-        SearchCreator searchCreator = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
-
-        /*
-        Set<OWLLogicalAxiom> bgAxioms = searchCreator.getSearch().getSearchable().
-                getKnowledgeBase().getBackgroundFormulas();
-
-        Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<OWLLogicalAxiom>();
+        Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<>();
         if (selectedEntity==null)
             copySet(ontology.getLogicalAxioms(),ontologyAxMinusBg);
         else {
@@ -149,21 +141,20 @@ public class BackgroundView extends AbstractQueryViewComponent {
         }
         ontologyAxMinusBg.removeAll(bgAxioms);
         ontologyAxiomList.updateList(ontologyAxMinusBg,ontology);
-        */
+
     }
 
-    protected void updateDisplayedBackgroundAxioms() { // TODO
-        /*
-        SearchCreator searchCreator = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
-        Set<OWLLogicalAxiom> bgAxioms = searchCreator.getSearch().getSearchable().
-                getKnowledgeBase().getBackgroundFormulas();
+    protected void updateDisplayedBackgroundAxioms() {
+
+        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
+        Set<OWLLogicalAxiom> bgAxioms = new HashSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
         backgroundAxiomList.updateList(bgAxioms,ontology);
-        */
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        logger.debug("stateChanged(" + e + ")");
         updateDisplayedBackgroundAxioms();
         updateDisplayedOntologyAxioms();
     }

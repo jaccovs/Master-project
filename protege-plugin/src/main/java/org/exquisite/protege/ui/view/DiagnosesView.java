@@ -1,15 +1,14 @@
 package org.exquisite.protege.ui.view;
 
-/* TODO
-import at.ainf.diagnosis.storage.FormulaSet;
-import at.ainf.protegeview.gui.buttons.StartButton;
-import at.ainf.protegeview.model.configuration.SearchCreator;
-*/
-import org.exquisite.protege.ui.buttons.StartButton;
+import org.exquisite.core.model.Diagnosis;
+import org.exquisite.protege.ui.buttons.SearchDiagnosesButton;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +19,9 @@ import java.awt.*;
  */
 public class DiagnosesView extends AbstractAxiomSetView {
 
-    private StartButton startButton;
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(DiagnosesView.class.getName());
+
+    private SearchDiagnosesButton searchDiagnosesButton;
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -33,19 +34,18 @@ public class DiagnosesView extends AbstractAxiomSetView {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setFloatable(false);
-        startButton = new StartButton(this);
-        toolBar.add(startButton);
+        searchDiagnosesButton = new SearchDiagnosesButton(this);
+        toolBar.add(searchDiagnosesButton);
         toolBar.add(Box.createHorizontalGlue());
 
         return toolBar;
     }
 
     private void updateView() {
-        /* TODO
-        SearchCreator searchCreator = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
-        Set<FormulaSet<OWLLogicalAxiom>> setOfFormulaSets = searchCreator.getSearch().getDiagnoses();
-        updateList(setOfFormulaSets);
-        */
+
+        Set<Diagnosis<OWLLogicalAxiom>> diagnoses = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnoses();
+        logger.debug("updateView: got diagnoses: " + diagnoses);
+        updateList(diagnoses);
     }
 
     @Override

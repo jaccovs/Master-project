@@ -3,7 +3,7 @@ package org.exquisite.protege.ui.view;
 /*
 import at.ainf.diagnosis.storage.FormulaSet;
 import at.ainf.protegeview.model.OntologyDiagnosisSearcher;
-import at.ainf.protegeview.model.configuration.SearchCreator;
+import at.ainf.protegeview.model.configuration.DiagnosisEngineFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 */
 import javax.swing.event.ChangeEvent;
@@ -22,7 +22,7 @@ public class ConflictsView extends AbstractAxiomSetView {
     @Override
     public void stateChanged(ChangeEvent e) {
         /*
-        SearchCreator searchCreator = ((OntologyDiagnosisSearcher) e.getSource()).getSearchCreator();
+        DiagnosisEngineFactory searchCreator = ((OntologyDiagnosisSearcher) e.getSource()).getSearchCreator();
         Set<FormulaSet<OWLLogicalAxiom>> setOfFormulaSets = searchCreator.getSearch().getConflicts();
         updateList(setOfFormulaSets);
         */

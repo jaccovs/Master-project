@@ -14,10 +14,10 @@ import java.awt.event.KeyEvent;
  * Time: 09:01
  * To change this template use File | Settings | File Templates.
  */
-public class StartButton extends AbstractGuiButton {
+public class SearchDiagnosesButton extends AbstractGuiButton {
 
-    public StartButton(final DiagnosesView toolboxView) {
-        super("Refresh Diagnoses","start to calculate diagnoses","Search.png",KeyEvent.VK_D,
+    public SearchDiagnosesButton(final DiagnosesView toolboxView) {
+        super("Search Diagnoses","start to calculate diagnoses","Search.png",KeyEvent.VK_D,
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
