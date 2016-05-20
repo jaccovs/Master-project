@@ -44,11 +44,13 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
         ExquisiteOWLReasoner reasoner = createReasoner(ontology);
 
         IDiagnosisEngine<OWLLogicalAxiom> engine = getDiagnosisEngine(reasoner);
-        engine.setMaxNumberOfDiagnoses(2);
+        engine.setMaxNumberOfDiagnoses(9);
+
+        System.out.println("Start calculating diagnosis on the following " + engine.getSolver().getDiagnosisModel());
 
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = engine.calculateDiagnoses();
         System.out.println(diagnoses.size() + " diags found");
-        assertEquals(2, diagnoses.size());
+        assertEquals(6, diagnoses.size());
 
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
             System.out.println(" ----");

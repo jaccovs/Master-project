@@ -55,9 +55,18 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
         diagnosisEngine.resetEngine();
         diagnosisEngine.setMaxNumberOfDiagnoses(nrOfDiagnoses);
 
-        if (logger.isDebugEnabled()) logger.debug("calculating " + nrOfDiagnoses + " diagnoses for OWL-ontology " + ontology + " using reasoner " + diagnosisEngine.getSolver() + " with engine " + diagnosisEngine);
-        final Set diagnoses = diagnosisEngine.calculateDiagnoses();
+        if (logger.isDebugEnabled()) {
+            logger.debug("calculating a maximum of " + nrOfDiagnoses + " diagnoses for OWL-ontology " + ontology + " using reasoner " + diagnosisEngine.getSolver() + " with engine " + diagnosisEngine);
+            logger.debug("based on " + diagnosisEngine.getSolver().getDiagnosisModel());
+        }
+
+        final Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
         assertNotNull(diagnoses);
+        if (logger.isDebugEnabled()) {
+            logger.debug("got " + diagnoses.size() + " diagnoses: ");
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses)
+                logger.debug('\t' + OWLUtils.getString(diagnosis));
+        }
         assertEquals(nrOfDiagnoses, diagnoses.size());
         if (logger.isDebugEnabled()) logger.debug("done");
         return diagnoses;
