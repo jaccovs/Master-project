@@ -4,6 +4,7 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
+import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.exquisite.protege.model.error.ErrorHandler;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
@@ -141,6 +142,10 @@ public class OntologyDiagnosisSearcher {
             diagnosisEngine.resetEngine();
         }
 
+    }
+
+    public void updateConfig(SearchConfiguration newConfiguration) {
+        getSearchCreator().updateConfig(newConfiguration);
     }
 /*
     public class SearchThread extends SwingWorker<Object,Object> implements ChangeListener {

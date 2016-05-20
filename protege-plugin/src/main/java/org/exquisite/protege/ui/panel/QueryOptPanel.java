@@ -5,13 +5,6 @@ import org.exquisite.protege.model.configuration.SearchConfiguration;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 11.09.12
- * Time: 09:50
- * To change this template use File | Settings | File Templates.
- */
 public class QueryOptPanel extends AbstractOptPanel {
 
     private JSpinner partitioningThresholdField = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
@@ -20,21 +13,16 @@ public class QueryOptPanel extends AbstractOptPanel {
 
     private JCheckBox minimizeQuery_Checkbox = new JCheckBox("minimize query ", true);
 
-
-    private JCheckBox incSubClassOf = new JCheckBox("include entailments containing SubClassOf", false);
-
-    private JCheckBox incClassAssert = new JCheckBox("include entailments containing ClassAssertion", false);
-
-    private JCheckBox incEquivClass = new JCheckBox("include entailments containing EquivalentClass", false);
-
-    private JCheckBox incDisjClass = new JCheckBox("include entailments containing DisjointClass", false);
-
-    private JCheckBox incProperty = new JCheckBox("include entailments containing PropertyOf", false);
-
-    private JCheckBox incOntologyAxioms = new JCheckBox("include ontology axioms", true);
-
-    private JCheckBox incRefThingAxioms = new JCheckBox("include axioms referencing top", false);
-
+    // Entailmenttypes
+    private JCheckBox incInferenceTypeClassHierarchy_Checkbox = new JCheckBox("include entailments containing ClassHierarchy", true);
+    private JCheckBox incInferenceTypeDisjointClasses_Checkbox = new JCheckBox("include entailments containing DisjointClasses", true);
+    private JCheckBox incInferenceTypeObjectPropertyHierarchy_Checkbox = new JCheckBox("include entailments containing ObjectPropertyHierarchy", false);
+    private JCheckBox incInferenceTypeDataPropertyHierarchy_Checkbox = new JCheckBox("include entailments containing DataPropertyHierarchy", false);
+    private JCheckBox incInferenceTypeClassAssertions_Checkbox = new JCheckBox("include entailments containing ClassAssertions", false);
+    private JCheckBox incInferenceTypeObjectPropertyAssertions_Checkbox = new JCheckBox("include entailments containing ObjectPropertyAssertions", false);
+    private JCheckBox incInferenceTypeDataPropertyAssertions_Checkbox = new JCheckBox("include entailments containing DataPropertyAssertions", false);
+    private JCheckBox incInferenceTypeSameIndividual_Checkbox = new JCheckBox("include entailments containing SameIndividual", false);
+    private JCheckBox incInferenceTypeDifferentIndividuals_Checkbox = new JCheckBox("include entailments containing DifferentIndividuals", false);
 
     public QueryOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration) {
         super(configuration,newConfiguration);
@@ -56,14 +44,16 @@ public class QueryOptPanel extends AbstractOptPanel {
         partitioningThresholdField.setPreferredSize(new Dimension(60, 22));
         holderQueryGen.addOptionBox(new OptionBox("entcalcthr",getListener(),new JLabel("EntCalcThreshold "),partitioningThresholdField));
 
-        OptionGroupBox holderEntailments = new OptionGroupBox("Axioms included in query");
-        holderEntailments.addOptionBox(new OptionBox("incontologyaxioms",getListener(),incOntologyAxioms));
-        holderEntailments.addOptionBox(new OptionBox("increfthingaxioms",getListener(),incRefThingAxioms));
-        holderEntailments.addOptionBox(new OptionBox("incsubclassofaxioms",getListener(),incSubClassOf));
-        holderEntailments.addOptionBox(new OptionBox("incclassassertaxioms",getListener(),incClassAssert));
-        holderEntailments.addOptionBox(new OptionBox("incequivclassaxioms",getListener(),incEquivClass));
-        holderEntailments.addOptionBox(new OptionBox("incdisjclassaxioms",getListener(),incDisjClass));
-        holderEntailments.addOptionBox(new OptionBox("incpropertyaxiomss",getListener(),incProperty));
+        OptionGroupBox holderEntailments = new OptionGroupBox("Inference Types used to calculate entailments");
+        holderEntailments.addOptionBox(new OptionBox("incclasshierarchy",getListener(),incInferenceTypeClassHierarchy_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incdisjointclasses",getListener(),incInferenceTypeDisjointClasses_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incobjectpropertyhierarchy",getListener(),incInferenceTypeObjectPropertyHierarchy_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incdatapropertyhierarchy",getListener(),incInferenceTypeDataPropertyHierarchy_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incclassassertions",getListener(),incInferenceTypeClassAssertions_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incobjectpropertyassertions",getListener(),incInferenceTypeObjectPropertyAssertions_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incdatapropertyassertions",getListener(),incInferenceTypeDataPropertyAssertions_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incsameindividual",getListener(),incInferenceTypeSameIndividual_Checkbox));
+        holderEntailments.addOptionBox(new OptionBox("incdifferentindividuals",getListener(),incInferenceTypeDifferentIndividuals_Checkbox));
 
         holder.add(holderQueryGen);
         holder.add(holderEntailments);
@@ -76,13 +66,16 @@ public class QueryOptPanel extends AbstractOptPanel {
         minimizeQuery_Checkbox.setSelected(getConfiguration().minimizeQuery);
         scoringFunction.setSelectedItem(getConfiguration().qss);
         partitioningThresholdField.setValue(getConfiguration().entailmentCalThres);
-        incRefThingAxioms.setSelected(getConfiguration().incAxiomsRefThing);
-        incOntologyAxioms.setSelected(getConfiguration().incOntolAxioms);
-        incSubClassOf.setSelected(getConfiguration().inclEntSubClass);
-        incClassAssert.setSelected(getConfiguration().incEntClassAssert);
-        incEquivClass.setSelected(getConfiguration().incEntEquivClass);
-        incDisjClass.setSelected(getConfiguration().incEntDisjClasses);
-        incProperty.setSelected(getConfiguration().incEntPropAssert);
+
+        incInferenceTypeClassHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeClassHierarchy);
+        incInferenceTypeDisjointClasses_Checkbox.setSelected(getConfiguration().incInferenceTypeDisjointClasses);
+        incInferenceTypeObjectPropertyHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeObjectPropertyHierarchy);
+        incInferenceTypeDataPropertyHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeDataPropertyHierarchy);
+        incInferenceTypeClassAssertions_Checkbox.setSelected(getConfiguration().incInferenceTypeClassAssertions);
+        incInferenceTypeObjectPropertyAssertions_Checkbox.setSelected(getConfiguration().incInferenceTypeObjectPropertyAssertions);
+        incInferenceTypeDataPropertyAssertions_Checkbox.setSelected(getConfiguration().incInferenceTypeDataPropertyAssertions);
+        incInferenceTypeSameIndividual_Checkbox.setSelected(getConfiguration().incInferenceTypeSameIndividual);
+        incInferenceTypeDifferentIndividuals_Checkbox.setSelected(getConfiguration().incInferenceTypeDifferentIndividuals);
     }
 
     @Override
@@ -91,13 +84,16 @@ public class QueryOptPanel extends AbstractOptPanel {
         getNewConfiguration().minimizeQuery = minimizeQuery_Checkbox.isSelected();
         getNewConfiguration().qss = (SearchConfiguration.QSS) scoringFunction.getSelectedItem();
         getNewConfiguration().entailmentCalThres = (Double) partitioningThresholdField.getValue();
-        getNewConfiguration().incAxiomsRefThing = incRefThingAxioms.isSelected();
-        getNewConfiguration().incOntolAxioms = incOntologyAxioms.isSelected();
-        getNewConfiguration().inclEntSubClass = incSubClassOf.isSelected();
-        getNewConfiguration().incEntClassAssert = incClassAssert.isSelected();
-        getNewConfiguration().incEntEquivClass = incEquivClass.isSelected();
-        getNewConfiguration().incEntDisjClasses = incDisjClass.isSelected();
-        getNewConfiguration().incEntPropAssert = incProperty.isSelected();
+
+        getNewConfiguration().incInferenceTypeClassHierarchy = incInferenceTypeClassHierarchy_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeDisjointClasses = incInferenceTypeDisjointClasses_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeObjectPropertyHierarchy = incInferenceTypeObjectPropertyHierarchy_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeDataPropertyHierarchy = incInferenceTypeDataPropertyHierarchy_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeClassAssertions = incInferenceTypeClassAssertions_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeObjectPropertyAssertions = incInferenceTypeObjectPropertyAssertions_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeDataPropertyAssertions = incInferenceTypeDataPropertyAssertions_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeSameIndividual = incInferenceTypeSameIndividual_Checkbox.isSelected();
+        getNewConfiguration().incInferenceTypeDifferentIndividuals = incInferenceTypeDifferentIndividuals_Checkbox.isSelected();
     }
 
 }

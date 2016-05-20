@@ -1,43 +1,25 @@
 package org.exquisite.protege.model.configuration;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 21.05.12
- * Time: 11:33
- * To change this template use File | Settings | File Templates.
- */
+import org.semanticweb.owlapi.reasoner.InferenceType;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class SearchConfiguration {
 
-    public static enum SearchType {
-        UNIFORM_COST,
-        BREATHFIRST;
-
+    public static enum DiagnosisEngineType {
+        HSDAG,
+        HSTree,
+        Inverse;
         @Override
         public String toString() {
             switch (this) {
-                case UNIFORM_COST:
-                    return "Uniform Cost Search";
-                case  BREATHFIRST:
-                    return "Breadth First Search";
-                default:
-                    return this.toString();
-            }
-        }
-
-    }
-
-    public static enum TreeType {
-        REITER,
-        DUAL;
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case REITER:
+                case HSDAG:
+                    return "HS-DAG";
+                case HSTree:
                     return "HS-Tree";
-                case  DUAL:
-                    return "Inv-HS-Tree";
+                case Inverse:
+                    return "Inv-QuickXPlain";
                 default:
                     return this.toString();
             }
@@ -69,44 +51,69 @@ public class SearchConfiguration {
 
     public Boolean aBoxInBG = true;
     public Boolean tBoxInBG = false;
-    public SearchType searchType = SearchType.UNIFORM_COST;
-    public TreeType treeType = TreeType.REITER;
+    public DiagnosisEngineType engineType = DiagnosisEngineType.Inverse;
     public Integer numOfLeadingDiags = 9;
     public QSS qss = QSS.MINSCORE;
     public Boolean reduceIncoherency = false;
+    public Boolean extractModules = false;
     public Boolean minimizeQuery = true;
     public Boolean calcAllDiags = false;
 
-    public Boolean inclEntSubClass = true;
-    public Boolean incEntClassAssert = true;
-    public Boolean incEntEquivClass = false;
-    public Boolean incEntDisjClasses = false;
-    public Boolean incEntPropAssert = false;
-    public Boolean incOntolAxioms = true;
-    public Boolean incAxiomsRefThing = false;
+    /** include specific InferenceTypes (or EntailmentTypes) for reasoner (yes/no) ?*/
+    public Boolean incInferenceTypeClassHierarchy = true;
+    public Boolean incInferenceTypeDisjointClasses = true;
+    public Boolean incInferenceTypeObjectPropertyHierarchy = false;
+    public Boolean incInferenceTypeDataPropertyHierarchy = false;
+    public Boolean incInferenceTypeClassAssertions = false;
+    public Boolean incInferenceTypeObjectPropertyAssertions = false;
+    public Boolean incInferenceTypeDataPropertyAssertions = false;
+    public Boolean incInferenceTypeSameIndividual = false;
+    public Boolean incInferenceTypeDifferentIndividuals = false;
 
     public Double entailmentCalThres = 0.01;
 
+    /**
+     * Returns an array of preferred inference types (entailment types).
+     *
+     * @return
+     */
+    public InferenceType[] getEntailmentTypes() {
+        List<InferenceType> entailmentTypes = new ArrayList<>();
+        if (incInferenceTypeClassHierarchy) entailmentTypes.add(InferenceType.CLASS_HIERARCHY);
+        if (incInferenceTypeDisjointClasses) entailmentTypes.add(InferenceType.DISJOINT_CLASSES);
+        if (incInferenceTypeObjectPropertyHierarchy) entailmentTypes.add(InferenceType.OBJECT_PROPERTY_HIERARCHY);
+        if (incInferenceTypeDataPropertyHierarchy) entailmentTypes.add(InferenceType.DATA_PROPERTY_HIERARCHY);
+        if (incInferenceTypeClassAssertions) entailmentTypes.add(InferenceType.CLASS_ASSERTIONS);
+        if (incInferenceTypeObjectPropertyAssertions) entailmentTypes.add(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
+        if (incInferenceTypeDataPropertyAssertions) entailmentTypes.add(InferenceType.DATA_PROPERTY_ASSERTIONS);
+        if (incInferenceTypeSameIndividual) entailmentTypes.add(InferenceType.SAME_INDIVIDUAL);
+        if (incInferenceTypeDifferentIndividuals) entailmentTypes.add(InferenceType.DIFFERENT_INDIVIDUALS);
+
+        return entailmentTypes.toArray(new InferenceType[entailmentTypes.size()]);
+    }
+
+
     public String toString() {
-        return "SearchType: " +  searchType + ", " +
-                "TreeType: " +  treeType + ", " +
+        return "EngineType: " +  engineType + ", " +
                 "QSS: " +  qss + ", " +
                 "aboxInBg: " + aBoxInBG + ", " +
                 "tboxInBg: " + tBoxInBG + ", " +
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
                 "reduceIncoherency: " + reduceIncoherency + ", " +
+                "extractModules:" + extractModules + ", " +
                 "minimizeQuery: " + minimizeQuery + ", " +
                 "calcAllDiags: " + calcAllDiags + ", " +
-                "SubClass: " + inclEntSubClass + ", " +
-                "ClassAssert: " + incEntClassAssert + ", " +
-                "EquivClass: " + incEntEquivClass + ", " +
-                "DisjointClass: " + incEntEquivClass + ", " +
-                "PropertyAssertions: " + incEntPropAssert + ", " +
-                "OntologyAxioms: " + incOntolAxioms + ", " +
-                "RefThing: " + incAxiomsRefThing + ", " +
+                "CLASS_HIERARCHY: " + incInferenceTypeClassHierarchy + ", " +
+                "DISJOINT_CLASSES: " + incInferenceTypeDisjointClasses + ", " +
+                "OBJECT_PROPERTY_HIERARCHY: " + incInferenceTypeObjectPropertyHierarchy + ", " +
+                "DATA_PROPERTY_HIERARCHY: " + incInferenceTypeDataPropertyHierarchy + ", " +
+                "CLASS_ASSERTIONS: " + incInferenceTypeClassAssertions + ", " +
+                "OBJECT_PROPERTY_ASSERTIONS: " + incInferenceTypeObjectPropertyAssertions + ", " +
+                "DATA_PROPERTY_ASSERTIONS: " + incInferenceTypeDataPropertyAssertions + ", " +
+                "SAME_INDIVIDUAL: " + incInferenceTypeSameIndividual + ", " +
+                "DIFFERENT_INDIVIDUALS: " + incInferenceTypeDifferentIndividuals + ", " +
                 "double threshold: " + entailmentCalThres;
 
     }
-
 
 }

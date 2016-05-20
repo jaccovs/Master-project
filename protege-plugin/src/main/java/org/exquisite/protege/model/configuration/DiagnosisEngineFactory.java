@@ -3,10 +3,8 @@ package org.exquisite.protege.model.configuration;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
-import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.protege.model.EditorKitHook;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -15,8 +13,6 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.LoggerFactory;
-
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,6 +47,24 @@ public class DiagnosisEngineFactory {
         config = ConfigFileManager.readConfiguration();
     }
 
+    public void updateConfig(SearchConfiguration newConfiguration) {
+        ConfigFileManager.writeConfiguration(newConfiguration);
+        reset();
+    }
+
+    public void reset() {
+
+        readConfiguration();
+        /*
+        OWLTheory theoryOld = (OWLTheory) getSearch().getSearchable();
+
+        search = null;
+        OWLTheory theory = (OWLTheory) getSearch().getSearchable();
+        copyTestcases(theoryOld,theory);
+        */
+        createDiagnosisEngine(); // TODO check if this works
+    }
+
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
         if (diagnosisEngine == null)
             createDiagnosisEngine();
@@ -61,19 +75,22 @@ public class DiagnosisEngineFactory {
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, false, false);
+            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+
             for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
                 diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
                 diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
             }
             diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
-            ExquisiteOWLReasoner solver = new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
+            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
 
-            solver.setEntailmentTypes(InferenceType.DISJOINT_CLASSES, InferenceType.CLASS_HIERARCHY);
-            diagnosisEngine = new InverseDiagnosisEngine<>(solver);
+            reasoner.setEntailmentTypes(config.getEntailmentTypes());
+
+            diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
-            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + solver  + " and diagnosisModel " + diagnosisModel);
+            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner  + " and diagnosisModel " + diagnosisModel);
 
         } catch (OWLOntologyCreationException e) {
             e.printStackTrace();
@@ -82,6 +99,7 @@ public class DiagnosisEngineFactory {
         }
 
     }
+
 
     @Override
     public String toString() {
