@@ -70,6 +70,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
         this.searcher = searcher;
     }
 
+    @Override
     public Set<Set<F>> getConflicts() {
         return conflicts;
     }

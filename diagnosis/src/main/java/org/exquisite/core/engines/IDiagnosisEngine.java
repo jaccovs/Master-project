@@ -42,4 +42,6 @@ public interface IDiagnosisEngine<F> {
      * @param conflicts a set of known conflicts
      */
     void setConflicts(Set<Set<F>> conflicts);
+
+    Set<Set<F>> getConflicts();
 }
