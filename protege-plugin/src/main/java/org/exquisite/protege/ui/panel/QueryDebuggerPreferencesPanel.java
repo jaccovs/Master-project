@@ -17,8 +17,8 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
                 getOWLEditorKit().get("org.exquisite.protege.EditorKitHook");
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.ontoSearch = editorKitHook.getActiveOntologyDiagnosisSearcher();
-        SearchConfiguration configuration = this.ontoSearch.getSearchCreator().getConfig();
+        this.ontologyDiagnosisSearcher = editorKitHook.getActiveOntologyDiagnosisSearcher();
+        SearchConfiguration configuration = this.ontologyDiagnosisSearcher.getDiagnosisEngineFactory().getSearchConfiguration();
         newConfiguration = new SearchConfiguration();
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -34,13 +34,11 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
         for (AbstractOptPanel panel : panes)
             panel.saveChanges();
 
-        ontoSearch.updateConfig(newConfiguration);
+        ontologyDiagnosisSearcher.updateConfig(newConfiguration);
 
-        /* TODO
         for (AbstractOptPanel panel : panes)
             if (panel instanceof ProbabPanel)
-                ontoSearch.updateProbab(((ProbabPanel)panel).getMap());
-        */
+                ontologyDiagnosisSearcher.updateProbab(((ProbabPanel)panel).getMap());
     }
 
     public void dispose() throws Exception {
@@ -52,7 +50,7 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
         panes.add(panel);
     }
 
-    private OntologyDiagnosisSearcher ontoSearch;
+    private OntologyDiagnosisSearcher ontologyDiagnosisSearcher;
 
     private SearchConfiguration newConfiguration;
 

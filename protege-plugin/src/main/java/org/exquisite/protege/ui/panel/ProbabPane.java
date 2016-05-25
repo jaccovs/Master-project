@@ -69,7 +69,7 @@ public class ProbabPane extends JPanel {
 
     public ProbabPane(EditorKitHook editorKitHook) { // TODO
         /*
-        DiagnosisEngineFactory creator = editorKitHook.getActiveOntologyDiagnosisSearcher().getSearchCreator();
+        DiagnosisEngineFactory creator = editorKitHook.getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
         OWLOntology ontology =  ((OWLTheory) creator.getSearch().getSearchable()).getOriginalOntology();
 
         OWLAxiomKeywordCostsEstimator est = (OWLAxiomKeywordCostsEstimator) creator.getSearch().getCostsEstimator();

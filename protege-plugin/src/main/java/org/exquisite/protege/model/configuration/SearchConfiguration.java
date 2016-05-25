@@ -5,8 +5,14 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The applied preferences or configuration used for diagnoses search and query computation.
+ */
 public class SearchConfiguration {
 
+    /**
+     * Configuration possibilty to use diverse diagnosis engines.
+     */
     public static enum DiagnosisEngineType {
         HSDAG,
         HSTree,
@@ -27,19 +33,22 @@ public class SearchConfiguration {
 
     }
 
-    public static enum QSS {
-        MINSCORE,
-        SPLIT,
-        DYNAMIC;
+    /**
+     * Configuration possibility to use diverse requirements measurements used for query computation.
+     */
+    public static enum RM {
+        ENT,
+        SPL,
+        RIO;
 
         @Override
         public String toString() {
             switch (this) {
-                case MINSCORE:
+                case ENT:
                     return "Entropy";
-                case  SPLIT:
+                case SPL:
                     return "Split in Half";
-                case  DYNAMIC:
+                case RIO:
                     return "Dynamic Risk";
                 default:
                     return this.toString();
@@ -48,12 +57,40 @@ public class SearchConfiguration {
 
     }
 
+    public static enum SortCriterion {
+        MINCARD,
+        MINSUM,
+        MINMAX;
 
-    public Boolean aBoxInBG = true;
-    public Boolean tBoxInBG = false;
+        @Override
+        public String toString() {
+            switch (this) {
+                case MINCARD:
+                    return "MinCard";
+                case MINSUM:
+                    return "MinSum";
+                case MINMAX:
+                    return "MinMax";
+                default:
+                    return this.toString();
+            }
+        }
+    }
+
+    /** The diagnoses engine to be used: possible values are: HSDag, HSTree and InverseQuickXPlain (FastDiag). Default: Inverse  */
     public DiagnosisEngineType engineType = DiagnosisEngineType.Inverse;
+
+    /** The maximum number of leading diagnoses to search for. Default: 9. */
     public Integer numOfLeadingDiags = 9;
-    public QSS qss = QSS.MINSCORE;
+
+    /**
+     * The applied measure used during qPartition selection applied for query computation.
+     * Possible measures are are entropy based, split in half or risk optimization(RIO) -based requirements measure.
+     * Default: ENT
+     */
+    public RM rm = RM.ENT;
+
+    public SortCriterion sortCriterion = SortCriterion.MINCARD;
     public Boolean reduceIncoherency = false;
     public Boolean extractModules = false;
     public Boolean minimizeQuery = true;
@@ -95,9 +132,8 @@ public class SearchConfiguration {
 
     public String toString() {
         return "EngineType: " +  engineType + ", " +
-                "QSS: " +  qss + ", " +
-                "aboxInBg: " + aBoxInBG + ", " +
-                "tboxInBg: " + tBoxInBG + ", " +
+                "RM: " + rm + ", " +
+                "sortCriterion: " + sortCriterion + ", " +
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
                 "reduceIncoherency: " + reduceIncoherency + ", " +
                 "extractModules:" + extractModules + ", " +

@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.list;
 
+import org.exquisite.core.model.Diagnosis;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -9,18 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SimpleAxiomList extends AbstractAxiomList {
+public class SimpleDiagnosisList extends AbstractAxiomList {
 
-    public SimpleAxiomList(OWLEditorKit editorKit, Color headerColor) {
+    public SimpleDiagnosisList(OWLEditorKit editorKit, Color headerColor) {
         super(editorKit);
         setCellRenderer(new AxiomListItemRenderer(editorKit,headerColor));
     }
 
-    public void updateList(Set<Set<OWLLogicalAxiom>> setsOfAxioms, OWLOntology ontology, String headerPref) {
+    public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses, OWLOntology ontology, String headerPref, boolean isIncludeMeasure) {
         List<Object> items = new ArrayList<Object>();
-        for (Set<OWLLogicalAxiom> axioms : setsOfAxioms) {
-            items.add(new AxiomListHeader(axioms,headerPref));
-            for (OWLLogicalAxiom axiom : axioms) {
+        for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
+            items.add(new DiagnosisListHeader(diagnosis,headerPref,isIncludeMeasure));
+            for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
                 items.add(new AxiomListItem(axiom,ontology));
             }
             items.add(" ");

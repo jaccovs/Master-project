@@ -9,13 +9,14 @@ import org.exquisite.protege.model.error.ErrorHandler;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,7 @@ public class OntologyDiagnosisSearcher {
         diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerMan);
     }
 
-    public DiagnosisEngineFactory getSearchCreator() {
+    public DiagnosisEngineFactory getDiagnosisEngineFactory() {
         return diagnosisEngineFactory;
     }
 
@@ -120,8 +121,8 @@ public class OntologyDiagnosisSearcher {
 
 
     public void doCalculateDiagnosis(ErrorHandler errorHandler) {
-        int n = diagnosisEngineFactory.getConfig().numOfLeadingDiags;
-        if (diagnosisEngineFactory.getConfig().calcAllDiags)
+        int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
+        if (diagnosisEngineFactory.getSearchConfiguration().calcAllDiags)
             n = -1;
         //new SearchThread(diagnosisEngineFactory.getDiagnosisEngine(), n, errorHandler).execute();
 
@@ -145,7 +146,15 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void updateConfig(SearchConfiguration newConfiguration) {
-        getSearchCreator().updateConfig(newConfiguration);
+        getDiagnosisEngineFactory().updateConfig(newConfiguration);
+    }
+
+    public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {
+        // TODO
+        /*
+        CostsEstimator<OWLLogicalAxiom> estimator = getSearchCreator().getSearch().getCostsEstimator();
+        ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
+        */
     }
 /*
     public class SearchThread extends SwingWorker<Object,Object> implements ChangeListener {

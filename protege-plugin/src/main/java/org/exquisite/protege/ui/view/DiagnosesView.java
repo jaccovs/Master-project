@@ -10,14 +10,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 04.09.12
- * Time: 10:10
- * To change this template use File | Settings | File Templates.
- */
-public class DiagnosesView extends AbstractAxiomSetView {
+public class DiagnosesView extends AbstractDiagnosesSetView {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(DiagnosesView.class.getName());
 

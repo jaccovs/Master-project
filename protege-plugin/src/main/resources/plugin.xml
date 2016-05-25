@@ -108,7 +108,7 @@
     </extension>
 
     <extension id="BackgroundView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Background View"/>
+        <label value="Diagnosismodel"/>
         <class value="org.exquisite.protege.ui.view.BackgroundView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>

@@ -12,7 +12,7 @@ public class ConfigFileManager {
         String userHome = System.getProperty("user.home");
         if(userHome == null)
             throw new IllegalStateException("user home directory is null");
-        File confFile = new File(new File(userHome), "querydebugger.properties");
+        File confFile = new File(new File(userHome), "exquisitedebugger.properties");
 
         Properties properties = new Properties();
         SearchConfiguration c = new SearchConfiguration();
@@ -28,11 +28,10 @@ public class ConfigFileManager {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        c.aBoxInBG = Boolean.parseBoolean((String) properties.get("aBoxInBG"));
-        c.tBoxInBG = Boolean.parseBoolean((String) properties.get("tBoxInBG"));
         c.numOfLeadingDiags = Integer.parseInt((String) properties.get("numOfLeadingDiags"));
         c.engineType = parseEngineType((String) properties.get("enginetype"));
-        c.qss = parseQSS((String) properties.get("qss"));
+        c.rm = parseRM((String) properties.get("rm"));
+        c.sortCriterion = parseSortCriterion((String) properties.get("sortcriterion"));
         c.reduceIncoherency = Boolean.parseBoolean((String) properties.get("reduceIncoherency"));
         c.extractModules = Boolean.parseBoolean((String) properties.get("extractModules"));
         c.minimizeQuery = Boolean.parseBoolean((String) properties.get("minimizeQuery"));
@@ -67,23 +66,27 @@ public class ConfigFileManager {
         throw new IllegalStateException("Unknown DiagnosisEngine Type");
     }
 
-    private static SearchConfiguration.QSS parseQSS (String qss) {
-        for (SearchConfiguration.QSS type : SearchConfiguration.QSS.values())
-            if (type.toString().equals(qss))
+    private static SearchConfiguration.RM parseRM(String rm) {
+        for (SearchConfiguration.RM type : SearchConfiguration.RM.values())
+            if (type.toString().equals(rm))
                 return type;
-        throw new IllegalStateException("Unknown QSS ");
+        throw new IllegalStateException("Unknown Requirements Measurement ");
+    }
+
+    private static SearchConfiguration.SortCriterion parseSortCriterion(String sortcriterion) {
+        for (SearchConfiguration.SortCriterion type : SearchConfiguration.SortCriterion.values())
+            if (type.toString().equals(sortcriterion))
+                return type;
+        throw new IllegalStateException("Unknown Sortcriterion");
     }
 
     public static SearchConfiguration getDefaultConfig() {
         SearchConfiguration conf = new SearchConfiguration();
 
-        conf.aBoxInBG = true;
-        conf.tBoxInBG = false;
-        //conf.searchType = SearchConfiguration.SearchType.UNIFORM_COST;
-        //conf.treeType = SearchConfiguration.TreeType.REITER;
         conf.engineType = SearchConfiguration.DiagnosisEngineType.Inverse;
         conf.numOfLeadingDiags = 9;
-        conf.qss = SearchConfiguration.QSS.MINSCORE;
+        conf.rm = SearchConfiguration.RM.ENT;
+        conf.sortCriterion = SearchConfiguration.SortCriterion.MINCARD;
         conf.reduceIncoherency = false;
         conf.extractModules = false;
         conf.minimizeQuery = true;
@@ -109,15 +112,14 @@ public class ConfigFileManager {
         String userHome = System.getProperty("user.home");
         if(userHome == null)
             throw new IllegalStateException("user home directory is null");
-        File confFile = new File(new File(userHome), "querydebugger.properties");
+        File confFile = new File(new File(userHome),  "exquisitedebugger.properties");
 
         Properties properties = new Properties();
 
-        properties.put("aBoxInBG",configuration.aBoxInBG.toString());
-        properties.put("tBoxInBG",configuration.tBoxInBG.toString());
         properties.put("enginetype", configuration.engineType.toString());
         properties.put("numOfLeadingDiags",configuration.numOfLeadingDiags.toString());
-        properties.put("qss",configuration.qss.toString());
+        properties.put("rm",configuration.rm.toString());
+        properties.put("sortcriterion", configuration.sortCriterion.toString());
         properties.put("reduceIncoherency",configuration.reduceIncoherency.toString());
         properties.put("extractModules",configuration.extractModules.toString());
         properties.put("minimizeQuery",configuration.minimizeQuery.toString());

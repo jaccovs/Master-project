@@ -6,13 +6,6 @@ import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 06.09.12
- * Time: 13:15
- * To change this template use File | Settings | File Templates.
- */
 public class BasicAxiomListItemRenderer implements ListCellRenderer  {
 
 

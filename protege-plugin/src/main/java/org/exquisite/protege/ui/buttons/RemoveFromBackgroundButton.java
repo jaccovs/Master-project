@@ -22,8 +22,8 @@ public class RemoveFromBackgroundButton extends AbstractGuiButton {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         List selectedValues = new LinkedList();
-                        for (int idx : backgroundView.getBackgroundAxiomList().getSelectedIndices())
-                            selectedValues.add(backgroundView.getBackgroundAxiomList().getModel().getElementAt(idx));
+                        for (int idx : backgroundView.getBackgroundAxiomsList().getSelectedIndices())
+                            selectedValues.add(backgroundView.getBackgroundAxiomsList().getModel().getElementAt(idx));
 
                         backgroundView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().
                                 removeBackgroundAxioms(selectedValues);

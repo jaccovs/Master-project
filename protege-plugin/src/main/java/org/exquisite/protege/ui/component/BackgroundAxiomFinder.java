@@ -15,13 +15,6 @@ import java.awt.event.*;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 25.09.12
- * Time: 11:44
- * To change this template use File | Settings | File Templates.
- */
 public class BackgroundAxiomFinder extends AugmentedJTextField {
 
     private OWLEditorKit editorKit;
@@ -95,7 +88,7 @@ public class BackgroundAxiomFinder extends AugmentedJTextField {
 
         closeResults();
         parent.setSelectedEntity (entitiy);
-        parent.updateDisplayedOntologyAxioms();
+        parent.updateDisplayedPossiblyFaultyAxioms();
         if (entitiy != null)
             setText(editorKit.getModelManager().getOWLEntityRenderer().render(entitiy));
         else

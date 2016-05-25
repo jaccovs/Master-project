@@ -4,13 +4,6 @@ import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-/**
-* Created with IntelliJ IDEA.
-* User: pfleiss
-* Date: 05.09.12
-* Time: 16:40
-* To change this template use File | Settings | File Templates.
-*/
 public class AxiomListItem implements MListItem {
 
     private OWLLogicalAxiom axiom;

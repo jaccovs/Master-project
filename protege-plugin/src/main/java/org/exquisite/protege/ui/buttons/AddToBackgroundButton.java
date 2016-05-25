@@ -22,8 +22,8 @@ public class AddToBackgroundButton extends AbstractGuiButton {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         List selectedValues = new LinkedList();
-                        for (int idx : backgroundView.getOntologyAxiomList().getSelectedIndices())
-                            selectedValues.add(backgroundView.getOntologyAxiomList().getModel().getElementAt(idx));
+                        for (int idx : backgroundView.getPossiblyFaultyAxiomsList().getSelectedIndices())
+                            selectedValues.add(backgroundView.getPossiblyFaultyAxiomsList().getModel().getElementAt(idx));
 
                         backgroundView.getEditorKitHook().getActiveOntologyDiagnosisSearcher()
                                 .addBackgroundAxioms(selectedValues);

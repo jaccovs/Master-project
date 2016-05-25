@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.list;
 
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.editor.TcaeHeaderEditor;
@@ -19,13 +20,6 @@ import java.util.Set;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 05.09.12
- * Time: 16:55
- * To change this template use File | Settings | File Templates.
- */
 public class TcaeAxiomList extends AbstractAxiomList {
 
     private EditorKitHook editorKitHook;
@@ -93,37 +87,35 @@ public class TcaeAxiomList extends AbstractAxiomList {
             for (int number : getSelectedIndices()) {
                 TcaeListItem item = (TcaeListItem) getModel().getElementAt(number);
 
-                getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType());
+                //getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType());
 
             }
         }
     }
 
-    public void updateView() { // TODO
-        /*
+    public void updateView() {
         OntologyDiagnosisSearcher diagnosisSearcher = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
-        OWLTheory theory = (OWLTheory) diagnosisSearcher.getSearchCreator().getSearch().getSearchable();
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisSearcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
 
-        List<Object> items = new ArrayList<Object>();
-        addToItems(items, POSITIVE_TC, theory.getKnowledgeBase().getPositiveTests());
-        addToItems(items, NEGATIVE_TC, theory.getKnowledgeBase().getNegativeTests());
-        addToItems(items, ENTAILED_TC, theory.getKnowledgeBase().getEntailedTests());
-        addToItems(items, NON_ENTAILED_TC, theory.getKnowledgeBase().getNonentailedTests());
+        List<Object> items = new ArrayList<>();
+        addToItems(items, POSITIVE_TC, diagnosisModel.getConsistentExamples() /*theory.getKnowledgeBase().getPositiveTests()*/ );
+        addToItems(items, NEGATIVE_TC, diagnosisModel.getInconsistentExamples() /*theory.getKnowledgeBase().getNegativeTests()*/);
+        addToItems(items, ENTAILED_TC, diagnosisModel.getEntailedExamples() /* theory.getKnowledgeBase().getEntailedTests()*/);
+        addToItems(items, NON_ENTAILED_TC, diagnosisModel.getNotEntailedExamples() /*theory.getKnowledgeBase().getNonentailedTests()*/);
 
         setListData(items.toArray());
-        */
     }
 
-    protected void addToItems(List<Object> items, TestCaseType type, Collection<Set<OWLLogicalAxiom>> testcases) {
+    protected void addToItems(List<Object> items, TestCaseType type, List<OWLLogicalAxiom> testcases) {
         OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         items.add(new TcaeListHeader(type));
-        for (Set<OWLLogicalAxiom> testcase : testcases) {
-            items.add(new TcaeListItem(testcase,type));
-            for (OWLLogicalAxiom axiom : testcase)
+        //for (Set<OWLLogicalAxiom> testcase : testcases) {
+            items.add(new TcaeListItem(testcases, type));
+            for (OWLLogicalAxiom axiom : testcases)
                 items.add(new AxiomListItem(axiom,ontology));
             items.add(" ");
-        }
+        //}
 
     }
 

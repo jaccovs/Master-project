@@ -1,6 +1,8 @@
 package org.exquisite.protege.model.configuration;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.engines.HSDAGEngine;
+import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
@@ -10,17 +12,9 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 04.09.12
- * Time: 15:18
- * To change this template use File | Settings | File Templates.
- */
 public class DiagnosisEngineFactory {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(DiagnosisEngineFactory.class.getName());
@@ -39,7 +33,7 @@ public class DiagnosisEngineFactory {
         readConfiguration();
     }
 
-    public SearchConfiguration getConfig() {
+    public SearchConfiguration getSearchConfiguration() {
         return config;
     }
 
@@ -62,16 +56,18 @@ public class DiagnosisEngineFactory {
         OWLTheory theory = (OWLTheory) getSearch().getSearchable();
         copyTestcases(theoryOld,theory);
         */
-        createDiagnosisEngine(); // TODO check if this works
+        this. diagnosisEngine = createDiagnosisEngine(); // TODO check if this works
     }
 
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
         if (diagnosisEngine == null)
-            createDiagnosisEngine();
+            diagnosisEngine = createDiagnosisEngine();
         return diagnosisEngine;
     }
 
-    private void createDiagnosisEngine() {
+    private IDiagnosisEngine<OWLLogicalAxiom> createDiagnosisEngine() {
+
+        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = null;
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
@@ -87,15 +83,29 @@ public class DiagnosisEngineFactory {
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
 
-            diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+            switch (config.engineType) {
+                case HSDAG:
+                    diagnosisEngine = new HSDAGEngine<>(reasoner);
+                    break;
+                case HSTree:
+                    diagnosisEngine = new HSTreeEngine<>(reasoner);
+                    break;
+                case Inverse:
+                    diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+                    break;
+                default:
+
+                    break;
+            }
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
             logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner  + " and diagnosisModel " + diagnosisModel);
-
         } catch (OWLOntologyCreationException e) {
             e.printStackTrace();
         } catch (DiagnosisException e) {
             e.printStackTrace();
+        } finally {
+            return diagnosisEngine;
         }
 
     }

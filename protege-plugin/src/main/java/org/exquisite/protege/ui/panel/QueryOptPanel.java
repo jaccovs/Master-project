@@ -9,7 +9,9 @@ public class QueryOptPanel extends AbstractOptPanel {
 
     private JSpinner partitioningThresholdField = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
 
-    private JComboBox scoringFunction = new JComboBox();
+    private JComboBox requirementsMeasurement = new JComboBox();
+
+    private JComboBox sortCriterion = new JComboBox();
 
     private JCheckBox minimizeQuery_Checkbox = new JCheckBox("minimize query ", true);
 
@@ -27,8 +29,11 @@ public class QueryOptPanel extends AbstractOptPanel {
     public QueryOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration) {
         super(configuration,newConfiguration);
 
-        for (SearchConfiguration.QSS type : SearchConfiguration.QSS.values())
-            scoringFunction.addItem(type);
+        for (SearchConfiguration.RM type : SearchConfiguration.RM.values())
+            requirementsMeasurement.addItem(type);
+
+        for (SearchConfiguration.SortCriterion type : SearchConfiguration.SortCriterion.values())
+            sortCriterion.addItem(type);
 
         loadConfiguration();
         createPanel();
@@ -38,9 +43,10 @@ public class QueryOptPanel extends AbstractOptPanel {
         setLayout(new BorderLayout());
         Box holder = Box.createVerticalBox();
 
-        OptionGroupBox holderQueryGen = new OptionGroupBox("Query Generation");
+        OptionGroupBox holderQueryGen = new OptionGroupBox("Heuristic Query Computation");
         holderQueryGen.addOptionBox(new OptionBox("minimizequery",getListener(),minimizeQuery_Checkbox));
-        holderQueryGen.addOptionBox(new OptionBox("qss",getListener(),new JLabel("QSS: "),scoringFunction));
+        holderQueryGen.addOptionBox(new OptionBox("rm",getListener(),new JLabel("RequirementsMeasure: "), requirementsMeasurement));
+        holderQueryGen.addOptionBox(new OptionBox("sortcriterion",getListener(),new JLabel("SortCriterion: "), sortCriterion));
         partitioningThresholdField.setPreferredSize(new Dimension(60, 22));
         holderQueryGen.addOptionBox(new OptionBox("entcalcthr",getListener(),new JLabel("EntCalcThreshold "),partitioningThresholdField));
 
@@ -64,7 +70,8 @@ public class QueryOptPanel extends AbstractOptPanel {
 
     protected void loadConfiguration() {
         minimizeQuery_Checkbox.setSelected(getConfiguration().minimizeQuery);
-        scoringFunction.setSelectedItem(getConfiguration().qss);
+        requirementsMeasurement.setSelectedItem(getConfiguration().rm);
+        sortCriterion.setSelectedItem(getConfiguration().sortCriterion);
         partitioningThresholdField.setValue(getConfiguration().entailmentCalThres);
 
         incInferenceTypeClassHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeClassHierarchy);
@@ -82,7 +89,8 @@ public class QueryOptPanel extends AbstractOptPanel {
     public void saveChanges() {
 
         getNewConfiguration().minimizeQuery = minimizeQuery_Checkbox.isSelected();
-        getNewConfiguration().qss = (SearchConfiguration.QSS) scoringFunction.getSelectedItem();
+        getNewConfiguration().rm = (SearchConfiguration.RM) requirementsMeasurement.getSelectedItem();
+        getNewConfiguration().sortCriterion = (SearchConfiguration.SortCriterion) sortCriterion.getSelectedItem();
         getNewConfiguration().entailmentCalThres = (Double) partitioningThresholdField.getValue();
 
         getNewConfiguration().incInferenceTypeClassHierarchy = incInferenceTypeClassHierarchy_Checkbox.isSelected();

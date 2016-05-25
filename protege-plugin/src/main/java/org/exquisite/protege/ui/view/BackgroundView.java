@@ -17,43 +17,36 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 24.09.12
- * Time: 13:33
- * To change this template use File | Settings | File Templates.
- */
 public class BackgroundView extends AbstractQueryViewComponent {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(BackgroundView.class.getName());
 
-    private BasicAxiomList backgroundAxiomList;
+    private BasicAxiomList backgroundAxiomsList;
 
-    private BasicAxiomList ontologyAxiomList;
+    private BasicAxiomList possiblyFaultyAxiomsList;
 
     @Override
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         setLayout(new BorderLayout(10, 10));
-        backgroundAxiomList = new BasicAxiomList(getOWLEditorKit());
-        ontologyAxiomList = new BasicAxiomList(getOWLEditorKit());
+        backgroundAxiomsList = new BasicAxiomList(getOWLEditorKit());
+        possiblyFaultyAxiomsList = new BasicAxiomList(getOWLEditorKit());
 
         Box box = Box.createVerticalBox();
 
         JPanel backgroundPanel = new JPanel(new BorderLayout());
         backgroundPanel.add(createAxiomCreationToolBar(),BorderLayout.NORTH);
-        backgroundPanel.add(ComponentFactory.createScrollPane(backgroundAxiomList),BorderLayout.CENTER);
+        backgroundPanel.add(ComponentFactory.createScrollPane(backgroundAxiomsList),BorderLayout.CENTER);
         box.add(backgroundPanel);
 
         JPanel ontologyPanel = new JPanel(new BorderLayout());
         ontologyPanel.add(createSwitchAxiomsToolBar(), BorderLayout.NORTH);
-        ontologyPanel.add(ComponentFactory.createScrollPane(ontologyAxiomList),BorderLayout.CENTER);
+        ontologyPanel.add(ComponentFactory.createScrollPane(possiblyFaultyAxiomsList),BorderLayout.CENTER);
         box.add(ontologyPanel);
 
         add(box, BorderLayout.CENTER);
         updateDisplayedBackgroundAxioms();
-        updateDisplayedOntologyAxioms();
+        updateDisplayedPossiblyFaultyAxioms();
 
     }
 
@@ -68,12 +61,12 @@ public class BackgroundView extends AbstractQueryViewComponent {
     }
 
 
-    public BasicAxiomList getBackgroundAxiomList() {
-        return backgroundAxiomList;
+    public BasicAxiomList getBackgroundAxiomsList() {
+        return backgroundAxiomsList;
     }
 
-    public BasicAxiomList getOntologyAxiomList() {
-        return ontologyAxiomList;
+    public BasicAxiomList getPossiblyFaultyAxiomsList() {
+        return possiblyFaultyAxiomsList;
     }
 
     protected JToolBar createToolBar() {
@@ -96,7 +89,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
     protected JToolBar createSwitchAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
 
-        toolBar.add(createLabel("Ontology Axioms"));
+        toolBar.add(createLabel("Possibly faulty Axioms (KB)"));
         toolBar.add(Box.createHorizontalStrut(20));
         JPanel axiomFinderPanel = new JPanel();
         axiomFinderPanel.add(new BackgroundAxiomFinder(this,getOWLEditorKit()));
@@ -111,7 +104,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
     protected JToolBar createAxiomCreationToolBar() {
         JToolBar toolBar = createToolBar();
 
-        toolBar.add(createLabel("Background Axioms"));
+        toolBar.add(createLabel("Correct Axioms (backgound knowledge)"));
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(new CreateBackgroundAxiomButton(this));
         toolBar.setMaximumSize(toolBar.getPreferredSize());
@@ -125,8 +118,8 @@ public class BackgroundView extends AbstractQueryViewComponent {
     }
 
 
-    public void updateDisplayedOntologyAxioms() {
-        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
+    public void updateDisplayedPossiblyFaultyAxioms() {
+        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
         java.util.List<OWLLogicalAxiom> bgAxioms = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas();
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
 
@@ -140,23 +133,23 @@ public class BackgroundView extends AbstractQueryViewComponent {
             }
         }
         ontologyAxMinusBg.removeAll(bgAxioms);
-        ontologyAxiomList.updateList(ontologyAxMinusBg,ontology);
+        possiblyFaultyAxiomsList.updateList(ontologyAxMinusBg,ontology);
 
     }
 
     protected void updateDisplayedBackgroundAxioms() {
 
-        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getSearchCreator();
+        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
         Set<OWLLogicalAxiom> bgAxioms = new HashSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        backgroundAxiomList.updateList(bgAxioms,ontology);
+        backgroundAxiomsList.updateList(bgAxioms,ontology);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
         logger.debug("stateChanged(" + e + ")");
         updateDisplayedBackgroundAxioms();
-        updateDisplayedOntologyAxioms();
+        updateDisplayedPossiblyFaultyAxioms();
     }
 
 }

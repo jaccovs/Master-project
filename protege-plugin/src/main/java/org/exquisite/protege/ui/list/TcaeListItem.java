@@ -3,6 +3,9 @@ package org.exquisite.protege.ui.list;
 import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -19,15 +22,16 @@ public class TcaeListItem implements MListItem {
 
     private Logger logger = Logger.getLogger(TcaeListItem.class.getName());
 
-    private Set<OWLLogicalAxiom> testcase;
+    private List<OWLLogicalAxiom> testcase;
 
     private TestCaseType type;
 
     public Set<OWLLogicalAxiom> getTestcase() {
-        return testcase;
+        //return testcase;
+        return new HashSet<>(testcase);
     }
 
-    public TcaeListItem(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
+    public TcaeListItem(List<OWLLogicalAxiom> testcase, TestCaseType type) {
         this.testcase = testcase;
         this.type = type;
     }
@@ -58,13 +62,13 @@ public class TcaeListItem implements MListItem {
     public String getEditorTitleSuffix() {
         switch (type) {
             case POSITIVE_TC:
-                return "Positive Testcase";
+                return "Consistent Examples";
             case NEGATIVE_TC:
-                return "Negative Testcase";
+                return "Inconsistent Examples";
             case ENTAILED_TC:
-                return "Entailed Testcase";
+                return "Entailed Examples";
             case NON_ENTAILED_TC:
-                return "Non Entailed Testcase";
+                return "Non Entailed Examples";
             default:
                 throw new IllegalStateException("Unknown Header Type");
         }

@@ -10,9 +10,6 @@ public class DiagnosisOptPanel extends AbstractOptPanel {
 
     public static final int maxLeadingDiags = 18;
 
-    private JCheckBox test_Tbox_Checkbox = new JCheckBox("include TBox in Background Knowledge", false);
-
-    private JCheckBox test_Abox_Checkbox = new JCheckBox("include ABox in Background Knowledge", true);
 
     private JSpinner numofLeadingDiagsField = new JSpinner(new SpinnerNumberModel(9, 1, maxLeadingDiags + 1, 1));
 
@@ -39,13 +36,8 @@ public class DiagnosisOptPanel extends AbstractOptPanel {
         setLayout(new BorderLayout());
         Box holder = Box.createVerticalBox();
 
-
-        OptionGroupBox holderBoxes = new OptionGroupBox("Background Axioms");
-        holderBoxes.addOptionBox(new OptionBox("abox",getListener(),test_Abox_Checkbox));
-        holderBoxes.addOptionBox(new OptionBox("tbox",getListener(),test_Tbox_Checkbox));
-
         OptionGroupBox holderSearch = new OptionGroupBox("Engine Type");
-        holderSearch.addOptionBox(new OptionBox("enginetype",getListener(),new JLabel("Engine Type: "), engineType));
+        holderSearch.addOptionBox(new OptionBox("enginetype",getListener(),new JLabel("Diagnosis Engine: "), engineType));
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Diagnoses Calculation");
         holderCalculation.addOptionBox(new OptionBox("numofleadingdiags",getListener(),new JLabel("NumOfLeadingDiag: "), numofLeadingDiagsField));
@@ -53,7 +45,6 @@ public class DiagnosisOptPanel extends AbstractOptPanel {
         holderCalculation.addOptionBox(new OptionBox("testincoherencyinconsistency",getListener(),test_incoherency_inconsistency_Checkbox));
         holderCalculation.addOptionBox(new OptionBox("extractModules",getListener(),extactModule_Checkbox));
 
-        holder.add(holderBoxes);
         holder.add(holderSearch);
         holder.add(holderCalculation);
 
@@ -63,8 +54,6 @@ public class DiagnosisOptPanel extends AbstractOptPanel {
     }
 
     protected void loadConfiguration() {
-        test_Tbox_Checkbox.setSelected(getConfiguration().tBoxInBG);
-        test_Abox_Checkbox.setSelected(getConfiguration().aBoxInBG);
 
         test_incoherency_inconsistency_Checkbox.setSelected(getConfiguration().reduceIncoherency);
         extactModule_Checkbox.setSelected(getConfiguration().extractModules);
@@ -76,9 +65,6 @@ public class DiagnosisOptPanel extends AbstractOptPanel {
 
     @Override
     public void saveChanges() {
-
-        getNewConfiguration().tBoxInBG = test_Tbox_Checkbox.isSelected();
-        getNewConfiguration().aBoxInBG = test_Abox_Checkbox.isSelected();
 
         getNewConfiguration().reduceIncoherency = test_incoherency_inconsistency_Checkbox.isSelected();
         getNewConfiguration().extractModules = extactModule_Checkbox.isSelected();
