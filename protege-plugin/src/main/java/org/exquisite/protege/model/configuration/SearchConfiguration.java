@@ -36,7 +36,7 @@ public class SearchConfiguration {
     /**
      * Configuration possibility to use diverse requirements measurements used for query computation.
      */
-    public enum RM {
+    public static enum RM {
         ENT,
         SPL,
         RIO;

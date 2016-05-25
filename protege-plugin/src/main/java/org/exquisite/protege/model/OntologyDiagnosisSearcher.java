@@ -1,8 +1,16 @@
 package org.exquisite.protege.model;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.query.Query;
+import org.exquisite.core.query.querycomputation.IQueryComputation;
+import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
+import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.RiskOptimizationMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.SplitInHalfMeasure;
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.exquisite.protege.model.error.ErrorHandler;
@@ -30,7 +38,7 @@ public class OntologyDiagnosisSearcher {
     public static enum TestCaseType {POSITIVE_TC, NEGATIVE_TC, ENTAILED_TC, NON_ENTAILED_TC}
 
     public static enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
-        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR}
+        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM}
 
     public static enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
 
@@ -55,6 +63,16 @@ public class OntologyDiagnosisSearcher {
     }
 
     private Set<Diagnosis<OWLLogicalAxiom>> diagnoses = new HashSet<>();
+
+    private Query<OWLLogicalAxiom> actualQuery;
+
+    private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<OWLLogicalAxiom>();
+
+    private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<OWLLogicalAxiom>();
+
+    private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<Set<OWLLogicalAxiom>>();
+
+    private Map<Set<OWLLogicalAxiom>,TestCaseType> queryHistoryType = new LinkedHashMap<Set<OWLLogicalAxiom>, TestCaseType>();
 
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
@@ -146,6 +164,156 @@ public class OntologyDiagnosisSearcher {
 
     public void updateConfig(SearchConfiguration newConfiguration) {
         getDiagnosisEngineFactory().updateConfig(newConfiguration);
+    }
+
+    public Query<OWLLogicalAxiom> getActualQuery() {
+        return actualQuery;
+    }
+
+    public boolean isMarkedEntailed(OWLLogicalAxiom axiom) {
+        return axiomsMarkedEntailed.contains(axiom);
+    }
+
+    public boolean isMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        return axiomsMarkedNonEntailed.contains(axiom);
+    }
+
+    public void doAddAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedEntailed.add(axiom);
+        notifyListeners();
+    }
+
+    public void doAddAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedNonEntailed.add(axiom);
+        notifyListeners();
+    }
+
+    public void doRemoveAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedEntailed.remove(axiom);
+        notifyListeners();
+    }
+
+    public void doRemoveAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedNonEntailed.remove(axiom);
+        notifyListeners();
+    }
+
+    public void doCommitQuery() {
+        if (!axiomsMarkedEntailed.isEmpty()) {
+            doAddTestcase(new LinkedHashSet<OWLLogicalAxiom>(axiomsMarkedEntailed),
+                    TestCaseType.ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedEntailed,TestCaseType.ENTAILED_TC);
+        }
+        if (!axiomsMarkedNonEntailed.isEmpty()) {
+            doAddTestcase(new LinkedHashSet<OWLLogicalAxiom>(axiomsMarkedNonEntailed),
+                    TestCaseType.NON_ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedNonEntailed,TestCaseType.NON_ENTAILED_TC);
+        }
+        resetQuery();
+        notifyListeners();
+    }
+
+    protected void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
+        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>(ax);
+        queryHistory.add(axioms);
+        queryHistoryType.put(axioms,type);
+    }
+
+    protected void resetQuery() {
+        axiomsMarkedEntailed.clear();
+        axiomsMarkedNonEntailed.clear();
+        actualQuery=null;
+        querySearchStatus = QuerySearchStatus.IDLE;
+        qc.reset();
+    }
+
+    public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
+        doCommitQuery();
+        doGetQuery(errorHandler);
+    }
+
+    IQueryComputation<OWLLogicalAxiom> qc = null;
+
+    public void doGetQuery(ErrorHandler errorHandler) {
+
+        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
+        final SearchConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
+        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine);
+
+        heuristicConfiguration.setEnrichQueries(preference.enrichQuery);
+        switch (preference.rm) {
+            case ENT:
+                heuristicConfiguration.setRm(
+                        new EntropyBasedMeasure<>(new BigDecimal(String.valueOf(preference.entropyThreshold))));
+                break;
+            case SPL:
+                heuristicConfiguration.setRm(
+                        new SplitInHalfMeasure<>(new BigDecimal(String.valueOf(preference.entropyThreshold))));
+                break;
+            case RIO:
+                heuristicConfiguration.setRm(
+                        new RiskOptimizationMeasure<>(new BigDecimal(String.valueOf(preference.entropyThreshold)),
+                        new BigDecimal(String.valueOf(preference.cardinalityThreshold)),
+                        new BigDecimal(String.valueOf(preference.cautiousParameter))));
+                break;
+            default:
+                errorHandler.errorHappend(ErrorStatus.UNKNOWN_RM);
+        }
+
+        // heuristicConfiguration.setSortCriterion(preference. TODO
+
+
+        qc = new HeuristicQueryComputation<>(heuristicConfiguration);
+
+        try {
+
+            setDiagnosesMeasures(diagnoses);
+            qc.initialize(diagnoses);
+
+            if ( qc.hasNext()) {
+                actualQuery = qc.next();
+            } else {
+                errorHandler.errorHappend(ErrorStatus.NO_QUERY);
+                errorStatus = ErrorStatus.NO_QUERY;
+                resetQuery();
+            }
+            querySearchStatus = QuerySearchStatus.ASKING_QUERY;
+
+        } catch (DiagnosisException e) {
+            errorHandler.errorHappend(ErrorStatus.SOLVER_EXCEPTION);
+        } finally {
+            notifyListeners();
+        }
+
+
+        //new QueryGenerationThread(getSearchCreator(), errorHandler).execute();
+    }
+
+    protected void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
+        int i = 1;
+        for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
+
+            BigDecimal measure = new BigDecimal(i++);
+            if (measure != null) {
+                diagnosis.setMeasure(measure);
+                System.out.println("set measure " + measure + " for diagnosis " + diagnosis);
+            }
+        }
+    }
+
+    public void doGetAlternativeQuery() {
+        if (qc != null && qc.hasNext()) {
+            querySearchStatus = QuerySearchStatus.ASKING_QUERY;
+            notifyListeners();
+            actualQuery = qc.next();
+        } else {
+            errorStatus = ErrorStatus.NO_QUERY;
+            resetQuery();
+            notifyListeners();
+        }
+
+
+        //JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {

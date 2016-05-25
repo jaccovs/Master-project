@@ -6,13 +6,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 07.09.12
- * Time: 17:14
- * To change this template use File | Settings | File Templates.
- */
 public class GetAlternativeQueryButton extends AbstractGuiButton {
 
     public GetAlternativeQueryButton(final QueryView queryView) {
@@ -20,7 +13,7 @@ public class GetAlternativeQueryButton extends AbstractGuiButton {
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doGetAlternativeQuery(); // TODO
+                        queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doGetAlternativeQuery();
                     }
                 }
         );

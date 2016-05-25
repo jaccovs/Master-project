@@ -9,13 +9,6 @@ import org.semanticweb.owlapi.model.OWLObject;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 05.09.12
- * Time: 17:53
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractAxiomList extends MList implements LinkedObjectComponent {
 
     private LinkedObjectComponentMediator mediator;
