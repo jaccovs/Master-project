@@ -28,14 +28,19 @@ public class ConfigFileManager {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        c.numOfLeadingDiags = Integer.parseInt((String) properties.get("numOfLeadingDiags"));
+        // diagnosis preferences
         c.engineType = parseEngineType((String) properties.get("enginetype"));
-        c.rm = parseRM((String) properties.get("rm"));
-        c.sortCriterion = parseSortCriterion((String) properties.get("sortcriterion"));
+        c.numOfLeadingDiags = Integer.parseInt((String) properties.get("numOfLeadingDiags"));
         c.reduceIncoherency = Boolean.parseBoolean((String) properties.get("reduceIncoherency"));
         c.extractModules = Boolean.parseBoolean((String) properties.get("extractModules"));
-        c.minimizeQuery = Boolean.parseBoolean((String) properties.get("minimizeQuery"));
-        c.calcAllDiags = Boolean.parseBoolean((String) properties.get("calcAllDiags"));
+
+        // query computation
+        c.enrichQuery = Boolean.parseBoolean((String) properties.get("enrichquery"));
+        c.sortCriterion = parseSortCriterion((String) properties.get("sortcriterion"));
+        c.rm = parseRM((String) properties.get("rm"));
+        c.entropyThreshold = Double.parseDouble((String) properties.get("entropythreshold"));
+        c.cardinalityThreshold = Double.parseDouble((String) properties.get("cardinalitythreshold"));
+        c.cautiousParameter = Double.parseDouble((String) properties.get("cautiousparameter"));
 
         // entailmenttypes
         c.incInferenceTypeClassHierarchy = Boolean.parseBoolean((String) properties.get("incclasshierarchy"));
@@ -48,7 +53,6 @@ public class ConfigFileManager {
         c.incInferenceTypeSameIndividual = Boolean.parseBoolean((String) properties.get("incsameindividual"));
         c.incInferenceTypeDifferentIndividuals = Boolean.parseBoolean((String) properties.get("incdifferentindividuals"));
 
-        c.entailmentCalThres = Double.parseDouble((String) properties.get("entailmentCalThres"));
 
         try {
             properties.store(new FileOutputStream(confFile),null);
@@ -83,14 +87,19 @@ public class ConfigFileManager {
     public static SearchConfiguration getDefaultConfig() {
         SearchConfiguration conf = new SearchConfiguration();
 
+        // diagnosis calculation
         conf.engineType = SearchConfiguration.DiagnosisEngineType.Inverse;
         conf.numOfLeadingDiags = 9;
-        conf.rm = SearchConfiguration.RM.ENT;
-        conf.sortCriterion = SearchConfiguration.SortCriterion.MINCARD;
         conf.reduceIncoherency = false;
         conf.extractModules = false;
-        conf.minimizeQuery = true;
-        conf.calcAllDiags = false;
+
+        // calculate query
+        conf.enrichQuery = true;
+        conf.sortCriterion = SearchConfiguration.SortCriterion.MINCARD;
+        conf.rm = SearchConfiguration.RM.ENT;
+        conf.entropyThreshold = 0.05;
+        conf.cardinalityThreshold = 0.00;
+        conf.cautiousParameter = 0.4;
 
         // entailmenttypes
         conf.incInferenceTypeClassHierarchy = true;
@@ -103,8 +112,6 @@ public class ConfigFileManager {
         conf.incInferenceTypeSameIndividual = false;
         conf.incInferenceTypeDifferentIndividuals = false;
 
-        conf.entailmentCalThres = 0.01;
-
         return conf;
     }
 
@@ -116,14 +123,20 @@ public class ConfigFileManager {
 
         Properties properties = new Properties();
 
+        // diagnosis calculation
         properties.put("enginetype", configuration.engineType.toString());
         properties.put("numOfLeadingDiags",configuration.numOfLeadingDiags.toString());
-        properties.put("rm",configuration.rm.toString());
-        properties.put("sortcriterion", configuration.sortCriterion.toString());
         properties.put("reduceIncoherency",configuration.reduceIncoherency.toString());
         properties.put("extractModules",configuration.extractModules.toString());
-        properties.put("minimizeQuery",configuration.minimizeQuery.toString());
-        properties.put("calcAllDiags",configuration.calcAllDiags.toString());
+
+        // query calculation
+        properties.put("enrichquery",configuration.enrichQuery.toString());
+        properties.put("sortcriterion", configuration.sortCriterion.toString());
+        properties.put("rm",configuration.rm.toString());
+        properties.put("entropythreshold",configuration.entropyThreshold.toString());
+        properties.put("cardinalitythreshold",configuration.cardinalityThreshold.toString());
+        properties.put("cautiousparameter",configuration.cautiousParameter.toString());
+
 
         // entailmenttypes
         properties.put("incclasshierarchy",configuration.incInferenceTypeClassHierarchy.toString());
@@ -136,7 +149,6 @@ public class ConfigFileManager {
         properties.put("incsameindividual",configuration.incInferenceTypeSameIndividual.toString());
         properties.put("incdifferentindividuals",configuration.incInferenceTypeDifferentIndividuals.toString());
 
-        properties.put("entailmentCalThres",configuration.entailmentCalThres.toString());
 
         try {
             properties.store(new FileOutputStream(confFile),null);

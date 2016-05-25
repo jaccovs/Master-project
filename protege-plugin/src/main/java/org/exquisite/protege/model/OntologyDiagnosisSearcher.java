@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus.NO_ERROR;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus.SOLVER_EXCEPTION;
 
-/**
- * Created by wolfi on 17.03.2016.
- */
 public class OntologyDiagnosisSearcher {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDiagnosisSearcher.class.getName());
@@ -122,8 +119,10 @@ public class OntologyDiagnosisSearcher {
 
     public void doCalculateDiagnosis(ErrorHandler errorHandler) {
         int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
-        if (diagnosisEngineFactory.getSearchConfiguration().calcAllDiags)
+
+        /*if (diagnosisEngineFactory.getSearchConfiguration().calcAllDiags)
             n = -1;
+        */
         //new SearchThread(diagnosisEngineFactory.getDiagnosisEngine(), n, errorHandler).execute();
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();

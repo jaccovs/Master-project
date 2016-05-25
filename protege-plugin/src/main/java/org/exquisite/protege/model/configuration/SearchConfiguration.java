@@ -13,7 +13,7 @@ public class SearchConfiguration {
     /**
      * Configuration possibilty to use diverse diagnosis engines.
      */
-    public static enum DiagnosisEngineType {
+    public enum DiagnosisEngineType {
         HSDAG,
         HSTree,
         Inverse;
@@ -36,7 +36,7 @@ public class SearchConfiguration {
     /**
      * Configuration possibility to use diverse requirements measurements used for query computation.
      */
-    public static enum RM {
+    public enum RM {
         ENT,
         SPL,
         RIO;
@@ -57,7 +57,7 @@ public class SearchConfiguration {
 
     }
 
-    public static enum SortCriterion {
+    public enum SortCriterion {
         MINCARD,
         MINSUM,
         MINMAX;
@@ -83,6 +83,14 @@ public class SearchConfiguration {
     /** The maximum number of leading diagnoses to search for. Default: 9. */
     public Integer numOfLeadingDiags = 9;
 
+    public Boolean reduceIncoherency = false;
+
+    public Boolean extractModules = false;
+
+    public Boolean enrichQuery = true;
+
+    public SortCriterion sortCriterion = SortCriterion.MINCARD;
+
     /**
      * The applied measure used during qPartition selection applied for query computation.
      * Possible measures are are entropy based, split in half or risk optimization(RIO) -based requirements measure.
@@ -90,11 +98,10 @@ public class SearchConfiguration {
      */
     public RM rm = RM.ENT;
 
-    public SortCriterion sortCriterion = SortCriterion.MINCARD;
-    public Boolean reduceIncoherency = false;
-    public Boolean extractModules = false;
-    public Boolean minimizeQuery = true;
-    public Boolean calcAllDiags = false;
+    public Double entropyThreshold = 0.05;
+    public Double cardinalityThreshold = 0.00;
+    public Double cautiousParameter = 0.4;
+
 
     /** include specific InferenceTypes (or EntailmentTypes) for reasoner (yes/no) ?*/
     public Boolean incInferenceTypeClassHierarchy = true;
@@ -106,8 +113,6 @@ public class SearchConfiguration {
     public Boolean incInferenceTypeDataPropertyAssertions = false;
     public Boolean incInferenceTypeSameIndividual = false;
     public Boolean incInferenceTypeDifferentIndividuals = false;
-
-    public Double entailmentCalThres = 0.01;
 
     /**
      * Returns an array of preferred inference types (entailment types).
@@ -132,13 +137,15 @@ public class SearchConfiguration {
 
     public String toString() {
         return "EngineType: " +  engineType + ", " +
-                "RM: " + rm + ", " +
-                "sortCriterion: " + sortCriterion + ", " +
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
                 "reduceIncoherency: " + reduceIncoherency + ", " +
                 "extractModules:" + extractModules + ", " +
-                "minimizeQuery: " + minimizeQuery + ", " +
-                "calcAllDiags: " + calcAllDiags + ", " +
+                "enrichQuery: " + enrichQuery + ", " +
+                "sortCriterion: " + sortCriterion + ", " +
+                "RM: " + rm + ", " +
+                "entropy threshold: " + entropyThreshold + ", " +
+                "cardinality threshold: " + cardinalityThreshold + ", " +
+                "cautious parameter: " + cautiousParameter + ", " +
                 "CLASS_HIERARCHY: " + incInferenceTypeClassHierarchy + ", " +
                 "DISJOINT_CLASSES: " + incInferenceTypeDisjointClasses + ", " +
                 "OBJECT_PROPERTY_HIERARCHY: " + incInferenceTypeObjectPropertyHierarchy + ", " +
@@ -147,9 +154,7 @@ public class SearchConfiguration {
                 "OBJECT_PROPERTY_ASSERTIONS: " + incInferenceTypeObjectPropertyAssertions + ", " +
                 "DATA_PROPERTY_ASSERTIONS: " + incInferenceTypeDataPropertyAssertions + ", " +
                 "SAME_INDIVIDUAL: " + incInferenceTypeSameIndividual + ", " +
-                "DIFFERENT_INDIVIDUALS: " + incInferenceTypeDifferentIndividuals + ", " +
-                "double threshold: " + entailmentCalThres;
-
+                "DIFFERENT_INDIVIDUALS: " + incInferenceTypeDifferentIndividuals + ", ";
     }
 
 }

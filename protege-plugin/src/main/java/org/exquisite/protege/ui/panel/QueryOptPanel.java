@@ -7,13 +7,14 @@ import java.awt.*;
 
 public class QueryOptPanel extends AbstractOptPanel {
 
-    private JSpinner partitioningThresholdField = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
-
-    private JComboBox requirementsMeasurement = new JComboBox();
-
+    // Query computation
+    private JCheckBox enrichQuery_Checkbox = new JCheckBox("enrich query ", true);
     private JComboBox sortCriterion = new JComboBox();
+    private JComboBox requirementsMeasurement = new JComboBox();
+    private JSpinner entropyThresholdSpinner = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
+    private JSpinner cardinalityThresholdSpinner = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
+    private JSpinner cautiousParameterSpinner = new JSpinner(new SpinnerNumberModel(0.75, 0, 1, 0.01));
 
-    private JCheckBox minimizeQuery_Checkbox = new JCheckBox("minimize query ", true);
 
     // Entailmenttypes
     private JCheckBox incInferenceTypeClassHierarchy_Checkbox = new JCheckBox("include entailments containing ClassHierarchy", true);
@@ -43,12 +44,16 @@ public class QueryOptPanel extends AbstractOptPanel {
         setLayout(new BorderLayout());
         Box holder = Box.createVerticalBox();
 
-        OptionGroupBox holderQueryGen = new OptionGroupBox("Heuristic Query Computation");
-        holderQueryGen.addOptionBox(new OptionBox("minimizequery",getListener(),minimizeQuery_Checkbox));
-        holderQueryGen.addOptionBox(new OptionBox("rm",getListener(),new JLabel("RequirementsMeasure: "), requirementsMeasurement));
+        OptionGroupBox holderQueryGen = new OptionGroupBox("Query Computation");
+        holderQueryGen.addOptionBox(new OptionBox("enrichquery",getListener(),enrichQuery_Checkbox));
         holderQueryGen.addOptionBox(new OptionBox("sortcriterion",getListener(),new JLabel("SortCriterion: "), sortCriterion));
-        partitioningThresholdField.setPreferredSize(new Dimension(60, 22));
-        holderQueryGen.addOptionBox(new OptionBox("entcalcthr",getListener(),new JLabel("EntCalcThreshold "),partitioningThresholdField));
+        holderQueryGen.addOptionBox(new OptionBox("rm",getListener(),new JLabel("RequirementsMeasure: "), requirementsMeasurement));
+        entropyThresholdSpinner.setPreferredSize(new Dimension(60, 22));
+        holderQueryGen.addOptionBox(new OptionBox("entropythreshold",getListener(),new JLabel("EntropyThreshold "),entropyThresholdSpinner));
+        cardinalityThresholdSpinner.setPreferredSize(new Dimension(60, 22));
+        holderQueryGen.addOptionBox(new OptionBox("cardinalitythreshold",getListener(),new JLabel("CardinalityThreshold "),cardinalityThresholdSpinner));
+        cautiousParameterSpinner.setPreferredSize(new Dimension(60, 22));
+        holderQueryGen.addOptionBox(new OptionBox("cautiousparameter",getListener(),new JLabel("CautiousParameter "),cautiousParameterSpinner));
 
         OptionGroupBox holderEntailments = new OptionGroupBox("Inference Types used to calculate entailments");
         holderEntailments.addOptionBox(new OptionBox("incclasshierarchy",getListener(),incInferenceTypeClassHierarchy_Checkbox));
@@ -69,10 +74,12 @@ public class QueryOptPanel extends AbstractOptPanel {
     }
 
     protected void loadConfiguration() {
-        minimizeQuery_Checkbox.setSelected(getConfiguration().minimizeQuery);
-        requirementsMeasurement.setSelectedItem(getConfiguration().rm);
+        enrichQuery_Checkbox.setSelected(getConfiguration().enrichQuery);
         sortCriterion.setSelectedItem(getConfiguration().sortCriterion);
-        partitioningThresholdField.setValue(getConfiguration().entailmentCalThres);
+        requirementsMeasurement.setSelectedItem(getConfiguration().rm);
+        entropyThresholdSpinner.setValue(getConfiguration().entropyThreshold);
+        cardinalityThresholdSpinner.setValue(getConfiguration().cardinalityThreshold);
+        cautiousParameterSpinner.setValue(getConfiguration().cautiousParameter);
 
         incInferenceTypeClassHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeClassHierarchy);
         incInferenceTypeDisjointClasses_Checkbox.setSelected(getConfiguration().incInferenceTypeDisjointClasses);
@@ -87,11 +94,12 @@ public class QueryOptPanel extends AbstractOptPanel {
 
     @Override
     public void saveChanges() {
-
-        getNewConfiguration().minimizeQuery = minimizeQuery_Checkbox.isSelected();
-        getNewConfiguration().rm = (SearchConfiguration.RM) requirementsMeasurement.getSelectedItem();
+        getNewConfiguration().enrichQuery = enrichQuery_Checkbox.isSelected();
         getNewConfiguration().sortCriterion = (SearchConfiguration.SortCriterion) sortCriterion.getSelectedItem();
-        getNewConfiguration().entailmentCalThres = (Double) partitioningThresholdField.getValue();
+        getNewConfiguration().rm = (SearchConfiguration.RM) requirementsMeasurement.getSelectedItem();
+        getNewConfiguration().entropyThreshold = (Double) entropyThresholdSpinner.getValue();
+        getNewConfiguration().cardinalityThreshold = (Double) cardinalityThresholdSpinner.getValue();
+        getNewConfiguration().cautiousParameter = (Double) cautiousParameterSpinner.getValue();
 
         getNewConfiguration().incInferenceTypeClassHierarchy = incInferenceTypeClassHierarchy_Checkbox.isSelected();
         getNewConfiguration().incInferenceTypeDisjointClasses = incInferenceTypeDisjointClasses_Checkbox.isSelected();
