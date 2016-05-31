@@ -144,6 +144,11 @@ public class OntologyDiagnosisSearcher {
         //new SearchThread(diagnosisEngineFactory.getDiagnosisEngine(), n, errorHandler).execute();
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
+
+        logger.debug("diagnoses before resetEngine() " + diagnoses);
+        diagnosisEngine.resetEngine();
+        logger.debug("diagnoses after resetEngine() " + diagnoses);
+
         diagnosisEngine.setMaxNumberOfDiagnoses(n);
         try {
             logger.debug("maxNumberOfDiagnoses: " + n);
@@ -156,8 +161,6 @@ public class OntologyDiagnosisSearcher {
             notifyListeners();
         } catch (DiagnosisException e) {
             errorHandler.errorHappend(SOLVER_EXCEPTION);
-        } finally {
-            diagnosisEngine.resetEngine();
         }
 
     }
