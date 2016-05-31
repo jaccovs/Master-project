@@ -12,15 +12,11 @@
     <artifactId>protege-plugin</artifactId>
 
     <properties>
-        <protege-version>5.0.0-RC2</protege-version>
+        <protege-version>5.0.1-SNAPSHOT</protege-version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-distribution</artifactId>
-            <version>4.2.5</version>
-        </dependency>
+
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-owl</artifactId>
