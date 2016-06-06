@@ -8,61 +8,6 @@ import java.util.Properties;
 
 public class ConfigFileManager {
 
-    public static SearchConfiguration readConfiguration() {
-        String userHome = System.getProperty("user.home");
-        if(userHome == null)
-            throw new IllegalStateException("user home directory is null");
-        File confFile = new File(new File(userHome), "exquisitedebugger.properties");
-
-        Properties properties = new Properties();
-        SearchConfiguration c = new SearchConfiguration();
-
-        if (!confFile.exists()) {
-            writeConfiguration(getDefaultConfig());
-            return getDefaultConfig();
-        }
-
-        try {
-            properties.load(new FileInputStream(confFile));
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        // diagnosis preferences
-        c.engineType = parseEngineType((String) properties.get("enginetype"));
-        c.numOfLeadingDiags = Integer.parseInt((String) properties.get("numOfLeadingDiags"));
-        c.reduceIncoherency = Boolean.parseBoolean((String) properties.get("reduceIncoherency"));
-        c.extractModules = Boolean.parseBoolean((String) properties.get("extractModules"));
-
-        // query computation
-        c.enrichQuery = Boolean.parseBoolean((String) properties.get("enrichquery"));
-        c.sortCriterion = parseSortCriterion((String) properties.get("sortcriterion"));
-        c.rm = parseRM((String) properties.get("rm"));
-        c.entropyThreshold = Double.parseDouble((String) properties.get("entropythreshold"));
-        c.cardinalityThreshold = Double.parseDouble((String) properties.get("cardinalitythreshold"));
-        c.cautiousParameter = Double.parseDouble((String) properties.get("cautiousparameter"));
-
-        // entailmenttypes
-        c.incInferenceTypeClassHierarchy = Boolean.parseBoolean((String) properties.get("incclasshierarchy"));
-        c.incInferenceTypeDisjointClasses = Boolean.parseBoolean((String) properties.get("incdisjointclasses"));
-        c.incInferenceTypeObjectPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incobjectpropertyhierarchy"));
-        c.incInferenceTypeDataPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incdatapropertyhierarchy"));
-        c.incInferenceTypeClassAssertions = Boolean.parseBoolean((String) properties.get("incclassassertions"));
-        c.incInferenceTypeObjectPropertyAssertions = Boolean.parseBoolean((String) properties.get("incobjectpropertyassertions"));
-        c.incInferenceTypeDataPropertyAssertions = Boolean.parseBoolean((String) properties.get("incdatapropertyassertions"));
-        c.incInferenceTypeSameIndividual = Boolean.parseBoolean((String) properties.get("incsameindividual"));
-        c.incInferenceTypeDifferentIndividuals = Boolean.parseBoolean((String) properties.get("incdifferentindividuals"));
-
-
-        try {
-            properties.store(new FileOutputStream(confFile),null);
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return c;
-    }
-
     private static SearchConfiguration.DiagnosisEngineType parseEngineType(String engineType) {
         for (SearchConfiguration.DiagnosisEngineType type : SearchConfiguration.DiagnosisEngineType.values())
             if (type.toString().equals(engineType))
@@ -94,6 +39,8 @@ public class ConfigFileManager {
         conf.extractModules = false;
 
         // calculate query
+        conf.minimalQueries = SearchConfiguration.DEFAULT_MINIMAL_QUERIES;
+        conf.maximalQueries = SearchConfiguration.DEFAULT_MAXIMAL_QUERIES;
         conf.enrichQuery = true;
         conf.sortCriterion = SearchConfiguration.SortCriterion.MINCARD;
         conf.rm = SearchConfiguration.RM.ENT;
@@ -115,6 +62,63 @@ public class ConfigFileManager {
         return conf;
     }
 
+    public static SearchConfiguration readConfiguration() {
+        String userHome = System.getProperty("user.home");
+        if(userHome == null)
+            throw new IllegalStateException("user home directory is null");
+        File confFile = new File(new File(userHome), "exquisitedebugger.properties");
+
+        Properties properties = new Properties();
+        SearchConfiguration c = new SearchConfiguration();
+
+        if (!confFile.exists()) {
+            writeConfiguration(getDefaultConfig());
+            return getDefaultConfig();
+        }
+
+        try {
+            properties.load(new FileInputStream(confFile));
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        // diagnosis preferences
+        c.engineType = parseEngineType((String) properties.get("enginetype"));
+        c.numOfLeadingDiags = Integer.parseInt((String) properties.get("numOfLeadingDiags"));
+        c.reduceIncoherency = Boolean.parseBoolean((String) properties.get("reduceIncoherency"));
+        c.extractModules = Boolean.parseBoolean((String) properties.get("extractModules"));
+
+        // query computation
+        c.minimalQueries = Integer.parseInt((String) properties.get("minimalQueries"));
+        c.maximalQueries = Integer.parseInt((String) properties.get("maximalQueries"));
+        c.enrichQuery = Boolean.parseBoolean((String) properties.get("enrichquery"));
+        c.sortCriterion = parseSortCriterion((String) properties.get("sortcriterion"));
+        c.rm = parseRM((String) properties.get("rm"));
+        c.entropyThreshold = Double.parseDouble((String) properties.get("entropythreshold"));
+        c.cardinalityThreshold = Double.parseDouble((String) properties.get("cardinalitythreshold"));
+        c.cautiousParameter = Double.parseDouble((String) properties.get("cautiousparameter"));
+
+        // entailmenttypes
+        c.incInferenceTypeClassHierarchy = Boolean.parseBoolean((String) properties.get("incclasshierarchy"));
+        c.incInferenceTypeDisjointClasses = Boolean.parseBoolean((String) properties.get("incdisjointclasses"));
+        c.incInferenceTypeObjectPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incobjectpropertyhierarchy"));
+        c.incInferenceTypeDataPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incdatapropertyhierarchy"));
+        c.incInferenceTypeClassAssertions = Boolean.parseBoolean((String) properties.get("incclassassertions"));
+        c.incInferenceTypeObjectPropertyAssertions = Boolean.parseBoolean((String) properties.get("incobjectpropertyassertions"));
+        c.incInferenceTypeDataPropertyAssertions = Boolean.parseBoolean((String) properties.get("incdatapropertyassertions"));
+        c.incInferenceTypeSameIndividual = Boolean.parseBoolean((String) properties.get("incsameindividual"));
+        c.incInferenceTypeDifferentIndividuals = Boolean.parseBoolean((String) properties.get("incdifferentindividuals"));
+
+
+        try {
+            properties.store(new FileOutputStream(confFile),null);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return c;
+    }
+
     public static void writeConfiguration (SearchConfiguration configuration) {
         String userHome = System.getProperty("user.home");
         if(userHome == null)
@@ -130,6 +134,8 @@ public class ConfigFileManager {
         properties.put("extractModules",configuration.extractModules.toString());
 
         // query calculation
+        properties.put("minimalQueries",configuration.minimalQueries.toString());
+        properties.put("maximalQueries",configuration.maximalQueries.toString());
         properties.put("enrichquery",configuration.enrichQuery.toString());
         properties.put("sortcriterion", configuration.sortCriterion.toString());
         properties.put("rm",configuration.rm.toString());

@@ -8,6 +8,8 @@ import java.awt.*;
 public class QueryOptPanel extends AbstractOptPanel {
 
     // Query computation
+    private JSpinner minimalQueriesSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+    private JSpinner maximalQueriesSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
     private JCheckBox enrichQuery_Checkbox = new JCheckBox("enrich query ", true);
     private JComboBox sortCriterion = new JComboBox();
     private JComboBox requirementsMeasurement = new JComboBox();
@@ -17,6 +19,7 @@ public class QueryOptPanel extends AbstractOptPanel {
 
 
     // Entailmenttypes
+    /*
     private JCheckBox incInferenceTypeClassHierarchy_Checkbox = new JCheckBox("include entailments containing ClassHierarchy", true);
     private JCheckBox incInferenceTypeDisjointClasses_Checkbox = new JCheckBox("include entailments containing DisjointClasses", true);
     private JCheckBox incInferenceTypeObjectPropertyHierarchy_Checkbox = new JCheckBox("include entailments containing ObjectPropertyHierarchy", false);
@@ -26,6 +29,7 @@ public class QueryOptPanel extends AbstractOptPanel {
     private JCheckBox incInferenceTypeDataPropertyAssertions_Checkbox = new JCheckBox("include entailments containing DataPropertyAssertions", false);
     private JCheckBox incInferenceTypeSameIndividual_Checkbox = new JCheckBox("include entailments containing SameIndividual", false);
     private JCheckBox incInferenceTypeDifferentIndividuals_Checkbox = new JCheckBox("include entailments containing DifferentIndividuals", false);
+    */
 
     public QueryOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration) {
         super(configuration,newConfiguration);
@@ -45,6 +49,12 @@ public class QueryOptPanel extends AbstractOptPanel {
         Box holder = Box.createVerticalBox();
 
         OptionGroupBox holderQueryGen = new OptionGroupBox("Query Computation");
+
+        minimalQueriesSpinner.setPreferredSize(new Dimension(60, 22));
+        holderQueryGen.addOptionBox(new OptionBox("minimalQueries",getListener(),new JLabel("Minimal Queries "),minimalQueriesSpinner));
+        maximalQueriesSpinner.setPreferredSize(new Dimension(60, 22));
+        holderQueryGen.addOptionBox(new OptionBox("maximalQueries",getListener(),new JLabel("Maximal Queries "),maximalQueriesSpinner));
+        holderQueryGen.addOptionBox(new OptionBox("entropythreshold",getListener(),new JLabel("EntropyThreshold "),entropyThresholdSpinner));
         holderQueryGen.addOptionBox(new OptionBox("enrichquery",getListener(),enrichQuery_Checkbox));
         holderQueryGen.addOptionBox(new OptionBox("sortcriterion",getListener(),new JLabel("SortCriterion: "), sortCriterion));
         holderQueryGen.addOptionBox(new OptionBox("rm",getListener(),new JLabel("RequirementsMeasure: "), requirementsMeasurement));
@@ -55,6 +65,7 @@ public class QueryOptPanel extends AbstractOptPanel {
         cautiousParameterSpinner.setPreferredSize(new Dimension(60, 22));
         holderQueryGen.addOptionBox(new OptionBox("cautiousparameter",getListener(),new JLabel("CautiousParameter "),cautiousParameterSpinner));
 
+        /*
         OptionGroupBox holderEntailments = new OptionGroupBox("Inference Types used to calculate entailments");
         holderEntailments.addOptionBox(new OptionBox("incclasshierarchy",getListener(),incInferenceTypeClassHierarchy_Checkbox));
         holderEntailments.addOptionBox(new OptionBox("incdisjointclasses",getListener(),incInferenceTypeDisjointClasses_Checkbox));
@@ -65,15 +76,18 @@ public class QueryOptPanel extends AbstractOptPanel {
         holderEntailments.addOptionBox(new OptionBox("incdatapropertyassertions",getListener(),incInferenceTypeDataPropertyAssertions_Checkbox));
         holderEntailments.addOptionBox(new OptionBox("incsameindividual",getListener(),incInferenceTypeSameIndividual_Checkbox));
         holderEntailments.addOptionBox(new OptionBox("incdifferentindividuals",getListener(),incInferenceTypeDifferentIndividuals_Checkbox));
+        */
 
         holder.add(holderQueryGen);
-        holder.add(holderEntailments);
+        //holder.add(holderEntailments);
 
         add(holder, BorderLayout.NORTH);
         add(getHelpAreaPane(),BorderLayout.CENTER);
     }
 
     protected void loadConfiguration() {
+        minimalQueriesSpinner.setValue(getConfiguration().minimalQueries);
+        maximalQueriesSpinner.setValue(getConfiguration().maximalQueries);
         enrichQuery_Checkbox.setSelected(getConfiguration().enrichQuery);
         sortCriterion.setSelectedItem(getConfiguration().sortCriterion);
         requirementsMeasurement.setSelectedItem(getConfiguration().rm);
@@ -81,6 +95,7 @@ public class QueryOptPanel extends AbstractOptPanel {
         cardinalityThresholdSpinner.setValue(getConfiguration().cardinalityThreshold);
         cautiousParameterSpinner.setValue(getConfiguration().cautiousParameter);
 
+        /*
         incInferenceTypeClassHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeClassHierarchy);
         incInferenceTypeDisjointClasses_Checkbox.setSelected(getConfiguration().incInferenceTypeDisjointClasses);
         incInferenceTypeObjectPropertyHierarchy_Checkbox.setSelected(getConfiguration().incInferenceTypeObjectPropertyHierarchy);
@@ -90,17 +105,20 @@ public class QueryOptPanel extends AbstractOptPanel {
         incInferenceTypeDataPropertyAssertions_Checkbox.setSelected(getConfiguration().incInferenceTypeDataPropertyAssertions);
         incInferenceTypeSameIndividual_Checkbox.setSelected(getConfiguration().incInferenceTypeSameIndividual);
         incInferenceTypeDifferentIndividuals_Checkbox.setSelected(getConfiguration().incInferenceTypeDifferentIndividuals);
+        */
     }
 
     @Override
     public void saveChanges() {
+        getNewConfiguration().minimalQueries = (Integer) minimalQueriesSpinner.getValue();
+        getNewConfiguration().maximalQueries = (Integer) maximalQueriesSpinner.getValue();
         getNewConfiguration().enrichQuery = enrichQuery_Checkbox.isSelected();
         getNewConfiguration().sortCriterion = (SearchConfiguration.SortCriterion) sortCriterion.getSelectedItem();
         getNewConfiguration().rm = (SearchConfiguration.RM) requirementsMeasurement.getSelectedItem();
         getNewConfiguration().entropyThreshold = (Double) entropyThresholdSpinner.getValue();
         getNewConfiguration().cardinalityThreshold = (Double) cardinalityThresholdSpinner.getValue();
         getNewConfiguration().cautiousParameter = (Double) cautiousParameterSpinner.getValue();
-
+        /*
         getNewConfiguration().incInferenceTypeClassHierarchy = incInferenceTypeClassHierarchy_Checkbox.isSelected();
         getNewConfiguration().incInferenceTypeDisjointClasses = incInferenceTypeDisjointClasses_Checkbox.isSelected();
         getNewConfiguration().incInferenceTypeObjectPropertyHierarchy = incInferenceTypeObjectPropertyHierarchy_Checkbox.isSelected();
@@ -110,6 +128,7 @@ public class QueryOptPanel extends AbstractOptPanel {
         getNewConfiguration().incInferenceTypeDataPropertyAssertions = incInferenceTypeDataPropertyAssertions_Checkbox.isSelected();
         getNewConfiguration().incInferenceTypeSameIndividual = incInferenceTypeSameIndividual_Checkbox.isSelected();
         getNewConfiguration().incInferenceTypeDifferentIndividuals = incInferenceTypeDifferentIndividuals_Checkbox.isSelected();
+        */
     }
 
 }

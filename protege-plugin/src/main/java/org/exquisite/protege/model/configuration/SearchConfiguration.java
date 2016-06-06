@@ -10,6 +10,12 @@ import java.util.List;
  */
 public class SearchConfiguration {
 
+    /** Default value for minimal queries */
+    public static final Integer DEFAULT_MINIMAL_QUERIES = 1;
+
+    /** Default value for maximal queries */
+    public static final Integer DEFAULT_MAXIMAL_QUERIES = 1;
+
     /**
      * Configuration possibilty to use diverse diagnosis engines.
      */
@@ -36,7 +42,7 @@ public class SearchConfiguration {
     /**
      * Configuration possibility to use diverse requirements measurements used for query computation.
      */
-    public static enum RM {
+    public enum RM {
         ENT,
         SPL,
         RIO;
@@ -87,6 +93,13 @@ public class SearchConfiguration {
 
     public Boolean extractModules = false;
 
+    /** Generate at least minimal queries */
+    public Integer minimalQueries = DEFAULT_MINIMAL_QUERIES;
+
+    /** Generate at most maxmial queries (>= minimalQueries) */
+    public Integer maximalQueries = DEFAULT_MAXIMAL_QUERIES;
+
+    /** Shall the query computation use enrichment of queries ? */
     public Boolean enrichQuery = true;
 
     public SortCriterion sortCriterion = SortCriterion.MINCARD;
@@ -101,7 +114,6 @@ public class SearchConfiguration {
     public Double entropyThreshold = 0.05;
     public Double cardinalityThreshold = 0.00;
     public Double cautiousParameter = 0.4;
-
 
     /** include specific InferenceTypes (or EntailmentTypes) for reasoner (yes/no) ?*/
     public Boolean incInferenceTypeClassHierarchy = true;
@@ -140,6 +152,8 @@ public class SearchConfiguration {
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
                 "reduceIncoherency: " + reduceIncoherency + ", " +
                 "extractModules:" + extractModules + ", " +
+                "minimalQueries:" + minimalQueries + ", " +
+                "maximalQueries:" + maximalQueries + ", " +
                 "enrichQuery: " + enrichQuery + ", " +
                 "sortCriterion: " + sortCriterion + ", " +
                 "RM: " + rm + ", " +

@@ -11,6 +11,9 @@ import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputa
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.RiskOptimizationMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.SplitInHalfMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFormulaWeights;
+import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
+import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.exquisite.protege.model.error.ErrorHandler;
@@ -38,7 +41,7 @@ public class OntologyDiagnosisSearcher {
     public static enum TestCaseType {POSITIVE_TC, NEGATIVE_TC, ENTAILED_TC, NON_ENTAILED_TC}
 
     public static enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
-        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM}
+        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
 
     public static enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
 
@@ -66,13 +69,13 @@ public class OntologyDiagnosisSearcher {
 
     private Query<OWLLogicalAxiom> actualQuery;
 
-    private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<OWLLogicalAxiom>();
+    private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<>();
 
-    private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<OWLLogicalAxiom>();
+    private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<>();
 
-    private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<Set<OWLLogicalAxiom>>();
+    private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
 
-    private Map<Set<OWLLogicalAxiom>,TestCaseType> queryHistoryType = new LinkedHashMap<Set<OWLLogicalAxiom>, TestCaseType>();
+    private Map<Set<OWLLogicalAxiom>,TestCaseType> queryHistoryType = new LinkedHashMap<>();
 
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
@@ -203,12 +206,12 @@ public class OntologyDiagnosisSearcher {
 
     public void doCommitQuery() {
         if (!axiomsMarkedEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<OWLLogicalAxiom>(axiomsMarkedEntailed),
+            doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
                     TestCaseType.ENTAILED_TC, new ErrorHandler());
             addToQueryHistory(axiomsMarkedEntailed,TestCaseType.ENTAILED_TC);
         }
         if (!axiomsMarkedNonEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<OWLLogicalAxiom>(axiomsMarkedNonEntailed),
+            doAddTestcase(new LinkedHashSet<>(axiomsMarkedNonEntailed),
                     TestCaseType.NON_ENTAILED_TC, new ErrorHandler());
             addToQueryHistory(axiomsMarkedNonEntailed,TestCaseType.NON_ENTAILED_TC);
         }
@@ -243,6 +246,17 @@ public class OntologyDiagnosisSearcher {
         final SearchConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
         HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine);
 
+        int minimalQueries = preference.minimalQueries;
+        int maximalQueries = preference.maximalQueries;
+        if (maximalQueries < minimalQueries) {
+            maximalQueries = minimalQueries;
+            preference.maximalQueries = maximalQueries;
+
+        }
+
+        heuristicConfiguration.setMinQueries(minimalQueries);
+        heuristicConfiguration.setMaxQueries(maximalQueries);
+
         heuristicConfiguration.setEnrichQueries(preference.enrichQuery);
         switch (preference.rm) {
             case ENT:
@@ -263,7 +277,19 @@ public class OntologyDiagnosisSearcher {
                 errorHandler.errorHappend(ErrorStatus.UNKNOWN_RM);
         }
 
-        // heuristicConfiguration.setSortCriterion(preference. TODO
+        switch (preference.sortCriterion) {
+            case MINCARD:
+                heuristicConfiguration.setSortCriterion(new MinQueryCardinality<>());
+                break;
+            case MINSUM:
+                heuristicConfiguration.setSortCriterion(new MinSumFormulaWeights<>(new HashMap<>())); // TODO find a method to automatically calculate formula weights
+                break;
+            case MINMAX:
+                heuristicConfiguration.setSortCriterion(new MinMaxFormulaWeights<>(new HashMap<>())); // TODO find a method to automatically calculate formula weights
+                break;
+            default:
+                errorHandler.errorHappend(ErrorStatus.UNKNOWN_SORTCRITERION);
+        }
 
 
         qc = new HeuristicQueryComputation<>(heuristicConfiguration);
