@@ -15,3 +15,5 @@ In the standard implementation conflicts are computed using Junker's QuickXPlain
 In general case the library can return many diagnoses as there may exists multiple ways to repair a KB. Therefore we developed an interactive debugging algorithm that allows a user to reduce the number of diagnoses by answering a number of queries, i.e. whether some set of formulas should be entailed by the target KB or not.
 
 The project can be applied to debugging (diagnosis) of SAT (SAT4J), Constraints (Choco, JSolver) and OWL (any OWLAPI compatible reasoner) knowledge bases. At the moment the project team focuses on development on the OWL debugging module, therefore, CP and SAT modules might be slightly outdated.
+
+# Protégé debugger plug-in
