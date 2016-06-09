@@ -4,6 +4,7 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
@@ -132,7 +133,27 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doAddTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type, ErrorHandler errorHandler) {
+        addNewTestcase(testcase,type);
+        if(!getErrorStatus().equals(NO_ERROR))
+            errorHandler.errorHappend(getErrorStatus());
+        notifyListeners();
     }
+
+    protected void addNewTestcase(Set<OWLLogicalAxiom> axioms, TestCaseType type) {
+
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+
+        switch(type) {
+            case ENTAILED_TC:
+                diagnosisModel.getEntailedExamples().addAll(axioms);
+                break;
+            case NON_ENTAILED_TC:
+                diagnosisModel.getNotEntailedExamples().addAll(axioms);
+                break;
+        }
+    }
+
+
 
     public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
     }
@@ -343,6 +364,10 @@ public class OntologyDiagnosisSearcher {
 
 
         //JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    protected ErrorStatus getErrorStatus() {
+        return errorStatus;
     }
 
     public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {

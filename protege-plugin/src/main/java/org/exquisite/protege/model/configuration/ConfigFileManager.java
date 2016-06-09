@@ -1,12 +1,25 @@
 package org.exquisite.protege.model.configuration;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * A ConfigFileManager is responsible for correct loading and saving of the preferences for the ontology debugger.
+ */
 public class ConfigFileManager {
+
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ConfigFileManager.class);
+
+    /**
+     * The name of the properties file. Usually can found in the .protege subdirectory of the user's home directory.
+     */
+    private static final String EXQUISITEDEBUGGER_PROPERTIES = "exquisitedebugger.properties";
+
 
     private static SearchConfiguration.DiagnosisEngineType parseEngineType(String engineType) {
         for (SearchConfiguration.DiagnosisEngineType type : SearchConfiguration.DiagnosisEngineType.values())
@@ -29,13 +42,13 @@ public class ConfigFileManager {
         throw new IllegalStateException("Unknown Sortcriterion");
     }
 
-    public static SearchConfiguration getDefaultConfig() {
+    private static SearchConfiguration getDefaultConfig() {
         SearchConfiguration conf = new SearchConfiguration();
 
         // diagnosis calculation
-        conf.engineType = SearchConfiguration.DiagnosisEngineType.Inverse;
+        conf.engineType = SearchConfiguration.DiagnosisEngineType.HSTree;
         conf.numOfLeadingDiags = 9;
-        conf.reduceIncoherency = false;
+        conf.reduceIncoherency = true;
         conf.extractModules = false;
 
         // calculate query
@@ -48,25 +61,11 @@ public class ConfigFileManager {
         conf.cardinalityThreshold = 0.00;
         conf.cautiousParameter = 0.4;
 
-        // entailmenttypes
-        conf.incInferenceTypeClassHierarchy = true;
-        conf.incInferenceTypeDisjointClasses = true;
-        conf.incInferenceTypeObjectPropertyHierarchy = false;
-        conf.incInferenceTypeDataPropertyHierarchy = false;
-        conf.incInferenceTypeClassAssertions = false;
-        conf.incInferenceTypeObjectPropertyAssertions = false;
-        conf.incInferenceTypeDataPropertyAssertions = false;
-        conf.incInferenceTypeSameIndividual = false;
-        conf.incInferenceTypeDifferentIndividuals = false;
-
         return conf;
     }
 
     public static SearchConfiguration readConfiguration() {
-        String userHome = System.getProperty("user.home");
-        if(userHome == null)
-            throw new IllegalStateException("user home directory is null");
-        File confFile = new File(new File(userHome), "exquisitedebugger.properties");
+        File confFile = getConfFile();
 
         Properties properties = new Properties();
         SearchConfiguration c = new SearchConfiguration();
@@ -98,18 +97,6 @@ public class ConfigFileManager {
         c.cardinalityThreshold = Double.parseDouble((String) properties.get("cardinalitythreshold"));
         c.cautiousParameter = Double.parseDouble((String) properties.get("cautiousparameter"));
 
-        // entailmenttypes
-        c.incInferenceTypeClassHierarchy = Boolean.parseBoolean((String) properties.get("incclasshierarchy"));
-        c.incInferenceTypeDisjointClasses = Boolean.parseBoolean((String) properties.get("incdisjointclasses"));
-        c.incInferenceTypeObjectPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incobjectpropertyhierarchy"));
-        c.incInferenceTypeDataPropertyHierarchy = Boolean.parseBoolean((String) properties.get("incdatapropertyhierarchy"));
-        c.incInferenceTypeClassAssertions = Boolean.parseBoolean((String) properties.get("incclassassertions"));
-        c.incInferenceTypeObjectPropertyAssertions = Boolean.parseBoolean((String) properties.get("incobjectpropertyassertions"));
-        c.incInferenceTypeDataPropertyAssertions = Boolean.parseBoolean((String) properties.get("incdatapropertyassertions"));
-        c.incInferenceTypeSameIndividual = Boolean.parseBoolean((String) properties.get("incsameindividual"));
-        c.incInferenceTypeDifferentIndividuals = Boolean.parseBoolean((String) properties.get("incdifferentindividuals"));
-
-
         try {
             properties.store(new FileOutputStream(confFile),null);
         } catch (IOException e) {
@@ -120,10 +107,7 @@ public class ConfigFileManager {
     }
 
     public static void writeConfiguration (SearchConfiguration configuration) {
-        String userHome = System.getProperty("user.home");
-        if(userHome == null)
-            throw new IllegalStateException("user home directory is null");
-        File confFile = new File(new File(userHome),  "exquisitedebugger.properties");
+        File confFile = getConfFile();
 
         Properties properties = new Properties();
 
@@ -143,23 +127,41 @@ public class ConfigFileManager {
         properties.put("cardinalitythreshold",configuration.cardinalityThreshold.toString());
         properties.put("cautiousparameter",configuration.cautiousParameter.toString());
 
-
-        // entailmenttypes
-        properties.put("incclasshierarchy",configuration.incInferenceTypeClassHierarchy.toString());
-        properties.put("incdisjointclasses",configuration.incInferenceTypeDisjointClasses.toString());
-        properties.put("incobjectpropertyhierarchy",configuration.incInferenceTypeObjectPropertyHierarchy.toString());
-        properties.put("incdatapropertyhierarchy",configuration.incInferenceTypeDataPropertyHierarchy.toString());
-        properties.put("incclassassertions",configuration.incInferenceTypeClassAssertions.toString());
-        properties.put("incobjectpropertyassertions",configuration.incInferenceTypeObjectPropertyAssertions.toString());
-        properties.put("incdatapropertyassertions",configuration.incInferenceTypeDataPropertyAssertions.toString());
-        properties.put("incsameindividual",configuration.incInferenceTypeSameIndividual.toString());
-        properties.put("incdifferentindividuals",configuration.incInferenceTypeDifferentIndividuals.toString());
-
-
         try {
             properties.store(new FileOutputStream(confFile),null);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error("Cannot use " + confFile+ " to save properties");
+            throw new IllegalStateException("Cannot use " + confFile+ " to save properties");
+        }
+    }
+
+    /**
+     * A helper method to find the config file and correctly locate the preference file for protege ontology debugger
+     * plugin.
+     * @return The file object where the preferences are found.
+     */
+    private static File getConfFile() {
+        String userHome = System.getProperty("user.home");
+        if(userHome == null)
+            throw new IllegalStateException("user home directory is null");
+
+        final File userHomeDir = new File(userHome);
+
+        if (userHomeDir.exists() && userHomeDir.isDirectory() && userHomeDir.canWrite()) {
+            File prefHomeDir = new File(userHome + File.separator + ".protege" + File.separator + "org.exquisite.protege" + File.separator);
+            if (!prefHomeDir.exists()) {
+                try {
+                    boolean isCreated = prefHomeDir.mkdir();
+                    assert isCreated;
+                } catch (SecurityException e) {
+                    logger.error("Cannot create subdirectory .protege" + File.separator + "org.exquisite.protege in user home directory " + userHome + ". Fall back to " + userHome, e);
+                    return new File(userHomeDir, EXQUISITEDEBUGGER_PROPERTIES);
+                }
+            }
+            return new File(prefHomeDir,  EXQUISITEDEBUGGER_PROPERTIES);
+        } else {
+            logger.error("Cannot use user home directory " + userHome + " to save properties");
+            throw new IllegalStateException("Cannot use user home directory " + userHome + " to save properties");
         }
     }
 

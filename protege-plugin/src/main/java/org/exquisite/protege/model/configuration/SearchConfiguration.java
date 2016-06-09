@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The applied preferences or configuration used for diagnoses search and query computation.
+ * The applied preferences and configuration used for diagnoses search and query computation.
  */
 public class SearchConfiguration {
 
     /** Default value for minimal queries */
-    public static final Integer DEFAULT_MINIMAL_QUERIES = 1;
+    static final Integer DEFAULT_MINIMAL_QUERIES = 1;
 
     /** Default value for maximal queries */
-    public static final Integer DEFAULT_MAXIMAL_QUERIES = 1;
+    static final Integer DEFAULT_MAXIMAL_QUERIES = 1;
 
     /**
      * Configuration possibilty to use diverse diagnosis engines.
@@ -83,13 +83,13 @@ public class SearchConfiguration {
         }
     }
 
-    /** The diagnoses engine to be used: possible values are: HSDag, HSTree and InverseQuickXPlain (FastDiag). Default: Inverse  */
-    public DiagnosisEngineType engineType = DiagnosisEngineType.Inverse;
+    /** The diagnoses engine to be used: possible values are: HSDag, HSTree and InverseQuickXPlain (FastDiag). Default: HSTree  */
+    public DiagnosisEngineType engineType = DiagnosisEngineType.HSTree;
 
     /** The maximum number of leading diagnoses to search for. Default: 9. */
     public Integer numOfLeadingDiags = 9;
 
-    public Boolean reduceIncoherency = false;
+    public Boolean reduceIncoherency = true;
 
     public Boolean extractModules = false;
 
@@ -115,33 +115,16 @@ public class SearchConfiguration {
     public Double cardinalityThreshold = 0.00;
     public Double cautiousParameter = 0.4;
 
-    /** include specific InferenceTypes (or EntailmentTypes) for reasoner (yes/no) ?*/
-    public Boolean incInferenceTypeClassHierarchy = true;
-    public Boolean incInferenceTypeDisjointClasses = true;
-    public Boolean incInferenceTypeObjectPropertyHierarchy = false;
-    public Boolean incInferenceTypeDataPropertyHierarchy = false;
-    public Boolean incInferenceTypeClassAssertions = false;
-    public Boolean incInferenceTypeObjectPropertyAssertions = false;
-    public Boolean incInferenceTypeDataPropertyAssertions = false;
-    public Boolean incInferenceTypeSameIndividual = false;
-    public Boolean incInferenceTypeDifferentIndividuals = false;
-
     /**
      * Returns an array of preferred inference types (entailment types).
+     * By default we have class hierarchy and disjoint classes.
      *
-     * @return
+     * @return The preferred entailment types.
      */
-    public InferenceType[] getEntailmentTypes() {
+    InferenceType[] getEntailmentTypes() {
         List<InferenceType> entailmentTypes = new ArrayList<>();
-        if (incInferenceTypeClassHierarchy) entailmentTypes.add(InferenceType.CLASS_HIERARCHY);
-        if (incInferenceTypeDisjointClasses) entailmentTypes.add(InferenceType.DISJOINT_CLASSES);
-        if (incInferenceTypeObjectPropertyHierarchy) entailmentTypes.add(InferenceType.OBJECT_PROPERTY_HIERARCHY);
-        if (incInferenceTypeDataPropertyHierarchy) entailmentTypes.add(InferenceType.DATA_PROPERTY_HIERARCHY);
-        if (incInferenceTypeClassAssertions) entailmentTypes.add(InferenceType.CLASS_ASSERTIONS);
-        if (incInferenceTypeObjectPropertyAssertions) entailmentTypes.add(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
-        if (incInferenceTypeDataPropertyAssertions) entailmentTypes.add(InferenceType.DATA_PROPERTY_ASSERTIONS);
-        if (incInferenceTypeSameIndividual) entailmentTypes.add(InferenceType.SAME_INDIVIDUAL);
-        if (incInferenceTypeDifferentIndividuals) entailmentTypes.add(InferenceType.DIFFERENT_INDIVIDUALS);
+        entailmentTypes.add(InferenceType.CLASS_HIERARCHY);
+        entailmentTypes.add(InferenceType.DISJOINT_CLASSES);
 
         return entailmentTypes.toArray(new InferenceType[entailmentTypes.size()]);
     }
@@ -159,16 +142,7 @@ public class SearchConfiguration {
                 "RM: " + rm + ", " +
                 "entropy threshold: " + entropyThreshold + ", " +
                 "cardinality threshold: " + cardinalityThreshold + ", " +
-                "cautious parameter: " + cautiousParameter + ", " +
-                "CLASS_HIERARCHY: " + incInferenceTypeClassHierarchy + ", " +
-                "DISJOINT_CLASSES: " + incInferenceTypeDisjointClasses + ", " +
-                "OBJECT_PROPERTY_HIERARCHY: " + incInferenceTypeObjectPropertyHierarchy + ", " +
-                "DATA_PROPERTY_HIERARCHY: " + incInferenceTypeDataPropertyHierarchy + ", " +
-                "CLASS_ASSERTIONS: " + incInferenceTypeClassAssertions + ", " +
-                "OBJECT_PROPERTY_ASSERTIONS: " + incInferenceTypeObjectPropertyAssertions + ", " +
-                "DATA_PROPERTY_ASSERTIONS: " + incInferenceTypeDataPropertyAssertions + ", " +
-                "SAME_INDIVIDUAL: " + incInferenceTypeSameIndividual + ", " +
-                "DIFFERENT_INDIVIDUALS: " + incInferenceTypeDifferentIndividuals + ", ";
+                "cautious parameter: " + cautiousParameter;
     }
 
 }
