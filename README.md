@@ -1,4 +1,4 @@
-The project implments in a number of algorithms for debugging of knowledge bases, 
+The project implements in a number of algorithms for debugging of knowledge bases, 
 which do not satisfy requirements and/or test cases specified by the user. 
 
 The project can be applied to debugging of SAT (SAT4J), 
