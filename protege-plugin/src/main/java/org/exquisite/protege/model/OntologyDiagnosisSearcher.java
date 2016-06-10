@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.math.BigDecimal;
@@ -352,6 +353,7 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doGetAlternativeQuery() {
+        /*
         if (qc != null && qc.hasNext()) {
             querySearchStatus = QuerySearchStatus.ASKING_QUERY;
             notifyListeners();
@@ -361,9 +363,9 @@ public class OntologyDiagnosisSearcher {
             resetQuery();
             notifyListeners();
         }
+        */
 
-
-        //JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected ErrorStatus getErrorStatus() {
