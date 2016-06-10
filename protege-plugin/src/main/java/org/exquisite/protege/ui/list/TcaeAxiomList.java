@@ -13,9 +13,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType.*;
@@ -98,10 +96,10 @@ public class TcaeAxiomList extends AbstractAxiomList {
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisSearcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
 
         List<Object> items = new ArrayList<>();
-        addToItems(items, POSITIVE_TC, diagnosisModel.getConsistentExamples() /*theory.getKnowledgeBase().getPositiveTests()*/ );
-        addToItems(items, NEGATIVE_TC, diagnosisModel.getInconsistentExamples() /*theory.getKnowledgeBase().getNegativeTests()*/);
         addToItems(items, ENTAILED_TC, diagnosisModel.getEntailedExamples() /* theory.getKnowledgeBase().getEntailedTests()*/);
         addToItems(items, NON_ENTAILED_TC, diagnosisModel.getNotEntailedExamples() /*theory.getKnowledgeBase().getNonentailedTests()*/);
+        addToItems(items, POSITIVE_TC, diagnosisModel.getConsistentExamples() /*theory.getKnowledgeBase().getPositiveTests()*/ );
+        addToItems(items, NEGATIVE_TC, diagnosisModel.getInconsistentExamples() /*theory.getKnowledgeBase().getNegativeTests()*/);
 
         setListData(items.toArray());
     }
