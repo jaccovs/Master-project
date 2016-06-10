@@ -257,6 +257,7 @@ public class OntologyDiagnosisSearcher {
 
     public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
         doCommitQuery();
+        doCalculateDiagnosis(errorHandler);
         doGetQuery(errorHandler);
     }
 
