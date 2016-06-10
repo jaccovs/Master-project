@@ -56,8 +56,8 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                                 OWLOntologyManager manager, OWLReasonerFactory reasonerFactory)
             throws OWLOntologyCreationException, DiagnosisException {
         super(dm);
-        //OWLOntology debugOntology = manager.createOntology(IRI.create("http://ainf.aau.at/debug_ontology#" + System.nanoTime()));
-        OWLOntology debugOntology = manager.createOntology(); // TODO: check for a better solution
+        OWLOntology debugOntology = manager.createOntology(IRI.create("http://git-ainf.aau.at/debug_ontology#" + System.nanoTime()));
+        //OWLOntology debugOntology = manager.createOntology(); // TODO: check for a better solution
         this.reasoner = reasonerFactory.createReasoner(debugOntology);
         checkDiagnosisModel();
     }
