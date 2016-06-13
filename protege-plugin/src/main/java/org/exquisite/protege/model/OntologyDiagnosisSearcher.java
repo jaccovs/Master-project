@@ -154,8 +154,6 @@ public class OntologyDiagnosisSearcher {
         }
     }
 
-
-
     public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
     }
 
@@ -239,12 +237,6 @@ public class OntologyDiagnosisSearcher {
         }
         resetQuery();
         notifyListeners();
-    }
-
-    protected void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
-        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>(ax);
-        queryHistory.add(axioms);
-        queryHistoryType.put(axioms,type);
     }
 
     protected void resetQuery() {
@@ -367,6 +359,27 @@ public class OntologyDiagnosisSearcher {
         */
 
         JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    protected void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
+        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>(ax);
+        queryHistory.add(axioms);
+        queryHistoryType.put(axioms,type);
+    }
+
+    public List<Set<OWLLogicalAxiom>> getQueryHistory() {
+        return queryHistory;
+    }
+
+    public Map<Set<OWLLogicalAxiom>, TestCaseType> getQueryHistoryType() {
+        return queryHistoryType;
+    }
+
+    public void doRemoveQueryHistoryTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
+        doRemoveTestcase(testcase,type);
+        queryHistory.remove(testcase);
+        queryHistoryType.remove(testcase);
+        notifyListeners();
     }
 
     protected ErrorStatus getErrorStatus() {
