@@ -50,7 +50,7 @@ public class DiagnosisEngineFactory {
 
     public void reset() {
         readConfiguration();
-        this. diagnosisEngine = createDiagnosisEngine(); // TODO check if this works
+        this. diagnosisEngine = createDiagnosisEngine();
     }
 
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
