@@ -129,6 +129,55 @@ public class SearchConfiguration {
         return entailmentTypes.toArray(new InferenceType[entailmentTypes.size()]);
     }
 
+    public boolean hasConfigurationChanged(SearchConfiguration newConfiguration) {
+        return !this.equals(newConfiguration);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SearchConfiguration that = (SearchConfiguration) o;
+
+        if (engineType != that.engineType) return false;
+        if (numOfLeadingDiags != null ? !numOfLeadingDiags.equals(that.numOfLeadingDiags) : that.numOfLeadingDiags != null)
+            return false;
+        if (reduceIncoherency != null ? !reduceIncoherency.equals(that.reduceIncoherency) : that.reduceIncoherency != null)
+            return false;
+        if (extractModules != null ? !extractModules.equals(that.extractModules) : that.extractModules != null)
+            return false;
+        if (minimalQueries != null ? !minimalQueries.equals(that.minimalQueries) : that.minimalQueries != null)
+            return false;
+        if (maximalQueries != null ? !maximalQueries.equals(that.maximalQueries) : that.maximalQueries != null)
+            return false;
+        if (enrichQuery != null ? !enrichQuery.equals(that.enrichQuery) : that.enrichQuery != null) return false;
+        if (sortCriterion != that.sortCriterion) return false;
+        if (rm != that.rm) return false;
+        if (entropyThreshold != null ? !entropyThreshold.equals(that.entropyThreshold) : that.entropyThreshold != null)
+            return false;
+        if (cardinalityThreshold != null ? !cardinalityThreshold.equals(that.cardinalityThreshold) : that.cardinalityThreshold != null)
+            return false;
+        return cautiousParameter != null ? cautiousParameter.equals(that.cautiousParameter) : that.cautiousParameter == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = engineType != null ? engineType.hashCode() : 0;
+        result = 31 * result + (numOfLeadingDiags != null ? numOfLeadingDiags.hashCode() : 0);
+        result = 31 * result + (reduceIncoherency != null ? reduceIncoherency.hashCode() : 0);
+        result = 31 * result + (extractModules != null ? extractModules.hashCode() : 0);
+        result = 31 * result + (minimalQueries != null ? minimalQueries.hashCode() : 0);
+        result = 31 * result + (maximalQueries != null ? maximalQueries.hashCode() : 0);
+        result = 31 * result + (enrichQuery != null ? enrichQuery.hashCode() : 0);
+        result = 31 * result + (sortCriterion != null ? sortCriterion.hashCode() : 0);
+        result = 31 * result + (rm != null ? rm.hashCode() : 0);
+        result = 31 * result + (entropyThreshold != null ? entropyThreshold.hashCode() : 0);
+        result = 31 * result + (cardinalityThreshold != null ? cardinalityThreshold.hashCode() : 0);
+        result = 31 * result + (cautiousParameter != null ? cautiousParameter.hashCode() : 0);
+        return result;
+    }
 
     public String toString() {
         return "EngineType: " +  engineType + ", " +

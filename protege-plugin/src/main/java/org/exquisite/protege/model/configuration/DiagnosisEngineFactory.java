@@ -42,20 +42,14 @@ public class DiagnosisEngineFactory {
     }
 
     public void updateConfig(SearchConfiguration newConfiguration) {
-        ConfigFileManager.writeConfiguration(newConfiguration);
-        reset();
+        if (config.hasConfigurationChanged(newConfiguration)) {
+            ConfigFileManager.writeConfiguration(newConfiguration);
+            reset();
+        }
     }
 
     public void reset() {
-
         readConfiguration();
-        /*
-        OWLTheory theoryOld = (OWLTheory) getSearch().getSearchable();
-
-        search = null;
-        OWLTheory theory = (OWLTheory) getSearch().getSearchable();
-        copyTestcases(theoryOld,theory);
-        */
         this. diagnosisEngine = createDiagnosisEngine(); // TODO check if this works
     }
 
