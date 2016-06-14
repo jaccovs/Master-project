@@ -250,7 +250,12 @@ public class OntologyDiagnosisSearcher {
     public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
         doCommitQuery();
         doCalculateDiagnosis(errorHandler);
-        doGetQuery(errorHandler);
+        if (diagnoses.size() >= 2) {
+            doGetQuery(errorHandler);
+        } else {
+            final String diagMsg = (diagnoses.size() == 0) ? "no diagnoses" : (diagnoses.size()) + " diagnosis";
+            JOptionPane.showMessageDialog(null, "We have found " + diagMsg +"!\nTo compute queries we need at least 2 diagnoses.", "No Query computation possible!", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     IQueryComputation<OWLLogicalAxiom> qc = null;
