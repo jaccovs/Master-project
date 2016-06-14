@@ -69,7 +69,7 @@ public abstract class AbstractTestHeuristicQC {
 
             QPartition rootPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), null);
 
-            QPartition<Integer> qPartition = QPartitionOperations.findQPartition(diagnoses, qc.getConfig().getRm(), qc.getConfig().getDiagnosisEngine().getCostsEstimator()); //qc.findQPartition(diagnoses, qc.getPartitionRequirementsMeasure());
+            QPartition<Integer> qPartition = QPartitionOperations.findQPartition(diagnoses, qc.getConfig().getRm(), qc.getConfig().getDiagnosisEngine().getCostsEstimator());
 
             assertNotNull(qPartition);
             assertTrue(BigDecimal.ONE.compareTo(qPartition.probDx.add(qPartition.probDnx)) == 0); // , qPartition.probDx + qPartition.probDnx, 0.001);
@@ -82,7 +82,7 @@ public abstract class AbstractTestHeuristicQC {
     @Test
     public void testFindQPartition() {
         try {
-            QPartition<Integer> qPartition = QPartitionOperations.findQPartition(calculateDiagnoses(), qc.getConfig().getRm(), qc.getConfig().getDiagnosisEngine().getCostsEstimator()); //qc.findQPartition(calculateDiagnoses(), qc.getPartitionRequirementsMeasure());
+            QPartition<Integer> qPartition = QPartitionOperations.findQPartition(calculateDiagnoses(), qc.getConfig().getRm(), qc.getConfig().getDiagnosisEngine().getCostsEstimator());
             QPartition<Integer> expectedP = getExpectedQPartition();
 
             assertTrue("expected probdx " + getExpectedProbDx() + " does not match " + qPartition.probDx, new BigDecimal(getExpectedProbDx()).compareTo(qPartition.probDx) == 0);

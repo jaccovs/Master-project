@@ -1,5 +1,6 @@
 package org.exquisite.core.query;
 
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.Utils;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.model.Diagnosis;
@@ -26,10 +27,13 @@ public class QPartitionOperations {
      *
      * @param diagnoses The leading diagnoses.
      * @param rm A partition requirements measure to find the (nearly) optimal q-partition.
+     * @param costsEstimator A cost estimator used for computing the probabilities of dx and dnx.
+     * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
      * @return A (nearly) optimal q-partition.
+     * @throws DiagnosisRuntimeException Throws a DiagnosisRuntimeException, if not more than one leading diagnoses are given.
      */
-    public static <F> QPartition<F> findQPartition(Set<Diagnosis<F>> diagnoses, IQPartitionRequirementsMeasure<F> rm, ICostsEstimator<F> costsEstimator) {
-        assert diagnoses.size() >= 2;
+    public static <F> QPartition<F> findQPartition(Set<Diagnosis<F>> diagnoses, IQPartitionRequirementsMeasure<F> rm, ICostsEstimator<F> costsEstimator) throws DiagnosisRuntimeException {
+        if (diagnoses.size() < 2) throw new DiagnosisRuntimeException("For query computation at least 2 leading diagnoses are required. But only " + diagnoses.size() + " leading diagnoses are given.");
 
         QPartition<F> partition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), costsEstimator);
         QPartition<F> bestPartition = new QPartition<>(new HashSet<>(), diagnoses, new HashSet<>(), costsEstimator);
@@ -68,7 +72,8 @@ public class QPartitionOperations {
                 pBest = optimalPartition.partition;
             else
                 return optimalPartition;
-            assert sucs.remove(p1);
+            final boolean remove = sucs.remove(p1);
+            assert remove;
         }
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_BACKTRACKINGS); // ADD 1 to CNT_BACKTRACKING_OPERATIONS
         return new OptimalPartition<>(pBest, false);
