@@ -5,13 +5,6 @@ import org.protege.editor.owl.ui.action.ProtegeOWLAction;
 
 import java.awt.event.ActionEvent;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 07.07.11
- * Time: 10:14
- * To change this template use File | Settings | File Templates.
- */
 public class OpenOptionsDialog extends ProtegeOWLAction {
 
     public void actionPerformed(ActionEvent e) {

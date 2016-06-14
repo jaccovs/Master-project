@@ -7,13 +7,6 @@ import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 24.09.12
- * Time: 15:10
- * To change this template use File | Settings | File Templates.
- */
 public class RemoveFromBackgroundButton extends AbstractGuiButton {
 
     public RemoveFromBackgroundButton(final BackgroundView backgroundView) {

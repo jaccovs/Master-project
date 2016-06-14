@@ -1,6 +1,5 @@
 package org.exquisite.protege.ui.menu;
 
-
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.protege.editor.owl.ui.action.ProtegeOWLAction;
@@ -8,19 +7,11 @@ import org.protege.editor.owl.ui.action.ProtegeOWLAction;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 30.10.12
- * Time: 16:53
- * To change this template use File | Settings | File Templates.
- */
 public class Reset extends ProtegeOWLAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        EditorKitHook editorKitHook = (EditorKitHook) getOWLModelManager().
-                get("org.exquisite.protege.EditorKitHook");
+        EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
         OntologyDiagnosisSearcher ods = editorKitHook.getActiveOntologyDiagnosisSearcher();
         // TODO
         /*

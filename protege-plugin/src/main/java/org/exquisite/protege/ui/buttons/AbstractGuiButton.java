@@ -5,13 +5,6 @@ import org.protege.editor.core.ProtegeApplication;
 
 import javax.swing.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 04.09.12
- * Time: 08:46
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractGuiButton extends JButton {
 
     public AbstractGuiButton(String name, String tooltip, String icon, int event, AbstractAction abstractAction) {

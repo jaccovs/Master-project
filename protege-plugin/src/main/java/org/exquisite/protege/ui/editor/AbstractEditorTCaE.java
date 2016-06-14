@@ -1,6 +1,5 @@
 package org.exquisite.protege.ui.editor;
 
-
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.ui.action.CreateOWLEntityAction;
 import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
@@ -17,13 +16,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 06.09.12
- * Time: 14:32
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractEditorTCaE {
 
     private OWLEditorKit editorKit;

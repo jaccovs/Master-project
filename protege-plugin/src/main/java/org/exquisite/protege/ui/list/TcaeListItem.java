@@ -11,13 +11,6 @@ import java.util.logging.Logger;
 
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 05.09.12
- * Time: 18:31
- * To change this template use File | Settings | File Templates.
- */
 public class TcaeListItem implements MListItem {
 
     private Logger logger = Logger.getLogger(TcaeListItem.class.getName());
@@ -36,7 +29,6 @@ public class TcaeListItem implements MListItem {
         this.type = type;
     }
 
-
     public void handleEdit() {
     }
 
@@ -45,9 +37,7 @@ public class TcaeListItem implements MListItem {
         return false;
     }
 
-
     public String getTooltip() {
-        // ontology.getOntologyID()
         return "Simple Axiom" ;
     }
 
@@ -72,7 +62,6 @@ public class TcaeListItem implements MListItem {
             default:
                 throw new IllegalStateException("Unknown Header Type");
         }
-
     }
 
     public String toString() {

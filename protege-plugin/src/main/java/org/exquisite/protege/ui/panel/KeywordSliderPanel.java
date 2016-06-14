@@ -10,13 +10,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.math.BigDecimal;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 19.09.12
- * Time: 12:41
- * To change this template use File | Settings | File Templates.
- */
 public class KeywordSliderPanel extends Box {
 
     private ManchesterOWLSyntax kw;

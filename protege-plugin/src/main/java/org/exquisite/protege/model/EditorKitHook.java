@@ -15,13 +15,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 14.11.11
- * Time: 16:02
- * To change this template use File | Settings | File Templates.
- */
 public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerListener, ChangeListener {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(EditorKitHook.class.getName());
@@ -30,9 +23,9 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     private static int cnt = 0;
 
-    boolean initialized = false;
+    private boolean initialized = false;
 
-    private Set<ChangeListener> changeListeners = new LinkedHashSet<ChangeListener>();
+    private Set<ChangeListener> changeListeners = new LinkedHashSet<>();
 
     private Map<OWLOntology,OntologyDiagnosisSearcher> ontologyDiagnosisSearcherMap;
 
@@ -48,7 +41,6 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         }
         else
             logger.debug("editorKitHook is already initialized " + id);
-
     }
 
     public OWLEditorKit getOWLEditorKit() {
@@ -106,6 +98,5 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         for (ChangeListener listener : changeListeners)
             listener.stateChanged(event);
     }
-
 
 }

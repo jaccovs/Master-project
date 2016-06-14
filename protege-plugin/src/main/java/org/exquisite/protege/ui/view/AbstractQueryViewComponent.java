@@ -5,13 +5,6 @@ import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
 
 import javax.swing.event.ChangeListener;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 04.09.12
- * Time: 14:07
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractQueryViewComponent extends AbstractOWLViewComponent implements ChangeListener {
 
     private EditorKitHook editorKitHook;

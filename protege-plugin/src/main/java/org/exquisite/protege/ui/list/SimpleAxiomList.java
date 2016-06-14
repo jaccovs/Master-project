@@ -17,7 +17,7 @@ public class SimpleAxiomList extends AbstractAxiomList {
     }
 
     public void updateList(Set<Set<OWLLogicalAxiom>> setsOfAxioms, OWLOntology ontology, String headerPref) {
-        List<Object> items = new ArrayList<Object>();
+        List<Object> items = new ArrayList<>();
         for (Set<OWLLogicalAxiom> axioms : setsOfAxioms) {
             items.add(new AxiomListHeader(axioms,headerPref));
             for (OWLLogicalAxiom axiom : axioms) {

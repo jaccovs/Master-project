@@ -5,13 +5,6 @@ import org.protege.editor.core.ui.util.ComponentFactory;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 05.09.12
- * Time: 17:09
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractListQueryViewComponent extends AbstractQueryViewComponent {
 
     private JComponent list;

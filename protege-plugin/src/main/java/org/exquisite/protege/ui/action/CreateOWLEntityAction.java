@@ -11,13 +11,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 25.03.11
- * Time: 11:32
- * To change this template use File | Settings | File Templates.
- */
 public class CreateOWLEntityAction<T extends OWLEntity> extends AbstractAction {
 
     private OWLEditorKit edKT;

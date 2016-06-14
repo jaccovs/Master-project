@@ -101,16 +101,14 @@ public class DiagnosisEngineFactory {
         } finally {
             return diagnosisEngine;
         }
-
     }
-
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DiagnosisEngineFactory{");
-        sb.append("config=").append(config);
-        sb.append(", diagnosisEngine=").append(diagnosisEngine);
+        sb.append("engine=").append(diagnosisEngine);
         sb.append(", ontology=").append(ontology);
+        sb.append(", config=").append(config);
         sb.append(", reasonerMan=").append(reasonerMan);
         sb.append('}');
         return sb.toString();

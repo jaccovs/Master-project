@@ -85,7 +85,7 @@ public class TcaeAxiomList extends AbstractAxiomList {
             for (int number : getSelectedIndices()) {
                 TcaeListItem item = (TcaeListItem) getModel().getElementAt(number);
 
-                //getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType());
+                //getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType()); // TODO
 
             }
         }

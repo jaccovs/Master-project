@@ -1,6 +1,5 @@
 package org.exquisite.protege.ui.view;
 
-
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;

@@ -13,13 +13,6 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 06.09.12
- * Time: 11:17
- * To change this template use File | Settings | File Templates.
- */
 public class AxiomChecker implements OWLExpressionChecker<Set<OWLLogicalAxiom>> {
 
     private OWLModelManager modelManager;

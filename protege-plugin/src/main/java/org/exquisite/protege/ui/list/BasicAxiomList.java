@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 24.09.12
- * Time: 13:36
- * To change this template use File | Settings | File Templates.
- */
 public class BasicAxiomList extends AbstractAxiomList {
 
     public BasicAxiomList(OWLEditorKit editorKit) {

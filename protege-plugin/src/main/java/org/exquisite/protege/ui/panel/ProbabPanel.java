@@ -9,13 +9,6 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 11.09.12
- * Time: 09:50
- * To change this template use File | Settings | File Templates.
- */
 public class ProbabPanel extends AbstractOptPanel {
 
     private ProbabPane probabPane;
@@ -28,12 +21,10 @@ public class ProbabPanel extends AbstractOptPanel {
         JEditorPane helpArea = createHelpEditorPane();
         helpArea.setText("<html>Here you can specifiy the fault probabilities for the OWL keywords<html>");
         add(helpArea, BorderLayout.SOUTH);
-
     }
 
     @Override
     public void saveChanges() {
-
     }
 
     public Map<ManchesterOWLSyntax, BigDecimal> getMap() {

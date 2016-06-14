@@ -7,13 +7,6 @@ import org.exquisite.protege.model.exception.SolverException;
 
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 14.06.12
- * Time: 10:06
- * To change this template use File | Settings | File Templates.
- */
 public interface Debugger<T extends Diagnosis<Id>, Id> {
 
     public static int ALL_DIAGNOSES = -1;

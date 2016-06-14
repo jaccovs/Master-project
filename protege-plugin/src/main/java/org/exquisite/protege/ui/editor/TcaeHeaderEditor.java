@@ -11,13 +11,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 06.09.12
- * Time: 10:13
- * To change this template use File | Settings | File Templates.
- */
 public class TcaeHeaderEditor extends AbstractEditorTCaE {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(TcaeHeaderEditor.class.getName());

@@ -12,13 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pfleiss
- * Date: 11.09.12
- * Time: 09:59
- * To change this template use File | Settings | File Templates.
- */
 public class AbstractOptPanel extends JPanel {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractOptPanel.class.getName());
