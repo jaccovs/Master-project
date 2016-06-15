@@ -31,7 +31,4 @@ public class SimpleAxiomList extends AbstractAxiomList {
         setListData(items.toArray());
     }
 
-
-
-
 }

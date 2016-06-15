@@ -23,29 +23,23 @@ public class AxiomListItem implements MListItem {
         this.ontology = ontology;
     }
 
-
     public boolean isEditable() {
         return false;
     }
 
-
     public void handleEdit() {
     }
-
 
     public boolean isDeleteable() {
         return false;
     }
 
-
     public boolean handleDelete() {
         return false;
     }
 
-
     public String getTooltip() {
-        // ontology.getOntologyID()
-        return "Simple Axiom" ;
+        return "AxiomType:" + axiom.getAxiomType().getName();
     }
 
 }
