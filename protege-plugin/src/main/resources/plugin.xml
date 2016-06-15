@@ -25,14 +25,6 @@
         <editorKitId value="any"/>
     </extension>
 
-    <extension id="menu.menudebug.openinteractivedebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Exquisite Interactive Debug Tab"/>
-        <toolTip value="Open Exquisite Interactive Debug Tab"/>
-        <class value="org.exquisite.protege.ui.menu.OpenInteractiveDebugTab"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAA-C"/>
-        <editorKitId value="any"/>
-    </extension>
-
     <extension id="menu.menudebug.options" point="org.protege.editor.core.application.EditorKitMenuAction">
         <name value="Options"/>
         <toolTip value="Options"/>
@@ -60,14 +52,6 @@
     </extension>
 
     <!-- Tabs -->
-
-    <extension id="InteractiveDebugging" point="org.protege.editor.core.application.WorkspaceTab">
-        <label value="Exquisite Interactive Debugging"/>
-        <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
-        <index value="X2"/>
-        <editorKitId value="OWLEditorKit"/>
-        <defaultViewConfigFileName value="InteractiveDebuggingLayout.xml"/>
-    </extension>
 
     <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
         <label value="Exquisite Ontology Debugging"/>
