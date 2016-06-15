@@ -1,6 +1,7 @@
 package org.exquisite.protege.model.configuration;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.engines.HSDAGEngine;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
@@ -50,7 +51,7 @@ public class DiagnosisEngineFactory {
 
     public void reset() {
         readConfiguration();
-        this. diagnosisEngine = createDiagnosisEngine();
+        this.diagnosisEngine = createDiagnosisEngine();
     }
 
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
@@ -59,7 +60,11 @@ public class DiagnosisEngineFactory {
         return diagnosisEngine;
     }
 
-    private IDiagnosisEngine<OWLLogicalAxiom> createDiagnosisEngine() {
+    public void reasonerChanged() {
+        diagnosisEngine = createDiagnosisEngine();
+    }
+
+    private IDiagnosisEngine<OWLLogicalAxiom> createDiagnosisEngine() throws DiagnosisRuntimeException {
 
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = null;
 
@@ -94,10 +99,9 @@ public class DiagnosisEngineFactory {
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
             logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner  + " and diagnosisModel " + diagnosisModel);
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
-        } catch (DiagnosisException e) {
-            e.printStackTrace();
+        } catch (OWLOntologyCreationException | DiagnosisException e) {
+            logger.error(e.getMessage(), e);
+            throw new DiagnosisRuntimeException("An error occurred during creation of a diagnosis engine", e);
         } finally {
             return diagnosisEngine;
         }

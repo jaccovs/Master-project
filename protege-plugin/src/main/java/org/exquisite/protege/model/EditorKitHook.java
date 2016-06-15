@@ -71,6 +71,13 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             }
             notifyActiveSearcherListeners(new ChangeEvent(getActiveOntologyDiagnosisSearcher()));
             logger.debug("ontology changed to " + activeOntology.getOntologyID().getOntologyIRI().get().getShortForm());
+
+        } else if (EventType.REASONER_CHANGED.equals(event.getType())) {
+            for (Map.Entry<OWLOntology,OntologyDiagnosisSearcher> entry : ontologyDiagnosisSearcherMap.entrySet()) {
+                OntologyDiagnosisSearcher searcher = entry.getValue();
+                searcher.getDiagnosisEngineFactory().reasonerChanged();
+                logger.debug("changed reasoner of " + searcher + " to " + searcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver());
+            }
         }
     }
 
