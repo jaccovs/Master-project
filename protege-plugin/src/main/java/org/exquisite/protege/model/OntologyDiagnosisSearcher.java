@@ -40,24 +40,18 @@ public class OntologyDiagnosisSearcher {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDiagnosisSearcher.class.getName());
 
-    public static enum TestCaseType {POSITIVE_TC, NEGATIVE_TC, ENTAILED_TC, NON_ENTAILED_TC}
+    public enum TestCaseType {POSITIVE_TC, NEGATIVE_TC, ENTAILED_TC, NON_ENTAILED_TC}
 
-    public static enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
+    public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
 
-    public static enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
+    public enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
 
-    public static enum SearchStatus { IDLE, RUNNING }
+    private enum SearchStatus { IDLE, RUNNING }
 
     private QuerySearchStatus querySearchStatus = QuerySearchStatus.IDLE;
 
     private DiagnosisEngineFactory diagnosisEngineFactory;
-
-    private OWLReasonerManager reasonerMan;
-
-    private OWLOntology ontology;
-
-    private SearchStatus searchStatus = SearchStatus.IDLE;
 
     private ErrorStatus errorStatus = NO_ERROR;
 
@@ -79,12 +73,11 @@ public class OntologyDiagnosisSearcher {
 
     private Map<Set<OWLLogicalAxiom>,TestCaseType> queryHistoryType = new LinkedHashMap<>();
 
+    private IQueryComputation<OWLLogicalAxiom> qc = null;
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
-        reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
-        ontology = editorKit.getModelManager().getActiveOntology();
-
-
+        OWLReasonerManager reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
+        OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
         diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerMan);
     }
 
@@ -92,36 +85,37 @@ public class OntologyDiagnosisSearcher {
         return diagnosisEngineFactory;
     }
 
-    protected List<OWLLogicalAxiom> extract(List<AxiomListItem> selectedValuesList) {
-        List<OWLLogicalAxiom> axioms = selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
-        return axioms;
-    }
-
     public void removeBackgroundAxioms(List<AxiomListItem> selectedValues) {
         logger.debug("moving " + selectedValues + " from background to possiblyFaultyFormulas");
         List<OWLLogicalAxiom> axioms = extract(selectedValues);
-        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas().removeAll(axioms);
-        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().addAll(axioms);
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
+        diagnosisModel.getCorrectFormulas().removeAll(axioms);
+        diagnosisModel.getPossiblyFaultyFormulas().addAll(axioms);
         notifyListeners();
     }
 
     public void addBackgroundAxioms(List<AxiomListItem> selectedValues) {
         logger.debug("moving " + selectedValues + " from possiblyFaultyFormulas to background");
         List<OWLLogicalAxiom> axioms = extract(selectedValues);
-        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().removeAll(axioms);
-        diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas().addAll(axioms);
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
+        diagnosisModel.getPossiblyFaultyFormulas().removeAll(axioms);
+        diagnosisModel.getCorrectFormulas().addAll(axioms);
         notifyListeners();
     }
 
-    public void addChangeListener(ChangeListener listener) {
+    private List<OWLLogicalAxiom> extract(List<AxiomListItem> selectedValuesList) {
+        return selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
+    }
+
+    void addChangeListener(ChangeListener listener) {
         changeListeners.add(listener);
     }
 
-    public void removeChangeListener(ChangeListener listener) {
+    void removeChangeListener(ChangeListener listener) {
         changeListeners.remove(listener);
     }
 
-    protected void notifyListeners() {
+    private void notifyListeners() {
         for (ChangeListener listener : changeListeners)
             listener.stateChanged(new ChangeEvent(this));
     }
@@ -130,7 +124,7 @@ public class OntologyDiagnosisSearcher {
         return querySearchStatus;
     }
 
-    public void doRemoveTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
+    private void doRemoveTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
     }
 
     public void doAddTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type, ErrorHandler errorHandler) {
@@ -140,7 +134,7 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
-    protected void addNewTestcase(Set<OWLLogicalAxiom> axioms, TestCaseType type) {
+    private void addNewTestcase(Set<OWLLogicalAxiom> axioms, TestCaseType type) {
 
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
 
@@ -156,7 +150,6 @@ public class OntologyDiagnosisSearcher {
 
     public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
     }
-
 
     public void doCalculateDiagnosis(ErrorHandler errorHandler) {
         int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
@@ -224,7 +217,7 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
-    public void doCommitQuery() {
+    private void doCommitQuery() {
         if (!axiomsMarkedEntailed.isEmpty()) {
             doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
                     TestCaseType.ENTAILED_TC, new ErrorHandler());
@@ -239,7 +232,7 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
-    protected void resetQuery() {
+    private void resetQuery() {
         axiomsMarkedEntailed.clear();
         axiomsMarkedNonEntailed.clear();
         actualQuery=null;
@@ -250,17 +243,50 @@ public class OntologyDiagnosisSearcher {
     public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
         doCommitQuery();
         doCalculateDiagnosis(errorHandler);
-        if (diagnoses.size() >= 2) {
-            doGetQuery(errorHandler);
-        } else {
-            final String diagMsg = (diagnoses.size() == 0) ? "no diagnoses" : (diagnoses.size()) + " diagnosis";
-            JOptionPane.showMessageDialog(null, "We have found " + diagMsg +"!\nTo compute queries we need at least 2 diagnoses.", "No Query computation possible!", JOptionPane.INFORMATION_MESSAGE);
+
+        switch (diagnoses.size()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                doGetQuery(errorHandler);
+                break;
         }
     }
 
-    IQueryComputation<OWLLogicalAxiom> qc = null;
+    /**
+     * Calculates a query according to the diagnoses.
+     * If no diagnoses have been computed yet, let us compute them first.
+     *
+     * @param errorHandler An error handler.
+     */
+    public void doCalculateDiagnosesAndGetQuery(ErrorHandler errorHandler) {
+        if (diagnoses.size() == 0)
+            doCalculateDiagnosis(errorHandler);
 
-    public void doGetQuery(ErrorHandler errorHandler) {
+        switch (diagnoses.size()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                doGetQuery(errorHandler);
+                break;
+        }
+    }
+
+    /**
+     * The main method to calculate a new query.
+     * The calling method has to check that the size of diagnoses is at least 2.
+     *
+     * @param errorHandler An error handler.
+     */
+    private void doGetQuery(ErrorHandler errorHandler) {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final SearchConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
@@ -271,7 +297,6 @@ public class OntologyDiagnosisSearcher {
         if (maximalQueries < minimalQueries) {
             maximalQueries = minimalQueries;
             preference.maximalQueries = maximalQueries;
-
         }
 
         heuristicConfiguration.setMinQueries(minimalQueries);
@@ -333,20 +358,14 @@ public class OntologyDiagnosisSearcher {
         } finally {
             notifyListeners();
         }
-
-
-        //new QueryGenerationThread(getSearchCreator(), errorHandler).execute();
     }
 
-    protected void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
+    private void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
         int i = 1;
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-
             BigDecimal measure = new BigDecimal(i++);
-            if (measure != null) {
-                diagnosis.setMeasure(measure);
-                System.out.println("set measure " + measure + " for diagnosis " + diagnosis);
-            }
+            diagnosis.setMeasure(measure);
+            logger.debug("set measure " + measure + " for diagnosis " + diagnosis);
         }
     }
 
@@ -366,7 +385,7 @@ public class OntologyDiagnosisSearcher {
         JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    protected void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
+    private void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
         LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>(ax);
         queryHistory.add(axioms);
         queryHistoryType.put(axioms,type);
@@ -387,7 +406,7 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
-    protected ErrorStatus getErrorStatus() {
+    private ErrorStatus getErrorStatus() {
         return errorStatus;
     }
 
@@ -398,59 +417,5 @@ public class OntologyDiagnosisSearcher {
         ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
         */
     }
-/*
-    public class SearchThread extends SwingWorker<Object,Object> implements ChangeListener {
 
-        private IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine;
-
-        private int number;
-
-        private ErrorHandler errorHandler;
-
-        public SearchThread(IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine, int number, ErrorHandler errorHandler) {
-            this.number = number;
-            this.errorHandler = errorHandler;
-            this.diagnosisEngine = diagnosisEngine;
-        }
-
-        @Override
-        public Object doInBackground() {
-            //diagnosisEngine.addSearchListener(this);
-            searchStatus = SearchStatus.RUNNING;
-            publish(new Object());
-            try {
-                diagnosisEngine.setMaxNumberOfDiagnoses(number);
-                logger.debug("diagnosisEngine: " + diagnosisEngine);
-                logger.debug("solver: " + diagnosisEngine.getSolver());
-                logger.debug("diagnosisModel: " + diagnosisEngine.getSolver().getDiagnosisModel());
-                diagnoses = diagnosisEngine.calculateDiagnoses();
-                logger.debug("diagnoses: " + diagnoses);
-                errorStatus = NO_ERROR;
-            } catch (DiagnosisException e) {
-                errorStatus = SOLVER_EXCEPTION;
-            } finally {
-                diagnosisEngine.resetEngine();
-            }
-            searchStatus = SearchStatus.IDLE;
-            if (!errorStatus.equals(NO_ERROR))
-                errorHandler.errorHappend(errorStatus);
-
-            publish(new Object());
-            //diagnosisEngine.removeSearchListener(this);
-
-            return null;
-        }
-
-        @Override
-        protected void process(List<Object> chunks) {
-            notifyListeners();
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            publish(new Object());
-        }
-
-    }
-*/
 }

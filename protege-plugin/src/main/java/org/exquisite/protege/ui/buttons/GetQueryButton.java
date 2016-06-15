@@ -14,7 +14,7 @@ public class GetQueryButton extends AbstractGuiButton {
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doGetQuery(new QueryErrorHandler());
+                        queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
                     }
                 }
         );
