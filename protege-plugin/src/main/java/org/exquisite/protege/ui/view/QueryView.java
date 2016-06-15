@@ -46,9 +46,9 @@ public class QueryView extends AbstractListQueryViewComponent {
     public void stateChanged(ChangeEvent e) {
 
         OntologyDiagnosisSearcher diagnosisSearcher = (OntologyDiagnosisSearcher) e.getSource();
-        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
         switch(diagnosisSearcher.getQuerySearchStatus()) {
             case ASKING_QUERY:
+                OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
                 getList().updateList(diagnosisSearcher,ontology);
                 break;
             case IDLE:
