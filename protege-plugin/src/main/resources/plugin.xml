@@ -43,8 +43,8 @@
     </extension>
 
     <extension id="menu.menudebug.reset" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Reset "/>
-        <toolTip value="Reset"/>
+        <name value="Reset Debugger"/>
+        <toolTip value="Reset Debugger"/>
         <class value="org.exquisite.protege.ui.menu.Reset"/>
         <path value="org.exquisite.protege.menu.menudebug/SlotAC-C"/>
         <editorKitId value="any"/>

@@ -39,7 +39,7 @@ public class AxiomListItem implements MListItem {
     }
 
     public String getTooltip() {
-        return "AxiomType:" + axiom.getAxiomType().getName();
+        return "AxiomType: " + axiom.getAxiomType().getName();
     }
 
 }

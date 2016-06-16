@@ -3,7 +3,6 @@ package org.exquisite.protege.ui.list;
 import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +19,6 @@ public class TcaeListItem implements MListItem {
     private TestCaseType type;
 
     public Set<OWLLogicalAxiom> getTestcase() {
-        //return testcase;
         return new HashSet<>(testcase);
     }
 
@@ -31,7 +29,6 @@ public class TcaeListItem implements MListItem {
 
     public void handleEdit() {
     }
-
 
     public boolean handleDelete() {
         return false;
@@ -51,9 +48,9 @@ public class TcaeListItem implements MListItem {
 
     public String getEditorTitleSuffix() {
         switch (type) {
-            case POSITIVE_TC:
+            case CONSISTENT_TC:
                 return "Consistent Examples";
-            case NEGATIVE_TC:
+            case INCONSISTENT_TC:
                 return "Inconsistent Examples";
             case ENTAILED_TC:
                 return "Entailed Examples";
@@ -65,20 +62,19 @@ public class TcaeListItem implements MListItem {
     }
 
     public String toString() {
-
         String prefix = "";
         switch (type) {
-            case POSITIVE_TC:
-                prefix = "Positive ";
+            case CONSISTENT_TC:
+                prefix = "Consistent ";
                 break;
-            case NEGATIVE_TC:
-                prefix = "Negative ";
+            case INCONSISTENT_TC:
+                prefix = "Inconsistent ";
                 break;
             case ENTAILED_TC:
                 prefix = "Entailed ";
                 break;
             case NON_ENTAILED_TC:
-                prefix = "Nonentailed ";
+                prefix = "Non Entailed ";
                 break;
         }
 

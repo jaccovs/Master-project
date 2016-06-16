@@ -6,19 +6,19 @@ import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType
 
 public class TcaeListHeader implements MListSectionHeader {
 
+    private TestCaseType type;
+
     public TcaeListHeader(TestCaseType type) {
         this.type = type;
     }
 
-    private TestCaseType type;
-
     @Override
     public String getName() {
         switch (type) {
-            case POSITIVE_TC:
-                return "Positive Testcases";
-            case NEGATIVE_TC:
-                return "Negative Testcases";
+            case CONSISTENT_TC:
+                return "Consistent Testcases";
+            case INCONSISTENT_TC:
+                return "Inconsistent Testcases";
             case ENTAILED_TC:
                 return "Entailed Testcases";
             case NON_ENTAILED_TC:
@@ -26,15 +26,14 @@ public class TcaeListHeader implements MListSectionHeader {
             default:
                 throw new IllegalStateException("Unknown Header Type");
         }
-
     }
 
     public String getEditorTitleSuffix() {
         switch (type) {
-            case POSITIVE_TC:
-                return "Positive Testcase";
-            case NEGATIVE_TC:
-                return "Negative Testcase";
+            case CONSISTENT_TC:
+                return "Consistent Testcase";
+            case INCONSISTENT_TC:
+                return "Inconsistent Testcase";
             case ENTAILED_TC:
                 return "Entailed Testcase";
             case NON_ENTAILED_TC:
@@ -42,7 +41,6 @@ public class TcaeListHeader implements MListSectionHeader {
             default:
                 throw new IllegalStateException("Unknown Header Type");
         }
-
     }
 
     public TestCaseType getType() {

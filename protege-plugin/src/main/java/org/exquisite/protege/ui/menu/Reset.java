@@ -7,35 +7,32 @@ import org.protege.editor.owl.ui.action.ProtegeOWLAction;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * Reset the ontology debugger.
+ */
 public class Reset extends ProtegeOWLAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
         EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
         OntologyDiagnosisSearcher ods = editorKitHook.getActiveOntologyDiagnosisSearcher();
-        // TODO
-        /*
+
         if (!ods.isTestcasesEmpty()) {
-            int answer = JOptionPane.showConfirmDialog(null,
-                    "Do you also want to delete testcases?", "Reset Type", JOptionPane.YES_NO_CANCEL_OPTION);
+            int answer = JOptionPane.showConfirmDialog(null, "Do you also want to delete the testcases?", "Reset Type", JOptionPane.YES_NO_CANCEL_OPTION);
             if (answer == JOptionPane.YES_OPTION)
                 ods.doFullReset();
             else if (answer == JOptionPane.NO_OPTION)
                 ods.doReset();
-        }
-        else
+        } else
             ods.doFullReset();
-        */
+
+        JOptionPane.showMessageDialog(null, "The debugger has been reset!", "Debugger reset", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override
-    public void initialise() throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void initialise() throws Exception {}
 
     @Override
-    public void dispose() throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void dispose() throws Exception {}
 
 }

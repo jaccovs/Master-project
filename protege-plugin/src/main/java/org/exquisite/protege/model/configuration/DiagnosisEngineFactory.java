@@ -107,6 +107,14 @@ public class DiagnosisEngineFactory {
         }
     }
 
+    public OWLOntology getOntology() {
+        return ontology;
+    }
+
+    public OWLReasonerManager getReasonerManager() {
+        return reasonerMan;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DiagnosisEngineFactory{");

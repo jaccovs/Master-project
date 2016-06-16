@@ -39,10 +39,10 @@ public class BackgroundView extends AbstractQueryViewComponent {
         backgroundPanel.add(ComponentFactory.createScrollPane(backgroundAxiomsList),BorderLayout.CENTER);
         box.add(backgroundPanel);
 
-        JPanel ontologyPanel = new JPanel(new BorderLayout());
-        ontologyPanel.add(createSwitchAxiomsToolBar(), BorderLayout.NORTH);
-        ontologyPanel.add(ComponentFactory.createScrollPane(possiblyFaultyAxiomsList),BorderLayout.CENTER);
-        box.add(ontologyPanel);
+        JPanel kbPanel = new JPanel(new BorderLayout());
+        kbPanel.add(createSwitchAxiomsToolBar(), BorderLayout.NORTH);
+        kbPanel.add(ComponentFactory.createScrollPane(possiblyFaultyAxiomsList),BorderLayout.CENTER);
+        box.add(kbPanel);
 
         add(box, BorderLayout.CENTER);
         updateDisplayedBackgroundAxioms();
@@ -82,14 +82,15 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     protected JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        //label.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize()+1));
         return label;
     }
 
     protected JToolBar createSwitchAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
 
-        toolBar.add(createLabel("Possibly faulty Axioms (KB)"));
+        toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
         toolBar.add(Box.createHorizontalStrut(20));
         JPanel axiomFinderPanel = new JPanel();
         axiomFinderPanel.add(new BackgroundAxiomFinder(this,getOWLEditorKit()));
@@ -97,6 +98,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
         toolBar.add(new AddToBackgroundButton(this));
         toolBar.add(new RemoveFromBackgroundButton(this));
         toolBar.setMaximumSize(toolBar.getPreferredSize());
+        toolBar.setToolTipText("Axioms from the knowledge base are possible candidates for diagnoses.");
 
         return toolBar;
     }
@@ -104,10 +106,11 @@ public class BackgroundView extends AbstractQueryViewComponent {
     protected JToolBar createAxiomCreationToolBar() {
         JToolBar toolBar = createToolBar();
 
-        toolBar.add(createLabel("Correct Axioms (backgound knowledge)"));
+        toolBar.add(createLabel("Correct Axioms (Background)"));
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(new CreateBackgroundAxiomButton(this));
         toolBar.setMaximumSize(toolBar.getPreferredSize());
+        toolBar.setToolTipText("Axioms from the background are to be considered correct and hence are no candidates for diagnoses.");
 
         return toolBar;
     }
@@ -116,7 +119,6 @@ public class BackgroundView extends AbstractQueryViewComponent {
         for (OWLLogicalAxiom axiom : from)
             to.add(axiom);
     }
-
 
     public void updateDisplayedPossiblyFaultyAxioms() {
         DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();

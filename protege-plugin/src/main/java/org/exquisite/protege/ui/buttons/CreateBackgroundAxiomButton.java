@@ -12,6 +12,7 @@ public class CreateBackgroundAxiomButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        JOptionPane.showMessageDialog(null, "This function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
                         /* TODO
                         CreateAxiomEditor editor = new CreateAxiomEditor(backgroundView.getEditorKitHook());
                         editor.show();

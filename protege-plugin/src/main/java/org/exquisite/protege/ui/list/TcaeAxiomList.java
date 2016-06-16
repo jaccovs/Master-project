@@ -30,7 +30,6 @@ public class TcaeAxiomList extends AbstractAxiomList {
         this.editorKit = editorKit;
         setupKeyboardHandlers();
         updateView();
-
     }
 
     private void setupKeyboardHandlers() {
@@ -84,9 +83,7 @@ public class TcaeAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof TcaeListItem) {
             for (int number : getSelectedIndices()) {
                 TcaeListItem item = (TcaeListItem) getModel().getElementAt(number);
-
-                //getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType()); // TODO
-
+                getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType());
             }
         }
     }
@@ -96,10 +93,10 @@ public class TcaeAxiomList extends AbstractAxiomList {
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisSearcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
 
         List<Object> items = new ArrayList<>();
-        addToItems(items, ENTAILED_TC, diagnosisModel.getEntailedExamples() /* theory.getKnowledgeBase().getEntailedTests()*/);
-        addToItems(items, NON_ENTAILED_TC, diagnosisModel.getNotEntailedExamples() /*theory.getKnowledgeBase().getNonentailedTests()*/);
-        addToItems(items, POSITIVE_TC, diagnosisModel.getConsistentExamples() /*theory.getKnowledgeBase().getPositiveTests()*/ );
-        addToItems(items, NEGATIVE_TC, diagnosisModel.getInconsistentExamples() /*theory.getKnowledgeBase().getNegativeTests()*/);
+        addToItems(items, ENTAILED_TC, diagnosisModel.getEntailedExamples());
+        addToItems(items, NON_ENTAILED_TC, diagnosisModel.getNotEntailedExamples());
+        addToItems(items, CONSISTENT_TC, diagnosisModel.getConsistentExamples());
+        addToItems(items, INCONSISTENT_TC, diagnosisModel.getInconsistentExamples());
 
         setListData(items.toArray());
     }
