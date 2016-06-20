@@ -5,7 +5,7 @@ import org.protege.editor.core.ui.list.MListButton;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public abstract class AbstractAnswerButton extends MListButton {
+public abstract class AbstractAnswerButton extends MListButton  {
 
     protected AbstractAnswerButton(String name, Color rollOverColor, ActionListener actionListener) {
         super(name, rollOverColor, actionListener);

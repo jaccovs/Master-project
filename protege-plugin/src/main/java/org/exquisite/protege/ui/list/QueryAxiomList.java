@@ -25,10 +25,15 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     private EditorKitHook editorKitHook;
 
+    public QueryAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+        super(editorKit);
+        this.editorKitHook = editorKitHook;
+    }
+
     @Override
     protected List<MListButton> getButtons(Object value) {
 
-        List<MListButton> buttons = new ArrayList<MListButton>();
+        List<MListButton> buttons = new ArrayList<>();
         OntologyDiagnosisSearcher s = editorKitHook.getActiveOntologyDiagnosisSearcher();
         OWLLogicalAxiom axiom = ((AxiomListItem) value).getAxiom();
         buttons.addAll(super.getButtons(value));
@@ -85,11 +90,6 @@ public class QueryAxiomList extends AbstractAxiomList {
         if (explanationMngr.hasExplanation(axiom)) {
             explanationMngr.handleExplain((Frame) SwingUtilities.getAncestorOfClass(Frame.class, this), axiom);
         }
-    }
-
-    public QueryAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
-        super(editorKit);
-        this.editorKitHook = editorKitHook;
     }
 
     public void clearList() {
