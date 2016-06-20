@@ -238,25 +238,40 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
+
     public void reasonerChanged() {
         getDiagnosisEngineFactory().reasonerChanged();
         doReset();
     }
 
-    public void doReset() {
-        resetQuery();
-        resetQueryHistory();
-        resetDiagnoses();
-        notifyListeners();
-        logger.debug("searcher: do reset");
+    /**
+     * Reset the diagnoses engine and doFullReset().
+     */
+    public void doReload() {
+        diagnosisEngineFactory.reset();
+        doFullReset();
     }
 
+    /**
+     * Clear the not entailed examples and entailed examples and doReset().
+     */
     public void doFullReset() {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
         diagnosisModel.getNotEntailedExamples().clear();
         diagnosisModel.getEntailedExamples().clear();
         doReset();
+    }
+
+    /**
+     * Reset the query list, query history list, diagnoses and notify.
+     */
+    public void doReset() {
+        resetQuery();
+        resetQueryHistory();
+        resetDiagnoses();
+        notifyListeners();
+        logger.debug("searcher: do reset");
     }
 
     private void doCommitQuery() {

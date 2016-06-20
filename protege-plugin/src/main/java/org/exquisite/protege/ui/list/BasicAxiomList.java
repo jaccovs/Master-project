@@ -37,9 +37,9 @@ public class BasicAxiomList extends AbstractAxiomList {
         return buttons;
     }
 
-    public void updateList(Set<OWLLogicalAxiom> backgroundAxioms, OWLOntology ontology) {
+    public void updateList(Set<OWLLogicalAxiom> axioms, OWLOntology ontology) {
         List<Object> items = new ArrayList<>();
-        for (OWLLogicalAxiom axiom : backgroundAxioms)
+        for (OWLLogicalAxiom axiom : axioms)
             items.add(new AxiomListItem(axiom,ontology));
 
         setListData(items.toArray());

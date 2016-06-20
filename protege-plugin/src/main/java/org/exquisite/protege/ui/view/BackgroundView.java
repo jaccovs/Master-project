@@ -14,8 +14,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class BackgroundView extends AbstractQueryViewComponent {
 
@@ -87,7 +87,6 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     protected JToolBar createSwitchAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
-
         toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
         toolBar.add(Box.createHorizontalStrut(20));
         JPanel axiomFinderPanel = new JPanel();
@@ -101,7 +100,6 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     protected JToolBar createAxiomCreationToolBar() {
         JToolBar toolBar = createToolBar();
-
         toolBar.add(createLabel("Correct Axioms (Background)"));
         toolBar.add(Box.createHorizontalGlue());
         toolBar.add(new CreateBackgroundAxiomButton(this));
@@ -111,33 +109,17 @@ public class BackgroundView extends AbstractQueryViewComponent {
         return toolBar;
     }
 
-    protected void copySet(Set<OWLLogicalAxiom> from, Set<OWLLogicalAxiom> to) {
-        for (OWLLogicalAxiom axiom : from)
-            to.add(axiom);
-    }
-
     public void updateDisplayedPossiblyFaultyAxioms() {
         DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
-        java.util.List<OWLLogicalAxiom> bgAxioms = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas();
+        Set<OWLLogicalAxiom> possiblyFaultyFormulas = new TreeSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-
-        Set<OWLLogicalAxiom> ontologyAxMinusBg = new LinkedHashSet<>();
-        if (selectedEntity==null)
-            copySet(ontology.getLogicalAxioms(),ontologyAxMinusBg);
-        else {
-            for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
-                if (axiom.getSignature().contains(selectedEntity))
-                    ontologyAxMinusBg.add(axiom);
-            }
-        }
-        ontologyAxMinusBg.removeAll(bgAxioms);
-        possiblyFaultyAxiomsList.updateList(ontologyAxMinusBg,ontology);
+        possiblyFaultyAxiomsList.updateList(possiblyFaultyFormulas,ontology);
 
     }
 
     protected void updateDisplayedBackgroundAxioms() {
         DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
-        Set<OWLLogicalAxiom> bgAxioms = new HashSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
+        Set<OWLLogicalAxiom> bgAxioms = new TreeSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
         backgroundAxiomsList.updateList(bgAxioms,ontology);
     }
