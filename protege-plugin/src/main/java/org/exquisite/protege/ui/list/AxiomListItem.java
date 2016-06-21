@@ -6,9 +6,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 public class AxiomListItem implements MListItem {
 
-    private OWLLogicalAxiom axiom;
+    protected OWLLogicalAxiom axiom;
 
-    private OWLOntology ontology;
+    protected OWLOntology ontology;
 
     public OWLLogicalAxiom getAxiom() {
         return axiom;
@@ -23,21 +23,26 @@ public class AxiomListItem implements MListItem {
         this.ontology = ontology;
     }
 
+    @Override
     public boolean isEditable() {
         return false;
     }
 
+    @Override
     public void handleEdit() {
     }
 
+    @Override
     public boolean isDeleteable() {
         return false;
     }
 
+    @Override
     public boolean handleDelete() {
         return false;
     }
 
+    @Override
     public String getTooltip() {
         return "AxiomType: " + axiom.getAxiomType().getName();
     }

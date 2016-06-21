@@ -105,12 +105,9 @@ public class TcaeAxiomList extends AbstractAxiomList {
         OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         items.add(new TcaeListHeader(type));
-        //for (Set<OWLLogicalAxiom> testcase : testcases) {
-            items.add(new TcaeListItem(testcases, type));
-            for (OWLLogicalAxiom axiom : testcases)
-                items.add(new AxiomListItem(axiom,ontology));
-            items.add(" ");
-        //}
+        for (OWLLogicalAxiom axiom : testcases)
+            items.add(new TcaeListItem(axiom, type, ontology));
+        items.add(" ");
 
     }
 
