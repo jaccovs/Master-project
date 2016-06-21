@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
-import org.exquisite.protege.ui.buttons.CreateBackgroundAxiomButton;
 import org.exquisite.protege.ui.component.BackgroundAxiomFinder;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -101,11 +99,9 @@ public class BackgroundView extends AbstractQueryViewComponent {
     protected JToolBar createAxiomCreationToolBar() {
         JToolBar toolBar = createToolBar();
         toolBar.add(createLabel("Correct Axioms (Background)"));
-        toolBar.add(Box.createHorizontalGlue());
-        toolBar.add(new CreateBackgroundAxiomButton(this));
-        toolBar.setMaximumSize(toolBar.getPreferredSize());
         toolBar.setToolTipText("Axioms from the background are to be considered correct and hence are no candidates for diagnoses.");
-
+        toolBar.add(Box.createVerticalStrut(25));
+        toolBar.setMaximumSize(toolBar.getPreferredSize());
         return toolBar;
     }
 

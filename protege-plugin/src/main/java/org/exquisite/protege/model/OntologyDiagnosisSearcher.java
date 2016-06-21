@@ -190,7 +190,6 @@ public class OntologyDiagnosisSearcher {
             logger.debug("start searching maximal " + n + " diagnoses ...");
             diagnoses = diagnosisEngine.calculateDiagnoses();
             logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
-            setDiagnosesMeasures(diagnoses);
             notifyListeners();
 
             if (diagnoses.size() == 0)
@@ -413,6 +412,7 @@ public class OntologyDiagnosisSearcher {
 
             if ( qc.hasNext()) {
                 actualQuery = qc.next();
+                logger.debug("Got query " + actualQuery);
             } else {
                 errorHandler.errorHappend(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
@@ -424,15 +424,6 @@ public class OntologyDiagnosisSearcher {
             errorHandler.errorHappend(ErrorStatus.SOLVER_EXCEPTION);
         } finally {
             notifyListeners();
-        }
-    }
-
-    private void setDiagnosesMeasures(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
-        int i = 1;
-        for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-            BigDecimal measure = new BigDecimal(i++);
-            diagnosis.setMeasure(measure);
-            logger.debug("set measure " + measure + " for diagnosis " + diagnosis);
         }
     }
 
