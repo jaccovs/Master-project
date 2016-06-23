@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.panel;
 
 import org.exquisite.protege.model.configuration.SearchConfiguration;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class AbstractOptPanel extends JPanel {
-
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractOptPanel.class.getName());
+class AbstractOptPanel extends JPanel {
 
     private SearchConfiguration configuration;
 
@@ -24,71 +21,67 @@ public class AbstractOptPanel extends JPanel {
 
     private JEditorPane helpAreaPane;
 
-    public AbstractOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration) {
+    private final String PREFIX = "> ";
+
+    AbstractOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration) {
         this.newConfiguration = newConfiguration;
         this.configuration = configuration;
         helpAreaPane = createHelpEditorPane();
         listener = new ComponentHooverListener(helpAreaPane);
-
     }
 
     protected SearchConfiguration getConfiguration() {
         return configuration;
     }
 
-    public SearchConfiguration getNewConfiguration() {
+    SearchConfiguration getNewConfiguration() {
         return newConfiguration;
     }
 
-    public ComponentHooverListener getListener() {
+    ComponentHooverListener getListener() {
         return listener;
     }
 
-    public JEditorPane getHelpAreaPane() {
+    JEditorPane getHelpAreaPane() {
         return helpAreaPane;
     }
 
     public void saveChanges() {
-
     }
 
-    protected JEditorPane createHelpEditorPane() {
+    JEditorPane createHelpEditorPane() {
         JEditorPane helpArea = new JEditorPane();
         helpArea.setBorder(BorderFactory.createTitledBorder("Info"));
         helpArea.setContentType("text/html");
         helpArea.setEditable(false);
-        helpArea.setText(" ");
+        helpArea.setText(PREFIX);
         return helpArea;
     }
 
-    protected class ComponentHooverListener extends MouseAdapter {
+    private class ComponentHooverListener extends MouseAdapter {
 
         private JEditorPane editorPane;
 
-        public ComponentHooverListener(JEditorPane editorPane) {
+        ComponentHooverListener(JEditorPane editorPane) {
             this.editorPane = editorPane;
         }
 
-        protected void showHelpMessage(String id) {
+        void showHelpMessage(String id) {
             ResourceBundle helpMsgBundle = ResourceBundle.getBundle("OptionHelpMessages");
-
-            editorPane.setText(helpMsgBundle.getString(id));
-
+            editorPane.setText(PREFIX + helpMsgBundle.getString(id));
         }
 
-        protected String parseId(Object source) {
+        String parseId(Object source) {
 
             JComponent component = (JComponent) source;
             String id;
             if (component instanceof OptionBox) {
                 id = ((OptionBox)component).getId();
-            }
-            else {
+            } else {
                 component = (JComponent) component.getParent();
                 if (component instanceof JComboBox) {
                     id = ((OptionBox)component.getParent()).getId();
-                }
-                else {
+                } else {
                     id = ((OptionBox)component).getId();
                 }
             }
@@ -97,49 +90,49 @@ public class AbstractOptPanel extends JPanel {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-
             String id = parseId(e.getSource());
             showHelpMessage(id);
-
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            editorPane.setText(" ");
+            editorPane.setText(PREFIX);
         }
 
     }
 
-    public static class OptionBox extends Box {
+    static class OptionBox extends Box {
 
         private String id;
 
-        public OptionBox(String id, ComponentHooverListener listener, JComponent component) {
+        private JComponent label;
+
+        OptionBox(String id, ComponentHooverListener listener, JComponent component) {
             this(id,listener,null,component);
         }
 
-        public OptionBox(String id, ComponentHooverListener listener, JComponent label, JComponent component) {
+        OptionBox(String id, ComponentHooverListener listener, JComponent label, JComponent component) {
             super(BoxLayout.X_AXIS);
             this.id = id;
             if (label == null)
                 constructBox(Collections.singletonList(component),listener);
             else {
-                List<JComponent> list = new LinkedList<JComponent>();
+                this.label = label;
+                List<JComponent> list = new LinkedList<>();
                 list.add(label);
                 list.add(component);
                 constructBox(list,listener);
             }
-
         }
 
-        protected void addListenerToComboBox(JComboBox comboBox, ComponentHooverListener listener) {
+        void addListenerToComboBox(JComboBox comboBox, ComponentHooverListener listener) {
             for (Component component : comboBox.getComponents()) {
                 if (component instanceof AbstractButton)
                     component.addMouseListener(listener);
             }
         }
 
-        protected void constructBox(List<JComponent> components, ComponentHooverListener listener) {
+        void constructBox(List<JComponent> components, ComponentHooverListener listener) {
             for (JComponent component : components) {
                 component.setMaximumSize(component.getPreferredSize());
                 if (component instanceof JComboBox)
@@ -154,25 +147,27 @@ public class AbstractOptPanel extends JPanel {
 
         }
 
-        public String getId() {
+        String getId() {
             return id;
         }
 
-    }
-
-    public static class OptionGroupBox extends Box {
-
-        public OptionGroupBox(String name) {
-            super(BoxLayout.Y_AXIS);
-            setBorder(BorderFactory.createTitledBorder(name));
-
+        void setEnabledLabel(boolean b) {
+            if (this.label != null)
+                this.label.setEnabled(b);
         }
 
-        public void addOptionBox(OptionBox box) {
+    }
+
+    static class OptionGroupBox extends Box {
+
+        OptionGroupBox(String name) {
+            super(BoxLayout.Y_AXIS);
+            setBorder(BorderFactory.createTitledBorder(name));
+        }
+
+        void addOptionBox(OptionBox box) {
             add(box);
             add(Box.createVerticalStrut(10));
         }
-
     }
-
 }

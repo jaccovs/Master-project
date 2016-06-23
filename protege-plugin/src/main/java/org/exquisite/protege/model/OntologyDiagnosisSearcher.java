@@ -1,6 +1,10 @@
 package org.exquisite.protege.model;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.costestimators.CardinalityCostEstimator;
+import org.exquisite.core.costestimators.ICostsEstimator;
+import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
+import org.exquisite.core.costestimators.SimpleCostsEstimator;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
@@ -173,14 +177,37 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doCalculateDiagnosis(ErrorHandler errorHandler) {
-        int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
-
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
 
         logger.debug("diagnoses before resetEngine() " + diagnoses);
         diagnosisEngine.resetEngine();
         logger.debug("diagnoses after resetEngine() " + diagnoses);
 
+        // set the cost estimator
+        if (diagnosisEngine instanceof AbstractDiagnosisEngine) {
+            final AbstractDiagnosisEngine abstractDiagnosisEngine = ((AbstractDiagnosisEngine) diagnosisEngine);
+            final ICostsEstimator currentCostsEstimator = abstractDiagnosisEngine.getCostsEstimator();
+            switch (diagnosisEngineFactory.getSearchConfiguration().costEstimator) {
+                case EQUAL:
+                    if (! (currentCostsEstimator instanceof SimpleCostsEstimator))
+                        abstractDiagnosisEngine.setCostsEstimator(new SimpleCostsEstimator());
+                    break;
+                case CARD:
+                    if (! (currentCostsEstimator instanceof CardinalityCostEstimator))
+                        abstractDiagnosisEngine.setCostsEstimator(new CardinalityCostEstimator());
+                    break;
+                case SYNTAX:
+                    if (! (currentCostsEstimator instanceof OWLAxiomKeywordCostsEstimator))
+                        abstractDiagnosisEngine.setCostsEstimator(new OWLAxiomKeywordCostsEstimator(diagnosisEngine.getSolver().getDiagnosisModel()));
+                    break;
+                default:
+                    logger.warn("Cost estimator " + diagnosisEngineFactory.getSearchConfiguration().costEstimator + " is unknown. Using " + currentCostsEstimator + " as cost estimator.");
+            };
+
+        }
+
+        // set the maximum number of diagnoses to be calculated
+        int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
         diagnosisEngine.setMaxNumberOfDiagnoses(n);
         try {
             logger.debug("maxNumberOfDiagnoses: " + n);

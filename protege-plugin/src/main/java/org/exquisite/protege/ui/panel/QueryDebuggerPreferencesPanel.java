@@ -22,29 +22,24 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
         newConfiguration = new SearchConfiguration();
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        addPane(tabbedPane,"Diagnosis",new DiagnosisOptPanel(configuration,newConfiguration), KeyEvent.VK_D);
-        addPane(tabbedPane,"Query",new QueryOptPanel(configuration,newConfiguration),KeyEvent.VK_Q);
-        addPane(tabbedPane,"Probabilities",new ProbabPanel(configuration,newConfiguration,editorKitHook),KeyEvent.VK_P);
+        addPane(tabbedPane,"Diagnosis calculation",new DiagnosisOptPanel(configuration,newConfiguration), KeyEvent.VK_D);
+        addPane(tabbedPane,"Query computation",new QueryOptPanel(configuration,newConfiguration),KeyEvent.VK_Q);
+        addPane(tabbedPane,"Preferences measures",new PrefMeasureOptPanel(configuration,newConfiguration,editorKitHook),KeyEvent.VK_P);
 
         add(tabbedPane);
 
     }
 
     public void applyChanges() {
-        for (AbstractOptPanel panel : panes)
-            panel.saveChanges();
-
+        panes.forEach(AbstractOptPanel::saveChanges);
         ontologyDiagnosisSearcher.updateConfig(newConfiguration);
-
-        for (AbstractOptPanel panel : panes)
-            if (panel instanceof ProbabPanel)
-                ontologyDiagnosisSearcher.updateProbab(((ProbabPanel)panel).getMap());
+        panes.stream().filter(panel -> panel instanceof ProbabPanel).forEach(panel -> ontologyDiagnosisSearcher.updateProbab(((ProbabPanel) panel).getMap()));
     }
 
     public void dispose() throws Exception {
     }
 
-    protected void addPane(JTabbedPane tabbedPane, String title, AbstractOptPanel panel, int mnemonic) {
+    private void addPane(JTabbedPane tabbedPane, String title, AbstractOptPanel panel, int mnemonic) {
         tabbedPane.addTab(title, panel);
         tabbedPane.setMnemonicAt(tabbedPane.getTabCount()-1, mnemonic);
         panes.add(panel);
