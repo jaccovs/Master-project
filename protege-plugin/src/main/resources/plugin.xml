@@ -11,44 +11,62 @@
     <!-- Menus -->
 
     <extension id="menu.menudebug" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Excquisite Debugger"/>
+        <name value="Ontology Debugger"/>
         <toolTip value="Debug with Query Module "/>
         <path value="/SlotYB-B"/>
         <editorKitId value="any"/>
     </extension>
 
     <extension id="menu.menudebug.openmanualdebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Exquisite Ontology Debug Tab"/>
-        <toolTip value="Open Exquisite Ontology Debug Tab"/>
+        <name value="Open Exquisite Ontology Debugger Tab"/>
+        <toolTip value="Open Exquisite Ontology Debugger Tab"/>
         <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAA-B"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAA-A"/>
         <editorKitId value="any"/>
+    </extension>
+
+    <extension id="menu.menudebug.startdebuggingsession" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Start Debugging"/>
+        <toolTip value="Start a new Ontology Debugging Session"/>
+        <class value="org.exquisite.protege.ui.menu.StartDebuggingAction"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAAA-A"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift A"/>
+    </extension>
+
+    <extension id="menu.menudebug.stopdebuggingsession" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Stop Debugging"/>
+        <toolTip value="Stop the current Ontology Debugging Session"/>
+        <class value="org.exquisite.protege.ui.menu.StopDebuggingAction"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAAA-B"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift O"/>
+    </extension>
+
+    <extension id="menu.menudebug.reset" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Reset Debugger"/>
+        <toolTip value="Reset Debugger"/>
+        <class value="org.exquisite.protege.ui.menu.ResetDebuggingSessionAction"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAAAA-A"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift R"/>
+    </extension>
+
+    <extension id="menu.menudebug.resetall" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Reset All"/>
+        <toolTip value="Reset All"/>
+        <class value="org.exquisite.protege.ui.menu.ResetAllAction"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAAAA-B"/>
+        <editorKitId value="any"/>
+        <accelerator value=" shift L"/>
     </extension>
 
     <extension id="menu.menudebug.options" point="org.protege.editor.core.application.EditorKitMenuAction">
         <name value="Options"/>
         <toolTip value="Options"/>
         <class value="org.exquisite.protege.ui.menu.OpenOptionsDialog"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAD-C"/>
+        <path value="org.exquisite.protege.menu.menudebug/SlotAB-A"/>
         <editorKitId value="any"/>
-    </extension>
-
-    <extension id="menu.menudebug.calculatediagnoses" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Calculate Diagnoses"/>
-        <toolTip value="Calculate Diagnoses"/>
-        <class value="org.exquisite.protege.ui.menu.CalculateDiagnoses"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAC-B"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift C"/>
-    </extension>
-
-    <extension id="menu.menudebug.reset" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Reset Debugger"/>
-        <toolTip value="Reset Debugger"/>
-        <class value="org.exquisite.protege.ui.menu.Reset"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAC-C"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift R"/>
     </extension>
 
     <!-- Tabs -->

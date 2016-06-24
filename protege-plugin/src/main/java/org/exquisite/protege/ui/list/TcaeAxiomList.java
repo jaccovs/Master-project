@@ -4,7 +4,6 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.editor.TcaeHeaderEditor;
-import org.exquisite.protege.ui.editor.TcaeItemEditor;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -71,10 +70,6 @@ public class TcaeAxiomList extends AbstractAxiomList {
     @Override
     protected void handleEdit() {
         super.handleEdit();
-        if (this.getSelectedValue() instanceof TcaeListItem) {
-            TcaeItemEditor editor = new TcaeItemEditor((TcaeListItem) getSelectedValue(),getEditorKit(),getEditorKitHook());
-            editor.show();
-        }
     }
 
     @Override

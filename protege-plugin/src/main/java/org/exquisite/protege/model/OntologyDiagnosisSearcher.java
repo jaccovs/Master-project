@@ -22,12 +22,15 @@ import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFo
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.exquisite.protege.model.error.ErrorHandler;
+import org.exquisite.protege.model.error.SearchErrorHandler;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -51,7 +54,7 @@ public class OntologyDiagnosisSearcher {
 
     public enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
 
-    private enum SearchStatus { IDLE, RUNNING }
+    private DebuggingSession debuggingSession;
 
     private QuerySearchStatus querySearchStatus = QuerySearchStatus.IDLE;
 
@@ -75,15 +78,175 @@ public class OntologyDiagnosisSearcher {
 
     private IQueryComputation<OWLLogicalAxiom> qc = null;
 
+    private final OWLModelManager modelManager;
+
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
-        OWLReasonerManager reasonerMan = editorKit.getModelManager().getOWLReasonerManager();
-        OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
+        modelManager = editorKit.getModelManager();
+        OWLReasonerManager reasonerMan = modelManager.getOWLReasonerManager();
+        OWLOntology ontology = modelManager.getActiveOntology();
         diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerMan);
+        debuggingSession = new DebuggingSession();
     }
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /*************************             G E T T E R   M E T H O D S               **********************************/
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
 
     public DiagnosisEngineFactory getDiagnosisEngineFactory() {
         return diagnosisEngineFactory;
     }
+
+    public Query<OWLLogicalAxiom> getActualQuery() {
+        return actualQuery;
+    }
+
+    public Set<Diagnosis<OWLLogicalAxiom>> getDiagnoses() {
+        return diagnoses;
+    }
+
+    private ErrorStatus getErrorStatus() {
+        return errorStatus;
+    }
+
+    public List<Set<OWLLogicalAxiom>> getQueryHistory() {
+        return queryHistory;
+    }
+
+    public Map<Set<OWLLogicalAxiom>, TestCaseType> getQueryHistoryType() {
+        return queryHistoryType;
+    }
+
+    public QuerySearchStatus getQuerySearchStatus() {
+        return querySearchStatus;
+    }
+
+    public boolean isMarkedEntailed(OWLLogicalAxiom axiom) {
+        return axiomsMarkedEntailed.contains(axiom);
+    }
+
+    public boolean isMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        return axiomsMarkedNonEntailed.contains(axiom);
+    }
+
+    public boolean isSessionRunning() {
+        return debuggingSession.getState() == DebuggingSession.State.STARTED;
+    }
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /*************************                 L I S T E N E R S                     **********************************/
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+
+    public void addChangeListener(ChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        changeListeners.remove(listener);
+    }
+
+    private void notifyListeners() {
+        for (ChangeListener listener : changeListeners)
+            listener.stateChanged(new ChangeEvent(this));
+    }
+
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+    /*************************               S T A T E S   &   R E S E T S         ************************************/
+    /******************************************************************************************************************/
+    /******************************************************************************************************************/
+
+    /**
+     * Starts a new debugging session. This step initiates the search for a diagnosis and the presentation of a
+     * query.
+     *
+     * @param errorHandler An error handler.
+     */
+    public void doStartDebugging(SearchErrorHandler errorHandler) {
+        debuggingSession.startSession();                            // start session
+        doCalculateDiagnosesAndGetQuery(errorHandler);              // calculate diagnoses and compute query
+        notifyListeners();
+    }
+
+    /**
+     * Stop diagnosis session -> reset engine, diagnoses, conflicts, queries and history.
+     */
+    public void doStopDebugging() {
+        diagnosisEngineFactory.reset();                             // reset engine
+        resetDiagnoses();                                           // reset diagnoses, conflicts
+        resetQuery();                                               // reset queries
+        resetQueryHistory();                                        // reset history
+        debuggingSession.stopSession();                             // stop session
+        notifyListeners();
+    }
+
+    /**
+     * Reset debugger ->  reset test cases + doStopDebugging()
+     */
+    public void doResetDebugger() {
+        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
+        diagnosisModel.getNotEntailedExamples().clear();
+        diagnosisModel.getEntailedExamples().clear();
+        diagnosisModel.getConsistentExamples().clear();
+        diagnosisModel.getInconsistentExamples().clear();
+        doStopDebugging();
+    }
+
+    public void doResetAll() throws OWLOntologyCreationException {
+        modelManager.reload(modelManager.getActiveOntology());
+        // reload ontology // reload the ontology this will throw an event which calls doReload()
+        //doResetDebugger();
+    }
+
+    void reasonerChanged() {
+        getDiagnosisEngineFactory().reasonerChanged();
+        doStopDebugging();
+    }
+
+    /**
+     * Reset the diagnoses engine and doFullReset().
+     */
+    void doReload() {
+        diagnosisEngineFactory.reset();
+        doResetDebugger();
+    }
+
+    private void resetQuery() {
+        axiomsMarkedEntailed.clear();
+        axiomsMarkedNonEntailed.clear();
+        actualQuery=null;
+        querySearchStatus = QuerySearchStatus.IDLE;
+        if (qc!=null) qc.reset();
+    }
+
+    private void resetQueryHistory() {
+        queryHistory.clear();
+        queryHistoryType.clear();
+    }
+
+    private void resetDiagnoses() {
+        diagnoses.clear();
+
+        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
+        diagnosisEngine.resetEngine();
+    }
+
+    /**
+     * Reset the query list, query history list, diagnoses and notify.
+     */
+    /*
+    public void doReset() {
+        resetQuery();
+        resetQueryHistory();
+        resetDiagnoses();
+        notifyListeners();
+        logger.debug("searcher: do reset");
+    }
+    */
 
     public void removeBackgroundAxioms(List<AxiomListItem> selectedValues) {
         logger.debug("moving " + selectedValues + " from background to possiblyFaultyFormulas");
@@ -105,23 +268,6 @@ public class OntologyDiagnosisSearcher {
 
     private List<OWLLogicalAxiom> extract(List<AxiomListItem> selectedValuesList) {
         return selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
-    }
-
-    void addChangeListener(ChangeListener listener) {
-        changeListeners.add(listener);
-    }
-
-    void removeChangeListener(ChangeListener listener) {
-        changeListeners.remove(listener);
-    }
-
-    private void notifyListeners() {
-        for (ChangeListener listener : changeListeners)
-            listener.stateChanged(new ChangeEvent(this));
-    }
-
-    public QuerySearchStatus getQuerySearchStatus() {
-        return querySearchStatus;
     }
 
     public void doRemoveTestcase(Set<OWLLogicalAxiom> testcases, TestCaseType type) {
@@ -167,16 +313,69 @@ public class OntologyDiagnosisSearcher {
         }
     }
 
-    public void doUpdateTestcase(Set<OWLLogicalAxiom> testcase, Set<OWLLogicalAxiom> testcase1, TestCaseType type, ErrorHandler errorHandler) {
-    }
-
-    public boolean isTestcasesEmpty() {
+    public boolean areTestcasesEmpty() {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
         return diagnosisModel.getEntailedExamples().isEmpty() && diagnosisModel.getNotEntailedExamples().isEmpty();
     }
 
-    public void doCalculateDiagnosis(ErrorHandler errorHandler) {
+    public void updateConfig(SearchConfiguration newConfiguration) {
+        getDiagnosisEngineFactory().updateConfig(newConfiguration);
+    }
+
+    public void doAddAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedEntailed.add(axiom);
+        notifyListeners();
+    }
+
+    public void doAddAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedNonEntailed.add(axiom);
+        notifyListeners();
+    }
+
+    public void doRemoveAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedEntailed.remove(axiom);
+        notifyListeners();
+    }
+
+    public void doRemoveAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
+        axiomsMarkedNonEntailed.remove(axiom);
+        notifyListeners();
+    }
+
+    private void doCommitQuery() {
+        if (!axiomsMarkedEntailed.isEmpty()) {
+            doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
+                    TestCaseType.ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedEntailed,TestCaseType.ENTAILED_TC);
+        }
+        if (!axiomsMarkedNonEntailed.isEmpty()) {
+            doAddTestcase(new LinkedHashSet<>(axiomsMarkedNonEntailed),
+                    TestCaseType.NON_ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedNonEntailed,TestCaseType.NON_ENTAILED_TC);
+        }
+        resetQuery();
+        notifyListeners();
+    }
+
+    public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
+        doCommitQuery();
+        doCalculateDiagnosis(errorHandler);
+
+        switch (diagnoses.size()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                doGetQuery(errorHandler);
+                break;
+        }
+    }
+
+    private void doCalculateDiagnosis(ErrorHandler errorHandler) {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
 
         logger.debug("diagnoses before resetEngine() " + diagnoses);
@@ -228,137 +427,13 @@ public class OntologyDiagnosisSearcher {
 
     }
 
-    public void updateConfig(SearchConfiguration newConfiguration) {
-        getDiagnosisEngineFactory().updateConfig(newConfiguration);
-    }
-
-    public Query<OWLLogicalAxiom> getActualQuery() {
-        return actualQuery;
-    }
-
-    public boolean isMarkedEntailed(OWLLogicalAxiom axiom) {
-        return axiomsMarkedEntailed.contains(axiom);
-    }
-
-    public boolean isMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        return axiomsMarkedNonEntailed.contains(axiom);
-    }
-
-    public void doAddAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedEntailed.add(axiom);
-        notifyListeners();
-    }
-
-    public void doAddAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedNonEntailed.add(axiom);
-        notifyListeners();
-    }
-
-    public void doRemoveAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedEntailed.remove(axiom);
-        notifyListeners();
-    }
-
-    public void doRemoveAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedNonEntailed.remove(axiom);
-        notifyListeners();
-    }
-
-
-    public void reasonerChanged() {
-        getDiagnosisEngineFactory().reasonerChanged();
-        doReset();
-    }
-
-    /**
-     * Reset the diagnoses engine and doFullReset().
-     */
-    public void doReload() {
-        diagnosisEngineFactory.reset();
-        doFullReset();
-    }
-
-    /**
-     * Clear the not entailed examples and entailed examples and doReset().
-     */
-    public void doFullReset() {
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
-        diagnosisModel.getNotEntailedExamples().clear();
-        diagnosisModel.getEntailedExamples().clear();
-        doReset();
-    }
-
-    /**
-     * Reset the query list, query history list, diagnoses and notify.
-     */
-    public void doReset() {
-        resetQuery();
-        resetQueryHistory();
-        resetDiagnoses();
-        notifyListeners();
-        logger.debug("searcher: do reset");
-    }
-
-    private void doCommitQuery() {
-        if (!axiomsMarkedEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
-                    TestCaseType.ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedEntailed,TestCaseType.ENTAILED_TC);
-        }
-        if (!axiomsMarkedNonEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<>(axiomsMarkedNonEntailed),
-                    TestCaseType.NON_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedNonEntailed,TestCaseType.NON_ENTAILED_TC);
-        }
-        resetQuery();
-        notifyListeners();
-    }
-
-    private void resetQuery() {
-        axiomsMarkedEntailed.clear();
-        axiomsMarkedNonEntailed.clear();
-        actualQuery=null;
-        querySearchStatus = QuerySearchStatus.IDLE;
-        if (qc!=null) qc.reset();
-    }
-
-    private void resetQueryHistory() {
-        queryHistory.clear();
-        queryHistoryType.clear();
-    }
-
-    private void resetDiagnoses() {
-        diagnoses.clear();
-
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        diagnosisEngine.resetEngine();
-    }
-
-    public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
-        doCommitQuery();
-        doCalculateDiagnosis(errorHandler);
-
-        switch (diagnoses.size()) {
-            case 0:
-                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case 1:
-                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            default:
-                doGetQuery(errorHandler);
-                break;
-        }
-    }
-
     /**
      * Calculates a query according to the diagnoses.
      * If no diagnoses have been computed yet, let us compute them first.
      *
      * @param errorHandler An error handler.
      */
-    public void doCalculateDiagnosesAndGetQuery(ErrorHandler errorHandler) {
+    private void doCalculateDiagnosesAndGetQuery(ErrorHandler errorHandler) {
         if (diagnoses.size() == 0)
             doCalculateDiagnosis(errorHandler);
 
@@ -476,23 +551,11 @@ public class OntologyDiagnosisSearcher {
         queryHistoryType.put(axioms,type);
     }
 
-    public List<Set<OWLLogicalAxiom>> getQueryHistory() {
-        return queryHistory;
-    }
-
-    public Map<Set<OWLLogicalAxiom>, TestCaseType> getQueryHistoryType() {
-        return queryHistoryType;
-    }
-
     public void doRemoveQueryHistoryTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
         doRemoveTestcase(testcase,type);
         queryHistory.remove(testcase);
         queryHistoryType.remove(testcase);
         notifyListeners();
-    }
-
-    private ErrorStatus getErrorStatus() {
-        return errorStatus;
     }
 
     public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {
@@ -501,10 +564,6 @@ public class OntologyDiagnosisSearcher {
         CostsEstimator<OWLLogicalAxiom> estimator = getSearchCreator().getSearch().getCostsEstimator();
         ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
         */
-    }
-
-    public Set<Diagnosis<OWLLogicalAxiom>> getDiagnoses() {
-        return diagnoses;
     }
 
     @Override

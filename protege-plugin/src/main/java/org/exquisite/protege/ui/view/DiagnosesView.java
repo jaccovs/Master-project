@@ -1,7 +1,9 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.protege.ui.buttons.SearchDiagnosesButton;
+import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.ui.buttons.StartDebuggingButton;
+import org.exquisite.protege.ui.buttons.StopDebuggingButton;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +16,9 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(DiagnosesView.class.getName());
 
-    private SearchDiagnosesButton searchDiagnosesButton;
+    private StartDebuggingButton startDebuggingButton;
+    private StopDebuggingButton stopDebuggingButton;
+
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -27,18 +31,24 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setFloatable(false);
-        searchDiagnosesButton = new SearchDiagnosesButton(this);
-        toolBar.add(searchDiagnosesButton);
+        startDebuggingButton = new StartDebuggingButton(this);
+        toolBar.add(startDebuggingButton);
         toolBar.add(Box.createHorizontalGlue());
+        stopDebuggingButton = new StopDebuggingButton(this);
+        toolBar.add(stopDebuggingButton);
 
         return toolBar;
     }
 
     private void updateView() {
 
-        Set<Diagnosis<OWLLogicalAxiom>> diagnoses = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnoses();
+        final OntologyDiagnosisSearcher ods = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+        Set<Diagnosis<OWLLogicalAxiom>> diagnoses = ods.getDiagnoses();
         logger.debug("updateView: got diagnoses: " + diagnoses);
         updateList(diagnoses);
+
+        startDebuggingButton.setEnabled(!ods.isSessionRunning());
+        stopDebuggingButton.setEnabled(ods.isSessionRunning());
     }
 
     @Override

@@ -19,5 +19,7 @@ public class CommitAndGetNextButton extends AbstractGuiButton {
                 }
         );
 
+        setEnabled(queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
+
     }
 }

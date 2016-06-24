@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 public class GetAlternativeQueryButton extends AbstractGuiButton {
 
     public GetAlternativeQueryButton(final QueryView queryView) {
-        super("Get Alternative Query","If you don't want to answer the actual query, there is no correct answer or you don't know you can get a new quey", "next.png", KeyEvent.VK_A,
+        super("Get Alternative Query","This functionality is not yet implemented!" /*"If you don't want to answer the actual query, there is no correct answer or you don't know you can get a new quey"*/, "next.png", KeyEvent.VK_A,
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -18,6 +18,8 @@ public class GetAlternativeQueryButton extends AbstractGuiButton {
                 }
         );
 
+        //setEnabled(queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
+        setEnabled(false);
     }
 
 }

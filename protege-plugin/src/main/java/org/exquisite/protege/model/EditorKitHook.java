@@ -85,6 +85,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             OWLOntology activeOntology = event.getSource().getActiveOntology();
             final OntologyDiagnosisSearcher ods = ontologyDiagnosisSearcherMap.get(activeOntology);
             ods.doReload();
+            //ods.doResetDebugger();
         }
     }
 
