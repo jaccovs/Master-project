@@ -29,10 +29,12 @@ public class BasicAxiomList extends AbstractAxiomList {
         List<MListButton> buttons = new ArrayList<>();
         buttons.addAll(super.getButtons(value));
 
-        if (!isBackground)
-            buttons.add(new AddToBackgroundButton((AxiomListItem)value, view));
-        else
-            buttons.add(new RemoveFromBackgroundButton((AxiomListItem)value, view));
+        if (! view.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning()) {
+            if (!isBackground)
+                buttons.add(new AddToBackgroundButton((AxiomListItem) value, view));
+            else
+                buttons.add(new RemoveFromBackgroundButton((AxiomListItem) value, view));
+        }
 
         return buttons;
     }

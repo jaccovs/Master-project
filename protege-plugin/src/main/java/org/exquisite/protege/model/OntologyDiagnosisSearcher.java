@@ -318,6 +318,8 @@ public class OntologyDiagnosisSearcher {
                 break;
         }
 
+        if (isSessionRunning())
+            doCalculateDiagnosesAndGetQuery(new ErrorHandler());
         notifyListeners();
     }
 
@@ -437,15 +439,12 @@ public class OntologyDiagnosisSearcher {
     }
 
     /**
-     * Calculates a query according to the diagnoses.
-     * If no diagnoses have been computed yet, let us compute them first.
+     * First calculate diagnoses and compute queries afterwards.
      *
      * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(ErrorHandler errorHandler) {
-        if (diagnoses.size() == 0)
-            doCalculateDiagnosis(errorHandler);
-
+        doCalculateDiagnosis(errorHandler);
         if (diagnoses.size() > 1)
             doGetQuery(errorHandler);
     }
