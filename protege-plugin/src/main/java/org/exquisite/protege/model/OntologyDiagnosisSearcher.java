@@ -173,9 +173,44 @@ public class OntologyDiagnosisSearcher {
             JOptionPane.showMessageDialog(null, "No Reasoner set. Select a reasoner from the Reasoner menu.", "No Reasoner set", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        debuggingSession.startSession();                            // start session
-        doCalculateDiagnosesAndGetQuery(errorHandler);              // calculate diagnoses and compute query
-        notifyListeners();
+        debuggingSession.startSession();                // start session
+        doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
+
+        switch (diagnoses.size()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                doStopDebugging();
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                notifyListeners();
+                break;
+        }
+    }
+
+    /**
+     * Commit the response from the expert, calculate the new diagnoses and get the new queries.
+     *
+     * @param errorHandler An error handler.
+     */
+    public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
+        doCommitQuery();
+        doCalculateDiagnosis(errorHandler);
+
+        switch (diagnoses.size()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                doStopDebugging();
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                doGetQuery(errorHandler);
+                break;
+        }
     }
 
     /**
@@ -241,19 +276,6 @@ public class OntologyDiagnosisSearcher {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         diagnosisEngine.resetEngine();
     }
-
-    /**
-     * Reset the query list, query history list, diagnoses and notify.
-     */
-    /*
-    public void doReset() {
-        resetQuery();
-        resetQueryHistory();
-        resetDiagnoses();
-        notifyListeners();
-        logger.debug("searcher: do reset");
-    }
-    */
 
     public void removeBackgroundAxioms(List<AxiomListItem> selectedValues) {
         logger.debug("moving " + selectedValues + " from background to possiblyFaultyFormulas");
@@ -365,23 +387,6 @@ public class OntologyDiagnosisSearcher {
         notifyListeners();
     }
 
-    public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
-        doCommitQuery();
-        doCalculateDiagnosis(errorHandler);
-
-        switch (diagnoses.size()) {
-            case 0:
-                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case 1:
-                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            default:
-                doGetQuery(errorHandler);
-                break;
-        }
-    }
-
     private void doCalculateDiagnosis(ErrorHandler errorHandler) {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
 
@@ -425,9 +430,6 @@ public class OntologyDiagnosisSearcher {
             logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
             notifyListeners();
 
-            if (diagnoses.size() == 0)
-                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
-
         } catch (DiagnosisException e) {
             errorHandler.errorHappend(SOLVER_EXCEPTION);
         }
@@ -438,23 +440,14 @@ public class OntologyDiagnosisSearcher {
      * Calculates a query according to the diagnoses.
      * If no diagnoses have been computed yet, let us compute them first.
      *
-     * @param errorHandler An error handler.
+     * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(ErrorHandler errorHandler) {
         if (diagnoses.size() == 0)
             doCalculateDiagnosis(errorHandler);
 
-        switch (diagnoses.size()) {
-            case 0:
-                JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case 1:
-                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            default:
-                doGetQuery(errorHandler);
-                break;
-        }
+        if (diagnoses.size() > 1)
+            doGetQuery(errorHandler);
     }
 
     /**

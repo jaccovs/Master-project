@@ -15,7 +15,7 @@ public class ResetAllAction extends AbstractProtegeOWLAction {
     public void actionPerformed(ActionEvent e) {
         OntologyDiagnosisSearcher ods = getActiveOntologyDiagnosisSearcher();
 
-        int answer = JOptionPane.showConfirmDialog(null, "The ontology will be reloaded and the debugger will be fully reset!<br>Please confirm this!", "Reset Type", JOptionPane.YES_NO_CANCEL_OPTION);
+        int answer = JOptionPane.showConfirmDialog(null, "The ontology will be reloaded and the debugger will be fully reset! Please confirm this!", "Reset Type", JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
             try {
