@@ -27,6 +27,7 @@ import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -80,11 +81,13 @@ public class OntologyDiagnosisSearcher {
 
     private final OWLModelManager modelManager;
 
+    private final OWLReasonerManager reasonerManager;
+
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
-        OWLReasonerManager reasonerMan = modelManager.getOWLReasonerManager();
+        reasonerManager = modelManager.getOWLReasonerManager();
         OWLOntology ontology = modelManager.getActiveOntology();
-        diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerMan);
+        diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerManager);
         debuggingSession = new DebuggingSession();
     }
 
@@ -166,6 +169,10 @@ public class OntologyDiagnosisSearcher {
      * @param errorHandler An error handler.
      */
     public void doStartDebugging(SearchErrorHandler errorHandler) {
+        if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
+            JOptionPane.showMessageDialog(null, "No Reasoner set. Select a reasoner from the Reasoner menu.", "No Reasoner set", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         debuggingSession.startSession();                            // start session
         doCalculateDiagnosesAndGetQuery(errorHandler);              // calculate diagnoses and compute query
         notifyListeners();
