@@ -15,11 +15,10 @@ public class QueryView extends AbstractListQueryViewComponent {
     private GetAlternativeQueryButton getAlternativeQueryButton;
     private CommitAndGetNextButton commitAndGetNextButton;
 
-    protected JToolBar createNewQueryToolBar() {
+    private JToolBar createNewQueryToolBar() {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setFloatable(false);
-        //toolBar.add(new GetQueryButton(this));
         toolBar.add(Box.createHorizontalGlue());
         getAlternativeQueryButton = new GetAlternativeQueryButton(this);
         commitAndGetNextButton = new CommitAndGetNextButton(this);
@@ -34,7 +33,6 @@ public class QueryView extends AbstractListQueryViewComponent {
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         add(createNewQueryToolBar(), BorderLayout.NORTH);
-
     }
 
     public QueryAxiomList getList() {
@@ -43,25 +41,25 @@ public class QueryView extends AbstractListQueryViewComponent {
 
     @Override
     protected JComponent createListForComponent() {
-        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook());
+        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook(),commitAndGetNextButton);
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
 
-        OntologyDiagnosisSearcher diagnosisSearcher = (OntologyDiagnosisSearcher) e.getSource();
-        switch(diagnosisSearcher.getQuerySearchStatus()) {
+        OntologyDiagnosisSearcher s = (OntologyDiagnosisSearcher) e.getSource();
+        switch(s.getQuerySearchStatus()) {
             case ASKING_QUERY:
                 OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                getList().updateList(diagnosisSearcher,ontology);
+                getList().updateList(s,ontology);
                 break;
             case IDLE:
                 getList().clearList();
                 break;
         }
 
-        getAlternativeQueryButton.setEnabled(false); // todo NOT YET IMPLEMENTED
-        commitAndGetNextButton.setEnabled(diagnosisSearcher.isSessionRunning());
+        getAlternativeQueryButton.setEnabled(false); // TODO NOT YET IMPLEMENTED
+        commitAndGetNextButton.setEnabled(s.isSessionRunning() && s.sizeOfEntailedAndNonEntailedAxioms() > 0);
     }
 
 }

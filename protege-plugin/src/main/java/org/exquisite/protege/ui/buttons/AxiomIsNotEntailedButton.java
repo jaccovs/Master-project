@@ -3,22 +3,14 @@ package org.exquisite.protege.ui.buttons;
 import org.exquisite.protege.ui.list.QueryAxiomList;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AxiomIsNotEntailedButton extends AbstractAnswerButton {
 
     private boolean isMarkedNonEntailed;
 
     public AxiomIsNotEntailedButton(final QueryAxiomList list, boolean isMarkedNonEntailed) {
-        super("Not Entailed", Color.RED.darker(), new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                list.handleNotEntailed();
-            }
-        });
+        super("Not Entailed", Color.RED.darker(), e -> list.handleNotEntailed());
         this.isMarkedNonEntailed = isMarkedNonEntailed;
-
     }
 
     public void paintButtonContent(Graphics2D g) {

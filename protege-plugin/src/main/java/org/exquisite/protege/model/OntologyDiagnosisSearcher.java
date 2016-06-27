@@ -133,6 +133,10 @@ public class OntologyDiagnosisSearcher {
         return axiomsMarkedNonEntailed.contains(axiom);
     }
 
+    public int sizeOfEntailedAndNonEntailedAxioms() {
+        return axiomsMarkedEntailed.size() + axiomsMarkedNonEntailed.size();
+    }
+
     public boolean isSessionRunning() {
         return debuggingSession.getState() == DebuggingSession.State.STARTED;
     }

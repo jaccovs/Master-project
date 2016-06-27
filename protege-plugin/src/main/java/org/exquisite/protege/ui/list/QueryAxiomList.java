@@ -5,6 +5,7 @@ import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
+import org.exquisite.protege.ui.buttons.CommitAndGetNextButton;
 import org.exquisite.protege.ui.buttons.DebugExplainButton;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
@@ -18,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QueryAxiomList extends AbstractAxiomList {
 
@@ -25,9 +27,12 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     private EditorKitHook editorKitHook;
 
-    public QueryAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+    private CommitAndGetNextButton commitAndGetNextButton;
+
+    public QueryAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, CommitAndGetNextButton commitAndGetNextButton) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
+        this.commitAndGetNextButton = commitAndGetNextButton;
     }
 
     @Override
@@ -51,15 +56,14 @@ public class QueryAxiomList extends AbstractAxiomList {
         OntologyDiagnosisSearcher s = editorKitHook.getActiveOntologyDiagnosisSearcher();
         if (s.isMarkedEntailed(axiom)) {
             s.doRemoveAxiomsMarkedEntailed(axiom);
-        }
-        else if (s.isMarkedNonEntailed(axiom)) {
+        } else if (s.isMarkedNonEntailed(axiom)) {
             s.doRemoveAxiomsMarkedNonEntailed(axiom);
             s.doAddAxiomsMarkedEntailed(axiom);
-        }
-        else {
+        } else {
             s.doAddAxiomsMarkedEntailed(axiom);
         }
 
+        commitAndGetNextButton.setEnabled(s.isSessionRunning() && s.sizeOfEntailedAndNonEntailedAxioms() > 0);
     }
 
     public void handleNotEntailed() {
@@ -69,15 +73,14 @@ public class QueryAxiomList extends AbstractAxiomList {
         OntologyDiagnosisSearcher s = editorKitHook.getActiveOntologyDiagnosisSearcher();
         if (s.isMarkedNonEntailed(axiom)) {
             s.doRemoveAxiomsMarkedNonEntailed(axiom);
-        }
-        else if (s.isMarkedEntailed(axiom)) {
+        } else if (s.isMarkedEntailed(axiom)) {
             s.doRemoveAxiomsMarkedEntailed(axiom);
             s.doAddAxiomsMarkedNonEntailed(axiom);
-        }
-        else {
+        } else {
             s.doAddAxiomsMarkedNonEntailed(axiom);
         }
 
+        commitAndGetNextButton.setEnabled(s.isSessionRunning() && s.sizeOfEntailedAndNonEntailedAxioms() > 0);
     }
 
     public void handleAxiomExplain() {
@@ -98,10 +101,7 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     public void updateList(OntologyDiagnosisSearcher diagnosisSearcher, OWLOntology ontology) {
         Query<OWLLogicalAxiom> query = diagnosisSearcher.getActualQuery();
-        List<Object> items = new ArrayList<Object>();
-        for (OWLLogicalAxiom axiom : query.formulas) {
-            items.add(new QueryAxiomListItem(axiom, ontology));
-        }
+        List<Object> items = query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology)).collect(Collectors.toList());
 
         setListData(items.toArray());
     }
