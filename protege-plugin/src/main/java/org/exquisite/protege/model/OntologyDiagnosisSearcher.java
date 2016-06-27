@@ -396,9 +396,7 @@ public class OntologyDiagnosisSearcher {
     private void doCalculateDiagnosis(ErrorHandler errorHandler) {
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
 
-        logger.debug("diagnoses before resetEngine() " + diagnoses);
         diagnosisEngine.resetEngine();
-        logger.debug("diagnoses after resetEngine() " + diagnoses);
 
         // set the cost estimator
         if (diagnosisEngine instanceof AbstractDiagnosisEngine) {
@@ -424,7 +422,7 @@ public class OntologyDiagnosisSearcher {
         }
 
         // set the maximum number of diagnoses to be calculated
-        int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
+        final int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
         diagnosisEngine.setMaxNumberOfDiagnoses(n);
         try {
             logger.debug("maxNumberOfDiagnoses: " + n);
@@ -434,8 +432,8 @@ public class OntologyDiagnosisSearcher {
             logger.debug("start searching maximal " + n + " diagnoses ...");
             diagnoses = diagnosisEngine.calculateDiagnoses();
             logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
+            logger.debug("based on these conflicts: " + diagnosisEngine.getConflicts());
             notifyListeners();
-
         } catch (DiagnosisException e) {
             errorHandler.errorHappend(SOLVER_EXCEPTION);
         }
@@ -517,7 +515,7 @@ public class OntologyDiagnosisSearcher {
 
             if ( qc.hasNext()) {
                 actualQuery = qc.next();
-                logger.debug("Got query " + actualQuery);
+                logger.debug("query configuration: " + qc);
             } else {
                 errorHandler.errorHappend(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
@@ -549,7 +547,7 @@ public class OntologyDiagnosisSearcher {
     }
 
     private void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
-        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>(ax);
+        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<>(ax);
         queryHistory.add(axioms);
         queryHistoryType.put(axioms,type);
     }

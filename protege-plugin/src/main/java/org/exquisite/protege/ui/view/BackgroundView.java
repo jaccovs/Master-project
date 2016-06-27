@@ -4,10 +4,8 @@ import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.ui.component.BackgroundAxiomFinder;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -16,8 +14,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class BackgroundView extends AbstractQueryViewComponent {
-
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(BackgroundView.class.getName());
 
     private BasicAxiomList backgroundAxiomsList;
 
@@ -48,25 +44,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     }
 
-    private OWLEntity selectedEntity = null;
-
-    public void setSelectedEntity(OWLEntity selectedEntity) {
-        this.selectedEntity = selectedEntity;
-    }
-
-    public OWLEntity getSelectedEntity() {
-        return selectedEntity;
-    }
-
-    public BasicAxiomList getBackgroundAxiomsList() {
-        return backgroundAxiomsList;
-    }
-
-    public BasicAxiomList getPossiblyFaultyAxiomsList() {
-        return possiblyFaultyAxiomsList;
-    }
-
-    protected JToolBar createToolBar() {
+    private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
 
         toolBar.setOpaque(false);
@@ -77,13 +55,13 @@ public class BackgroundView extends AbstractQueryViewComponent {
         return toolBar;
     }
 
-    protected JLabel createLabel(String text) {
+    private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize()+1));
         return label;
     }
 
-    protected JToolBar createSwitchAxiomsToolBar() {
+    private JToolBar createSwitchAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
         toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
         toolBar.add(Box.createHorizontalStrut(20));
@@ -96,7 +74,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
         return toolBar;
     }
 
-    protected JToolBar createAxiomCreationToolBar() {
+    private JToolBar createAxiomCreationToolBar() {
         JToolBar toolBar = createToolBar();
         toolBar.add(createLabel("Correct Axioms (Background)"));
         toolBar.setToolTipText("Axioms from the background are to be considered correct and hence are no candidates for diagnoses.");
@@ -113,7 +91,7 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     }
 
-    protected void updateDisplayedBackgroundAxioms() {
+    private void updateDisplayedBackgroundAxioms() {
         DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
         Set<OWLLogicalAxiom> bgAxioms = new TreeSet<>(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
@@ -122,7 +100,6 @@ public class BackgroundView extends AbstractQueryViewComponent {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        logger.debug("stateChanged(" + e + ")");
         updateDisplayedBackgroundAxioms();
         updateDisplayedPossiblyFaultyAxioms();
     }

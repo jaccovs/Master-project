@@ -1,10 +1,12 @@
 package org.exquisite.protege.model;
 
+import com.google.common.base.Optional;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLEditorKitHook;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +72,10 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
                 ontologyDiagnosisSearcherMap.put(activeOntology,searcher);
             }
             notifyActiveSearcherListeners(new ChangeEvent(getActiveOntologyDiagnosisSearcher()));
-            logger.debug("ontology changed to " + activeOntology.getOntologyID().getOntologyIRI().get().getShortForm());
+
+            final Optional<IRI> ontologyIRI = activeOntology.getOntologyID().getOntologyIRI();
+            if (ontologyIRI.isPresent())
+                logger.debug("ontology changed to " + ontologyIRI.get().getShortForm());
 
 
         } else if (EventType.REASONER_CHANGED.equals(event.getType())) {
@@ -85,13 +90,11 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             OWLOntology activeOntology = event.getSource().getActiveOntology();
             final OntologyDiagnosisSearcher ods = ontologyDiagnosisSearcherMap.get(activeOntology);
             ods.doReload();
-            //ods.doResetDebugger();
         }
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        logger.debug(this.getClass() + ".stateChanged");
         OWLOntology activeOntology = getEditorKit().getModelManager().getActiveOntology();
 
         OntologyDiagnosisSearcher activeSearcher = ontologyDiagnosisSearcherMap.get(activeOntology);

@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 
-public abstract class AbstractAxiomSetView extends AbstractListQueryViewComponent {
+abstract class AbstractAxiomSetView extends AbstractListQueryViewComponent {
 
     public SimpleAxiomList getList() {
         return (SimpleAxiomList) super.getList();

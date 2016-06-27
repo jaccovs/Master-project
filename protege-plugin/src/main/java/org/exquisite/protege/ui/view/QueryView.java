@@ -41,7 +41,7 @@ public class QueryView extends AbstractListQueryViewComponent {
 
     @Override
     protected JComponent createListForComponent() {
-        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook(),commitAndGetNextButton);
+        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook());
     }
 
     @Override
