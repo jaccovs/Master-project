@@ -34,19 +34,4 @@ public class TcaeListItem extends AxiomListItem {
         return true;
     }
 
-    public String getEditorTitleSuffix() {
-        switch (type) {
-            case CONSISTENT_TC:
-                return "Consistent Examples";
-            case INCONSISTENT_TC:
-                return "Inconsistent Examples";
-            case ENTAILED_TC:
-                return "Entailed Examples";
-            case NON_ENTAILED_TC:
-                return "Non Entailed Examples";
-            default:
-                throw new IllegalStateException("Unknown Header Type");
-        }
-    }
-
 }

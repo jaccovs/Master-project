@@ -5,7 +5,7 @@ import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
 
 import javax.swing.event.ChangeListener;
 
-public abstract class AbstractQueryViewComponent extends AbstractOWLViewComponent implements ChangeListener {
+abstract class AbstractQueryViewComponent extends AbstractOWLViewComponent implements ChangeListener {
 
     private EditorKitHook editorKitHook;
 
@@ -18,7 +18,7 @@ public abstract class AbstractQueryViewComponent extends AbstractOWLViewComponen
         addActiveSearcherListener();
     }
 
-    protected void addActiveSearcherListener() {
+    private void addActiveSearcherListener() {
         editorKitHook = (EditorKitHook)
                 getOWLEditorKit().get("org.exquisite.protege.EditorKitHook");
         getEditorKitHook().addActiveSearcherChangeListener(this);

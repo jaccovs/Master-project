@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
+import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.ui.view.QueryView;
 
@@ -18,6 +19,9 @@ public class CommitAndGetNextButton extends AbstractGuiButton {
                     }
                 }
         );
+
+        final OntologyDiagnosisSearcher s = queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+        setEnabled(s.isSessionRunning() && s.sizeOfEntailedAndNonEntailedAxioms() > 0);
 
     }
 }

@@ -3,22 +3,14 @@ package org.exquisite.protege.ui.buttons;
 import org.exquisite.protege.ui.list.QueryAxiomList;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AxiomIsEntailedButton extends AbstractAnswerButton {
 
     private boolean isMarkedEntailed;
 
     public AxiomIsEntailedButton(final QueryAxiomList list, boolean isMarkedEntailed) {
-        super("Entailed", Color.GREEN.darker(), new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                list.handleEntailed();
-            }
-        });
+        super("Entailed", Color.GREEN.darker(), e -> list.handleEntailed());
         this.isMarkedEntailed = isMarkedEntailed;
-
     }
 
     public void paintButtonContent(Graphics2D g) {
@@ -38,7 +30,5 @@ public class AxiomIsEntailedButton extends AbstractAnswerButton {
         g.fillRect(x + size / 2  - thickness / 2, y + insetY, thickness, insetHeight);
         g.fillRect(x + insetX, y + size / 2 - thickness / 2, insetWidth, thickness);
     }
-
-
 
 }

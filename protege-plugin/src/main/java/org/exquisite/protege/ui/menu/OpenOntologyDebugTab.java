@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.menu;
 
-public class OpenOntologyDebugTab extends OpenTab {
+public class OpenOntologyDebugTab extends OpenTabAction {
 
     @Override
     public String getViewId() {

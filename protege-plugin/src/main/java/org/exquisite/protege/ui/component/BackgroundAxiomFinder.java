@@ -87,7 +87,7 @@ public class BackgroundAxiomFinder extends AugmentedJTextField {
     private void updateOWLEntity(OWLEntity entitiy) {
 
         closeResults();
-        parent.setSelectedEntity (entitiy);
+        //parent.setSelectedEntity (entitiy);
         parent.updateDisplayedPossiblyFaultyAxioms();
         if (entitiy != null)
             setText(editorKit.getModelManager().getOWLEntityRenderer().render(entitiy));

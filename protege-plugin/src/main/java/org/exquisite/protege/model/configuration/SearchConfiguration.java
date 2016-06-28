@@ -1,5 +1,6 @@
 package org.exquisite.protege.model.configuration;
 
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 
 import java.util.ArrayList;
@@ -10,14 +11,8 @@ import java.util.List;
  */
 public class SearchConfiguration {
 
-    /** Default value for minimal queries */
-    static final Integer DEFAULT_MINIMAL_QUERIES = 1;
-
-    /** Default value for maximal queries */
-    static final Integer DEFAULT_MAXIMAL_QUERIES = 1;
-
     /**
-     * Configuration possibilty to use diverse diagnosis engines.
+     * Configuration possibility to use diverse diagnosis engines.
      */
     public enum DiagnosisEngineType {
         HSDAG,
@@ -33,10 +28,9 @@ public class SearchConfiguration {
                 case Inverse:
                     return "Inv-QuickXPlain";
                 default:
-                    return this.toString();
+                    throw new DiagnosisRuntimeException("Unknown DiagnosisEngineType enum type");
             }
         }
-
     }
 
     /**
@@ -57,10 +51,9 @@ public class SearchConfiguration {
                 case RIO:
                     return "Dynamic Risk";
                 default:
-                    return this.toString();
+                    throw new DiagnosisRuntimeException("Unknown RM enum type");
             }
         }
-
     }
 
     public enum SortCriterion {
@@ -78,42 +71,65 @@ public class SearchConfiguration {
                 case MINMAX:
                     return "MinMax";
                 default:
-                    return this.toString();
+                    throw new DiagnosisRuntimeException("Unknown SortCriterion enum type");
+            }
+        }
+    }
+
+    public enum CostEstimator {
+        EQUAL,
+        CARD,
+        SYNTAX;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case EQUAL:
+                    return "EqualCosts";
+                case CARD:
+                    return "Cardinality";
+                case SYNTAX:
+                    return "Syntax";
+                default:
+                    throw new DiagnosisRuntimeException("Unknown CostEstimator enum type");
             }
         }
     }
 
     /** The diagnoses engine to be used: possible values are: HSDag, HSTree and InverseQuickXPlain (FastDiag). Default: HSTree  */
-    public DiagnosisEngineType engineType = DiagnosisEngineType.HSTree;
+    public DiagnosisEngineType engineType = DefaultConfiguration.getDefaultDiagnosisEngineType();
 
     /** The maximum number of leading diagnoses to search for. Default: 9. */
-    public Integer numOfLeadingDiags = 9;
+    public Integer numOfLeadingDiags = DefaultConfiguration.getDefaultNumOfLeadingDiags();
 
-    public Boolean reduceIncoherency = true;
+    /** Also check for incoherency next to inconsistency in the ontology. */
+    public Boolean reduceIncoherency = DefaultConfiguration.getDefaultReduceIncoherency();
 
-    public Boolean extractModules = false;
+    public Boolean extractModules = DefaultConfiguration.getDefaultExtractModules();
 
     /** Generate at least minimal queries */
-    public Integer minimalQueries = DEFAULT_MINIMAL_QUERIES;
+    public Integer minimalQueries = DefaultConfiguration.getDefaultMinimalQueries();
 
-    /** Generate at most maxmial queries (>= minimalQueries) */
-    public Integer maximalQueries = DEFAULT_MAXIMAL_QUERIES;
+    /** Generate at most maximal queries (>= minimalQueries) */
+    public Integer maximalQueries = DefaultConfiguration.getDefaultMaximalQueries();
 
     /** Shall the query computation use enrichment of queries ? */
-    public Boolean enrichQuery = true;
+    public Boolean enrichQuery = DefaultConfiguration.getDefaultEnrichQuery();
 
-    public SortCriterion sortCriterion = SortCriterion.MINCARD;
+    public SortCriterion sortCriterion = DefaultConfiguration.getDefaultSortCriterion();
 
     /**
      * The applied measure used during qPartition selection applied for query computation.
      * Possible measures are are entropy based, split in half or risk optimization(RIO) -based requirements measure.
      * Default: ENT
      */
-    public RM rm = RM.ENT;
+    public RM rm = DefaultConfiguration.getDefaultRM();
 
-    public Double entropyThreshold = 0.05;
-    public Double cardinalityThreshold = 0.00;
-    public Double cautiousParameter = 0.4;
+    public Double entropyThreshold = DefaultConfiguration.getDefaultEntropyThreshold();
+    public Double cardinalityThreshold = DefaultConfiguration.getDefaultCardinalityThreshold();
+    public Double cautiousParameter = DefaultConfiguration.getDefaultCautiousParameter();
+
+    public CostEstimator costEstimator = DefaultConfiguration.getDefaultCostEstimator();
 
     /**
      * Returns an array of preferred inference types (entailment types).
@@ -158,7 +174,9 @@ public class SearchConfiguration {
             return false;
         if (cardinalityThreshold != null ? !cardinalityThreshold.equals(that.cardinalityThreshold) : that.cardinalityThreshold != null)
             return false;
-        return cautiousParameter != null ? cautiousParameter.equals(that.cautiousParameter) : that.cautiousParameter == null;
+        if (cautiousParameter != null ? !cautiousParameter.equals(that.cautiousParameter) : that.cautiousParameter != null)
+            return false;
+        return costEstimator == that.costEstimator;
 
     }
 
@@ -176,9 +194,11 @@ public class SearchConfiguration {
         result = 31 * result + (entropyThreshold != null ? entropyThreshold.hashCode() : 0);
         result = 31 * result + (cardinalityThreshold != null ? cardinalityThreshold.hashCode() : 0);
         result = 31 * result + (cautiousParameter != null ? cautiousParameter.hashCode() : 0);
+        result = 31 * result + (costEstimator != null ? costEstimator.hashCode() : 0);
         return result;
     }
 
+    @Override
     public String toString() {
         return "EngineType: " +  engineType + ", " +
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
@@ -191,7 +211,8 @@ public class SearchConfiguration {
                 "RM: " + rm + ", " +
                 "entropy threshold: " + entropyThreshold + ", " +
                 "cardinality threshold: " + cardinalityThreshold + ", " +
-                "cautious parameter: " + cautiousParameter;
+                "cautious parameter: " + cautiousParameter + ", " +
+                "costEstimator: " + costEstimator;
     }
 
 }
