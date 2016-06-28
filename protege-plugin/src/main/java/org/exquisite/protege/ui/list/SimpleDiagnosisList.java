@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SimpleDiagnosisList extends AbstractAxiomList {
 
@@ -18,12 +19,10 @@ public class SimpleDiagnosisList extends AbstractAxiomList {
     }
 
     public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses, OWLOntology ontology, String headerPref, boolean isIncludeMeasure) {
-        List<Object> items = new ArrayList<Object>();
+        List<Object> items = new ArrayList<>();
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
             items.add(new DiagnosisListHeader(diagnosis,headerPref,isIncludeMeasure));
-            for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                items.add(new AxiomListItem(axiom,ontology));
-            }
+            items.addAll(diagnosis.getFormulas().stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
         if (items.size()>0)

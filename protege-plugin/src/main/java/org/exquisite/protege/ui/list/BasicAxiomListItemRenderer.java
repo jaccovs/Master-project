@@ -6,16 +6,15 @@ import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 import javax.swing.*;
 import java.awt.*;
 
-public class BasicAxiomListItemRenderer implements ListCellRenderer  {
-
+class BasicAxiomListItemRenderer implements ListCellRenderer  {
 
     private OWLCellRenderer renderer;
 
-    public BasicAxiomListItemRenderer(OWLEditorKit editorKit) {
+    BasicAxiomListItemRenderer(OWLEditorKit editorKit) {
         renderer = new OWLCellRenderer(editorKit);
     }
 
-    public OWLCellRenderer getRenderer() {
+    OWLCellRenderer getRenderer() {
         return renderer;
     }
 

@@ -18,7 +18,7 @@
     </extension>
 
     <extension id="menu.menudebug.openmanualdebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Exquisite Ontology Debugger Tab"/>
+        <name value="Open Ontology Debugger Tab"/>
         <toolTip value="Open Exquisite Ontology Debugger Tab"/>
         <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
         <path value="org.exquisite.protege.menu.menudebug/SlotAA-A"/>
@@ -72,7 +72,7 @@
     <!-- Tabs -->
 
     <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
-        <label value="Exquisite Ontology Debugging"/>
+        <label value="Ontology Debugger"/>
         <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
         <defaultViewConfigFileName value="OntologyDebuggingLayout.xml"/>
         <index value="X1"/>
@@ -82,14 +82,14 @@
     <!-- Views -->
 
     <extension id="QueryView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Query View"/>
+        <label value="Queries"/>
         <class value="org.exquisite.protege.ui.view.QueryView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="QueryHistoryView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Query History View"/>
+        <label value="Answers"/>
         <class value="org.exquisite.protege.ui.view.QueryHistoryView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>

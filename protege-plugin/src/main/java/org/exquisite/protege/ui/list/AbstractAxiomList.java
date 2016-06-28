@@ -9,11 +9,11 @@ import org.semanticweb.owlapi.model.OWLObject;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class AbstractAxiomList extends MList implements LinkedObjectComponent {
+abstract class AbstractAxiomList extends MList implements LinkedObjectComponent {
 
     private LinkedObjectComponentMediator mediator;
 
-    public AbstractAxiomList(OWLEditorKit editorKit) {
+    AbstractAxiomList(OWLEditorKit editorKit) {
         this.mediator = new LinkedObjectComponentMediator(editorKit, this);
         setCellRenderer(new BasicAxiomListItemRenderer(editorKit));
         getMouseListeners();

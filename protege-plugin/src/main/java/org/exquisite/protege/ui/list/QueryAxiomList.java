@@ -37,7 +37,7 @@ public class QueryAxiomList extends AbstractAxiomList {
         buttons.addAll(super.getButtons(value));
         buttons.add(new AxiomIsEntailedButton(this,s.isMarkedEntailed(axiom)));
         buttons.add(new AxiomIsNotEntailedButton(this,s.isMarkedNonEntailed(axiom)));
-        buttons.add(new DebugExplainButton(this));
+        //buttons.add(new DebugExplainButton(this));
 
         return buttons;
     }

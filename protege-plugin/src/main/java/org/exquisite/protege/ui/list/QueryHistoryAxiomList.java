@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class QueryHistoryAxiomList extends AbstractAxiomList {
 
@@ -56,8 +57,7 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
         for (int i = queryHistory.size() - 1; i >= 0; i--) {
             Set<OWLLogicalAxiom> testcase = queryHistory.get(i);
             items.add(new QueryHistoryItem(testcase,queryMap.get(testcase),i+1));
-            for (OWLLogicalAxiom axiom : testcase)
-                items.add(new AxiomListItem(axiom,ontology));
+            items.addAll(testcase.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
 

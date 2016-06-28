@@ -48,7 +48,7 @@ public class OntologyDiagnosisSearcher {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDiagnosisSearcher.class.getName());
 
-    public enum TestCaseType {CONSISTENT_TC, INCONSISTENT_TC, ENTAILED_TC, NON_ENTAILED_TC}
+    public enum TestCaseType {ENTAILED_TC, NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
@@ -308,12 +308,6 @@ public class OntologyDiagnosisSearcher {
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
 
         switch (type) {
-            case CONSISTENT_TC:
-                diagnosisModel.getConsistentExamples().removeAll(testcases);
-                break;
-            case INCONSISTENT_TC:
-                diagnosisModel.getInconsistentExamples().removeAll(testcases);
-                break;
             case ENTAILED_TC:
                 diagnosisModel.getEntailedExamples().removeAll(testcases);
                 break;

@@ -5,7 +5,7 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.math.MathContext;
 
-public class DiagnosisListHeader {
+class DiagnosisListHeader {
 
     private Diagnosis<OWLLogicalAxiom> diagnosis;
 
@@ -13,7 +13,7 @@ public class DiagnosisListHeader {
 
     private boolean isIncludeMeasure;
 
-    public DiagnosisListHeader(Diagnosis<OWLLogicalAxiom> diagnosis, String headerPref, boolean isIncludeMeasure) {
+    DiagnosisListHeader(Diagnosis<OWLLogicalAxiom> diagnosis, String headerPref, boolean isIncludeMeasure) {
         this.diagnosis = diagnosis;
         this.headerPref = headerPref;
         this.isIncludeMeasure = isIncludeMeasure;

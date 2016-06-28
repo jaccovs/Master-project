@@ -8,17 +8,13 @@ public class TcaeListHeader implements MListSectionHeader {
 
     private TestCaseType type;
 
-    public TcaeListHeader(TestCaseType type) {
+    TcaeListHeader(TestCaseType type) {
         this.type = type;
     }
 
     @Override
     public String getName() {
         switch (type) {
-            case CONSISTENT_TC:
-                return "Consistent Testcases";
-            case INCONSISTENT_TC:
-                return "Inconsistent Testcases";
             case ENTAILED_TC:
                 return "Entailed Testcases";
             case NON_ENTAILED_TC:
@@ -30,10 +26,6 @@ public class TcaeListHeader implements MListSectionHeader {
 
     public String getEditorTitleSuffix() {
         switch (type) {
-            case CONSISTENT_TC:
-                return "Consistent Testcase";
-            case INCONSISTENT_TC:
-                return "Inconsistent Testcase";
             case ENTAILED_TC:
                 return "Entailed Testcase";
             case NON_ENTAILED_TC:

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SimpleAxiomList extends AbstractAxiomList {
 
@@ -20,9 +21,7 @@ public class SimpleAxiomList extends AbstractAxiomList {
         List<Object> items = new ArrayList<>();
         for (Set<OWLLogicalAxiom> axioms : setsOfAxioms) {
             items.add(new AxiomListHeader(axioms,headerPref));
-            for (OWLLogicalAxiom axiom : axioms) {
-                items.add(new AxiomListItem(axiom,ontology));
-            }
+            items.addAll(axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
         if (items.size()>0)

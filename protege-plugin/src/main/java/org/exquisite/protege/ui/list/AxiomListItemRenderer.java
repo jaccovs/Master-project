@@ -5,12 +5,11 @@ import org.protege.editor.owl.OWLEditorKit;
 import javax.swing.*;
 import java.awt.*;
 
-public class AxiomListItemRenderer extends BasicAxiomListItemRenderer {
-
+class AxiomListItemRenderer extends BasicAxiomListItemRenderer {
 
     private Color headerColor;
 
-    public AxiomListItemRenderer(OWLEditorKit editorKit, Color headerColor) {
+    AxiomListItemRenderer(OWLEditorKit editorKit, Color headerColor) {
         super(editorKit);
         this.headerColor = headerColor;
     }

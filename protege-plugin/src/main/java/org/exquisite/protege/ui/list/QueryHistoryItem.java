@@ -5,11 +5,8 @@ import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
-public class QueryHistoryItem implements MListItem {
-
-    private Logger logger = Logger.getLogger(QueryHistoryItem.class.getName());
+class QueryHistoryItem implements MListItem {
 
     private Set<OWLLogicalAxiom> testcase;
 
@@ -17,11 +14,11 @@ public class QueryHistoryItem implements MListItem {
 
     private Integer num;
 
-    public Set<OWLLogicalAxiom> getTestcase() {
+    Set<OWLLogicalAxiom> getTestcase() {
         return testcase;
     }
 
-    public QueryHistoryItem(Set<OWLLogicalAxiom> testcase, OntologyDiagnosisSearcher.TestCaseType type, int num) {
+    QueryHistoryItem(Set<OWLLogicalAxiom> testcase, OntologyDiagnosisSearcher.TestCaseType type, int num) {
         this.testcase = testcase;
         this.num = num;
         this.type = type;

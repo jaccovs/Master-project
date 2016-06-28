@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BasicAxiomList extends AbstractAxiomList {
 
@@ -40,9 +41,7 @@ public class BasicAxiomList extends AbstractAxiomList {
     }
 
     public void updateList(Set<OWLLogicalAxiom> axioms, OWLOntology ontology) {
-        List<Object> items = new ArrayList<>();
-        for (OWLLogicalAxiom axiom : axioms)
-            items.add(new AxiomListItem(axiom,ontology));
+        List<Object> items = axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList());
 
         setListData(items.toArray());
 

@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestCaseType.*;
@@ -90,18 +91,15 @@ public class TcaeAxiomList extends AbstractAxiomList {
         List<Object> items = new ArrayList<>();
         addToItems(items, ENTAILED_TC, diagnosisModel.getEntailedExamples());
         addToItems(items, NON_ENTAILED_TC, diagnosisModel.getNotEntailedExamples());
-        addToItems(items, CONSISTENT_TC, diagnosisModel.getConsistentExamples());
-        addToItems(items, INCONSISTENT_TC, diagnosisModel.getInconsistentExamples());
 
         setListData(items.toArray());
     }
 
-    protected void addToItems(List<Object> items, TestCaseType type, List<OWLLogicalAxiom> testcases) {
+    private void addToItems(List<Object> items, TestCaseType type, List<OWLLogicalAxiom> testcases) {
         OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         items.add(new TcaeListHeader(type));
-        for (OWLLogicalAxiom axiom : testcases)
-            items.add(new TcaeListItem(axiom, type, ontology));
+        items.addAll(testcases.stream().map(axiom -> new TcaeListItem(axiom, type, ontology)).collect(Collectors.toList()));
         items.add(" ");
 
     }
