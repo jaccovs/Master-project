@@ -9,7 +9,9 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class DiagnosesView extends AbstractDiagnosesSetView {
 
@@ -40,7 +42,10 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
     private void updateView() {
 
         final OntologyDiagnosisSearcher ods = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
-        Set<Diagnosis<OWLLogicalAxiom>> diagnoses = ods.getDiagnoses();
+
+        // sort and show the list of diagnoses depending on their measures in descending order
+        Set<Diagnosis<OWLLogicalAxiom>> diagnoses = new TreeSet<>((o1, o2) -> o2.compareTo(o1));
+        diagnoses.addAll(ods.getDiagnoses());
         updateList(diagnoses);
 
         startDebuggingButton.setEnabled(!ods.isSessionRunning());

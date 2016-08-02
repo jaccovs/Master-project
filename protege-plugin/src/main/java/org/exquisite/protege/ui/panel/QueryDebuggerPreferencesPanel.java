@@ -22,9 +22,10 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
         newConfiguration = new SearchConfiguration();
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        addPane(tabbedPane,"Diagnosis calculation",new DiagnosisOptPanel(configuration,newConfiguration), KeyEvent.VK_D);
-        addPane(tabbedPane,"Query computation",new QueryOptPanel(configuration,newConfiguration),KeyEvent.VK_Q);
-        addPane(tabbedPane,"Preferences measures",new PrefMeasureOptPanel(configuration,newConfiguration,editorKitHook),KeyEvent.VK_P);
+        final QueryOptPanel queryOptPanel = new QueryOptPanel(configuration, newConfiguration);
+        addPane(tabbedPane,"Fault Localization",new DiagnosisOptPanel(configuration,newConfiguration, queryOptPanel), KeyEvent.VK_D);
+        addPane(tabbedPane,"Query Computation", queryOptPanel,KeyEvent.VK_Q);
+        //addPane(tabbedPane,"Preference Measures",new PrefMeasureOptPanel(configuration,newConfiguration,editorKitHook),KeyEvent.VK_P);
 
         add(tabbedPane);
 

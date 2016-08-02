@@ -11,15 +11,15 @@
     <!-- Menus -->
 
     <extension id="menu.menudebug" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Ontology Debugger"/>
-        <toolTip value="Debug with Query Module "/>
+        <name value="Debugger"/>
+        <toolTip value="Debug your ontology by answering Queries"/>
         <path value="/SlotYB-B"/>
         <editorKitId value="any"/>
     </extension>
 
     <extension id="menu.menudebug.openmanualdebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Ontology Debugger Tab"/>
-        <toolTip value="Open Exquisite Ontology Debugger Tab"/>
+        <name value="Open Debugger Tab"/>
+        <toolTip value="Open the Debugger Tab"/>
         <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
         <path value="org.exquisite.protege.menu.menudebug/SlotAA-A"/>
         <editorKitId value="any"/>
@@ -72,7 +72,7 @@
     <!-- Tabs -->
 
     <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
-        <label value="Ontology Debugger"/>
+        <label value="Debugger"/>
         <class value="org.protege.editor.core.ui.workspace.WorkspaceViewsTab"/>
         <defaultViewConfigFileName value="OntologyDebuggingLayout.xml"/>
         <index value="X1"/>
@@ -96,7 +96,7 @@
     </extension>
 
     <extension id="DiagnosesView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Diagnoses"/>
+        <label value="Faulty Axioms"/>
         <class value="org.exquisite.protege.ui.view.DiagnosesView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
@@ -110,21 +110,21 @@
     </extension>
 
     <extension id="BackgroundView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Diagnosismodel"/>
+        <label value="Input Ontology"/>
         <class value="org.exquisite.protege.ui.view.BackgroundView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="TestcaseView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Testcases"/>
+        <label value="Test Cases"/>
         <class value="org.exquisite.protege.ui.view.TestcaseView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="querydebugger.prefs" point="org.protege.editor.core.application.preferencespanel">
-        <label value="Exquisite QueryDebugger"/>
+        <label value="Debugger"/>
         <class value="org.exquisite.protege.ui.panel.QueryDebuggerPreferencesPanel"/>
     </extension>
 

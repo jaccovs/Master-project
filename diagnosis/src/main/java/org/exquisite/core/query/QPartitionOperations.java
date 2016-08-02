@@ -49,7 +49,7 @@ public class QPartitionOperations {
     private static <F> OptimalPartition<F> findQPartitionRek(QPartition<F> p, QPartition<F> pb, IQPartitionRequirementsMeasure<F> rm, Set<Diagnosis<F>> alreadyUsedDiagsOnLeft) {
         Set<Diagnosis<F>> alreadyUsedTraits = new HashSet<>(alreadyUsedDiagsOnLeft);
         QPartition<F> pBest = rm.updateBest(p,pb);
-        if (rm.isOptimal(pBest) && pBest.dx.size() != 0) // do not accept root q-partititons (dx.size() == 0) as optimal partitions
+        if (pBest.dx.size() != 0 && pBest.dnx.size() != 0 && rm.isOptimal(pBest)) // do not accept root q-partititons (dx.size() == 0) as optimal partitions
             return new OptimalPartition<>(pBest, true);
 
         if (rm.prune(p,pBest)) {// ADD 1 to CNT_PRUNING_OPERATIONS; and; ADD 1 to CNT_BACKTRACKING_OPERATIONS
@@ -64,7 +64,6 @@ public class QPartitionOperations {
         while (!sucs.isEmpty()) {
             SuccessorPlusDiagRepresentativeForEqClass<F> successor = bestSuc(p, sucs, rm);
             QPartition<F> p1 = successor.qPartition;
-            //QPartition<F> p1 = bestSuc(p, sucs, rm);
             OptimalPartition optimalPartition = findQPartitionRek(p1, pBest, rm, alreadyUsedTraits);
             alreadyUsedTraits.add(successor.diagnosis);
 
