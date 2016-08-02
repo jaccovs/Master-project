@@ -13,9 +13,7 @@ import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.RiskOptimizationMeasure;
-import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.SplitInHalfMeasure;
+import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.*;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFormulaWeights;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
@@ -67,11 +65,19 @@ public class OntologyDiagnosisSearcher {
 
     private Set<Diagnosis<OWLLogicalAxiom>> diagnoses = new HashSet<>();
 
+    private Set<Diagnosis<OWLLogicalAxiom>> previousDiagnoses = null;
+
     private Query<OWLLogicalAxiom> actualQuery;
+
+    private Query<OWLLogicalAxiom> previousQuery;
 
     private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<>();
 
+    private Set<OWLLogicalAxiom> previousAxiomsMarkedEntailed = new LinkedHashSet<>();
+
     private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<>();
+
+    private Set<OWLLogicalAxiom> previousAxiomsMarkedNonEntailed = new LinkedHashSet<>();
 
     private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
 
@@ -82,6 +88,8 @@ public class OntologyDiagnosisSearcher {
     private final OWLModelManager modelManager;
 
     private final OWLReasonerManager reasonerManager;
+
+    private Double cautiousParameter, previousCautiousParameter;
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
@@ -186,7 +194,7 @@ public class OntologyDiagnosisSearcher {
                 doStopDebugging();
                 break;
             case 1:
-                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
                 notifyListeners();
@@ -200,6 +208,7 @@ public class OntologyDiagnosisSearcher {
      * @param errorHandler An error handler.
      */
     public void doCommitAndGetNewQuery(ErrorHandler errorHandler) {
+        this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
         doCalculateDiagnosis(errorHandler);
 
@@ -209,7 +218,7 @@ public class OntologyDiagnosisSearcher {
                 doStopDebugging();
                 break;
             case 1:
-                JOptionPane.showMessageDialog(null, "The diagnosis corresponding to your preferences (test cases) is found!", "Diagnosis found!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
                 doGetQuery(errorHandler);
@@ -226,6 +235,8 @@ public class OntologyDiagnosisSearcher {
         resetQuery();                                               // reset queries
         resetQueryHistory();                                        // reset history
         debuggingSession.stopSession();                             // stop session
+        this.cautiousParameter = null;
+        this.previousCautiousParameter = null;
         notifyListeners();
     }
 
@@ -262,9 +273,14 @@ public class OntologyDiagnosisSearcher {
     }
 
     private void resetQuery() {
+        previousAxiomsMarkedEntailed = new LinkedHashSet<>(axiomsMarkedEntailed);
+        previousAxiomsMarkedNonEntailed = new LinkedHashSet<>(axiomsMarkedNonEntailed);
+        previousQuery = actualQuery;
+
         axiomsMarkedEntailed.clear();
         axiomsMarkedNonEntailed.clear();
-        actualQuery=null;
+        actualQuery = null;
+
         querySearchStatus = QuerySearchStatus.IDLE;
         if (qc!=null) qc.reset();
     }
@@ -276,6 +292,7 @@ public class OntologyDiagnosisSearcher {
 
     private void resetDiagnoses() {
         diagnoses.clear();
+        previousDiagnoses = null;
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         diagnosisEngine.resetEngine();
@@ -478,10 +495,22 @@ public class OntologyDiagnosisSearcher {
                         new SplitInHalfMeasure<>(new BigDecimal(String.valueOf(preference.entropyThreshold))));
                 break;
             case RIO:
+
                 heuristicConfiguration.setRm(
                         new RiskOptimizationMeasure<>(new BigDecimal(String.valueOf(preference.entropyThreshold)),
                         new BigDecimal(String.valueOf(preference.cardinalityThreshold)),
-                        new BigDecimal(String.valueOf(preference.cautiousParameter))));
+                        new BigDecimal(String.valueOf(updateCautiousParameter(preference.cautiousParameter)))));
+                break;
+            case KL:
+                heuristicConfiguration.setRm(
+                        new KLMeasure(new BigDecimal(String.valueOf(preference.entropyThreshold))));
+                break;
+            case EMCb:
+                heuristicConfiguration.setRm(new EMCbMeasure());
+                break;
+            case BME:
+                heuristicConfiguration.setRm(
+                        new BMEMeasure(new BigDecimal(String.valueOf(preference.cardinalityThreshold))));
                 break;
             default:
                 errorHandler.errorHappend(ErrorStatus.UNKNOWN_RM);
@@ -500,7 +529,6 @@ public class OntologyDiagnosisSearcher {
             default:
                 errorHandler.errorHappend(ErrorStatus.UNKNOWN_SORTCRITERION);
         }
-
 
         qc = new HeuristicQueryComputation<>(heuristicConfiguration);
 
@@ -522,6 +550,72 @@ public class OntologyDiagnosisSearcher {
         } finally {
             notifyListeners();
         }
+    }
+
+    /**
+     * Method that learns the cautious parameter for RIO for each new query generation.
+     *
+     * @param preferenceCautiousParameter the unmodifiable cautious parameter from the preferences.
+     */
+    private Double updateCautiousParameter(Double preferenceCautiousParameter) {
+        if (previousDiagnoses != null) {
+            previousCautiousParameter = cautiousParameter;
+            final double epsilon = 0.25;
+            final double intervalLength = (Math.floor((double)previousDiagnoses.size() / 2d) - 1d) / (double)previousDiagnoses.size();
+
+            logger.debug("epsilon: " + epsilon);
+            logger.debug("intervalLength: " + intervalLength);
+            logger.debug("old cautiousParameter: " + previousCautiousParameter);
+            logger.debug("previousDiagnoses#: " + previousDiagnoses.size());
+            logger.debug("diagnoses#: " + diagnoses.size());
+
+            double eliminationRate = calculateEliminationRate();
+            logger.debug("eliminationRate: " + eliminationRate);
+
+            double adjustmentFactor = ((Math.floor((double)previousDiagnoses.size() / 2.0 - epsilon) + 0.5) / (double)previousDiagnoses.size()) - eliminationRate;
+            logger.debug("adjustmentFactor: " + adjustmentFactor);
+
+            double adjustedCautiousParameter = previousCautiousParameter + (2 * intervalLength * adjustmentFactor);
+            final double minCautiousValue = 1.0 / (double) diagnoses.size();
+            final double maxCautiousValue = Math.floor((double)diagnoses.size() / 2.0) / (double)diagnoses.size();
+
+            logger.debug(adjustedCautiousParameter + " in [" + minCautiousValue + "," + maxCautiousValue + "] ?");
+
+            if (adjustedCautiousParameter < minCautiousValue)
+                adjustedCautiousParameter = minCautiousValue;
+            if (adjustedCautiousParameter > maxCautiousValue)
+                adjustedCautiousParameter = maxCautiousValue;
+
+            cautiousParameter = new Double(adjustedCautiousParameter);
+            logger.debug("NEW cautiousParameter: " + cautiousParameter);
+
+        } else {
+            cautiousParameter = preferenceCautiousParameter;
+            previousCautiousParameter = null;
+        }
+        return cautiousParameter;
+    }
+
+    private Double calculateEliminationRate() {
+        /*
+        Set<Diagnosis<OWLLogicalAxiom>> previousDiagnosesMinusDiagnoses = new HashSet<>(previousDiagnoses);
+        previousDiagnosesMinusDiagnoses.removeAll(diagnoses);
+        return ((double)(previousDiagnosesMinusDiagnoses.size())) / (double)previousDiagnoses.size();
+        */
+
+        Double eliminationRate = null;
+
+        if (previousAxiomsMarkedNonEntailed.size() >= 1)
+            // this calculates the lower bound of the actual elimination rate
+            eliminationRate = (double)previousQuery.qPartition.dx.size() / (double)previousDiagnoses.size();
+        else if (previousAxiomsMarkedEntailed.size() == previousQuery.formulas.size())
+            // this calculates the lower bound of the actual elimination rate
+            eliminationRate = (double)previousQuery.qPartition.dnx.size() / (double)previousDiagnoses.size();
+        else
+            // an approximation of the elimination rate (saves the costs to expensive reasoner calls)
+            eliminationRate = ( (double)previousQuery.qPartition.dnx.size() / (double)previousDiagnoses.size() ) * previousAxiomsMarkedEntailed.size() / previousQuery.formulas.size();
+
+        return eliminationRate;
     }
 
     public void doGetAlternativeQuery() {

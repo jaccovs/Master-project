@@ -2,15 +2,15 @@
 <layout>
     <VSNode splits="0.3 0.35 0.35">
         <CNode>
-            <Component label="Diagnosismodel">
+            <Component label="Input Ontology">
                 <Property id="pluginId" value="org.exquisite.protege.BackgroundView"/>
             </Component>
-            <Component label="Testcases">
+            <Component label="Test Cases">
                 <Property id="pluginId" value="org.exquisite.protege.TestcaseView"/>
             </Component>
         </CNode>
         <CNode>
-            <Component label="Diagnoses">
+            <Component label="Faulty Axioms">
                 <Property id="pluginId" value="org.exquisite.protege.DiagnosesView"/>
             </Component>
             <Component label="Conflicts">
@@ -19,12 +19,12 @@
         </CNode>
         <HSNode splits="0.4 0.6">
             <CNode>
-                <Component label="Query View">
+                <Component label="Queries">
                     <Property id="pluginId" value="org.exquisite.protege.QueryView"/>
                 </Component>
             </CNode>
             <CNode>
-                <Component label="Query History View">
+                <Component label="Answers">
                     <Property id="pluginId" value="org.exquisite.protege.QueryHistoryView"/>
                 </Component>
             </CNode>

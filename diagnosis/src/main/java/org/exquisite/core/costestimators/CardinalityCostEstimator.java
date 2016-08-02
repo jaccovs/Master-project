@@ -17,7 +17,7 @@ public class CardinalityCostEstimator<F> implements ICostsEstimator<F> {
      */
     @Override
     public BigDecimal getFormulasCosts(Collection<F> formulas) {
-        return BigDecimal.valueOf(formulas.size());
+        return BigDecimal.valueOf(1.0/(double)formulas.size());
     }
 
 

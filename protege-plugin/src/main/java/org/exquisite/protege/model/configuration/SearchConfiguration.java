@@ -39,7 +39,10 @@ public class SearchConfiguration {
     public enum RM {
         ENT,
         SPL,
-        RIO;
+        RIO,
+        KL,
+        EMCb,
+        BME;
 
         @Override
         public String toString() {
@@ -50,6 +53,12 @@ public class SearchConfiguration {
                     return "Split in Half";
                 case RIO:
                     return "Dynamic Risk";
+                case KL:
+                    return "KL";
+                case EMCb:
+                    return "EMCb";
+                case BME:
+                    return "BME";
                 default:
                     throw new DiagnosisRuntimeException("Unknown RM enum type");
             }
@@ -162,7 +171,7 @@ public class SearchConfiguration {
         if (reduceIncoherency != null ? !reduceIncoherency.equals(that.reduceIncoherency) : that.reduceIncoherency != null)
             return false;
         if (extractModules != null ? !extractModules.equals(that.extractModules) : that.extractModules != null)
-            return false;
+           return false;
         if (minimalQueries != null ? !minimalQueries.equals(that.minimalQueries) : that.minimalQueries != null)
             return false;
         if (maximalQueries != null ? !maximalQueries.equals(that.maximalQueries) : that.maximalQueries != null)
