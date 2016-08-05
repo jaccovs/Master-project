@@ -10,63 +10,28 @@
 
     <!-- Menus -->
 
-    <extension id="menu.menudebug" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Debugger"/>
-        <toolTip value="Debug your ontology by answering Queries"/>
-        <path value="/SlotYB-B"/>
-        <editorKitId value="any"/>
-    </extension>
-
-    <extension id="menu.menudebug.openmanualdebugtab" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Open Debugger Tab"/>
-        <toolTip value="Open the Debugger Tab"/>
+    <extension id="DebugOntology" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Debug Ontology..."/>
+        <toolTip value="Locate the errors in your inconsistent/incoherent ontology"/>
         <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAA-A"/>
-        <editorKitId value="any"/>
+        <path value="org.protege.editor.owl.menu.tools/SlotO-A"/>
+        <editorKitId value="OWLEditorKit"/>
     </extension>
 
-    <extension id="menu.menudebug.startdebuggingsession" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Start Debugging"/>
-        <toolTip value="Start a new Ontology Debugging Session"/>
-        <class value="org.exquisite.protege.ui.menu.StartDebuggingAction"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAAA-A"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift A"/>
-    </extension>
-
-    <extension id="menu.menudebug.stopdebuggingsession" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Stop Debugging"/>
-        <toolTip value="Stop the current Ontology Debugging Session"/>
-        <class value="org.exquisite.protege.ui.menu.StopDebuggingAction"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAAA-B"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift O"/>
-    </extension>
-
-    <extension id="menu.menudebug.reset" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Reset Debugger"/>
-        <toolTip value="Reset Debugger"/>
+    <extension id="ResetDebugger" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Reset Debugger..."/>
+        <toolTip value="Stops the running debugging session. Resets queries, answers and diagnosis engine. Optionally deletes the test cases."/>
         <class value="org.exquisite.protege.ui.menu.ResetDebuggingSessionAction"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAAAA-A"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift R"/>
+        <path value="org.protege.editor.owl.menu.tools/SlotO-B"/>
+        <editorKitId value="OWLEditorKit"/>
     </extension>
 
-    <extension id="menu.menudebug.resetall" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Reset All"/>
+    <extension id="ResetAll" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Reset All..."/>
         <toolTip value="Reset All"/>
         <class value="org.exquisite.protege.ui.menu.ResetAllAction"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAAAA-B"/>
-        <editorKitId value="any"/>
-        <accelerator value=" shift L"/>
-    </extension>
-
-    <extension id="menu.menudebug.options" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Options"/>
-        <toolTip value="Options"/>
-        <class value="org.exquisite.protege.ui.menu.OpenOptionsDialog"/>
-        <path value="org.exquisite.protege.menu.menudebug/SlotAB-A"/>
-        <editorKitId value="any"/>
+        <path value="org.protege.editor.owl.menu.tools/SlotO-C"/>
+        <editorKitId value="OWLEditorKit"/>
     </extension>
 
     <!-- Tabs -->
