@@ -11,8 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="protege-editor-owl" />
-    <orderEntry type="module" module-name="protege-common" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-owl:5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-common:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.4.1" level="project" />
@@ -63,7 +63,7 @@
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2" level="project" />
-    <orderEntry type="module" module-name="protege-editor-core" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-core:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.0.v20100503" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.0.v20100515" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.0.v20100503" level="project" />

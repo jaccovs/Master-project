@@ -298,18 +298,28 @@ public class OntologyDiagnosisSearcher {
         diagnosisEngine.resetEngine();
     }
 
-    public void removeBackgroundAxioms(List<AxiomListItem> selectedValues) {
-        logger.debug("moving " + selectedValues + " from background to possiblyFaultyFormulas");
-        List<OWLLogicalAxiom> axioms = extract(selectedValues);
+    /**
+     * Moves a set of correct axioms to the set of possibly faulty axioms in the diagnosis model.
+     *
+     * @param selectedCorrectAxioms The selected, yet correct, axioms that shall become possibly faulty.
+     */
+    public void moveToPossiblyFaultyAxioms(List<AxiomListItem> selectedCorrectAxioms) {
+        logger.debug("moving " + selectedCorrectAxioms + " from background to possiblyFaultyAxioms");
+        List<OWLLogicalAxiom> axioms = extract(selectedCorrectAxioms);
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
         diagnosisModel.getCorrectFormulas().removeAll(axioms);
         diagnosisModel.getPossiblyFaultyFormulas().addAll(axioms);
         notifyListeners();
     }
 
-    public void addBackgroundAxioms(List<AxiomListItem> selectedValues) {
-        logger.debug("moving " + selectedValues + " from possiblyFaultyFormulas to background");
-        List<OWLLogicalAxiom> axioms = extract(selectedValues);
+    /**
+     * Moves a list of possibly faulty axioms to the set of correct axioms in the diagnosis model.
+     *
+     * @param selectedPossiblyFaultyAxioms The selected, yet possibly faulty, axioms that shall become correct axioms.
+     */
+    public void moveToToCorrectAxioms(List<AxiomListItem> selectedPossiblyFaultyAxioms) {
+        logger.debug("moving " + selectedPossiblyFaultyAxioms + " from possiblyFaultyAxioms to correctAxioms");
+        List<OWLLogicalAxiom> axioms = extract(selectedPossiblyFaultyAxioms);
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(axioms);
         diagnosisModel.getCorrectFormulas().addAll(axioms);

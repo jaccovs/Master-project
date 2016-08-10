@@ -1,8 +1,8 @@
 package org.exquisite.protege.ui.list;
 
-import org.exquisite.protege.ui.buttons.AddToBackgroundButton;
-import org.exquisite.protege.ui.buttons.RemoveFromBackgroundButton;
-import org.exquisite.protege.ui.view.BackgroundView;
+import org.exquisite.protege.ui.buttons.MoveToCorrectAxiomsButton;
+import org.exquisite.protege.ui.buttons.MoveToPossiblyFaultyAxiomsButton;
+import org.exquisite.protege.ui.view.InputOntologyView;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class BasicAxiomList extends AbstractAxiomList {
 
     private boolean isBackground;
-    private BackgroundView view;
+    private InputOntologyView view;
 
-    public BasicAxiomList(OWLEditorKit editorKit, BackgroundView view, boolean isBackground) {
+    public BasicAxiomList(OWLEditorKit editorKit, InputOntologyView view, boolean isBackground) {
         super(editorKit);
         this.isBackground = isBackground;
         this.view = view;
@@ -32,9 +32,9 @@ public class BasicAxiomList extends AbstractAxiomList {
 
         if (! view.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning()) {
             if (!isBackground)
-                buttons.add(new AddToBackgroundButton((AxiomListItem) value, view));
+                buttons.add(new MoveToCorrectAxiomsButton((AxiomListItem) value, view));
             else
-                buttons.add(new RemoveFromBackgroundButton((AxiomListItem) value, view));
+                buttons.add(new MoveToPossiblyFaultyAxiomsButton((AxiomListItem) value, view));
         }
 
         return buttons;
@@ -44,7 +44,6 @@ public class BasicAxiomList extends AbstractAxiomList {
         List<Object> items = axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList());
 
         setListData(items.toArray());
-
     }
 
 }
