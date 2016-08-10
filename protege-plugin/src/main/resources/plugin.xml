@@ -74,19 +74,28 @@
         <category value="Debugger"/>
     </extension>
 
-    <extension id="BackgroundView" point="org.protege.editor.core.application.ViewComponent">
+    <extension id="InputOntologyView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Input Ontology"/>
         <class value="org.exquisite.protege.ui.view.InputOntologyView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
 
-    <extension id="TestcaseView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Test Cases"/>
+    <extension id="OriginalTestcasesView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Original Test Cases"/>
         <class value="org.exquisite.protege.ui.view.TestcaseView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
+
+    <extension id="AcquiredTestcasesView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Acquired Test Cases"/>
+        <class value="org.exquisite.protege.ui.view.TestcaseView"/>
+        <headerColor value="810000"/>
+        <category value="Debugger"/>
+    </extension>
+
+    <!-- Preferences Panel -->
 
     <extension id="querydebugger.prefs" point="org.protege.editor.core.application.preferencespanel">
         <label value="Debugger"/>
