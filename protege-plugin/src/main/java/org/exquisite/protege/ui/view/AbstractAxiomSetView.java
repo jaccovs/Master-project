@@ -21,7 +21,7 @@ abstract class AbstractAxiomSetView extends AbstractListQueryViewComponent {
 
     @Override
     protected JComponent createListForComponent() {
-        return new SimpleAxiomList(getOWLEditorKit(),getHeaderColor());
+        return new SimpleAxiomList(getOWLEditorKit(), getEditorKitHook(), getHeaderColor(), getHeaderPrefix());
     }
 
     protected abstract Color getHeaderColor();
