@@ -83,14 +83,14 @@
 
     <extension id="OriginalTestcasesView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Original Test Cases"/>
-        <class value="org.exquisite.protege.ui.view.TestcaseView"/>
+        <class value="org.exquisite.protege.ui.view.OriginalTestcasesView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="AcquiredTestcasesView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Acquired Test Cases"/>
-        <class value="org.exquisite.protege.ui.view.TestcaseView"/>
+        <class value="org.exquisite.protege.ui.view.AcquiredTestcasesView"/>
         <headerColor value="810000"/>
         <category value="Debugger"/>
     </extension>

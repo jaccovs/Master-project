@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.list;
 
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
 import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
@@ -10,7 +10,7 @@ class QueryHistoryItem implements MListItem {
 
     private Set<OWLLogicalAxiom> testcase;
 
-    private OntologyDiagnosisSearcher.TestCaseType type;
+    private TestcaseType type;
 
     private Integer num;
 
@@ -18,7 +18,7 @@ class QueryHistoryItem implements MListItem {
         return testcase;
     }
 
-    QueryHistoryItem(Set<OWLLogicalAxiom> testcase, OntologyDiagnosisSearcher.TestCaseType type, int num) {
+    QueryHistoryItem(Set<OWLLogicalAxiom> testcase, TestcaseType type, int num) {
         this.testcase = testcase;
         this.num = num;
         this.type = type;
@@ -36,7 +36,7 @@ class QueryHistoryItem implements MListItem {
         return "Simple Axiom" ;
     }
 
-    public OntologyDiagnosisSearcher.TestCaseType getType() {
+    public TestcaseType getType() {
         return type;
     }
 
@@ -48,10 +48,12 @@ class QueryHistoryItem implements MListItem {
 
         String typeStr = "";
         switch (type) {
-            case ENTAILED_TC:
+            case ORIGINAL_ENTAILED_TC:
+            case ACQUIRED_ENTAILED_TC:
                 typeStr = "Entailed ";
                 break;
-            case NON_ENTAILED_TC:
+            case ORIGINAL_NON_ENTAILED_TC:
+            case ACQUIRED_NON_ENTAILED_TC:
                 typeStr = "Nonentailed ";
                 break;
         }

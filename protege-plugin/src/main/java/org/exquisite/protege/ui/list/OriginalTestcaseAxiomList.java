@@ -1,0 +1,40 @@
+package org.exquisite.protege.ui.list;
+
+import org.exquisite.protege.model.EditorKitHook;
+import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+
+/**
+ * @author wolfi
+ */
+public class OriginalTestcaseAxiomList extends AbstractTestcaseAxiomList {
+
+    public OriginalTestcaseAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+        super(editorKit, editorKitHook);
+    }
+
+    @Override
+    protected TestcaseType getEntailedType() {
+        return TestcaseType.ORIGINAL_ENTAILED_TC;
+    }
+
+    @Override
+    protected List<OWLLogicalAxiom> getEntailedTestcases() {
+        return new ArrayList<>(getEditorKitHook().getActiveOntologyDiagnosisSearcher().getTestcases().getOriginalEntailedTestcases());
+    }
+
+    @Override
+    protected TestcaseType getNonEntailedType() {
+        return TestcaseType.ORIGINAL_NON_ENTAILED_TC;
+    }
+
+    @Override
+    protected List<OWLLogicalAxiom> getNonEntailedTestcases() {
+        return new ArrayList<>(getEditorKitHook().getActiveOntologyDiagnosisSearcher().getTestcases().getOriginalNonEntailedTestcases());
+    }
+}

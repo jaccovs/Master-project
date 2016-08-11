@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+
 public class QueryHistoryAxiomList extends AbstractAxiomList {
 
     private EditorKitHook editorKitHook;
@@ -48,7 +50,7 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
     public void updateView() {
         OntologyDiagnosisSearcher ods = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
         List<Set<OWLLogicalAxiom>> queryHistory = ods.getQueryHistory();
-        Map<Set<OWLLogicalAxiom>,OntologyDiagnosisSearcher.TestCaseType> queryMap = ods.getQueryHistoryType();
+        Map<Set<OWLLogicalAxiom>, TestcaseType> queryMap = ods.getQueryHistoryType();
 
         OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 

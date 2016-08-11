@@ -46,7 +46,7 @@ public class OntologyDiagnosisSearcher {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDiagnosisSearcher.class.getName());
 
-    public enum TestCaseType {ENTAILED_TC, NON_ENTAILED_TC}
+    public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
@@ -81,7 +81,7 @@ public class OntologyDiagnosisSearcher {
 
     private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
 
-    private Map<Set<OWLLogicalAxiom>,TestCaseType> queryHistoryType = new LinkedHashMap<>();
+    private Map<Set<OWLLogicalAxiom>,TestcaseType> queryHistoryType = new LinkedHashMap<>();
 
     private IQueryComputation<OWLLogicalAxiom> qc = null;
 
@@ -91,12 +91,15 @@ public class OntologyDiagnosisSearcher {
 
     private Double cautiousParameter, previousCautiousParameter;
 
+    private Testcases testcases;
+
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
         reasonerManager = modelManager.getOWLReasonerManager();
         OWLOntology ontology = modelManager.getActiveOntology();
         diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerManager);
         debuggingSession = new DebuggingSession();
+        this.testcases = new Testcases(this);
     }
 
     /******************************************************************************************************************/
@@ -125,7 +128,7 @@ public class OntologyDiagnosisSearcher {
         return queryHistory;
     }
 
-    public Map<Set<OWLLogicalAxiom>, TestCaseType> getQueryHistoryType() {
+    public Map<Set<OWLLogicalAxiom>, TestcaseType> getQueryHistoryType() {
         return queryHistoryType;
     }
 
@@ -147,6 +150,10 @@ public class OntologyDiagnosisSearcher {
 
     public boolean isSessionRunning() {
         return debuggingSession.getState() == DebuggingSession.State.STARTED;
+    }
+
+    public Testcases getTestcases() {
+        return this.testcases;
     }
 
     /******************************************************************************************************************/
@@ -186,6 +193,7 @@ public class OntologyDiagnosisSearcher {
             return;
         }
         debuggingSession.startSession();                // start session
+        this.testcases = new Testcases(this);
         doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
 
         switch (diagnoses.size()) {
@@ -234,6 +242,7 @@ public class OntologyDiagnosisSearcher {
         resetDiagnoses();                                           // reset diagnoses, conflicts
         resetQuery();                                               // reset queries
         resetQueryHistory();                                        // reset history
+        testcases.reset();
         debuggingSession.stopSession();                             // stop session
         this.cautiousParameter = null;
         this.previousCautiousParameter = null;
@@ -244,19 +253,12 @@ public class OntologyDiagnosisSearcher {
      * Reset debugger ->  reset test cases + doStopDebugging()
      */
     public void doResetDebugger() {
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
-        diagnosisModel.getNotEntailedExamples().clear();
-        diagnosisModel.getEntailedExamples().clear();
-        diagnosisModel.getConsistentExamples().clear();
-        diagnosisModel.getInconsistentExamples().clear();
+        this.testcases.reset();
         doStopDebugging();
     }
 
     public void doResetAll() throws OWLOntologyCreationException {
         modelManager.reload(modelManager.getActiveOntology());
-        // reload ontology // reload the ontology this will throw an event which calls doReload()
-        //doResetDebugger();
     }
 
     void reasonerChanged() {
@@ -330,49 +332,27 @@ public class OntologyDiagnosisSearcher {
         return selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
     }
 
-    public void doRemoveTestcase(Set<OWLLogicalAxiom> testcases, TestCaseType type) {
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
-
-        switch (type) {
-            case ENTAILED_TC:
-                diagnosisModel.getEntailedExamples().removeAll(testcases);
-                break;
-            case NON_ENTAILED_TC:
-                diagnosisModel.getNotEntailedExamples().removeAll(testcases);
-                break;
-        }
-
+    public void doRemoveTestcase(Set<OWLLogicalAxiom> testcases, TestcaseType type) {
+        this.testcases.removeTestcase(testcases, type);
         if (isSessionRunning())
             doCalculateDiagnosesAndGetQuery(new ErrorHandler());
         notifyListeners();
     }
 
-    public void doAddTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type, ErrorHandler errorHandler) {
-        addNewTestcase(testcase,type);
+    public void doAddTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type, ErrorHandler errorHandler) {
+        this.testcases.addTestcase(testcaseAxioms, type);
         if(!getErrorStatus().equals(NO_ERROR))
             errorHandler.errorHappend(getErrorStatus());
         notifyListeners();
     }
 
-    private void addNewTestcase(Set<OWLLogicalAxiom> axioms, TestCaseType type) {
-
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
-
-        switch(type) {
-            case ENTAILED_TC:
-                diagnosisModel.getEntailedExamples().addAll(axioms);
-                break;
-            case NON_ENTAILED_TC:
-                diagnosisModel.getNotEntailedExamples().addAll(axioms);
-                break;
-        }
-    }
-
+    /**
+     * Check if the set of new acquired test cases is empty. This check is called by the ResetDebuggingSessionAction.
+     *
+     * @return <code>true</code> if there are no acquired test cases yet, otherwise <code>false</code>.
+     */
     public boolean areTestcasesEmpty() {
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngine.getSolver().getDiagnosisModel();
-        return diagnosisModel.getEntailedExamples().isEmpty() && diagnosisModel.getNotEntailedExamples().isEmpty();
+        return testcases.areTestcasesEmpty();
     }
 
     public void updateConfig(SearchConfiguration newConfiguration) {
@@ -402,13 +382,13 @@ public class OntologyDiagnosisSearcher {
     private void doCommitQuery() {
         if (!axiomsMarkedEntailed.isEmpty()) {
             doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
-                    TestCaseType.ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedEntailed,TestCaseType.ENTAILED_TC);
+                    TestcaseType.ACQUIRED_ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedEntailed, TestcaseType.ACQUIRED_ENTAILED_TC);
         }
         if (!axiomsMarkedNonEntailed.isEmpty()) {
             doAddTestcase(new LinkedHashSet<>(axiomsMarkedNonEntailed),
-                    TestCaseType.NON_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedNonEntailed,TestCaseType.NON_ENTAILED_TC);
+                    TestcaseType.ACQUIRED_NON_ENTAILED_TC, new ErrorHandler());
+            addToQueryHistory(axiomsMarkedNonEntailed, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
         }
         resetQuery();
         notifyListeners();
@@ -644,13 +624,13 @@ public class OntologyDiagnosisSearcher {
         JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestCaseType type) {
+    private void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestcaseType type) {
         LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<>(ax);
         queryHistory.add(axioms);
         queryHistoryType.put(axioms,type);
     }
 
-    public void doRemoveQueryHistoryTestcase(Set<OWLLogicalAxiom> testcase, TestCaseType type) {
+    public void doRemoveQueryHistoryTestcase(Set<OWLLogicalAxiom> testcase, TestcaseType type) {
         doRemoveTestcase(testcase,type);
         queryHistory.remove(testcase);
         queryHistoryType.remove(testcase);
@@ -674,4 +654,6 @@ public class OntologyDiagnosisSearcher {
         sb.append('}');
         return sb.toString();
     }
+
+
 }
