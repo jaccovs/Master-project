@@ -1,6 +1,7 @@
 package org.exquisite.protege.model;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.costestimators.CardinalityCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
@@ -68,27 +69,11 @@ public class OntologyDiagnosisSearcher {
 
     private Set<Diagnosis<OWLLogicalAxiom>> previousDiagnoses = null;
 
-    //private Query<OWLLogicalAxiom> actualQuery;
-
-    //private Query<OWLLogicalAxiom> previousQuery;
-
     private Answer<OWLLogicalAxiom> answer = new Answer<>();
 
     private Answer<OWLLogicalAxiom> previousAnswer = new Answer<>();
 
-    /*
-    private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<>();
-
-    private Set<OWLLogicalAxiom> previousAxiomsMarkedEntailed = new LinkedHashSet<>();
-
-    private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<>();
-
-    private Set<OWLLogicalAxiom> previousAxiomsMarkedNonEntailed = new LinkedHashSet<>();
-    */
-
-    private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
-
-    private Map<Set<OWLLogicalAxiom>,TestcaseType> queryHistoryType = new LinkedHashMap<>();
+    private List<Answer<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
 
     private IQueryComputation<OWLLogicalAxiom> qc = null;
 
@@ -131,12 +116,8 @@ public class OntologyDiagnosisSearcher {
         return errorStatus;
     }
 
-    public List<Set<OWLLogicalAxiom>> getQueryHistory() {
+    public List<Answer<OWLLogicalAxiom>> getQueryHistory() {
         return queryHistory;
-    }
-
-    public Map<Set<OWLLogicalAxiom>, TestcaseType> getQueryHistoryType() {
-        return queryHistoryType;
     }
 
     public QuerySearchStatus getQuerySearchStatus() {
@@ -291,7 +272,6 @@ public class OntologyDiagnosisSearcher {
 
     private void resetQueryHistory() {
         this.queryHistory.clear();
-        this.queryHistoryType.clear();
     }
 
     private void resetDiagnoses() {
@@ -332,15 +312,46 @@ public class OntologyDiagnosisSearcher {
         return selectedValuesList.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
     }
 
-    public void doRemoveTestcase(Set<OWLLogicalAxiom> testcases, TestcaseType type) {
-        this.testcases.removeTestcase(testcases, type);
+    public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+        this.testcases.removeTestcase(axioms, type);
+
+        // We also have to synchronize the query history (if the user removed the test case from the acquired test cases)
+        if (axioms.size() == 1 && (type == TestcaseType.ACQUIRED_ENTAILED_TC || type == TestcaseType.ACQUIRED_NON_ENTAILED_TC)) {
+            // It is possible that the user used the remove button in the acquired test cases view
+            // Now search for the answer in the history
+            Answer<OWLLogicalAxiom> answer = null;
+            Iterator<Answer<OWLLogicalAxiom>> it = this.queryHistory.iterator();
+            while (it.hasNext() && answer == null) {
+                Answer<OWLLogicalAxiom> anAnswer = it.next();
+                switch (type) {
+                    case ACQUIRED_ENTAILED_TC:
+                        if (anAnswer.positive.removeAll(axioms)) // note that only one axiom is removed
+                            answer = anAnswer;
+                        break;
+                    case ACQUIRED_NON_ENTAILED_TC:
+                        if (anAnswer.negative.removeAll(axioms)) // note that only one axiom is removed
+                            answer = anAnswer;
+                        break;
+                    default:
+                        throw new DiagnosisRuntimeException("Unexpected test case type used to clean up history: " + type);
+                }
+            }
+
+            // we found an answer in the history we have to remove from history if the answer is empty
+            if (answer != null && answer.positive.isEmpty() && answer.negative.isEmpty()) {
+                this.queryHistory.remove(answer);
+                logger.debug("Removed from history: " + answer);
+            }
+
+        }
+
         if (isSessionRunning())
             doCalculateDiagnosesAndGetQuery(new ErrorHandler());
         notifyListeners();
     }
 
-    public void doAddTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type, ErrorHandler errorHandler) {
-        this.testcases.addTestcase(testcaseAxioms, type);
+    public void doAddTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type, ErrorHandler errorHandler) {
+        this.testcases.addTestcase(axioms, type);
         if(!getErrorStatus().equals(NO_ERROR))
             errorHandler.errorHappend(getErrorStatus());
         notifyListeners();
@@ -381,15 +392,14 @@ public class OntologyDiagnosisSearcher {
 
     private void doCommitQuery() {
         if (!this.answer.positive.isEmpty()) {
-            doAddTestcase(new TreeSet<>(this.answer.positive),
-                    TestcaseType.ACQUIRED_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(this.answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
+            doAddTestcase(this.answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC, new ErrorHandler());
         }
         if (!this.answer.negative.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<>(this.answer.negative),
-                    TestcaseType.ACQUIRED_NON_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(this.answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
+            doAddTestcase(this.answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC, new ErrorHandler());
         }
+
+        this.queryHistory.add(this.answer);
+
         resetQuery();
         notifyListeners();
     }
@@ -587,14 +597,7 @@ public class OntologyDiagnosisSearcher {
     }
 
     private Double calculateEliminationRate() {
-        /*
-        Set<Diagnosis<OWLLogicalAxiom>> previousDiagnosesMinusDiagnoses = new HashSet<>(previousDiagnoses);
-        previousDiagnosesMinusDiagnoses.removeAll(diagnoses);
-        return ((double)(previousDiagnosesMinusDiagnoses.size())) / (double)previousDiagnoses.size();
-        */
-
         Double eliminationRate = null;
-
         if (this.previousAnswer.negative.size() >= 1)
             // this calculates the lower bound of the actual elimination rate
             eliminationRate = (double)this.previousAnswer.query.qPartition.dx.size() / (double)previousDiagnoses.size();
@@ -609,31 +612,14 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doGetAlternativeQuery() {
-        /* TODO
-        if (qc != null && qc.hasNext()) {
-            querySearchStatus = QuerySearchStatus.ASKING_QUERY;
-            notifyListeners();
-            actualQuery = qc.next();
-        } else {
-            errorStatus = ErrorStatus.NO_QUERY;
-            resetQuery();
-            notifyListeners();
-        }
-        */
-
         JOptionPane.showMessageDialog(null, "The function is not implemented yet", "Not Implemented", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void addToQueryHistory(Set<OWLLogicalAxiom> ax, TestcaseType type) {
-        LinkedHashSet<OWLLogicalAxiom> axioms = new LinkedHashSet<>(ax);
-        queryHistory.add(axioms);
-        queryHistoryType.put(axioms,type);
-    }
+    public void doRemoveQueryHistoryAnswer(Answer<OWLLogicalAxiom> answer) {
+        queryHistory.remove(answer);
+        doRemoveTestcase(answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
+        doRemoveTestcase(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
 
-    public void doRemoveQueryHistoryTestcase(Set<OWLLogicalAxiom> testcase, TestcaseType type) {
-        doRemoveTestcase(testcase,type);
-        queryHistory.remove(testcase);
-        queryHistoryType.remove(testcase);
         notifyListeners();
     }
 

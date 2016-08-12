@@ -29,8 +29,7 @@ public class AxiomListItem implements MListItem {
     }
 
     @Override
-    public void handleEdit() {
-    }
+    public void handleEdit() {}
 
     @Override
     public boolean isDeleteable() {
