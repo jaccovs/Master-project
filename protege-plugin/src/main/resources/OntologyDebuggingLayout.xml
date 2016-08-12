@@ -3,10 +3,10 @@
     <VSNode splits="0.3 0.35 0.35">
         <CNode>
             <Component label="Input Ontology">
-                <Property id="pluginId" value="org.exquisite.protege.BackgroundView"/>
+                <Property id="pluginId" value="org.exquisite.protege.InputOntologyView"/>
             </Component>
-            <Component label="Test Cases">
-                <Property id="pluginId" value="org.exquisite.protege.TestcaseView"/>
+            <Component label="Original Test Cases">
+                <Property id="pluginId" value="org.exquisite.protege.OriginalTestcasesView"/>
             </Component>
         </CNode>
         <CNode>
@@ -22,10 +22,13 @@
                 <Component label="Queries">
                     <Property id="pluginId" value="org.exquisite.protege.QueryView"/>
                 </Component>
-            </CNode>
-            <CNode>
                 <Component label="Answers">
                     <Property id="pluginId" value="org.exquisite.protege.QueryHistoryView"/>
+                </Component>
+            </CNode>
+            <CNode>
+                <Component label="Acquired Test Cases">
+                    <Property id="pluginId" value="org.exquisite.protege.AcquiredTestcasesView"/>
                 </Component>
             </CNode>
         </HSNode>

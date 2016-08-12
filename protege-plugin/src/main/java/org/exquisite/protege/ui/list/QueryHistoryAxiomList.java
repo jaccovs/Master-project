@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.list;
 
+import org.exquisite.core.query.Answer;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.protege.editor.owl.OWLEditorKit;
@@ -8,8 +9,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class QueryHistoryAxiomList extends AbstractAxiomList {
@@ -39,25 +38,23 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof QueryHistoryItem) {
             for (int number : getSelectedIndices()) {
                 QueryHistoryItem item = (QueryHistoryItem) getModel().getElementAt(number);
-                getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveQueryHistoryTestcase(item.getTestcase(),item.getType());
+                final OntologyDiagnosisSearcher searcher = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+                searcher.doRemoveQueryHistoryAnswer(item.getAnswer());
             }
         }
     }
 
-
     public void updateView() {
-        OntologyDiagnosisSearcher ods = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
-        List<Set<OWLLogicalAxiom>> queryHistory = ods.getQueryHistory();
-        Map<Set<OWLLogicalAxiom>,OntologyDiagnosisSearcher.TestCaseType> queryMap = ods.getQueryHistoryType();
-
-        OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
+        List<Answer<OWLLogicalAxiom>> queryHistory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getQueryHistory();
+        final OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         List<Object> items = new LinkedList<>();
 
         for (int i = queryHistory.size() - 1; i >= 0; i--) {
-            Set<OWLLogicalAxiom> testcase = queryHistory.get(i);
-            items.add(new QueryHistoryItem(testcase,queryMap.get(testcase),i+1));
-            items.addAll(testcase.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
+            Answer<OWLLogicalAxiom> answer = queryHistory.get(i);
+            items.add(new QueryHistoryItem(answer,i+1));
+            items.addAll(answer.positive.stream().map(axiom -> new QueryHistoryEntailedAxiomListItem(axiom, ontology)).collect(Collectors.toList()));
+            items.addAll(answer.negative.stream().map(axiom -> new QueryHistoryNonEntailedAxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
 

@@ -5,7 +5,6 @@ import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
-import org.exquisite.protege.ui.buttons.DebugExplainButton;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
