@@ -10,7 +10,8 @@ import java.util.List;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
 
 /**
- * @author wolfi
+ * List of given answers to queries marked as either entailed or non-entailed.
+ * This is a separate view to the set of entailed and non-entailed testcases in the diagnosis model.
  */
 public class AcquiredTestcaseAxiomList extends AbstractTestcaseAxiomList {
 

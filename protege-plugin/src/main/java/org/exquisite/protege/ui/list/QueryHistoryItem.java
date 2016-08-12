@@ -26,7 +26,7 @@ class QueryHistoryItem implements MListItem {
     }
 
     public String getTooltip() {
-        return num + ". Answer" ;
+        return "Answer " + num ;
     }
 
     public boolean isDeleteable() {

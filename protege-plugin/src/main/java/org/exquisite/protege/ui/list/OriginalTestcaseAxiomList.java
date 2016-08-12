@@ -10,7 +10,7 @@ import java.util.List;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
 
 /**
- * @author wolfi
+ * List of entailed and non test cases already given the ontology.
  */
 public class OriginalTestcaseAxiomList extends AbstractTestcaseAxiomList {
 

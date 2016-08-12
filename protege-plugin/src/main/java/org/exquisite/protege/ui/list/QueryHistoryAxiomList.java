@@ -53,8 +53,8 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
         for (int i = queryHistory.size() - 1; i >= 0; i--) {
             Answer<OWLLogicalAxiom> answer = queryHistory.get(i);
             items.add(new QueryHistoryItem(answer,i+1));
-            items.addAll(answer.positive.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
-            items.addAll(answer.negative.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
+            items.addAll(answer.positive.stream().map(axiom -> new QueryHistoryEntailedAxiomListItem(axiom, ontology)).collect(Collectors.toList()));
+            items.addAll(answer.negative.stream().map(axiom -> new QueryHistoryNonEntailedAxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
 

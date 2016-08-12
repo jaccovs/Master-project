@@ -21,7 +21,7 @@ abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
 
     private OWLEditorKit editorKit;
 
-    public AbstractTestcaseAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+    AbstractTestcaseAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
         this.editorKit = editorKit;
