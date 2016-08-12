@@ -1,7 +1,7 @@
 package org.exquisite.core.query;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Answer given by the user. An answer represents formulas that are supported, not supported and unaffected.
@@ -12,17 +12,22 @@ import java.util.Set;
 public class Answer<F> {
 
     /**
-     * Formulas that are supported by the answer
+     * Formulas that are supported by the answer.
      */
-    public Set<F> positive = new HashSet<>();
+    public Set<F> positive = new TreeSet<>();
 
     /**
-     * Formulas that are not supported by the answer
+     * Formulas that are not supported by the answer.
      */
-    public Set<F> negative = new HashSet<>();
+    public Set<F> negative = new TreeSet<>();
 
     /**
-     * Formulas that are unaffected by the answer
+     * Formulas that are unaffected by the answer.
      */
-    public Set<F> undefined = new HashSet<>();
+    public Set<F> undefined = new TreeSet<>();
+
+    /**
+     * The query given to the answer.
+     */
+    public Query<F> query;
 }

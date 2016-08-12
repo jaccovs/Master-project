@@ -9,6 +9,7 @@ import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
@@ -67,10 +68,15 @@ public class OntologyDiagnosisSearcher {
 
     private Set<Diagnosis<OWLLogicalAxiom>> previousDiagnoses = null;
 
-    private Query<OWLLogicalAxiom> actualQuery;
+    //private Query<OWLLogicalAxiom> actualQuery;
 
-    private Query<OWLLogicalAxiom> previousQuery;
+    //private Query<OWLLogicalAxiom> previousQuery;
 
+    private Answer<OWLLogicalAxiom> answer = new Answer<>();
+
+    private Answer<OWLLogicalAxiom> previousAnswer = new Answer<>();
+
+    /*
     private Set<OWLLogicalAxiom> axiomsMarkedEntailed = new LinkedHashSet<>();
 
     private Set<OWLLogicalAxiom> previousAxiomsMarkedEntailed = new LinkedHashSet<>();
@@ -78,6 +84,7 @@ public class OntologyDiagnosisSearcher {
     private Set<OWLLogicalAxiom> axiomsMarkedNonEntailed = new LinkedHashSet<>();
 
     private Set<OWLLogicalAxiom> previousAxiomsMarkedNonEntailed = new LinkedHashSet<>();
+    */
 
     private List<Set<OWLLogicalAxiom>> queryHistory = new LinkedList<>();
 
@@ -113,7 +120,7 @@ public class OntologyDiagnosisSearcher {
     }
 
     public Query<OWLLogicalAxiom> getActualQuery() {
-        return actualQuery;
+        return answer.query;
     }
 
     public Set<Diagnosis<OWLLogicalAxiom>> getDiagnoses() {
@@ -137,15 +144,15 @@ public class OntologyDiagnosisSearcher {
     }
 
     public boolean isMarkedEntailed(OWLLogicalAxiom axiom) {
-        return axiomsMarkedEntailed.contains(axiom);
+        return answer.positive.contains(axiom);
     }
 
     public boolean isMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        return axiomsMarkedNonEntailed.contains(axiom);
+        return answer.negative.contains(axiom);
     }
 
     public int sizeOfEntailedAndNonEntailedAxioms() {
-        return axiomsMarkedEntailed.size() + axiomsMarkedNonEntailed.size();
+        return answer.positive.size() + answer.negative.size();
     }
 
     public boolean isSessionRunning() {
@@ -258,7 +265,7 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doResetAll() throws OWLOntologyCreationException {
-        modelManager.reload(modelManager.getActiveOntology());
+        this.modelManager.reload(modelManager.getActiveOntology());
     }
 
     void reasonerChanged() {
@@ -270,34 +277,27 @@ public class OntologyDiagnosisSearcher {
      * Reset the diagnoses engine and doFullReset().
      */
     void doReload() {
-        diagnosisEngineFactory.reset();
+        this.diagnosisEngineFactory.reset();
         doResetDebugger();
     }
 
     private void resetQuery() {
-        previousAxiomsMarkedEntailed = new LinkedHashSet<>(axiomsMarkedEntailed);
-        previousAxiomsMarkedNonEntailed = new LinkedHashSet<>(axiomsMarkedNonEntailed);
-        previousQuery = actualQuery;
+        this.previousAnswer = this.answer;
+        this.answer = new Answer<>();
 
-        axiomsMarkedEntailed.clear();
-        axiomsMarkedNonEntailed.clear();
-        actualQuery = null;
-
-        querySearchStatus = QuerySearchStatus.IDLE;
-        if (qc!=null) qc.reset();
+        this.querySearchStatus = QuerySearchStatus.IDLE;
+        if (this.qc!=null) qc.reset();
     }
 
     private void resetQueryHistory() {
-        queryHistory.clear();
-        queryHistoryType.clear();
+        this.queryHistory.clear();
+        this.queryHistoryType.clear();
     }
 
     private void resetDiagnoses() {
-        diagnoses.clear();
-        previousDiagnoses = null;
-
-        final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        diagnosisEngine.resetEngine();
+        this.diagnoses.clear();
+        this.previousDiagnoses = null;
+        this.diagnosisEngineFactory.getDiagnosisEngine().resetEngine();
     }
 
     /**
@@ -360,35 +360,35 @@ public class OntologyDiagnosisSearcher {
     }
 
     public void doAddAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedEntailed.add(axiom);
+        this.answer.positive.add(axiom);
         notifyListeners();
     }
 
     public void doAddAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedNonEntailed.add(axiom);
+        this.answer.negative.add(axiom);
         notifyListeners();
     }
 
     public void doRemoveAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedEntailed.remove(axiom);
+        this.answer.positive.remove(axiom);
         notifyListeners();
     }
 
     public void doRemoveAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
-        axiomsMarkedNonEntailed.remove(axiom);
+        this.answer.negative.remove(axiom);
         notifyListeners();
     }
 
     private void doCommitQuery() {
-        if (!axiomsMarkedEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<>(axiomsMarkedEntailed),
+        if (!this.answer.positive.isEmpty()) {
+            doAddTestcase(new TreeSet<>(this.answer.positive),
                     TestcaseType.ACQUIRED_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedEntailed, TestcaseType.ACQUIRED_ENTAILED_TC);
+            addToQueryHistory(this.answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
         }
-        if (!axiomsMarkedNonEntailed.isEmpty()) {
-            doAddTestcase(new LinkedHashSet<>(axiomsMarkedNonEntailed),
+        if (!this.answer.negative.isEmpty()) {
+            doAddTestcase(new LinkedHashSet<>(this.answer.negative),
                     TestcaseType.ACQUIRED_NON_ENTAILED_TC, new ErrorHandler());
-            addToQueryHistory(axiomsMarkedNonEntailed, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
+            addToQueryHistory(this.answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
         }
         resetQuery();
         notifyListeners();
@@ -526,7 +526,7 @@ public class OntologyDiagnosisSearcher {
             qc.initialize(diagnoses);
 
             if ( qc.hasNext()) {
-                actualQuery = qc.next();
+                this.answer.query = qc.next();
                 logger.debug("query configuration: " + qc);
             } else {
                 errorHandler.errorHappend(ErrorStatus.NO_QUERY);
@@ -595,15 +595,15 @@ public class OntologyDiagnosisSearcher {
 
         Double eliminationRate = null;
 
-        if (previousAxiomsMarkedNonEntailed.size() >= 1)
+        if (this.previousAnswer.negative.size() >= 1)
             // this calculates the lower bound of the actual elimination rate
-            eliminationRate = (double)previousQuery.qPartition.dx.size() / (double)previousDiagnoses.size();
-        else if (previousAxiomsMarkedEntailed.size() == previousQuery.formulas.size())
+            eliminationRate = (double)this.previousAnswer.query.qPartition.dx.size() / (double)previousDiagnoses.size();
+        else if (this.previousAnswer.positive.size() == this.previousAnswer.query.formulas.size())
             // this calculates the lower bound of the actual elimination rate
-            eliminationRate = (double)previousQuery.qPartition.dnx.size() / (double)previousDiagnoses.size();
+            eliminationRate = (double)this.previousAnswer.query.qPartition.dnx.size() / (double)previousDiagnoses.size();
         else
             // an approximation of the elimination rate (saves the costs to expensive reasoner calls)
-            eliminationRate = ( (double)previousQuery.qPartition.dnx.size() / (double)previousDiagnoses.size() ) * previousAxiomsMarkedEntailed.size() / previousQuery.formulas.size();
+            eliminationRate = ( (double)this.previousAnswer.query.qPartition.dnx.size() / (double)previousDiagnoses.size() ) * this.previousAnswer.positive.size() / this.previousAnswer.query.formulas.size();
 
         return eliminationRate;
     }
