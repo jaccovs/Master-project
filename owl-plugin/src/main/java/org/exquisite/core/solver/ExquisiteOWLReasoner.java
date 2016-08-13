@@ -1,6 +1,5 @@
 package org.exquisite.core.solver;
 
-import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.model.DiagnosisModel;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.InferenceType;
@@ -18,7 +17,9 @@ import java.util.stream.Collectors;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
 /**
- * Created by kostya on 17-Mar-16.
+ * Reasoner for OWL-Ontologies.
+ *
+ * @author kostya
  */
 public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
@@ -30,31 +31,16 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private HashSet<InferredAxiomGenerator<? extends OWLLogicalAxiom>> axiomGenerators = new HashSet<>();
 
     /**
-     * Constructor of the reasoner which also generates a simple diagnosis model from the given ontology.
-     *
-     * @param ontology        for which a diagnosis model must be generated
-     * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
-     * @throws OWLOntologyCreationException
-     * @throws DiagnosisException
-     */
-    public ExquisiteOWLReasoner(OWLOntology ontology, OWLReasonerFactory reasonerFactory)
-            throws OWLOntologyCreationException, DiagnosisException {
-        this(generateDiagnosisModel(ontology, reasonerFactory, false, false),
-                ontology.getOWLOntologyManager(), reasonerFactory);
-    }
-
-    /**
      * Default constructor of the reasoner
      *
      * @param dm              a diagnosis model
      * @param manager         ontology manager
      * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
-     * @throws OWLOntologyCreationException
-     * @throws DiagnosisException
+     * @throws OWLOntologyCreationException An exception which describes an error during the creation of an ontology.
      */
     public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm,
                                 OWLOntologyManager manager, OWLReasonerFactory reasonerFactory)
-            throws OWLOntologyCreationException, DiagnosisException {
+            throws OWLOntologyCreationException {
         super(dm);
         OWLOntology debugOntology = manager.createOntology(); // use of anonymous ontology as debugging ontology
         this.reasoner = reasonerFactory.createReasoner(debugOntology);
@@ -71,14 +57,13 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      *
      * @param ontology        for which a diagnosis model must be generated
      * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
-     * @param extractModule
+     * @param extractModule shall the SyntacticLocalityModuleExtractor be used on consistent ontologies?
      * @return a diagnosis model
-     * @throws OWLOntologyCreationException
-     * @throws DiagnosisException
+     * @throws OWLOntologyCreationException´An exception which describes an error during the creation of an ontology.
      */
     public static DiagnosisModel<OWLLogicalAxiom> generateDiagnosisModel(OWLOntology ontology,
                                                                          OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency)
-            throws OWLOntologyCreationException, DiagnosisException {
+            throws OWLOntologyCreationException {
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
         OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
         Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
@@ -86,7 +71,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
         for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
             Set<OWLAnnotationProperty> propertiesInSignature = axiom.getAnnotationPropertiesInSignature();
-            if (propertiesInSignature != null && propertiesInSignature.iterator().hasNext()) {
+            if (propertiesInSignature.iterator().hasNext()) {
                 OWLAnnotationProperty property = propertiesInSignature.iterator().next();
                 if (property.isComment()) {
                     OWLAnnotationValue annotationValue = axiom.getAnnotations(propertiesInSignature.iterator().next()).iterator().next().getValue();
@@ -197,11 +182,12 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         this.axiomGenerators = types;
     }
 
-    @Override
+
     /**
      * Uses underlying OWL reasoner to compute a set of entailments of formulas stored in the reasoner. The types of
      * computed entailments must be defined prior to calling this method using {@link #setEntailmentTypes(InferenceType...)}
      */
+    @Override
     protected Set<OWLLogicalAxiom> calculateEntailments() {
         start(TIMER_SOLVER_CALCULATE_ENTAILMENTS);
         incrementCounter(COUNTER_SOLVER_CALCULATE_ENTAILMENTS);

@@ -1,17 +1,15 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A view to present the set of correct and possibly faulty axioms in our input ontology.
@@ -22,8 +20,6 @@ public class InputOntologyView extends AbstractQueryViewComponent {
     private BasicAxiomList correctAxiomsList;
 
     private BasicAxiomList possiblyFaultyAxiomsList;
-
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(InputOntologyView.class.getName());
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -84,46 +80,47 @@ public class InputOntologyView extends AbstractQueryViewComponent {
     private JToolBar createCorrectAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
         toolBar.add(createLabel("Correct Axioms (Background)"));
-        toolBar.setToolTipText("Axioms from the background are to be considered correct and hence are no candidates for diagnoses.");
+        toolBar.setToolTipText("Axioms from the background are considered to be correct and therefore are not candidates for diagnoses.");
         toolBar.add(Box.createVerticalStrut(25));
         toolBar.setMaximumSize(toolBar.getPreferredSize());
         return toolBar;
     }
 
+    /**
+     * Updates the view of displayed possible faulty axioms.
+     * @see #stateChanged(ChangeEvent)
+     */
     public void updateDisplayedPossiblyFaultyAxioms() {
-        logger.debug("---- displaying possibly faulty axioms ----");
-
-        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
-        Set<OWLLogicalAxiom> possiblyFaultyAxioms = hideAxiomsWithAnonymousIndividuals(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
-        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        possiblyFaultyAxiomsList.updateList(possiblyFaultyAxioms,ontology);
-    }
-
-    private void updateDisplayedCorrectAxioms() {
-        logger.debug("---- displaying correct axioms ----");
-
-        DiagnosisEngineFactory diagnosisEngineFactory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
-        Set<OWLLogicalAxiom> correctAxioms = hideAxiomsWithAnonymousIndividuals(diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel().getCorrectFormulas());
-        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        correctAxiomsList.updateList(correctAxioms,ontology);
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDiagnosisSearcher().
+                getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        updateDisplayedAxioms(possiblyFaultyAxiomsList, diagnosisModel.getPossiblyFaultyFormulas());
     }
 
     /**
-     * The list of correct axioms and possibly faulty axioms shall not show the automatically created axioms with
-     * anonymous individuals (while still beeing present in the debug ontology and diagnoses model behind).
-     *
-     * @param axioms the set of correct or possibly faulty axioms from the diagnosis model.
-     * @return A copy of the set of axioms cleaned up by the axioms with anonymous individuals.
+     * Updates the view of displayed correct axioms.
+     * @see #stateChanged(ChangeEvent)
      */
-    private Set<OWLLogicalAxiom> hideAxiomsWithAnonymousIndividuals(java.util.List<OWLLogicalAxiom> axioms) {
-        Set<OWLLogicalAxiom> resultingAxioms = new TreeSet<>();
-        for (OWLLogicalAxiom axiom : axioms) {
-            if (axiom.getAnonymousIndividuals().isEmpty())
-                resultingAxioms.add(axiom);
-            else
-                logger.debug("Hide axiom with anonymous individual " + axiom);
-        }
-        return resultingAxioms;
+    private void updateDisplayedCorrectAxioms() {
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDiagnosisSearcher().
+                getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        updateDisplayedAxioms(correctAxiomsList, diagnosisModel.getCorrectFormulas());
+    }
+
+    /**
+     * Updates a list with a set of axioms that exists in the active ontology.
+     *
+     * @param list The list to update.
+     * @param axioms The axioms to update the list with after a check if all axioms doe exist in the active ontology.
+     * @see #updateDisplayedCorrectAxioms()
+     * @see #updateDisplayedPossiblyFaultyAxioms()
+     */
+    private void updateDisplayedAxioms(BasicAxiomList list, java.util.List<OWLLogicalAxiom> axioms) {
+        final OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
+
+        // show only those axioms that do also exist in the active ontology and show them in a sorted order (TreeSet)
+        Set<OWLLogicalAxiom> axiomsToDisplay = new TreeSet<>(axioms);
+        axiomsToDisplay.retainAll(ontology.getLogicalAxioms());
+        list.updateList(axiomsToDisplay, ontology);
     }
 
     @Override

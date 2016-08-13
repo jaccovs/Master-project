@@ -9,13 +9,18 @@ import java.util.TreeSet;
 import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
 
 /**
- * @author wolfi
+ * A model of the test cases that differs between the original entailed and non-entailed test cases and
+ * new (acquired) entailed and non-entailed test cases that are identified during an interactive debugging session.
+ *
+ * The the diagnosis model behind collects them alltogebher this model differs these two kinds of test cases
+ * for the views AcquiredTestcasesView and OriginalTestcasesView.
+ *
+ * @see org.exquisite.protege.ui.view.AcquiredTestcasesView
+ * @see org.exquisite.protege.ui.view.OriginalTestcasesView
  */
-public class Testcases {
+public class TestcasesModel {
 
     private OntologyDiagnosisSearcher ods;
-
-    private DiagnosisModel<OWLLogicalAxiom> diagnosisModel;
 
     private Set<OWLLogicalAxiom> originalEntailedTestcases;
 
@@ -25,13 +30,20 @@ public class Testcases {
 
     private Set<OWLLogicalAxiom> acquiredNonEntailedTestcases;
 
-    Testcases(OntologyDiagnosisSearcher ods) {
+    TestcasesModel(OntologyDiagnosisSearcher ods) {
         this.ods = ods;
-        this.diagnosisModel = ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
-        this.originalEntailedTestcases = new TreeSet<>(diagnosisModel.getEntailedExamples());
-        this.originalNonEntailedTestcases = new TreeSet<>(diagnosisModel.getNotEntailedExamples());
+        this.originalEntailedTestcases = new TreeSet<>();
+        this.originalNonEntailedTestcases = new TreeSet<>();
         this.acquiredEntailedTestcases = new TreeSet<>();
         this.acquiredNonEntailedTestcases = new TreeSet<>();
+    }
+
+    public void setOriginalEntailedTestcases(Set<OWLLogicalAxiom> originalEntailedTestcases) {
+        this.originalEntailedTestcases = originalEntailedTestcases;
+    }
+
+    public void setOriginalNonEntailedTestcases(Set<OWLLogicalAxiom> originalNonEntailedTestcases) {
+        this.originalNonEntailedTestcases = originalNonEntailedTestcases;
     }
 
     public Set<OWLLogicalAxiom> getOriginalEntailedTestcases() {
@@ -51,14 +63,16 @@ public class Testcases {
     }
 
     void addTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
+                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
-            this.diagnosisModel.getEntailedExamples().addAll(testcaseAxioms);
+            diagnosisModel.getEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
                 this.acquiredEntailedTestcases.addAll(testcaseAxioms);
             else
                 this.originalEntailedTestcases.addAll(testcaseAxioms);
         } else {
-            this.diagnosisModel.getNotEntailedExamples().addAll(testcaseAxioms);
+            diagnosisModel.getNotEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_NON_ENTAILED_TC)
                 this.acquiredNonEntailedTestcases.addAll(testcaseAxioms);
             else
@@ -67,14 +81,17 @@ public class Testcases {
     }
 
     void removeTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
+                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
-            this.diagnosisModel.getEntailedExamples().removeAll(testcaseAxioms);
+            diagnosisModel.getEntailedExamples().removeAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
                 this.acquiredEntailedTestcases.removeAll(testcaseAxioms);
             else
                 this.originalEntailedTestcases.removeAll(testcaseAxioms);
         } else {
-            this.diagnosisModel.getNotEntailedExamples().removeAll(testcaseAxioms);
+            diagnosisModel.getNotEntailedExamples().removeAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_NON_ENTAILED_TC)
                 this.acquiredNonEntailedTestcases.removeAll(testcaseAxioms);
             else
@@ -87,8 +104,11 @@ public class Testcases {
     }
 
     void reset() {
-        this.diagnosisModel.getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
-        this.diagnosisModel.getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
+                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+
+        diagnosisModel.getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
+        diagnosisModel.getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);
 
         this.originalEntailedTestcases = new TreeSet<>(diagnosisModel.getEntailedExamples());
         this.originalNonEntailedTestcases = new TreeSet<>(diagnosisModel.getNotEntailedExamples());

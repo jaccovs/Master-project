@@ -31,7 +31,6 @@ import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -83,15 +82,15 @@ public class OntologyDiagnosisSearcher {
 
     private Double cautiousParameter, previousCautiousParameter;
 
-    private Testcases testcases;
+    private TestcasesModel testcases;
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
         reasonerManager = modelManager.getOWLReasonerManager();
         OWLOntology ontology = modelManager.getActiveOntology();
-        diagnosisEngineFactory = new DiagnosisEngineFactory(ontology, reasonerManager);
+        diagnosisEngineFactory = new DiagnosisEngineFactory(this, ontology, reasonerManager);
         debuggingSession = new DebuggingSession();
-        this.testcases = new Testcases(this);
+        this.testcases = new TestcasesModel(this);
     }
 
     /******************************************************************************************************************/
@@ -140,7 +139,7 @@ public class OntologyDiagnosisSearcher {
         return debuggingSession.getState() == DebuggingSession.State.STARTED;
     }
 
-    public Testcases getTestcases() {
+    public TestcasesModel getTestcases() {
         return this.testcases;
     }
 
@@ -181,7 +180,6 @@ public class OntologyDiagnosisSearcher {
             return;
         }
         debuggingSession.startSession();                // start session
-        this.testcases = new Testcases(this);
         doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
 
         switch (diagnoses.size()) {
@@ -243,10 +241,6 @@ public class OntologyDiagnosisSearcher {
     public void doResetDebugger() {
         this.testcases.reset();
         doStopDebugging();
-    }
-
-    public void doResetAll() throws OWLOntologyCreationException {
-        this.modelManager.reload(modelManager.getActiveOntology());
     }
 
     void reasonerChanged() {

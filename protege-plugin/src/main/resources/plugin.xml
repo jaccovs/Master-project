@@ -26,14 +26,6 @@
         <editorKitId value="OWLEditorKit"/>
     </extension>
 
-    <extension id="ResetAll" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Reset All..."/>
-        <toolTip value="Reset All"/>
-        <class value="org.exquisite.protege.ui.menu.ResetAllAction"/>
-        <path value="org.protege.editor.owl.menu.tools/SlotO-C"/>
-        <editorKitId value="OWLEditorKit"/>
-    </extension>
-
     <!-- Tabs -->
 
     <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
