@@ -8,7 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * Abstract class to be extended for all Debugger menu items that depend
+ * Abstract class to be extended for all Debugger menu items that depend.
  */
 abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements ChangeListener {
 
@@ -39,8 +39,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
     }
 
     @Override
-    public void dispose() throws Exception {
-    }
+    public void dispose() throws Exception {}
 
     @Override
     public void stateChanged(ChangeEvent e) {

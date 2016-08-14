@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 /**
  * Reset debugging session: stop debugging + reset test cases.
  */
-public class ResetDebuggingSessionAction extends AbstractProtegeOWLAction {
+public class ResetDebuggerAction extends AbstractProtegeOWLAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -19,7 +19,7 @@ public class ResetDebuggingSessionAction extends AbstractProtegeOWLAction {
             if (answer == JOptionPane.YES_OPTION)
                 ods.doResetDebugger();
             else if (answer == JOptionPane.NO_OPTION)
-                ods.doStopDebugging();
+                ods.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.DEBUGGER_RESET);
         } else
             ods.doResetDebugger();
 

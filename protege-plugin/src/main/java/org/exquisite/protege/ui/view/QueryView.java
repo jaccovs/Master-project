@@ -10,6 +10,9 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 
+/**
+ * A view used for stating queries to the user.
+ */
 public class QueryView extends AbstractListQueryViewComponent {
 
     private GetAlternativeQueryButton getAlternativeQueryButton;

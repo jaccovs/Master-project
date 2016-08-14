@@ -3,8 +3,16 @@
 
 <plugin>
 
+    <!-- Plugins -->
+
+    <!-- -->
     <extension id="EditorKitHook" point="org.protege.editor.core.application.EditorKitHook">
         <class value="org.exquisite.protege.model.EditorKitHook"/>
+        <editorKitId value="OWLEditorKit"/>
+    </extension>
+
+    <extension id="QueryExplanation" point="org.protege.editor.owl.explanation">
+        <class value="org.exquisite.protege.model.QueryExplanation"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
 
@@ -13,7 +21,7 @@
     <extension id="DebugOntology" point="org.protege.editor.core.application.EditorKitMenuAction">
         <name value="Debug Ontology..."/>
         <toolTip value="Locate the errors in your inconsistent/incoherent ontology"/>
-        <class value="org.exquisite.protege.ui.menu.OpenOntologyDebugTab"/>
+        <class value="org.exquisite.protege.ui.menu.OpenDebuggerTabAction"/>
         <path value="org.protege.editor.owl.menu.tools/SlotO-A"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
@@ -21,7 +29,7 @@
     <extension id="ResetDebugger" point="org.protege.editor.core.application.EditorKitMenuAction">
         <name value="Reset Debugger..."/>
         <toolTip value="Stops the running debugging session. Resets queries, answers and diagnosis engine. Optionally deletes the test cases."/>
-        <class value="org.exquisite.protege.ui.menu.ResetDebuggingSessionAction"/>
+        <class value="org.exquisite.protege.ui.menu.ResetDebuggerAction"/>
         <path value="org.protege.editor.owl.menu.tools/SlotO-B"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>

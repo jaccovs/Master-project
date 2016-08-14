@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.TreeSet;
 
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.SessionStopReason;
+
 public class DiagnosisEngineFactory {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(DiagnosisEngineFactory.class.getName());
@@ -49,8 +51,11 @@ public class DiagnosisEngineFactory {
 
     public void updateConfig(SearchConfiguration newConfiguration) {
         if (config.hasConfigurationChanged(newConfiguration)) {
+            // as soon as the configuration has changed we do stop any currently running session
             ConfigFileManager.writeConfiguration(newConfiguration);
-            reset();
+            if (ods.isSessionRunning()) {
+                ods.doStopDebugging(SessionStopReason.PREFERENCES_CHANGED);
+            }
         }
     }
 
@@ -63,10 +68,6 @@ public class DiagnosisEngineFactory {
         if (diagnosisEngine == null)
             diagnosisEngine = createDiagnosisEngine();
         return diagnosisEngine;
-    }
-
-    public void reasonerChanged() {
-        diagnosisEngine = createDiagnosisEngine();
     }
 
     private IDiagnosisEngine<OWLLogicalAxiom> createDiagnosisEngine() throws DiagnosisRuntimeException {

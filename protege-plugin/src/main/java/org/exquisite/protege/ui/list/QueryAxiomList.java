@@ -3,8 +3,10 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.query.Query;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.QueryExplanation;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
+import org.exquisite.protege.ui.buttons.DebugExplainButton;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
@@ -29,14 +31,14 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     @Override
     protected List<MListButton> getButtons(Object value) {
-
         List<MListButton> buttons = new ArrayList<>();
         OntologyDiagnosisSearcher s = editorKitHook.getActiveOntologyDiagnosisSearcher();
         OWLLogicalAxiom axiom = ((AxiomListItem) value).getAxiom();
         buttons.addAll(super.getButtons(value));
         buttons.add(new AxiomIsEntailedButton(this,s.isMarkedEntailed(axiom)));
         buttons.add(new AxiomIsNotEntailedButton(this,s.isMarkedNonEntailed(axiom)));
-        //buttons.add(new DebugExplainButton(this));
+        if (QueryExplanation.isAxiomInferredFromDebugger(s,axiom))
+            buttons.add(new DebugExplainButton(this));
 
         return buttons;
     }

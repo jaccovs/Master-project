@@ -1,22 +1,22 @@
 package org.exquisite.protege.model.error;
 
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus;
 
 import javax.swing.*;
 
-public class SearchErrorHandler extends ErrorHandler {
+public class SearchErrorHandler extends AbstractErrorHandler {
 
     @Override
-    public void errorHappend(OntologyDiagnosisSearcher.ErrorStatus error) {
+    public void errorHappened(ErrorStatus error, Exception ex) {
         switch (error) {
             case SOLVER_EXCEPTION:
-                JOptionPane.showMessageDialog(null, "There are problems with the solver", "IReasoner Exception", JOptionPane.ERROR_MESSAGE);
+                showMessageDialog(null, "There are problems with the solver", "IReasoner Exception", JOptionPane.ERROR_MESSAGE, ex);
                 break;
             case INCONSISTENT_THEORY_EXCEPTION:
-                JOptionPane.showMessageDialog(null, "The set of testcases itself is inconsistent with the theory.", "Inconsistent Theory Exception", JOptionPane.ERROR_MESSAGE);
+                showMessageDialog(null, "The set of testcases itself is inconsistent with the theory.", "Inconsistent Theory Exception", JOptionPane.ERROR_MESSAGE, ex);
                 break;
             case NO_CONFLICT_EXCEPTION:
-                JOptionPane.showMessageDialog(null, "There are no conflicts and therefore no diagnoses", "No Conflict Exception", JOptionPane.INFORMATION_MESSAGE);
+                showMessageDialog(null, "There are no conflicts and therefore no diagnoses", "No Conflict Exception", JOptionPane.INFORMATION_MESSAGE, ex);
                 break;
         }
     }

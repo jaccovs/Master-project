@@ -82,7 +82,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             // notification of changing the reasoner
             for (Map.Entry<OWLOntology,OntologyDiagnosisSearcher> entry : ontologyDiagnosisSearcherMap.entrySet()) {
                 final OntologyDiagnosisSearcher searcher = entry.getValue();
-                searcher.reasonerChanged();
+                searcher.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.REASONER_CHANGED);
                 logger.debug("changed reasoner of " + searcher + " to " + searcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver());
             }
 
