@@ -48,8 +48,8 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
         diagnoses.addAll(ods.getDiagnoses());
         updateList(diagnoses);
 
-        startDebuggingButton.setEnabled(!ods.isSessionRunning());
-        stopDebuggingButton.setEnabled(ods.isSessionRunning());
+        startDebuggingButton.updateView(ods);
+        stopDebuggingButton.updateView(ods);
     }
 
     @Override

@@ -140,6 +140,14 @@ public class OntologyDiagnosisSearcher {
         return debuggingSession.getState() == DebuggingSession.State.STARTED;
     }
 
+    public boolean isSessionPaused() {
+        return debuggingSession.getState() == DebuggingSession.State.PAUSED;
+    }
+
+    public boolean isSessionStopped() {
+        return debuggingSession.getState() == DebuggingSession.State.STOPPED;
+    }
+
     public TestcasesModel getTestcases() {
         return this.testcases;
     }
@@ -232,6 +240,16 @@ public class OntologyDiagnosisSearcher {
                         "\nOntology: " + this.getDiagnosisEngineFactory().getOntology().getOntologyID() +
                         "\nReason: " + msg, "Debugging Session has been stopped!", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    public void doPauseDebugging() {
+        debuggingSession.pauseSession();
+        notifyListeners();
+    }
+
+    public void doResumeDebugging() {
+        debuggingSession.resumeSession();
+        notifyListeners();
     }
 
     /**

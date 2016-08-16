@@ -13,14 +13,8 @@ public class DebuggingSession {
 
     public enum State {
         STOPPED,
-        STARTED
-    }
-
-    public enum Action {
-        PRESS_START,
-        PRESS_STOP,
-        PRESS_COMMIT,
-        PRESS_ALTERNATIVE
+        STARTED,
+        PAUSED
     }
 
     void startSession() {
@@ -29,6 +23,12 @@ public class DebuggingSession {
 
     void stopSession() {
         this.state = State.STOPPED;
+    }
+
+    void pauseSession() { this.state = State.PAUSED; }
+
+    void resumeSession() {
+        this.state = State.STARTED;
     }
 
     public State getState() {
