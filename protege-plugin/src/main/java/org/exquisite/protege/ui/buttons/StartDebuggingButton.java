@@ -21,11 +21,8 @@ public class StartDebuggingButton extends AbstractGuiButton {
                         if (debugger.isSessionStopped()) {
                             debugger.doStartDebugging(new QueryErrorHandler());
                         } else if (debugger.isSessionRunning()) {
-                            debugger.doPauseDebugging();
-                        } else if (debugger.isSessionPaused()) {
-                            debugger.doResumeDebugging();
+                            debugger.doRestartDebugging(new QueryErrorHandler());
                         }
-
                     }
 
                 }
@@ -38,13 +35,9 @@ public class StartDebuggingButton extends AbstractGuiButton {
             setText("Start Debugging");
             setToolTipText("Start a new debugging session");
         } else if (debugger.isSessionRunning()) {
-            setIcon(loadCustomIcon("player_pause.png"));
-            setText("Pause Debugging");
+            setIcon(loadCustomIcon("player_rewind.png"));
+            setText("Restart Debugging");
             setToolTipText("Pause debugging session");
-        } else if (debugger.isSessionPaused()) {
-            setIcon(loadCustomIcon("player_play.png"));
-            setText("Resume Debugging");
-            setToolTipText("Resume the paused debugging session");
         }
     }
 

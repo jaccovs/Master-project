@@ -59,7 +59,7 @@ public class OntologyDiagnosisSearcher {
      * When calling doStopSession() use this flag to inform the user, why the debugging session has stopped.
      */
     public enum SessionStopReason { PREFERENCES_CHANGED, INVOKED_BY_USER, CONSISTENT_ONTOLOGY,
-        ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED };
+        ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED, ONTOLOGY_CHANGED, SESSION_RESTARTED };
 
     private DebuggingSession debuggingSession;
 
@@ -90,6 +90,11 @@ public class OntologyDiagnosisSearcher {
     private Double cautiousParameter, previousCautiousParameter;
 
     private TestcasesModel testcases;
+
+    /**
+     * Singleton instance of an listener to ontology changes. Registered in the EditorKitHook.
+     */
+    private OntologyChangeListener ontologyChangeListener;
 
     public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
@@ -140,10 +145,6 @@ public class OntologyDiagnosisSearcher {
         return debuggingSession.getState() == DebuggingSession.State.STARTED;
     }
 
-    public boolean isSessionPaused() {
-        return debuggingSession.getState() == DebuggingSession.State.PAUSED;
-    }
-
     public boolean isSessionStopped() {
         return debuggingSession.getState() == DebuggingSession.State.STOPPED;
     }
@@ -163,6 +164,12 @@ public class OntologyDiagnosisSearcher {
     private void notifyListeners() {
         for (ChangeListener listener : changeListeners)
             listener.stateChanged(new ChangeEvent(this));
+    }
+
+    OntologyChangeListener getOntologyChangeListener() {
+        if (this.ontologyChangeListener == null)
+            this.ontologyChangeListener = new OntologyChangeListener(this);
+        return this.ontologyChangeListener;
     }
 
     /**
@@ -197,11 +204,22 @@ public class OntologyDiagnosisSearcher {
     }
 
     /**
+     * Stops the current running debugging session and restarts with another one.
+     *
+     * @param errorHandler An error handler.
+     */
+    public void doRestartDebugging(QueryErrorHandler errorHandler) {
+        doStopDebugging(SessionStopReason.SESSION_RESTARTED);
+        doStartDebugging(errorHandler);
+        notifyListeners();
+    }
+
+    /**
      * Stop diagnosis session -> reset engine, diagnoses, conflicts, queries and history.
      */
     public void doStopDebugging(SessionStopReason reason) {
         if (isSessionRunning()) {
-            //diagnosisEngineFactory.reset();                             // reset engine
+            //diagnosisEngineFactory.reset();                           // reset engine
             resetDiagnoses();                                           // reset diagnoses, conflicts
             resetQuery();                                               // reset queries
             resetQueryHistory();                                        // reset history
@@ -220,6 +238,9 @@ public class OntologyDiagnosisSearcher {
                 case ONTOLOGY_RELOADED:
                     msg = "The ontology has been reloaded.";
                     break;
+                case ONTOLOGY_CHANGED:
+                    msg = "The ontology has been modified!";
+                    break;
                 case PREFERENCES_CHANGED:
                     msg = "Preferences have been modified!";
                     break;
@@ -229,6 +250,7 @@ public class OntologyDiagnosisSearcher {
                 case INVOKED_BY_USER:     // no message necessary
                 case DEBUGGER_RESET:      // no message necessary
                 case CONSISTENT_ONTOLOGY: // no message necessary
+                case SESSION_RESTARTED:   // no message necessary
                     break;
                 default:
                     msg = reason.toString();
@@ -240,16 +262,6 @@ public class OntologyDiagnosisSearcher {
                         "\nOntology: " + this.getDiagnosisEngineFactory().getOntology().getOntologyID() +
                         "\nReason: " + msg, "Debugging Session has been stopped!", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-
-    public void doPauseDebugging() {
-        debuggingSession.pauseSession();
-        notifyListeners();
-    }
-
-    public void doResumeDebugging() {
-        debuggingSession.resumeSession();
-        notifyListeners();
     }
 
     /**
