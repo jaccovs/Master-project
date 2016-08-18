@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
+import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.ui.view.DiagnosesView;
 
@@ -7,21 +8,37 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
- * This button starts a new debugging session.
- */
 public class StartDebuggingButton extends AbstractGuiButton {
 
     public StartDebuggingButton(final DiagnosesView toolboxView) {
-        super("Start Debugging","Start a new debugging session","Search.png",KeyEvent.VK_D,
+        super("Start Debugging","Start a new debugging session","player_play.png",KeyEvent.VK_D,
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doStartDebugging(new QueryErrorHandler());
+
+                        final OntologyDiagnosisSearcher debugger = toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+
+                        if (debugger.isSessionStopped()) {
+                            debugger.doStartDebugging(new QueryErrorHandler());
+                        } else if (debugger.isSessionRunning()) {
+                            debugger.doRestartDebugging(new QueryErrorHandler());
+                        }
                     }
+
                 }
         );
-
-        setEnabled(!toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
     }
+
+    public void updateView(OntologyDiagnosisSearcher debugger) {
+        if (debugger.isSessionStopped()) {
+            setIcon(loadCustomIcon("player_play.png"));
+            setText("Start Debugging");
+            setToolTipText("Start a new debugging session");
+        } else if (debugger.isSessionRunning()) {
+            setIcon(loadCustomIcon("player_rewind.png"));
+            setText("Restart Debugging");
+            setToolTipText("Pause debugging session");
+        }
+    }
+
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class MoveToPossiblyFaultyAxiomsButton extends AbstractImageButton {
 
     public MoveToPossiblyFaultyAxiomsButton(AxiomListItem axiomListItem, InputOntologyView inputOntologyView) {
-        super("Assume as Possibly Faulty", Color.RED.darker(), "clear.png", e -> {
+        super("Assume as Possibly Faulty", Color.RED.darker(), "notification_error.png", e -> {
             List<AxiomListItem> selectedValues = new LinkedList<>();
             selectedValues.add(axiomListItem);
             inputOntologyView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().moveToPossiblyFaultyAxioms(selectedValues);

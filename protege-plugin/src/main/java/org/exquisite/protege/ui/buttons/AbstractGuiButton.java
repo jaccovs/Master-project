@@ -17,7 +17,7 @@ public abstract class AbstractGuiButton extends JButton {
         setEnabled(true);
     }
 
-    protected ImageIcon loadCustomIcon(String name) {
+    protected static ImageIcon loadCustomIcon(String name) {
         Bundle bundle=null;
         for (Bundle b : ProtegeApplication.getContext().getBundles())
             if (b.getSymbolicName().equals("org.exquisite.protege"))

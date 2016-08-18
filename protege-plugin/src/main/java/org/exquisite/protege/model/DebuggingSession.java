@@ -3,7 +3,7 @@ package org.exquisite.protege.model;
 /**
  * A debugging session object that represents the different states such a debugging session can reach.
  */
-public class DebuggingSession {
+class DebuggingSession {
 
     private State state;
 
@@ -14,13 +14,6 @@ public class DebuggingSession {
     public enum State {
         STOPPED,
         STARTED
-    }
-
-    public enum Action {
-        PRESS_START,
-        PRESS_STOP,
-        PRESS_COMMIT,
-        PRESS_ALTERNATIVE
     }
 
     void startSession() {

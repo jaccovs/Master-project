@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 public class StopDebuggingButton extends AbstractGuiButton {
 
     public StopDebuggingButton(final DiagnosesView toolboxView) {
-        super("Stop Debugging","Stop current debugging session","stop.png",KeyEvent.VK_S,
+        super("Stop Debugging","Stop current debugging session","player_stop.png",KeyEvent.VK_S,
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -20,6 +20,14 @@ public class StopDebuggingButton extends AbstractGuiButton {
         );
 
         setEnabled(toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
+    }
+
+    public void updateView(OntologyDiagnosisSearcher debugger) {
+        if (debugger.isSessionStopped()) {
+            setEnabled(false);
+        } else {
+            setEnabled(true);
+        }
     }
 
 }

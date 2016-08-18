@@ -13,7 +13,7 @@ import java.util.List;
 public class MoveToCorrectAxiomsButton extends AbstractImageButton {
 
     public MoveToCorrectAxiomsButton(AxiomListItem axiomListItem, InputOntologyView inputOntologyView) {
-        super("Assume as Correct", Color.GREEN.darker(),"Accept2.png", e -> {
+        super("Assume as Correct", Color.GREEN.darker(),"notification_done.png", e -> {
             List<AxiomListItem> selectedValues = new LinkedList<>();
             selectedValues.add(axiomListItem);
             inputOntologyView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().moveToToCorrectAxioms(selectedValues);

@@ -53,12 +53,14 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         return ontologyDiagnosisSearcherMap.get(getEditorKit().getModelManager().getActiveOntology());
     }
 
-    // Every (OWL)EditorKit has a Model (get ModelManager) and a UI (get Workspace)
-
     public void dispose() throws Exception {
         getEditorKit().getModelManager().removeListener(this);
-        for (OntologyDiagnosisSearcher searcher : ontologyDiagnosisSearcherMap.values())
-            searcher.removeChangeListener(this);
+
+        for (Map.Entry<OWLOntology,OntologyDiagnosisSearcher> entry : ontologyDiagnosisSearcherMap.entrySet()) {
+            entry.getKey().getOWLOntologyManager().removeOntologyChangeListener(entry.getValue().getOntologyChangeListener());
+            entry.getValue().removeChangeListener(this);
+        }
+
         logger.debug("disposed editorKitHook " + id);
     }
 
@@ -69,6 +71,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             if (!ontologyDiagnosisSearcherMap.containsKey(activeOntology)) {
                 OntologyDiagnosisSearcher searcher = new OntologyDiagnosisSearcher(getEditorKit());
                 searcher.addChangeListener(this);
+                activeOntology.getOWLOntologyManager().addOntologyChangeListener(searcher.getOntologyChangeListener());
                 ontologyDiagnosisSearcherMap.put(activeOntology,searcher);
             }
             notifyActiveSearcherListeners(new ChangeEvent(getActiveOntologyDiagnosisSearcher()));
