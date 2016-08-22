@@ -245,6 +245,14 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     }
 
     @Override
+    public void dispose() {
+        super.dispose();
+        final OWLOntology ontology = this.reasoner.getRootOntology();
+        OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
+        ontologyManager.removeOntology(ontology);
+    }
+
+    @Override
     public String toString() {
         return "ExquisiteOWLReasoner(" + reasoner + ")";
     }

@@ -44,4 +44,6 @@ public interface IDiagnosisEngine<F> {
     void setConflicts(Set<Set<F>> conflicts);
 
     Set<Set<F>> getConflicts();
+
+    void dispose();
 }

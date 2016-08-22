@@ -44,4 +44,6 @@ public interface ISolver<F> {
      * @return the diagnosis model of the solver
      */
     DiagnosisModel<F> getDiagnosisModel();
+
+    void dispose();
 }

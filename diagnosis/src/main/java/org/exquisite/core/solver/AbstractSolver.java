@@ -225,6 +225,12 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
     protected abstract boolean isConsistent();
 
     @Override
+    public void dispose() {
+        this.formulasCache.clear();
+        this.negationsCache.clear();
+    }
+
+    @Override
     public DiagnosisModel<F> getDiagnosisModel() {
         return this.diagnosisModel;
     }

@@ -14,20 +14,17 @@ public class StopDebuggingButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.INVOKED_BY_USER);
+                        final OntologyDiagnosisSearcher debugger = toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+                        debugger.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.INVOKED_BY_USER);
                     }
                 }
         );
 
-        setEnabled(toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
+        updateView(toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher());
     }
 
     public void updateView(OntologyDiagnosisSearcher debugger) {
-        if (debugger.isSessionStopped()) {
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
+        setEnabled(!debugger.isSessionStopped());
     }
 
 }
