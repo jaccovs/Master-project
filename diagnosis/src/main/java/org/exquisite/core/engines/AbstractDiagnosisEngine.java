@@ -97,4 +97,11 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
         this.conflicts.clear();
         this.diagnoses.clear();
     }
+
+    @Override
+    public void dispose() {
+        this.solver.dispose();
+        this.conflicts.clear();
+        this.diagnoses.clear();
+    }
 }

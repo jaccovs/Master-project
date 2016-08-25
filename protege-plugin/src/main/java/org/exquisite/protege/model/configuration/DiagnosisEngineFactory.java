@@ -59,6 +59,10 @@ public class DiagnosisEngineFactory {
         }
     }
 
+    public void dispose() {
+        this.diagnosisEngine.dispose();
+    }
+
     public void reset() {
         readConfiguration();
         this.diagnosisEngine = createDiagnosisEngine();

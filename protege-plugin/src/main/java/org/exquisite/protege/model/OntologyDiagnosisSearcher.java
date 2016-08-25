@@ -219,6 +219,7 @@ public class OntologyDiagnosisSearcher {
      */
     public void doStopDebugging(SessionStopReason reason) {
         if (isSessionRunning()) {
+            diagnosisEngineFactory.dispose();
             //diagnosisEngineFactory.reset();                           // reset engine
             resetDiagnoses();                                           // reset diagnoses, conflicts
             resetQuery();                                               // reset queries
