@@ -31,6 +31,7 @@ import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.slf4j.LoggerFactory;
 
@@ -91,18 +92,25 @@ public class OntologyDiagnosisSearcher {
 
     private TestcasesModel testcases;
 
+    private DiagnosisModel<OWLLogicalAxiom> diagnosisModel;
+
     /**
      * Singleton instance of an listener to ontology changes. Registered in the EditorKitHook.
      */
     private OntologyChangeListener ontologyChangeListener;
 
-    public OntologyDiagnosisSearcher(OWLEditorKit editorKit) {
+    public OntologyDiagnosisSearcher(OWLEditorKit editorKit) throws OWLOntologyCreationException {
         modelManager = editorKit.getModelManager();
         reasonerManager = modelManager.getOWLReasonerManager();
         OWLOntology ontology = modelManager.getActiveOntology();
         diagnosisEngineFactory = new DiagnosisEngineFactory(this, ontology, reasonerManager);
         debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
+        this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+    }
+
+    public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
+        return diagnosisModel;
     }
 
     public DiagnosisEngineFactory getDiagnosisEngineFactory() {
@@ -305,7 +313,6 @@ public class OntologyDiagnosisSearcher {
     public void moveToPossiblyFaultyAxioms(List<AxiomListItem> selectedCorrectAxioms) {
         logger.debug("moving " + selectedCorrectAxioms + " from background to possiblyFaultyAxioms");
         List<OWLLogicalAxiom> axioms = selectedCorrectAxioms.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
         diagnosisModel.getCorrectFormulas().removeAll(axioms);
         diagnosisModel.getPossiblyFaultyFormulas().addAll(axioms);
         notifyListeners();
@@ -319,7 +326,6 @@ public class OntologyDiagnosisSearcher {
     public void moveToToCorrectAxioms(List<AxiomListItem> selectedPossiblyFaultyAxioms) {
         logger.debug("moving " + selectedPossiblyFaultyAxioms + " from possiblyFaultyAxioms to correctAxioms");
         List<OWLLogicalAxiom> axioms = selectedPossiblyFaultyAxioms.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = diagnosisEngineFactory.getDiagnosisEngine().getSolver().getDiagnosisModel();
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(axioms);
         diagnosisModel.getCorrectFormulas().addAll(axioms);
         notifyListeners();
@@ -474,7 +480,7 @@ public class OntologyDiagnosisSearcher {
                     break;
                 case SYNTAX:
                     if (! (currentCostsEstimator instanceof OWLAxiomKeywordCostsEstimator))
-                        abstractDiagnosisEngine.setCostsEstimator(new OWLAxiomKeywordCostsEstimator(diagnosisEngine.getSolver().getDiagnosisModel()));
+                        abstractDiagnosisEngine.setCostsEstimator(new OWLAxiomKeywordCostsEstimator(getDiagnosisModel()));
                     break;
                 default:
                     logger.warn("Cost estimator " + diagnosisEngineFactory.getSearchConfiguration().costEstimator + " is unknown. Using " + currentCostsEstimator + " as cost estimator.");
@@ -686,8 +692,8 @@ public class OntologyDiagnosisSearcher {
 
     @Override
     public String toString() {
-        return "OntologyDiagnosisSearcher{" + "engine=" + diagnosisEngineFactory.getDiagnosisEngine() +
-                "ontology=" + diagnosisEngineFactory.getOntology() +
+        //return "OntologyDiagnosisSearcher{" + "engine=" + diagnosisEngineFactory.getDiagnosisEngine() +
+        return "OntologyDiagnosisSearcher{" + "ontology=" + diagnosisEngineFactory.getOntology() +
                 "reasonerManager=" + diagnosisEngineFactory.getReasonerManager() +
                 '}';
     }

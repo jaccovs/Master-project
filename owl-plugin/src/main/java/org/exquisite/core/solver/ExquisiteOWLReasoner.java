@@ -129,6 +129,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         possiblyFaulty.removeAll(dm.getNotEntailedExamples());
 
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
+        reasoner.dispose();
         return dm;
     }
 

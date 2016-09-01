@@ -8,6 +8,7 @@ import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.event.ChangeEvent;
@@ -69,10 +70,15 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         if (event.getType().equals(EventType.ACTIVE_ONTOLOGY_CHANGED)) {
             OWLOntology activeOntology = event.getSource().getActiveOntology();
             if (!ontologyDiagnosisSearcherMap.containsKey(activeOntology)) {
-                OntologyDiagnosisSearcher searcher = new OntologyDiagnosisSearcher(getEditorKit());
-                searcher.addChangeListener(this);
-                activeOntology.getOWLOntologyManager().addOntologyChangeListener(searcher.getOntologyChangeListener());
-                ontologyDiagnosisSearcherMap.put(activeOntology,searcher);
+
+                try {
+                    OntologyDiagnosisSearcher searcher = new OntologyDiagnosisSearcher(getEditorKit());
+                    searcher.addChangeListener(this);
+                    activeOntology.getOWLOntologyManager().addOntologyChangeListener(searcher.getOntologyChangeListener());
+                    ontologyDiagnosisSearcherMap.put(activeOntology,searcher);
+                } catch (OWLOntologyCreationException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
             notifyActiveSearcherListeners(new ChangeEvent(getActiveOntologyDiagnosisSearcher()));
 
@@ -86,7 +92,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             for (Map.Entry<OWLOntology,OntologyDiagnosisSearcher> entry : ontologyDiagnosisSearcherMap.entrySet()) {
                 final OntologyDiagnosisSearcher searcher = entry.getValue();
                 searcher.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.REASONER_CHANGED);
-                logger.debug("changed reasoner of " + searcher + " to " + searcher.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver());
+                logger.debug("changed reasoner of " + searcher);
             }
 
         } else if (EventType.ONTOLOGY_RELOADED.equals(event.getType())) {

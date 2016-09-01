@@ -82,6 +82,6 @@ public class QueryExplanation extends ExplanationService {
         // it has been inferred by query computation
         return isAxiomFromQueries
                 &&
-                !debugger.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().contains(a);
+                !debugger.getDiagnosisModel().getPossiblyFaultyFormulas().contains(a);
     }
 }

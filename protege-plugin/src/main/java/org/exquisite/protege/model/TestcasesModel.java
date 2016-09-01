@@ -63,8 +63,7 @@ public class TestcasesModel {
     }
 
     void addTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
-                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
             diagnosisModel.getEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
@@ -81,8 +80,7 @@ public class TestcasesModel {
     }
 
     void removeTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
-                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
 
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
             diagnosisModel.getEntailedExamples().removeAll(testcaseAxioms);
@@ -104,8 +102,7 @@ public class TestcasesModel {
     }
 
     void reset() {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel =
-                this.ods.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
 
         diagnosisModel.getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
         diagnosisModel.getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);

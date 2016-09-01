@@ -80,19 +80,7 @@ public class DiagnosisEngineFactory {
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
-
-            for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-                diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
-                diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
-            }
-            diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
-
-            // make a snapshot of the 'original' entailed and non-entailed test cases
-            ods.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
-            ods.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
-
-            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
+            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.ods.getDiagnosisModel(), ontology.getOWLOntologyManager(), reasonerFactory);
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
 
@@ -112,13 +100,29 @@ public class DiagnosisEngineFactory {
             }
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
-            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + diagnosisModel);
+            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.ods.getDiagnosisModel());
             return diagnosisEngine;
 
         } catch (OWLOntologyCreationException e) {
             logger.error(e.getMessage(), e);
             throw new DiagnosisRuntimeException("An error occurred during creation of a diagnosis engine", e);
         }
+    }
+
+    public DiagnosisModel<OWLLogicalAxiom> createDiagnosisModel() throws OWLOntologyCreationException {
+        final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+
+        for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+        }
+        diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
+
+        // make a snapshot of the 'original' entailed and non-entailed test cases
+        ods.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
+        ods.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
+        return diagnosisModel;
     }
 
     public OWLOntology getOntology() {
