@@ -1,20 +1,15 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
-import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.exquisite.protege.model.OntologyDebugger;
 
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.Set;
 
 public class ConflictsView extends AbstractAxiomSetView {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        DiagnosisEngineFactory diagnosisEngineFactory = ((OntologyDiagnosisSearcher) e.getSource()).getDiagnosisEngineFactory();
-        Set<Set<OWLLogicalAxiom>> conflicts = diagnosisEngineFactory.getDiagnosisEngine().getConflicts();
-        updateList(conflicts);
+        updateList(((OntologyDebugger) e.getSource()).getConflicts());
     }
 
     @Override

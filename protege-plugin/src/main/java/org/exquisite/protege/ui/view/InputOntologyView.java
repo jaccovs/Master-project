@@ -91,8 +91,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
      * @see #stateChanged(ChangeEvent)
      */
     public void updateDisplayedPossiblyFaultyAxioms() {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDiagnosisSearcher().
-                getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         updateDisplayedAxioms(possiblyFaultyAxiomsList, diagnosisModel.getPossiblyFaultyFormulas());
     }
 
@@ -101,8 +100,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
      * @see #stateChanged(ChangeEvent)
      */
     private void updateDisplayedCorrectAxioms() {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDiagnosisSearcher().
-                getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel();
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         updateDisplayedAxioms(correctAxiomsList, diagnosisModel.getCorrectFormulas());
     }
 

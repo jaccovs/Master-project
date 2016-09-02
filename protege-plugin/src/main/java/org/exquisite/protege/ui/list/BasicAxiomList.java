@@ -30,7 +30,7 @@ public class BasicAxiomList extends AbstractAxiomList {
         List<MListButton> buttons = new ArrayList<>();
         buttons.addAll(super.getButtons(value));
 
-        if (! view.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning()) {
+        if (! view.getEditorKitHook().getActiveOntologyDebugger().isSessionRunning()) {
             if (!isBackground)
                 buttons.add(new MoveToCorrectAxiomsButton((AxiomListItem) value, view));
             else

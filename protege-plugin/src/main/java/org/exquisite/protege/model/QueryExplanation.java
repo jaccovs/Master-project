@@ -29,7 +29,7 @@ public class QueryExplanation extends ExplanationService {
 
     @Override
     public boolean hasExplanation(OWLAxiom axiom) {
-        return isAxiomInferredFromDebugger(getDebugger(), axiom);
+        return isAxiomInferredFromDebugger(getOntologyDebugger(), axiom);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class QueryExplanation extends ExplanationService {
     @Override
     public void dispose() throws Exception {}
 
-    private OntologyDiagnosisSearcher getDebugger() {
-        return getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+    private OntologyDebugger getOntologyDebugger() {
+        return getEditorKitHook().getActiveOntologyDebugger();
     }
 
     private EditorKitHook getEditorKitHook() {
@@ -59,7 +59,7 @@ public class QueryExplanation extends ExplanationService {
      * @param axiom The OWL Axiom to check.
      * @return <code>true</code> if axiom has been inferred by query computation, <code>false</code> otherwise.
      */
-    public static boolean isAxiomInferredFromDebugger(final OntologyDiagnosisSearcher debugger, final OWLAxiom axiom) {
+    public static boolean isAxiomInferredFromDebugger(final OntologyDebugger debugger, final OWLAxiom axiom) {
         if (!(axiom instanceof OWLLogicalAxiom)) // TODO clarify if this is a correct assumption
             return false;
 
@@ -82,6 +82,6 @@ public class QueryExplanation extends ExplanationService {
         // it has been inferred by query computation
         return isAxiomFromQueries
                 &&
-                !debugger.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().contains(a);
+                !debugger.getDiagnosisModel().getPossiblyFaultyFormulas().contains(a);
     }
 }

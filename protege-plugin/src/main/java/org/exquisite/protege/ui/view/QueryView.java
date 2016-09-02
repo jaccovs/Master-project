@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.OntologyDebugger;
 import org.exquisite.protege.ui.buttons.CommitAndGetNextButton;
 import org.exquisite.protege.ui.buttons.GetAlternativeQueryButton;
 import org.exquisite.protege.ui.list.QueryAxiomList;
@@ -36,6 +36,12 @@ public class QueryView extends AbstractListQueryViewComponent {
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         add(createNewQueryToolBar(), BorderLayout.NORTH);
+        updateView();
+    }
+
+    private void updateView() {
+        final OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
+        getList().updateList(debugger, debugger.getDiagnosisEngineFactory().getOntology());
     }
 
     public QueryAxiomList getList() {
@@ -50,11 +56,11 @@ public class QueryView extends AbstractListQueryViewComponent {
     @Override
     public void stateChanged(ChangeEvent e) {
 
-        OntologyDiagnosisSearcher s = (OntologyDiagnosisSearcher) e.getSource();
-        switch(s.getQuerySearchStatus()) {
+        OntologyDebugger debugger = (OntologyDebugger) e.getSource();
+        switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
                 OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                getList().updateList(s,ontology);
+                getList().updateList(debugger,ontology);
                 break;
             case IDLE:
                 getList().clearList();
@@ -62,7 +68,7 @@ public class QueryView extends AbstractListQueryViewComponent {
         }
 
         getAlternativeQueryButton.setEnabled(false); // TODO NOT YET IMPLEMENTED
-        commitAndGetNextButton.setEnabled(s.isSessionRunning() && s.sizeOfEntailedAndNonEntailedAxioms() > 0);
+        commitAndGetNextButton.setEnabled(debugger.isSessionRunning() && debugger.sizeOfEntailedAndNonEntailedAxioms() > 0);
     }
 
 }

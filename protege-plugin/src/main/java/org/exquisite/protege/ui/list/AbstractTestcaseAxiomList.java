@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
 
 abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
 
@@ -76,7 +76,7 @@ abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof TestcaseListItem) {
             for (int number : getSelectedIndices()) {
                 TestcaseListItem item = (TestcaseListItem) getModel().getElementAt(number);
-                getEditorKitHook().getActiveOntologyDiagnosisSearcher().doRemoveTestcase(item.getTestcase(),item.getType());
+                getEditorKitHook().getActiveOntologyDebugger().doRemoveTestcase(item.getTestcase(),item.getType());
             }
         }
     }

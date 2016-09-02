@@ -16,7 +16,7 @@ public class MoveToCorrectAxiomsButton extends AbstractAnswerButton {
         super("Assume as Correct", Color.GREEN.darker(), e -> {
             List<AxiomListItem> selectedValues = new LinkedList<>();
             selectedValues.add(axiomListItem);
-            inputOntologyView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().moveToToCorrectAxioms(selectedValues);
+            inputOntologyView.getEditorKitHook().getActiveOntologyDebugger().moveToToCorrectAxioms(selectedValues);
         });
     }
 

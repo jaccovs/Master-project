@@ -1,6 +1,6 @@
 package org.exquisite.protege.model.error;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus;
+import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus;
 
 import javax.swing.*;
 

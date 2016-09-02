@@ -31,6 +31,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private HashSet<InferredAxiomGenerator<? extends OWLLogicalAxiom>> axiomGenerators = new HashSet<>();
 
     /**
+     * An anonymous ontology that is used by the internal OWLreasoner for debugging sessions.
+     */
+    private OWLOntology debuggingOntology = null;
+
+    /**
      * Default constructor of the reasoner
      *
      * @param dm              a diagnosis model
@@ -42,8 +47,8 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                                 OWLOntologyManager manager, OWLReasonerFactory reasonerFactory)
             throws OWLOntologyCreationException {
         super(dm);
-        OWLOntology debugOntology = manager.createOntology(); // use of anonymous ontology as debugging ontology
-        this.reasoner = reasonerFactory.createReasoner(debugOntology);
+        this.debuggingOntology = manager.createOntology(); // use of anonymous ontology as debugging ontology
+        this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
         checkDiagnosisModel();
     }
 
@@ -129,6 +134,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         possiblyFaulty.removeAll(dm.getNotEntailedExamples());
 
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
+        reasoner.dispose();
         return dm;
     }
 
@@ -248,8 +254,16 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     public void dispose() {
         super.dispose();
         final OWLOntology ontology = this.reasoner.getRootOntology();
+        if (!ontology.equals(this.debuggingOntology))
+            throw new UnsupportedOperationException("reasoners root ontology does not equal the debugging ontology");
         OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
         ontologyManager.removeOntology(ontology);
+        this.axiomGenerators.clear();
+        this.reasoner.dispose();
+    }
+
+    public OWLOntology getDebuggingOntology() {
+        return debuggingOntology;
     }
 
     @Override

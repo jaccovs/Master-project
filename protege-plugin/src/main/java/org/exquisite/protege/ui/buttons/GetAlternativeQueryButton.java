@@ -13,12 +13,10 @@ public class GetAlternativeQueryButton extends AbstractGuiButton {
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().doGetAlternativeQuery();
+                        queryView.getEditorKitHook().getActiveOntologyDebugger().doGetAlternativeQuery();
                     }
                 }
         );
-
-        //setEnabled(queryView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().isSessionRunning());
         setEnabled(false);
     }
 

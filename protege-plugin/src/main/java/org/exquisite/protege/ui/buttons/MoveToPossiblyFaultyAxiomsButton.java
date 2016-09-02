@@ -18,7 +18,7 @@ public class MoveToPossiblyFaultyAxiomsButton extends AbstractAnswerButton {
         super("Assume as Possibly Faulty", ROLL_OVER_COLOR, e -> {
             List<AxiomListItem> selectedValues = new LinkedList<>();
             selectedValues.add(axiomListItem);
-            inputOntologyView.getEditorKitHook().getActiveOntologyDiagnosisSearcher().moveToPossiblyFaultyAxioms(selectedValues);
+            inputOntologyView.getEditorKitHook().getActiveOntologyDebugger().moveToPossiblyFaultyAxioms(selectedValues);
         });
     }
 
