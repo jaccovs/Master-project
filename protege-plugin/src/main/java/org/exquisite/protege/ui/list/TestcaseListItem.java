@@ -6,7 +6,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
 
 class TestcaseListItem extends AxiomListItem {
 

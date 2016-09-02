@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.query.Answer;
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.OntologyDebugger;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -38,14 +38,14 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof QueryHistoryItem) {
             for (int number : getSelectedIndices()) {
                 QueryHistoryItem item = (QueryHistoryItem) getModel().getElementAt(number);
-                final OntologyDiagnosisSearcher searcher = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
-                searcher.doRemoveQueryHistoryAnswer(item.getAnswer());
+                final OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
+                debugger.doRemoveQueryHistoryAnswer(item.getAnswer());
             }
         }
     }
 
     public void updateView() {
-        List<Answer<OWLLogicalAxiom>> queryHistory = getEditorKitHook().getActiveOntologyDiagnosisSearcher().getQueryHistory();
+        List<Answer<OWLLogicalAxiom>> queryHistory = getEditorKitHook().getActiveOntologyDebugger().getQueryHistory();
         final OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         List<Object> items = new LinkedList<>();

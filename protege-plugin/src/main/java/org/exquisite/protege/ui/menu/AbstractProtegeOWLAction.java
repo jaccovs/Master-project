@@ -1,24 +1,24 @@
 package org.exquisite.protege.ui.menu;
 
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.OntologyDebugger;
 import org.protege.editor.owl.ui.action.ProtegeOWLAction;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * Abstract class to be extended for all Debugger menu items that depend.
+ * Abstract class to be extended for all OntologyDebugger menu items that depend.
  */
 abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements ChangeListener {
 
     /**
-     * Get the active OntologyDiagnosisSearcher instance.
-     * @return The active OntologyDiagnosisSearcher instance.
+     * Get the active OntologyDebugger instance.
+     * @return The active OntologyDebugger instance.
      */
-    OntologyDiagnosisSearcher getActiveOntologyDiagnosisSearcher() {
+    OntologyDebugger getActiveOntologyDebugger() {
         EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
-        return editorKitHook.getActiveOntologyDiagnosisSearcher();
+        return editorKitHook.getActiveOntologyDebugger();
     }
 
     /**
@@ -27,7 +27,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
      * <code>false</code> if the state is in STOPPED.
      */
     boolean isSessionRunning() {
-        return getActiveOntologyDiagnosisSearcher().isSessionRunning();
+        return getActiveOntologyDebugger().isSessionRunning();
     }
 
     @Override

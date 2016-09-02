@@ -3,7 +3,7 @@ package org.exquisite.protege.model.error;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.ErrorStatus;
+import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus;
 
 public abstract class AbstractErrorHandler {
 

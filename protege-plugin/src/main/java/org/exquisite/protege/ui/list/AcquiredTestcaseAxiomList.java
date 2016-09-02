@@ -7,7 +7,7 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
 
 /**
  * List of given answers to queries marked as either entailed or non-entailed.
@@ -26,7 +26,7 @@ public class AcquiredTestcaseAxiomList extends AbstractTestcaseAxiomList {
 
     @Override
     protected List<OWLLogicalAxiom> getEntailedTestcases() {
-        return new ArrayList<>(getEditorKitHook().getActiveOntologyDiagnosisSearcher().getTestcases().getAcquiredEntailedTestcases());
+        return new ArrayList<>(getEditorKitHook().getActiveOntologyDebugger().getTestcases().getAcquiredEntailedTestcases());
     }
 
     @Override
@@ -36,6 +36,6 @@ public class AcquiredTestcaseAxiomList extends AbstractTestcaseAxiomList {
 
     @Override
     protected List<OWLLogicalAxiom> getNonEntailedTestcases() {
-        return new ArrayList<>(getEditorKitHook().getActiveOntologyDiagnosisSearcher().getTestcases().getAcquiredNonEntailedTestcases());
+        return new ArrayList<>(getEditorKitHook().getActiveOntologyDebugger().getTestcases().getAcquiredNonEntailedTestcases());
     }
 }

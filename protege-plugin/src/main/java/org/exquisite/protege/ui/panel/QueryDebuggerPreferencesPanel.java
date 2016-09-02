@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.panel;
 
+import org.exquisite.protege.model.OntologyDebugger;
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.protege.editor.owl.ui.preferences.OWLPreferencesPanel;
 
@@ -17,8 +17,8 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
                 getOWLEditorKit().get("org.exquisite.protege.EditorKitHook");
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.ontologyDiagnosisSearcher = editorKitHook.getActiveOntologyDiagnosisSearcher();
-        SearchConfiguration configuration = this.ontologyDiagnosisSearcher.getDiagnosisEngineFactory().getSearchConfiguration();
+        this.debugger = editorKitHook.getActiveOntologyDebugger();
+        SearchConfiguration configuration = this.debugger.getDiagnosisEngineFactory().getSearchConfiguration();
         newConfiguration = new SearchConfiguration();
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -33,8 +33,8 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
 
     public void applyChanges() {
         panes.forEach(AbstractOptPanel::saveChanges);
-        ontologyDiagnosisSearcher.updateConfig(newConfiguration);
-        panes.stream().filter(panel -> panel instanceof ProbabPanel).forEach(panel -> ontologyDiagnosisSearcher.updateProbab(((ProbabPanel) panel).getMap()));
+        debugger.updateConfig(newConfiguration);
+        panes.stream().filter(panel -> panel instanceof ProbabPanel).forEach(panel -> debugger.updateProbab(((ProbabPanel) panel).getMap()));
     }
 
     public void dispose() throws Exception {
@@ -46,7 +46,7 @@ public class QueryDebuggerPreferencesPanel extends OWLPreferencesPanel {
         panes.add(panel);
     }
 
-    private OntologyDiagnosisSearcher ontologyDiagnosisSearcher;
+    private OntologyDebugger debugger;
 
     private SearchConfiguration newConfiguration;
 

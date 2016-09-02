@@ -7,7 +7,7 @@ import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.OntologyDebugger;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.TreeSet;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.SessionStopReason;
+import static org.exquisite.protege.model.OntologyDebugger.SessionStopReason;
 
 public class DiagnosisEngineFactory {
 
@@ -26,7 +26,7 @@ public class DiagnosisEngineFactory {
 
     private IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine;
 
-    private OntologyDiagnosisSearcher ods;
+    private OntologyDebugger debugger;
 
     private OWLOntology ontology;
 
@@ -34,8 +34,8 @@ public class DiagnosisEngineFactory {
 
     private OWLReasonerManager reasonerMan;
 
-    public DiagnosisEngineFactory(OntologyDiagnosisSearcher ods, OWLOntology ontology, OWLReasonerManager reasonerMan) {
-        this.ods = ods;
+    public DiagnosisEngineFactory(OntologyDebugger debugger, OWLOntology ontology, OWLReasonerManager reasonerMan) {
+        this.debugger = debugger;
         this.ontology = ontology;
         this.reasonerMan = reasonerMan;
         readConfiguration();
@@ -53,8 +53,8 @@ public class DiagnosisEngineFactory {
         if (config.hasConfigurationChanged(newConfiguration)) {
             // as soon as the configuration has changed we do stop any currently running session
             ConfigFileManager.writeConfiguration(newConfiguration);
-            if (ods.isSessionRunning()) {
-                ods.doStopDebugging(SessionStopReason.PREFERENCES_CHANGED);
+            if (debugger.isSessionRunning()) {
+                debugger.doStopDebugging(SessionStopReason.PREFERENCES_CHANGED);
             }
         }
     }
@@ -69,8 +69,6 @@ public class DiagnosisEngineFactory {
     }
 
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
-        if (diagnosisEngine == null)
-            diagnosisEngine = createDiagnosisEngine();
         return diagnosisEngine;
     }
 
@@ -80,7 +78,7 @@ public class DiagnosisEngineFactory {
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.ods.getDiagnosisModel(), ontology.getOWLOntologyManager(), reasonerFactory);
+            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), ontology.getOWLOntologyManager(), reasonerFactory);
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
 
@@ -100,7 +98,7 @@ public class DiagnosisEngineFactory {
             }
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
-            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.ods.getDiagnosisModel());
+            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.debugger.getDiagnosisModel());
             return diagnosisEngine;
 
         } catch (OWLOntologyCreationException e) {
@@ -120,8 +118,8 @@ public class DiagnosisEngineFactory {
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
         // make a snapshot of the 'original' entailed and non-entailed test cases
-        ods.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
-        ods.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
+        debugger.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
+        debugger.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
         return diagnosisModel;
     }
 

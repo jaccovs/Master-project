@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
+import org.exquisite.protege.model.OntologyDebugger;
 import org.exquisite.protege.ui.view.DiagnosesView;
 
 import javax.swing.*;
@@ -14,16 +14,16 @@ public class StopDebuggingButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        final OntologyDiagnosisSearcher debugger = toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher();
-                        debugger.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.INVOKED_BY_USER);
+                        final OntologyDebugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
+                        debugger.doStopDebugging(OntologyDebugger.SessionStopReason.INVOKED_BY_USER);
                     }
                 }
         );
 
-        updateView(toolboxView.getEditorKitHook().getActiveOntologyDiagnosisSearcher());
+        updateView(toolboxView.getEditorKitHook().getActiveOntologyDebugger());
     }
 
-    public void updateView(OntologyDiagnosisSearcher debugger) {
+    public void updateView(OntologyDebugger debugger) {
         setEnabled(!debugger.isSessionStopped());
     }
 

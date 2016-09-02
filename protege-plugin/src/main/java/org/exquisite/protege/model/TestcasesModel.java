@@ -1,12 +1,11 @@
 package org.exquisite.protege.model;
 
-import org.exquisite.core.model.DiagnosisModel;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType;
+import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
 
 /**
  * A model of the test cases that differs between the original entailed and non-entailed test cases and
@@ -20,7 +19,7 @@ import static org.exquisite.protege.model.OntologyDiagnosisSearcher.TestcaseType
  */
 public class TestcasesModel {
 
-    private OntologyDiagnosisSearcher ods;
+    private OntologyDebugger debugger;
 
     private Set<OWLLogicalAxiom> originalEntailedTestcases;
 
@@ -30,8 +29,8 @@ public class TestcasesModel {
 
     private Set<OWLLogicalAxiom> acquiredNonEntailedTestcases;
 
-    TestcasesModel(OntologyDiagnosisSearcher ods) {
-        this.ods = ods;
+    TestcasesModel(OntologyDebugger debugger) {
+        this.debugger = debugger;
         this.originalEntailedTestcases = new TreeSet<>();
         this.originalNonEntailedTestcases = new TreeSet<>();
         this.acquiredEntailedTestcases = new TreeSet<>();
@@ -63,15 +62,14 @@ public class TestcasesModel {
     }
 
     void addTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
-            diagnosisModel.getEntailedExamples().addAll(testcaseAxioms);
+            this.debugger.getDiagnosisModel().getEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
                 this.acquiredEntailedTestcases.addAll(testcaseAxioms);
             else
                 this.originalEntailedTestcases.addAll(testcaseAxioms);
         } else {
-            diagnosisModel.getNotEntailedExamples().addAll(testcaseAxioms);
+            this.debugger.getDiagnosisModel().getNotEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_NON_ENTAILED_TC)
                 this.acquiredNonEntailedTestcases.addAll(testcaseAxioms);
             else
@@ -80,16 +78,15 @@ public class TestcasesModel {
     }
 
     void removeTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
 
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
-            diagnosisModel.getEntailedExamples().removeAll(testcaseAxioms);
+            this.debugger.getDiagnosisModel().getEntailedExamples().removeAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
                 this.acquiredEntailedTestcases.removeAll(testcaseAxioms);
             else
                 this.originalEntailedTestcases.removeAll(testcaseAxioms);
         } else {
-            diagnosisModel.getNotEntailedExamples().removeAll(testcaseAxioms);
+            this.debugger.getDiagnosisModel().getNotEntailedExamples().removeAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_NON_ENTAILED_TC)
                 this.acquiredNonEntailedTestcases.removeAll(testcaseAxioms);
             else
@@ -102,13 +99,11 @@ public class TestcasesModel {
     }
 
     void reset() {
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.ods.getDiagnosisModel();
+        debugger.getDiagnosisModel().getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
+        debugger.getDiagnosisModel().getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);
 
-        diagnosisModel.getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
-        diagnosisModel.getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);
-
-        this.originalEntailedTestcases = new TreeSet<>(diagnosisModel.getEntailedExamples());
-        this.originalNonEntailedTestcases = new TreeSet<>(diagnosisModel.getNotEntailedExamples());
+        this.originalEntailedTestcases = new TreeSet<>(debugger.getDiagnosisModel().getEntailedExamples());
+        this.originalNonEntailedTestcases = new TreeSet<>(debugger.getDiagnosisModel().getNotEntailedExamples());
 
         this.acquiredEntailedTestcases.clear();
         this.acquiredNonEntailedTestcases.clear();

@@ -17,9 +17,9 @@ class OntologyChangeListener implements OWLOntologyChangeListener  {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyChangeListener.class);
 
-    private OntologyDiagnosisSearcher debugger;
+    private OntologyDebugger debugger;
 
-    OntologyChangeListener(OntologyDiagnosisSearcher debugger) {
+    OntologyChangeListener(OntologyDebugger debugger) {
         this.debugger = debugger;
     }
 
@@ -27,7 +27,7 @@ class OntologyChangeListener implements OWLOntologyChangeListener  {
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
         if (areChangesRelevant(changes) && debugger.isSessionRunning()) {
                 logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
-                debugger.doStopDebugging(OntologyDiagnosisSearcher.SessionStopReason.ONTOLOGY_CHANGED);
+                debugger.doStopDebugging(OntologyDebugger.SessionStopReason.ONTOLOGY_CHANGED);
         }
     }
 

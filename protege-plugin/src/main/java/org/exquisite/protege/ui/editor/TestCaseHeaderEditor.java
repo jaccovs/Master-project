@@ -1,8 +1,8 @@
 package org.exquisite.protege.ui.editor;
 
+import org.exquisite.protege.model.OntologyDebugger;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.ui.list.TestcaseListHeader;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -27,11 +27,11 @@ public class TestCaseHeaderEditor extends AbstractEditor {
     }
 
     protected void handleEditorConfirmed(Set<OWLLogicalAxiom> testcase) {
-        OntologyDiagnosisSearcher diagnosisSearcher = getEditorKitHook().getActiveOntologyDiagnosisSearcher();
+        OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
 
-        diagnosisSearcher.doAddTestcase(testcase,header.getType(),new AbstractErrorHandler() {
+        debugger.doAddTestcase(testcase,header.getType(),new AbstractErrorHandler() {
             @Override
-            public void errorHappened(OntologyDiagnosisSearcher.ErrorStatus error, Exception ex) {
+            public void errorHappened(OntologyDebugger.ErrorStatus error, Exception ex) {
                 showMessageDialog(null, "This testcase is not compatible with already specified testcases and was " +
                         "therefore nod added. To resolve this problem you can try to delete testcase which are conflicting. ",
                         "Inconsistent Theory Exception", JOptionPane.ERROR_MESSAGE, null);

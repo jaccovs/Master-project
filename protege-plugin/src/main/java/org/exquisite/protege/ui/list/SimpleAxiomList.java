@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDiagnosisSearcher;
 import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -20,8 +19,7 @@ public class SimpleAxiomList extends AbstractAxiomList {
         super(editorKit);
         setCellRenderer(new AxiomListItemRenderer(editorKit,headerColor));
 
-        DiagnosisEngineFactory diagnosisEngineFactory = editorKitHook.getActiveOntologyDiagnosisSearcher().getDiagnosisEngineFactory();
-        Set<Set<OWLLogicalAxiom>> conflicts = diagnosisEngineFactory.getDiagnosisEngine().getConflicts();
+        Set<Set<OWLLogicalAxiom>> conflicts = editorKitHook.getActiveOntologyDebugger().getConflicts();
         OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
         updateList(conflicts, ontology, headerPrefix);
     }
