@@ -34,8 +34,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         if (!initialized) {
             ontologyDebuggerMap = new LinkedHashMap<>();
             getEditorKit().getModelManager().addListener(this);
-            id = cnt;
-            cnt++;
+            id = cnt++;
             logger.debug("initialised editorKitHook " + id);
             logger.debug("this is ls4j logger");
             initialized = true;
@@ -116,19 +115,14 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             try {
                 final OntologyDebugger debugger = new OntologyDebugger(getEditorKit());
                 final OWLOntologyManager ontologyManager = activeOntology.getOWLOntologyManager();
-
-
                 debugger.addChangeListener(this);
-
                 ontologyManager.addOntologyChangeListener(debugger.getOntologyChangeListener());
-                final OWLModelManager modelManager = getEditorKit().getModelManager();
-
                 ontologyDebuggerMap.put(activeOntology, debugger);
             } catch (OWLOntologyCreationException e) {
                 logger.error(e.getMessage(), e);
             }
         }
-        notifyActiveSearcherListeners(new ChangeEvent(getActiveOntologyDebugger()));
+        notifyActiveDebuggerListeners(new ChangeEvent(getActiveOntologyDebugger()));
 
         final Optional<IRI> ontologyIRI = activeOntology.getOntologyID().getOntologyIRI();
         if (ontologyIRI.isPresent())
@@ -143,19 +137,19 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         OntologyDebugger activeDebugger = ontologyDebuggerMap.get(activeOntology);
         if (activeDebugger.equals(e.getSource())) {
             // something in the active ontology searcher has changed
-            notifyActiveSearcherListeners(e);
+            notifyActiveDebuggerListeners(e);
         }
     }
 
-    public void addActiveSearcherChangeListener(ChangeListener listener) {
+    public void addActiveDebuggerChangeListener(ChangeListener listener) {
         changeListeners.add(listener);
     }
 
-    public void removeActiveSearcherChangeListener(ChangeListener listener) {
+    public void removeActiveDebuggerChangeListener(ChangeListener listener) {
         changeListeners.remove(listener);
     }
 
-    private void notifyActiveSearcherListeners(ChangeEvent event) {
+    private void notifyActiveDebuggerListeners(ChangeEvent event) {
         for (ChangeListener listener : changeListeners)
             listener.stateChanged(event);
     }

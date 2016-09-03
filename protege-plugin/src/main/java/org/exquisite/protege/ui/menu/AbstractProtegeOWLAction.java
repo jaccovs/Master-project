@@ -33,13 +33,16 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
     @Override
     public void initialise() throws Exception {
         // notify this menu item when the ontology is changed.
-        EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
-        editorKitHook.addActiveSearcherChangeListener(this);
+        final EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
+        editorKitHook.addActiveDebuggerChangeListener(this);
         updateState();
     }
 
     @Override
-    public void dispose() throws Exception {}
+    public void dispose() throws Exception {
+        final EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
+        editorKitHook.removeActiveDebuggerChangeListener(this);
+    }
 
     @Override
     public void stateChanged(ChangeEvent e) {
