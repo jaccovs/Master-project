@@ -23,6 +23,8 @@ import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.exquisite.protege.model.configuration.SearchConfiguration;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
 import org.exquisite.protege.model.error.QueryErrorHandler;
+import org.exquisite.protege.model.event.EventType;
+import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -35,7 +37,6 @@ import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.math.BigDecimal;
 import java.util.*;
@@ -46,7 +47,7 @@ import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus.SOLVER_EX
 
 public class OntologyDebugger {
 
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDebugger.class.getName());
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDebugger.class.getCanonicalName());
 
     public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
@@ -175,9 +176,9 @@ public class OntologyDebugger {
         changeListeners.remove(listener);
     }
 
-    private void notifyListeners() {
+    private void notifyListeners(OntologyDebuggerChangeEvent e) {
         for (ChangeListener listener : changeListeners)
-            listener.stateChanged(new ChangeEvent(this));
+            listener.stateChanged(e);
     }
 
     OntologyChangeListener getOntologyChangeListener() {
@@ -198,20 +199,24 @@ public class OntologyDebugger {
                 JOptionPane.showMessageDialog(null, "No Reasoner set. Select a reasoner from the Reasoner menu.", "No Reasoner set", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
+
+            logger.info("----------------- Starting new Debugging Session -----------------");
+
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
+            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
             doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
 
             switch (diagnoses.size()) {
                 case 0:
-                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
                     doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
+                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 1:
+                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
                     JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 default:
-                    notifyListeners();
                     break;
             }
         }
@@ -225,7 +230,6 @@ public class OntologyDebugger {
     public void doRestartDebugging(QueryErrorHandler errorHandler) {
         doStopDebugging(SessionStopReason.SESSION_RESTARTED);
         doStartDebugging(errorHandler);
-        notifyListeners();
     }
 
     /**
@@ -233,7 +237,13 @@ public class OntologyDebugger {
      */
     public void doStopDebugging(SessionStopReason reason) {
         if (isSessionRunning()) {
-            diagnosisEngineFactory.dispose();
+            logger.info("----------------- Stopping Debugging Session -----------------");
+
+            try {
+                diagnosisEngineFactory.dispose();
+            } catch (RuntimeException rex) {
+                logger.error("A runtime exception occurred while disposing diagnosis engine", rex);
+            }
 
             this.diagnoses.clear();                                     // reset diagnoses, conflicts
             this.conflicts.clear();
@@ -244,9 +254,10 @@ public class OntologyDebugger {
             resetQueryHistory();                                        // reset history
             testcases.reset();
             debuggingSession.stopSession();                             // stop session
+            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
             this.cautiousParameter = null;
             this.previousCautiousParameter = null;
-            notifyListeners();
+
 
             // notify the user why session has stopped
             String msg = null;
@@ -322,7 +333,7 @@ public class OntologyDebugger {
         List<OWLLogicalAxiom> axioms = selectedCorrectAxioms.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
         diagnosisModel.getCorrectFormulas().removeAll(axioms);
         diagnosisModel.getPossiblyFaultyFormulas().addAll(axioms);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.INPUT_ONTOLOGY_CHANGED));
     }
 
     /**
@@ -335,7 +346,7 @@ public class OntologyDebugger {
         List<OWLLogicalAxiom> axioms = selectedPossiblyFaultyAxioms.stream().map(AxiomListItem::getAxiom).collect(Collectors.toList());
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(axioms);
         diagnosisModel.getCorrectFormulas().addAll(axioms);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.INPUT_ONTOLOGY_CHANGED));
     }
 
     public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
@@ -373,14 +384,12 @@ public class OntologyDebugger {
 
         if (isSessionRunning())
             doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
-        notifyListeners();
     }
 
     public void doAddTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type, AbstractErrorHandler errorHandler) {
         this.testcases.addTestcase(axioms, type);
         if(!getErrorStatus().equals(NO_ERROR))
             errorHandler.errorHappened(getErrorStatus());
-        notifyListeners();
     }
 
     /**
@@ -398,22 +407,22 @@ public class OntologyDebugger {
 
     public void doAddAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
         this.answer.positive.add(axiom);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
     public void doAddAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
         this.answer.negative.add(axiom);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
     public void doRemoveAxiomsMarkedEntailed(OWLLogicalAxiom axiom) {
         this.answer.positive.remove(axiom);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
     public void doRemoveAxiomsMarkedNonEntailed(OWLLogicalAxiom axiom) {
         this.answer.negative.remove(axiom);
-        notifyListeners();
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
     /**
@@ -428,10 +437,11 @@ public class OntologyDebugger {
         if (noErrorOccur) {
             switch (diagnoses.size()) {
                 case 0:
-                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
                     doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
+                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 1:
+                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
                     JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 default:
@@ -458,7 +468,6 @@ public class OntologyDebugger {
         this.queryHistory.add(this.answer);
 
         resetQuery();
-        notifyListeners();
     }
 
     /**
@@ -511,7 +520,6 @@ public class OntologyDebugger {
             conflicts.addAll(diagnosisEngine.getConflicts());
             logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
             logger.debug("based on these conflicts: " + conflicts);
-            notifyListeners();
             return true;
         } catch (DiagnosisException | ReasonerInternalException e) {
             errorHandler.errorHappened(SOLVER_EXCEPTION, e);
@@ -622,7 +630,7 @@ public class OntologyDebugger {
         } catch (DiagnosisException e) {
             errorHandler.errorHappened(ErrorStatus.SOLVER_EXCEPTION);
         } finally {
-            notifyListeners();
+            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_CALCULATED));
         }
     }
 
@@ -687,10 +695,9 @@ public class OntologyDebugger {
 
     public void doRemoveQueryHistoryAnswer(Answer<OWLLogicalAxiom> answer) {
         queryHistory.remove(answer);
+        // TODO FIX THIS DOUBLE CALCULATION
         doRemoveTestcase(answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
         doRemoveTestcase(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
-
-        notifyListeners();
     }
 
     public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {

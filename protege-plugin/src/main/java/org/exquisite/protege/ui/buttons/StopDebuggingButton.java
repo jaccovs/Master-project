@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.buttons;
 
 import org.exquisite.protege.model.OntologyDebugger;
-import org.exquisite.protege.ui.view.DiagnosesView;
+import org.exquisite.protege.ui.view.AbstractQueryViewComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class StopDebuggingButton extends AbstractGuiButton {
 
-    public StopDebuggingButton(final DiagnosesView toolboxView) {
+    public StopDebuggingButton(final AbstractQueryViewComponent toolboxView) {
         super("Stop Debugging","Stop current debugging session","player_stop.png",KeyEvent.VK_S,
                 new AbstractAction() {
                     @Override

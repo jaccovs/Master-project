@@ -98,7 +98,22 @@ public class DiagnosisEngineFactory {
             }
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
-            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags + " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.debugger.getDiagnosisModel());
+
+            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags +
+                    " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.debugger.getDiagnosisModel());
+            logger.info("----------------------------------- Debugger Settings -----------------------------------");
+            logger.info("Diagnosis Engine: {}", diagnosisEngine);
+            logger.info("Reasoner: {}", reasoner);
+            logger.info("Leading Diagnoses: " + config.numOfLeadingDiags);
+            logger.info("Enrich Query: " + config.enrichQuery);
+            logger.info("Thresholds: {}, {}, {}", config.entropyThreshold, config.cardinalityThreshold, config.cautiousParameter);
+            logger.info("Diagnosis Model:");
+            final DiagnosisModel<OWLLogicalAxiom> dm = this.debugger.getDiagnosisModel();
+            logger.info("   {} Correct Formulas: {}", dm.getCorrectFormulas().size(), dm.getCorrectFormulas());
+            logger.info("   {} Possibly Faulty Formulas: {}", dm.getPossiblyFaultyFormulas().size(), dm.getPossiblyFaultyFormulas());
+            logger.info("   {} Entailed Examples: {}", dm.getEntailedExamples().size(), dm.getEntailedExamples());
+            logger.info("   {} Not-Entailed Examples: {}", dm.getNotEntailedExamples().size(), dm.getNotEntailedExamples());
+
             return diagnosisEngine;
 
         } catch (OWLOntologyCreationException e) {

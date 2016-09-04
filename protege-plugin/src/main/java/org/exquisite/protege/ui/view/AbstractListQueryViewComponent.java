@@ -5,7 +5,7 @@ import org.protege.editor.core.ui.util.ComponentFactory;
 import javax.swing.*;
 import java.awt.*;
 
-abstract class AbstractListQueryViewComponent extends AbstractQueryViewComponent {
+public abstract class AbstractListQueryViewComponent extends AbstractQueryViewComponent {
 
     private JComponent list;
 

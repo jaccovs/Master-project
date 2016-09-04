@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 
-abstract class AbstractDiagnosesSetView extends AbstractListQueryViewComponent {
+public abstract class AbstractDiagnosesSetView extends AbstractListQueryViewComponent {
 
     public SimpleDiagnosisList getList() {
         return (SimpleDiagnosisList) super.getList();

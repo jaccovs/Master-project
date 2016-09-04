@@ -5,7 +5,7 @@ import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
 
 import javax.swing.event.ChangeListener;
 
-abstract class AbstractQueryViewComponent extends AbstractOWLViewComponent implements ChangeListener {
+public abstract class AbstractQueryViewComponent extends AbstractOWLViewComponent implements ChangeListener {
 
     private EditorKitHook editorKitHook;
 

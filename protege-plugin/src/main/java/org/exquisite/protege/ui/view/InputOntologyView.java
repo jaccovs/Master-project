@@ -1,6 +1,8 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.core.model.DiagnosisModel;
+import org.exquisite.protege.model.event.EventType;
+import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -10,6 +12,10 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.util.*;
+
+import static org.exquisite.protege.model.event.EventType.ACTIVE_ONTOLOGY_CHANGED;
+import static org.exquisite.protege.model.event.EventType.INPUT_ONTOLOGY_CHANGED;
+import static org.exquisite.protege.model.event.EventType.SESSION_STATE_CHANGED;
 
 /**
  * A view to present the set of correct and possibly faulty axioms in our input ontology.
@@ -123,8 +129,11 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        updateDisplayedCorrectAxioms();
-        updateDisplayedPossiblyFaultyAxioms();
+        final EventType type = ((OntologyDebuggerChangeEvent) e).getType();
+        if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
+            updateDisplayedCorrectAxioms();
+            updateDisplayedPossiblyFaultyAxioms();
+        }
     }
 
 }

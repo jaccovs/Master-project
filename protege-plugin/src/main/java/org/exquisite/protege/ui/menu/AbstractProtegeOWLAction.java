@@ -27,7 +27,8 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
      * <code>false</code> if the state is in STOPPED.
      */
     boolean isSessionRunning() {
-        return getActiveOntologyDebugger().isSessionRunning();
+        OntologyDebugger debugger = getActiveOntologyDebugger();
+        return debugger != null && debugger.isSessionRunning();
     }
 
     @Override
@@ -41,7 +42,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
     @Override
     public void dispose() throws Exception {
         final EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
-        editorKitHook.removeActiveDebuggerChangeListener(this);
+        if (editorKitHook != null) editorKitHook.removeActiveDebuggerChangeListener(this);
     }
 
     @Override

@@ -10,12 +10,12 @@
         <class value="org.exquisite.protege.model.EditorKitHook"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
-
+<!--
     <extension id="QueryExplanation" point="org.protege.editor.owl.explanation">
         <class value="org.exquisite.protege.model.QueryExplanation"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
-
+-->
     <!-- Menus -->
 
     <extension id="DebugOntology" point="org.protege.editor.core.application.EditorKitMenuAction">

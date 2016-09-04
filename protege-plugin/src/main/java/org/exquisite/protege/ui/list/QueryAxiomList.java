@@ -37,6 +37,8 @@ public class QueryAxiomList extends AbstractAxiomList {
         buttons.addAll(super.getButtons(value));
         buttons.add(new AxiomIsEntailedButton(this,debugger.isMarkedEntailed(axiom)));
         buttons.add(new AxiomIsNotEntailedButton(this,debugger.isMarkedNonEntailed(axiom)));
+
+        // TODO activate explanation button once we have a good explanation component for the query computation
         if (QueryExplanation.isAxiomInferredFromDebugger(debugger,axiom))
             buttons.add(new DebugExplainButton(this));
 

@@ -2,6 +2,7 @@ package org.exquisite.protege.model;
 
 import com.google.common.base.Optional;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
+import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLEditorKitHook;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -15,6 +16,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.*;
+
+import static org.exquisite.protege.model.event.EventType.*;
 
 public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerListener, ChangeListener {
 
@@ -122,7 +125,8 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
                 logger.error(e.getMessage(), e);
             }
         }
-        notifyActiveDebuggerListeners(new ChangeEvent(getActiveOntologyDebugger()));
+        notifyActiveDebuggerListeners(
+                new OntologyDebuggerChangeEvent(getActiveOntologyDebugger(), ACTIVE_ONTOLOGY_CHANGED));
 
         final Optional<IRI> ontologyIRI = activeOntology.getOntologyID().getOntologyIRI();
         if (ontologyIRI.isPresent())
@@ -132,12 +136,10 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        OWLOntology activeOntology = getEditorKit().getModelManager().getActiveOntology();
-
-        OntologyDebugger activeDebugger = ontologyDebuggerMap.get(activeOntology);
+        OntologyDebugger activeDebugger = ontologyDebuggerMap.get(getEditorKit().getModelManager().getActiveOntology());
         if (activeDebugger.equals(e.getSource())) {
             // something in the active ontology searcher has changed
-            notifyActiveDebuggerListeners(e);
+            notifyActiveDebuggerListeners((OntologyDebuggerChangeEvent) e);
         }
     }
 
@@ -149,7 +151,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         changeListeners.remove(listener);
     }
 
-    private void notifyActiveDebuggerListeners(ChangeEvent event) {
+    private void notifyActiveDebuggerListeners(OntologyDebuggerChangeEvent event) {
         for (ChangeListener listener : changeListeners)
             listener.stateChanged(event);
     }
