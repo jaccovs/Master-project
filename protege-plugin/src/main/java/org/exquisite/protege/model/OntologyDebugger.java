@@ -511,19 +511,19 @@ public class OntologyDebugger {
         final int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
         diagnosisEngine.setMaxNumberOfDiagnoses(n);
         try {
-            logger.debug("maxNumberOfDiagnoses: " + n);
-            logger.debug("diagnosisEngine: " + diagnosisEngine);
-            logger.debug("solver: " + diagnosisEngine.getSolver());
-            logger.debug("diagnosisModel: " + diagnosisEngine.getSolver().getDiagnosisModel());
-            logger.debug("start searching maximal " + n + " diagnoses ...");
+            logger.debug("Calculating {} diagnoses ...", n);
             diagnoses.addAll(diagnosisEngine.calculateDiagnoses());
             conflicts.addAll(diagnosisEngine.getConflicts());
-            logger.debug("found these " + diagnoses.size() + " diagnoses: " + diagnoses);
-            logger.debug("based on these conflicts: " + conflicts);
+            logger.debug("Found {} diagnoses.", diagnoses.size());
+            logger.debug("Diagnoses: " + diagnoses.toString());
+            logger.debug("Diagnoses are based on {} conflicts", conflicts.size());
+            logger.debug("Conflicts: " + conflicts.toString());
             return true;
         } catch (DiagnosisException | ReasonerInternalException e) {
             errorHandler.errorHappened(SOLVER_EXCEPTION, e);
             logger.error("Exception occurred while calculating diagnoses.", e);
+            diagnoses.clear(); // reset diagnoses and conflicts
+            conflicts.clear();
             return false;
         }
 
