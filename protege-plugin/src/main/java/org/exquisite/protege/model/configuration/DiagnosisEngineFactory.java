@@ -8,12 +8,14 @@ import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.slf4j.LoggerFactory;
 
 import java.util.TreeSet;
@@ -99,8 +101,6 @@ public class DiagnosisEngineFactory {
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
 
-            logger.debug("created diagnosisEngine with calculation of maximal " + config.numOfLeadingDiags +
-                    " diagnoses using " + diagnosisEngine + " with reasoner " + reasoner + " and diagnosisModel " + this.debugger.getDiagnosisModel());
             logger.info("----------------------------------- Debugger Settings -----------------------------------");
             logger.info("Diagnosis Engine: {}", diagnosisEngine);
             logger.info("Reasoner: {}", reasoner);
@@ -122,20 +122,26 @@ public class DiagnosisEngineFactory {
         }
     }
 
-    public DiagnosisModel<OWLLogicalAxiom> createDiagnosisModel() throws OWLOntologyCreationException {
-        final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+    public DiagnosisModel<OWLLogicalAxiom> createDiagnosisModel() throws DiagnosisModelCreationException {
+        try {
+            final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
 
-        for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+
+            for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
+                diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
+                diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+            }
+            diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
+
+            // make a snapshot of the 'original' entailed and non-entailed test cases
+            debugger.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
+            debugger.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
+
+            return diagnosisModel;
+        } catch (OWLOntologyCreationException | ReasonerInternalException e) {
+            throw new DiagnosisModelCreationException(e);
         }
-        diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
-
-        // make a snapshot of the 'original' entailed and non-entailed test cases
-        debugger.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));
-        debugger.getTestcases().setOriginalNonEntailedTestcases(new TreeSet<>(diagnosisModel.getNotEntailedExamples()));
-        return diagnosisModel;
     }
 
     public OWLOntology getOntology() {

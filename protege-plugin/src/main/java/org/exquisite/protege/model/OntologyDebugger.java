@@ -25,6 +25,7 @@ import org.exquisite.protege.model.error.AbstractErrorHandler;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
+import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -103,12 +104,16 @@ public class OntologyDebugger {
      */
     private OntologyChangeListener ontologyChangeListener;
 
-    public OntologyDebugger(OWLEditorKit editorKit) throws OWLOntologyCreationException {
+    public OntologyDebugger(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
         reasonerManager = modelManager.getOWLReasonerManager();
         diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), reasonerManager);
         debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
+        this.diagnosisModel = new DiagnosisModel<>();
+    }
+
+    public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
     }
 
@@ -254,10 +259,24 @@ public class OntologyDebugger {
             resetQueryHistory();                                        // reset history
             testcases.reset();
             debuggingSession.stopSession();                             // stop session
-            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
+
             this.cautiousParameter = null;
             this.previousCautiousParameter = null;
 
+
+            switch (reason) {
+                case ONTOLOGY_RELOADED:
+                case REASONER_CHANGED:
+                    try {
+                        createNewDiagnosisModel();
+                    } catch (DiagnosisModelCreationException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+            }
+
+            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
             // notify the user why session has stopped
             String msg = null;

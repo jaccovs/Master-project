@@ -3,6 +3,7 @@ package org.exquisite.protege.model;
 import com.google.common.base.Optional;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
+import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLEditorKitHook;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -115,13 +116,14 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     private void changeActiveOntologyDebugger(OWLOntology activeOntology) {
         if (!ontologyDebuggerMap.containsKey(activeOntology)) {
+            final OntologyDebugger debugger = new OntologyDebugger(getEditorKit());
+            final OWLOntologyManager ontologyManager = activeOntology.getOWLOntologyManager();
+            debugger.addChangeListener(this);
+            ontologyManager.addOntologyChangeListener(debugger.getOntologyChangeListener());
+            ontologyDebuggerMap.put(activeOntology, debugger);
             try {
-                final OntologyDebugger debugger = new OntologyDebugger(getEditorKit());
-                final OWLOntologyManager ontologyManager = activeOntology.getOWLOntologyManager();
-                debugger.addChangeListener(this);
-                ontologyManager.addOntologyChangeListener(debugger.getOntologyChangeListener());
-                ontologyDebuggerMap.put(activeOntology, debugger);
-            } catch (OWLOntologyCreationException e) {
+                debugger.createNewDiagnosisModel();
+            } catch (DiagnosisModelCreationException e) {
                 logger.error(e.getMessage(), e);
             }
         }
