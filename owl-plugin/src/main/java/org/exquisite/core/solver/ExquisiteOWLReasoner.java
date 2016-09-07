@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.*;
+import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
 
@@ -23,6 +24,7 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ExquisiteOWLReasoner.class.getCanonicalName());
 
     private final OWLReasoner reasoner;
     private InferenceType[] interenceTypes = new InferenceType[]{InferenceType.CLASS_HIERARCHY,
@@ -69,10 +71,23 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     public static DiagnosisModel<OWLLogicalAxiom> generateDiagnosisModel(OWLOntology ontology,
                                                                          OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency)
             throws OWLOntologyCreationException {
-        OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
-        Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
 
+        OWLOntologyManager manager = ontology.getOWLOntologyManager();
+
+
+        logger.info("------------------------- Diagnosis Model Creation Settings -----------------------------");
+        logger.info("Ontology: {}", ontology.getOntologyID());
+        logger.info("OWLOntologyManager: {}", manager);
+        logger.info("OWLReasonerFactory: {}", reasonerFactory);
+
+        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
+
+        logger.info("OWLReasoner: {}", reasoner);
+        logger.info("Configuration [extractModules]: {}", extractModule);
+        logger.info("Configuration [reduceIncoherency]: {}", reduceIncoherencyToInconsistency);
+        logger.info("-----------------------------------------------------------------------------------------");
+
+        Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
         for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
             Set<OWLAnnotationProperty> propertiesInSignature = axiom.getAnnotationPropertiesInSignature();
@@ -135,6 +150,13 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
         reasoner.dispose();
+
+        logger.info("------------------------- Generated Diagnosis Model -------------------------------------");
+        logger.info("{} Possibly Faulty Formulas", dm.getPossiblyFaultyFormulas().size());
+        logger.info("{} Correct Formulas", dm.getCorrectFormulas().size());
+        logger.info("{} Entailed Examples", dm.getEntailedExamples().size());
+        logger.info("{} Not-Entailed Examples", dm.getNotEntailedExamples().size());
+        logger.info("-----------------------------------------------------------------------------------------");
         return dm;
     }
 
