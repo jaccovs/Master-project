@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
-    <VSNode splits="0.4 0.6">
+    <VSNode splits="0.4 0.3 0.3">
         <HSNode splits="0.4 0.6">
             <CNode>
                 <Component label="Queries">
@@ -17,18 +17,18 @@
             <Component label="Input Ontology">
                 <Property id="pluginId" value="org.exquisite.protege.InputOntologyView"/>
             </Component>
-            <Component label="Acquired Test Cases">
-                <Property id="pluginId" value="org.exquisite.protege.AcquiredTestcasesView"/>
-            </Component>
-            <Component label="Original Test Cases">
-                <Property id="pluginId" value="org.exquisite.protege.OriginalTestcasesView"/>
-            </Component>
-            <Component label="Answers">
-                <Property id="pluginId" value="org.exquisite.protege.QueryHistoryView"/>
-            </Component>
-            <Component label="Conflicts">
-                <Property id="pluginId" value="org.exquisite.protege.ConflictsView"/>
-            </Component>
         </CNode>
+        <HSNode splits="0.4 0.6">
+            <CNode>
+                <Component label="Acquired Test Cases">
+                    <Property id="pluginId" value="org.exquisite.protege.AcquiredTestcasesView"/>
+                </Component>
+            </CNode>
+            <CNode>
+                <Component label="Original Test Cases">
+                    <Property id="pluginId" value="org.exquisite.protege.OriginalTestcasesView"/>
+                </Component>
+            </CNode>
+        </HSNode>
     </VSNode>
 </layout>
