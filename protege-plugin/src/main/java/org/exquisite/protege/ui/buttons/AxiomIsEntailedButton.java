@@ -9,7 +9,7 @@ public class AxiomIsEntailedButton extends AbstractAnswerButton {
     private boolean isMarkedEntailed;
 
     public AxiomIsEntailedButton(final QueryAxiomList list, boolean isMarkedEntailed) {
-        super("Entailed", Color.GREEN.darker(), e -> list.handleEntailed());
+        super("Yes, this axiom in entailed in the ontology", Color.GREEN.darker(), e -> list.handleEntailed());
         this.isMarkedEntailed = isMarkedEntailed;
     }
 

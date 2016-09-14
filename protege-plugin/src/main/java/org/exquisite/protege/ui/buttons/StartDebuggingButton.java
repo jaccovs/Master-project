@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 public class StartDebuggingButton extends AbstractGuiButton {
 
     public StartDebuggingButton(final AbstractQueryViewComponent toolboxView) {
-        super("Start Debugging","Start a new debugging session","player_play.png",KeyEvent.VK_D,
+        super("Start","Start a new debugging session","player_play.png",KeyEvent.VK_D,
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -32,12 +32,12 @@ public class StartDebuggingButton extends AbstractGuiButton {
     public void updateView(OntologyDebugger debugger) {
         if (debugger.isSessionStopped()) {
             setIcon(loadCustomIcon("player_play.png"));
-            setText("Start Debugging");
+            setText("Start");
             setToolTipText("Start a new debugging session");
         } else if (debugger.isSessionRunning()) {
             setIcon(loadCustomIcon("player_rewind.png"));
-            setText("Restart Debugging");
-            setToolTipText("Pause debugging session");
+            setText("Restart");
+            setToolTipText("Stops current session and starts a new debugging session");
         }
     }
 

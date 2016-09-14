@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 public class StopDebuggingButton extends AbstractGuiButton {
 
     public StopDebuggingButton(final AbstractQueryViewComponent toolboxView) {
-        super("Stop Debugging","Stop current debugging session","player_stop.png",KeyEvent.VK_S,
+        super("Stop","Stop the current running debugging session","player_stop.png",KeyEvent.VK_S,
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

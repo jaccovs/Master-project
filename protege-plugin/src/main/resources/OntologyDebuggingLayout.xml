@@ -13,11 +13,6 @@
                 </Component>
             </CNode>
         </HSNode>
-        <CNode>
-            <Component label="Input Ontology">
-                <Property id="pluginId" value="org.exquisite.protege.InputOntologyView"/>
-            </Component>
-        </CNode>
         <HSNode splits="0.4 0.6">
             <CNode>
                 <Component label="Acquired Test Cases">
@@ -30,5 +25,10 @@
                 </Component>
             </CNode>
         </HSNode>
+        <CNode>
+            <Component label="Input Ontology">
+                <Property id="pluginId" value="org.exquisite.protege.InputOntologyView"/>
+            </Component>
+        </CNode>
     </VSNode>
 </layout>

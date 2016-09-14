@@ -13,7 +13,7 @@ class DiagnosisOptPanel extends AbstractOptPanel {
 
     private JSpinner numOfLeadingDiagsSpinner = new JSpinner(new SpinnerNumberModel(DefaultConfiguration.getDefaultNumOfLeadingDiags().intValue(), 1, MAX_LEADING_DIAGS , 1));
 
-    private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("reduce incoherency to inconsistency ", DefaultConfiguration.getDefaultReduceIncoherency());
+    private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also check for incoherency", DefaultConfiguration.getDefaultReduceIncoherency());
 
     // private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules of unsatisfiable classes it the ontology is consistent, but its terminology is incoherent", DefaultConfiguration.getDefaultExtractModules());
 
@@ -49,7 +49,7 @@ class DiagnosisOptPanel extends AbstractOptPanel {
         optionGroupCostEstimator.addOptionBox(new OptionBox("costEstimator", getListener(), new JLabel("Preference Function: "), estimatorComboBox));
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Diagnoses Calculation");
-        holderCalculation.addOptionBox(new OptionBox("numofleadingdiags",getListener(),new JLabel("Number of Leading Diagnoses: "), numOfLeadingDiagsSpinner));
+        holderCalculation.addOptionBox(new OptionBox("numofleadingdiags",getListener(),new JLabel("Number of Faulty Axiom Sets: "), numOfLeadingDiagsSpinner));
         numOfLeadingDiagsSpinner.addChangeListener(e -> queryOptPanel.updateThresholdParameter(((Integer) numOfLeadingDiagsSpinner.getValue())));
         holderCalculation.addOptionBox(new OptionBox("testincoherencyinconsistency",getListener(), reduceIncoherencyCheckbox));
         //holderCalculation.addOptionBox(new OptionBox("extractModules",getListener(), extractModulesCheckbox));

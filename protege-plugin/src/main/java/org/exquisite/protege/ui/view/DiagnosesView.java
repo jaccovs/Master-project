@@ -45,7 +45,7 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
 
     @Override
     protected String getHeaderPrefix() {
-        return "Diagnosis ";
+        return "Faulty Axioms ";
     }
 
     @Override
