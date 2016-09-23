@@ -11,7 +11,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.List;
 
 import static org.exquisite.protege.model.event.EventType.ACTIVE_ONTOLOGY_CHANGED;
 import static org.exquisite.protege.model.event.EventType.INPUT_ONTOLOGY_CHANGED;
@@ -26,6 +28,15 @@ public class InputOntologyView extends AbstractQueryViewComponent {
     private BasicAxiomList correctAxiomsList;
 
     private BasicAxiomList possiblyFaultyAxiomsList;
+
+    private final int pageSize = 100;
+
+    private int currPageNum = 1;
+
+    private int lastPageNum = Integer.MAX_VALUE;
+
+
+    private JButton first, prev, next, last;
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -77,10 +88,68 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         axiomFinderPanel.add(new PossiblyFaultyAxiomsFinder(this,getOWLEditorKit()));
         toolBar.add(axiomFinderPanel);
         */
+        toolBar.add(createControls(), BorderLayout.SOUTH);
         toolBar.setMaximumSize(toolBar.getPreferredSize());
         toolBar.setToolTipText("Axioms from the knowledge base are possible candidates for diagnoses.");
 
         return toolBar;
+    }
+
+    private void start() {
+        currPageNum = 1;
+        updatePage();
+    }
+
+    private void prev() {
+        if (--currPageNum <= 0)
+            currPageNum = 1;
+        updatePage();
+    }
+
+    private void next() {
+        if (++currPageNum > lastPageNum)
+            currPageNum = lastPageNum;
+        updatePage();
+    }
+
+    private void end() {
+        currPageNum = lastPageNum;
+        updatePage();
+    }
+
+
+
+    private JPanel createControls() {
+        first = new JButton(new AbstractAction("<<") {
+            public void actionPerformed(ActionEvent e) {
+                start();
+            }
+        });
+
+        prev = new JButton(new AbstractAction("<") {
+            public void actionPerformed(ActionEvent e) {
+                prev();
+            }
+        });
+
+        next = new JButton(new AbstractAction(">") {
+            public void actionPerformed(ActionEvent e) {
+                next();
+            }
+        });
+
+        last = new JButton(new AbstractAction(">>") {
+            public void actionPerformed(ActionEvent e) {
+                end();
+            }
+        });
+
+        JPanel bar = new JPanel(new GridLayout(1, 4));
+        bar.add(first);
+        bar.add(prev);
+        bar.add(next);
+        bar.add(last);
+        return bar;
     }
 
     private JToolBar createCorrectAxiomsToolBar() {
@@ -97,8 +166,46 @@ public class InputOntologyView extends AbstractQueryViewComponent {
      * @see #stateChanged(ChangeEvent)
      */
     public void updateDisplayedPossiblyFaultyAxioms() {
+        updatePage();
+        //updateDisplayedAxioms(possiblyFaultyAxiomsList, diagnosisModel.getPossiblyFaultyFormulas());
+    }
+
+    private void updatePage( ) {
+        final OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
-        updateDisplayedAxioms(possiblyFaultyAxiomsList, diagnosisModel.getPossiblyFaultyFormulas());
+        BasicAxiomList list = possiblyFaultyAxiomsList;
+
+        List<OWLLogicalAxiom> axioms = new ArrayList<>(diagnosisModel.getPossiblyFaultyFormulas());
+        axioms.retainAll(ontology.getLogicalAxioms());
+        Collections.sort(axioms);
+
+        //work out how many pages there are
+        this.lastPageNum = axioms.size() / pageSize + (axioms.size() % pageSize != 0 ? 1 : 0);
+
+        //replace the list's model with a new model containing
+        //only the entries in the current page.
+        List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
+        final int start = (currPageNum - 1) * pageSize;
+        int end = start + pageSize;
+        if (end >= axioms.size()) {
+            end = axioms.size();
+        }
+        for (int i = start; i < end; i++) {
+            axiomsToDisplay.add(axioms.get(i));
+        }
+        //list.setModel(page);
+        list.updateList(axiomsToDisplay,ontology);
+
+        //update the label
+        //countLabel.setText("Page " + currPageNum + "/" + lastPageNum);
+
+        // update buttons
+        final boolean canGoBack = currPageNum != 1;
+        final boolean canGoFwd = currPageNum != lastPageNum;
+        first.setEnabled(canGoBack);
+        prev.setEnabled(canGoBack);
+        next.setEnabled(canGoFwd);
+        last.setEnabled(canGoFwd);
     }
 
     /**

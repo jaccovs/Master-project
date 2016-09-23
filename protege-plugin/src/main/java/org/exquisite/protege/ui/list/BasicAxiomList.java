@@ -46,4 +46,10 @@ public class BasicAxiomList extends AbstractAxiomList {
         setListData(items.toArray());
     }
 
+    public void updateList(List<OWLLogicalAxiom> axioms, OWLOntology ontology) {
+        List<Object> items = axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList());
+
+        setListData(items.toArray());
+    }
+
 }
