@@ -35,8 +35,9 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
     private int lastPageNum = Integer.MAX_VALUE;
 
-
     private JButton first, prev, next, last;
+
+    private JLabel infoLabel = null;
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -79,6 +80,12 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         return label;
     }
 
+    private JLabel createSizeLabel() {
+        JLabel label = new JLabel();
+        label.setFont(label.getFont().deriveFont(Font.ITALIC, label.getFont().getSize()-1));
+        return label;
+    }
+
     private JToolBar createPossiblyFaultyAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
         toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
@@ -88,7 +95,14 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         axiomFinderPanel.add(new PossiblyFaultyAxiomsFinder(this,getOWLEditorKit()));
         toolBar.add(axiomFinderPanel);
         */
-        toolBar.add(createControls(), BorderLayout.SOUTH);
+
+        toolBar.add(Box.createHorizontalGlue());
+        this.infoLabel = createSizeLabel();
+        toolBar.add(this.infoLabel);
+        toolBar.addSeparator();
+
+        final JPanel controls = createControls();
+        toolBar.add(controls, BorderLayout.EAST);
         toolBar.setMaximumSize(toolBar.getPreferredSize());
         toolBar.setToolTipText("Axioms from the knowledge base are possible candidates for diagnoses.");
 
@@ -167,7 +181,6 @@ public class InputOntologyView extends AbstractQueryViewComponent {
      */
     public void updateDisplayedPossiblyFaultyAxioms() {
         updatePage();
-        //updateDisplayedAxioms(possiblyFaultyAxiomsList, diagnosisModel.getPossiblyFaultyFormulas());
     }
 
     private void updatePage( ) {
@@ -193,11 +206,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         for (int i = start; i < end; i++) {
             axiomsToDisplay.add(axioms.get(i));
         }
-        //list.setModel(page);
         list.updateList(axiomsToDisplay,ontology);
-
-        //update the label
-        //countLabel.setText("Page " + currPageNum + "/" + lastPageNum);
 
         // update buttons
         final boolean canGoBack = currPageNum != 1;
@@ -206,6 +215,30 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         prev.setEnabled(canGoBack);
         next.setEnabled(canGoFwd);
         last.setEnabled(canGoFwd);
+
+        // update tooltips
+        if (canGoBack) {
+            first.setToolTipText("First " + pageSize + " axioms");
+            prev.setToolTipText("Previous " + pageSize + " axioms");
+        } else {
+            first.setToolTipText(null);
+            prev.setToolTipText(null);
+        }
+
+        if (canGoFwd) {
+            int nextSize = ((end+pageSize) > axioms.size()) ? (axioms.size()-end) : pageSize;
+            next.setToolTipText("Next " + nextSize + " axioms");
+            last.setToolTipText("Last axioms");
+        } else {
+            next.setToolTipText(null);
+            last.setToolTipText(null);
+        }
+
+        // update size label
+        if (axioms.size() > 0)
+            infoLabel.setText((start+1) + "-" + (end) + " of " + axioms.size());
+        else
+            infoLabel.setText("");
     }
 
     /**
