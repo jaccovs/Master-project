@@ -3,6 +3,7 @@ package org.exquisite.protege.ui.view;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
+import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -31,13 +32,13 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
     private final int pageSize = 100;
 
-    private int currPageNum = 1;
-
-    private int lastPageNum = Integer.MAX_VALUE;
-
     private JButton first, prev, next, last;
 
     private JLabel infoLabel = null;
+
+    private JScrollPane scrollPane = null;
+
+    private Point ZEROPOSITION = new Point(0,0);
 
     @Override
     protected void initialiseOWLView() throws Exception {
@@ -51,16 +52,19 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         JPanel correctAxiomsPanel = new JPanel(new BorderLayout());
         correctAxiomsPanel.add(createCorrectAxiomsToolBar(),BorderLayout.NORTH);
         correctAxiomsPanel.add(ComponentFactory.createScrollPane(correctAxiomsList),BorderLayout.CENTER);
-        box.add(correctAxiomsPanel);
 
         JPanel possiblyFaultyPanel = new JPanel(new BorderLayout());
         possiblyFaultyPanel.add(createPossiblyFaultyAxiomsToolBar(), BorderLayout.NORTH);
-        possiblyFaultyPanel.add(ComponentFactory.createScrollPane(possiblyFaultyAxiomsList),BorderLayout.CENTER);
+        this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
+        possiblyFaultyPanel.add(this.scrollPane,BorderLayout.CENTER);
+
         box.add(possiblyFaultyPanel);
+        box.add(correctAxiomsPanel);
 
         add(box, BorderLayout.CENTER);
-        updateDisplayedCorrectAxioms();
+
         updateDisplayedPossiblyFaultyAxioms();
+        updateDisplayedCorrectAxioms();
     }
 
     private JToolBar createToolBar() {
@@ -110,28 +114,24 @@ public class InputOntologyView extends AbstractQueryViewComponent {
     }
 
     private void start() {
-        currPageNum = 1;
+        getEditorKitHook().getActiveOntologyDebugger().getPagingState().start();
         updatePage();
     }
 
     private void prev() {
-        if (--currPageNum <= 0)
-            currPageNum = 1;
+        getEditorKitHook().getActiveOntologyDebugger().getPagingState().prev();
         updatePage();
     }
 
     private void next() {
-        if (++currPageNum > lastPageNum)
-            currPageNum = lastPageNum;
+        getEditorKitHook().getActiveOntologyDebugger().getPagingState().next();
         updatePage();
     }
 
     private void end() {
-        currPageNum = lastPageNum;
+        getEditorKitHook().getActiveOntologyDebugger().getPagingState().end();
         updatePage();
     }
-
-
 
     private JPanel createControls() {
         first = new JButton(new AbstractAction("<<") {
@@ -192,13 +192,15 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         axioms.retainAll(ontology.getLogicalAxioms());
         Collections.sort(axioms);
 
+        final PagingState pagingState = getEditorKitHook().getActiveOntologyDebugger().getPagingState();
+
         //work out how many pages there are
-        this.lastPageNum = axioms.size() / pageSize + (axioms.size() % pageSize != 0 ? 1 : 0);
+        pagingState.lastPageNum = axioms.size() / pageSize + (axioms.size() % pageSize != 0 ? 1 : 0);
 
         //replace the list's model with a new model containing
         //only the entries in the current page.
         List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
-        final int start = (currPageNum - 1) * pageSize;
+        final int start = (pagingState.currPageNum - 1) * pageSize;
         int end = start + pageSize;
         if (end >= axioms.size()) {
             end = axioms.size();
@@ -209,8 +211,8 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         list.updateList(axiomsToDisplay,ontology);
 
         // update buttons
-        final boolean canGoBack = currPageNum != 1;
-        final boolean canGoFwd = currPageNum != lastPageNum;
+        final boolean canGoBack = pagingState.currPageNum != 1;
+        final boolean canGoFwd = pagingState.currPageNum != pagingState.lastPageNum;
         first.setEnabled(canGoBack);
         prev.setEnabled(canGoBack);
         next.setEnabled(canGoFwd);
@@ -239,6 +241,10 @@ public class InputOntologyView extends AbstractQueryViewComponent {
             infoLabel.setText((start+1) + "-" + (end) + " of " + axioms.size());
         else
             infoLabel.setText("");
+
+        // position scroll pane to the top position each time a new page is displayed
+        this.scrollPane.getViewport().setViewPosition(ZEROPOSITION);
+
     }
 
     /**
