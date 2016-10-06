@@ -26,6 +26,7 @@ import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -33,7 +34,6 @@ import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +99,9 @@ public class OntologyDebugger {
 
     private DiagnosisModel<OWLLogicalAxiom> diagnosisModel;
 
+    // state information for the paging mode of the InputOntologyView
+    private PagingState pagingState;
+
     /**
      * Singleton instance of an listener to ontology changes. Registered in the EditorKitHook.
      */
@@ -111,10 +114,15 @@ public class OntologyDebugger {
         debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
         this.diagnosisModel = new DiagnosisModel<>();
+        this.pagingState = new PagingState();
     }
 
     public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+    }
+
+    public PagingState getPagingState() {
+        return pagingState;
     }
 
     public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
