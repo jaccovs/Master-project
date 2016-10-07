@@ -158,6 +158,11 @@ public class SearchConfiguration {
         return !this.equals(newConfiguration);
     }
 
+    public boolean hasCheckTypeChanged(SearchConfiguration newConfiguration) {
+        return !this.reduceIncoherency.equals(newConfiguration.reduceIncoherency);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -32,7 +32,7 @@ public class TestCaseHeaderEditor extends AbstractEditor {
         debugger.doAddTestcase(testcase,header.getType(),new AbstractErrorHandler() {
             @Override
             public void errorHappened(OntologyDebugger.ErrorStatus error, Exception ex) {
-                showMessageDialog(null, "This testcase is not compatible with already specified testcases and was " +
+                showErrorDialog(null, "This testcase is not compatible with already specified testcases and was " +
                         "therefore nod added. To resolve this problem you can try to delete testcase which are conflicting. ",
                         "Inconsistent Theory Exception", JOptionPane.ERROR_MESSAGE, null);
             }

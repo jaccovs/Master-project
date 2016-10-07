@@ -27,6 +27,7 @@ import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.state.PagingState;
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -209,11 +210,11 @@ public class OntologyDebugger {
     public void doStartDebugging(QueryErrorHandler errorHandler) {
         if (!isSessionRunning()) {
             if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
-                JOptionPane.showMessageDialog(null, "No Reasoner set. Select a reasoner from the Reasoner menu.", "No Reasoner set", JOptionPane.INFORMATION_MESSAGE);
+                DebuggingDialog.showNoReasonerSelectedMessage();
                 return;
             }
 
-            logger.info("----------------- Starting new Debugging Session -----------------");
+            logger.info("------------------------ Starting new Debugging Session ------------------------");
 
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
@@ -223,11 +224,14 @@ public class OntologyDebugger {
             switch (diagnoses.size()) {
                 case 0:
                     doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
+                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    else
+                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
                     break;
                 case 1:
                     notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                    JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
+                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
                     break;
                 default:
                     break;
@@ -250,7 +254,7 @@ public class OntologyDebugger {
      */
     public void doStopDebugging(SessionStopReason reason) {
         if (isSessionRunning()) {
-            logger.info("----------------- Stopping Debugging Session -----------------");
+            logger.info("-------------------------- Stopping Debugging Session --------------------------");
 
             try {
                 diagnosisEngineFactory.dispose();
@@ -272,13 +276,16 @@ public class OntologyDebugger {
             this.previousCautiousParameter = null;
 
 
+            // we need to create a new diagnosis model when ...
             switch (reason) {
-                case ONTOLOGY_RELOADED:
-                case REASONER_CHANGED:
+                case PREFERENCES_CHANGED: // ... switching between coherency/consistency and consistency-only check
+                case ONTOLOGY_RELOADED:   // ... the ontology has been reloaded
+                case REASONER_CHANGED:    // ... the reasoner has been changed
                     try {
                         createNewDiagnosisModel();
                     } catch (DiagnosisModelCreationException e) {
-                        e.printStackTrace();
+                        logger.error("An error occurred during creation of a new diagnosis model for " +
+                                DebuggingDialog.getOntologyName(getDiagnosisEngineFactory().getOntology()), e);
                     }
                     break;
 
@@ -287,25 +294,25 @@ public class OntologyDebugger {
             notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
             // notify the user why session has stopped
-            String msg = null;
+            String reasonMsg = null;
             switch (reason) {
                 case ERROR_OCCURRED:
-                    msg = "An error occured!";
+                    reasonMsg = "an unexpected error occured!";
                     break;
                 case ONTOLOGY_RELOADED:
-                    msg = "An ontology has been reloaded.";
+                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
                     break;
                 case ONTOLOGY_CHANGED:
-                    msg = "The ontology has been modified!";
+                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
                     break;
                 case PREFERENCES_CHANGED:
-                    msg = "Preferences have been modified!";
+                    reasonMsg = "the preferences have been modified!";
                     break;
                 case REASONER_CHANGED:
-                    msg = "Reasoner has been changed!";
+                    reasonMsg = "the reasoner has been changed!";
                     break;
                 case DEBUGGING_ONTOLOGY_SELECTED:
-                    msg = "Anonymous debugging ontology selected!";
+                    reasonMsg = "an anonymous debugging ontology has been selected!";
                     break;
                 case INVOKED_BY_USER:     // no message necessary
                 case DEBUGGER_RESET:      // no message necessary
@@ -313,14 +320,12 @@ public class OntologyDebugger {
                 case SESSION_RESTARTED:   // no message necessary
                     break;
                 default:
-                    msg = reason.toString();
-                    logger.warn("Unknown SessionStopReason: " + reason);
+                    reasonMsg = reason.toString();
+                    logger.warn("unknown reason: " + reason);
             }
 
-            if (msg != null)
-                JOptionPane.showMessageDialog(null, "Your running debugging session has been stopped!\n" +
-                        "\nOntology: " + this.getDiagnosisEngineFactory().getOntology().getOntologyID() +
-                        "\nReason: " + msg, "Debugging Session has been stopped!", JOptionPane.INFORMATION_MESSAGE);
+            if (reasonMsg != null)
+                DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
         }
     }
 
@@ -465,11 +470,14 @@ public class OntologyDebugger {
             switch (diagnoses.size()) {
                 case 0:
                     doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                    JOptionPane.showMessageDialog(null, "Your ontology is OK! Nothing to debug.", "Consistent ontology!", JOptionPane.INFORMATION_MESSAGE);
+                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
+                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    else
+                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
                     break;
                 case 1:
                     notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                    JOptionPane.showMessageDialog(null, "The faulty axioms corresponding to your preferences (test cases) are found!", "Faulty Axioms found!", JOptionPane.INFORMATION_MESSAGE);
+                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
                     break;
                 default:
                     doGetQuery(errorHandler);

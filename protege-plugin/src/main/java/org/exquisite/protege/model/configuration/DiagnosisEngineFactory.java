@@ -9,6 +9,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.model.OntologyDebugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -53,10 +54,26 @@ public class DiagnosisEngineFactory {
 
     public void updateConfig(SearchConfiguration newConfiguration) {
         if (config.hasConfigurationChanged(newConfiguration)) {
+            // we need the information later if the check type has changed
+            final boolean hasCheckTypeChanged = config.hasCheckTypeChanged(newConfiguration);
             // as soon as the configuration has changed we do stop any currently running session
             ConfigFileManager.writeConfiguration(newConfiguration);
+            // and immediately load the new config
+            readConfiguration();
+
             if (debugger.isSessionRunning()) {
                 debugger.doStopDebugging(SessionStopReason.PREFERENCES_CHANGED);
+            } else {
+                // we must generate a new diagnosis model when ... switching between coherency/consistency and consistency-only check
+                // even when no session is running
+                // TODO this is a temporary fix that works for the active ontology only (all other loaded ontology do not get this notifiction yet)
+                if (hasCheckTypeChanged)
+                    try {
+                        debugger.createNewDiagnosisModel();
+                    } catch (DiagnosisModelCreationException e) {
+                        logger.error("An error occurred during creation of a new diagnosis model for " +
+                                DebuggingDialog.getOntologyName(getOntology()), e);
+                    }
             }
         }
     }
@@ -101,7 +118,7 @@ public class DiagnosisEngineFactory {
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
 
-            logger.info("----------------------------------- Debugger Settings -----------------------------------");
+            logger.info("------------------------------- Debugger Settings ------------------------------");
             logger.info("Diagnosis Engine: {}", diagnosisEngine);
             logger.info("Reasoner: {}", reasoner);
             logger.info("Leading Diagnoses: " + config.numOfLeadingDiags);

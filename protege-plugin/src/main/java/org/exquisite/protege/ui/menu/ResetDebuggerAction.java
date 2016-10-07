@@ -1,6 +1,7 @@
 package org.exquisite.protege.ui.menu;
 
 import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,7 @@ public class ResetDebuggerAction extends AbstractProtegeOWLAction {
         OntologyDebugger debugger = getActiveOntologyDebugger();
 
         if (!debugger.areTestcasesEmpty()) {
-            int answer = JOptionPane.showConfirmDialog(null, "Do you also want to delete the testcases?", "Reset Type", JOptionPane.YES_NO_CANCEL_OPTION);
+            int answer = DebuggingDialog.showConfirmDialog("Do you also want to delete the testcases?", "Reset Type");
             if (answer == JOptionPane.YES_OPTION)
                 debugger.doResetDebugger();
             else if (answer == JOptionPane.NO_OPTION)
@@ -23,7 +24,7 @@ public class ResetDebuggerAction extends AbstractProtegeOWLAction {
         } else
             debugger.doResetDebugger();
 
-        JOptionPane.showMessageDialog(null, "The debugger has been reset!", "OntologyDebugger reset", JOptionPane.INFORMATION_MESSAGE);
+        DebuggingDialog.showDebuggerResetMessage();
     }
 
     @Override

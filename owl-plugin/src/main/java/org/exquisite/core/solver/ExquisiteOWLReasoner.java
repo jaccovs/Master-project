@@ -72,10 +72,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                                                                          OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency)
             throws OWLOntologyCreationException {
 
+        final long start = System.currentTimeMillis();
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
 
 
-        logger.info("------------------------- Diagnosis Model Creation Settings -----------------------------");
+        logger.info("---------------------- Diagnosis Model Creation Settings -----------------------");
         logger.info("Ontology: {}", ontology.getOntologyID());
         logger.info("OWLOntologyManager: {}", manager);
         logger.info("OWLReasonerFactory: {}", reasonerFactory);
@@ -85,7 +86,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         logger.info("OWLReasoner: {}", reasoner);
         logger.info("Configuration [extractModules]: {}", extractModule);
         logger.info("Configuration [reduceIncoherency]: {}", reduceIncoherencyToInconsistency);
-        logger.info("-----------------------------------------------------------------------------------------");
+        logger.info("--------------------------------------------------------------------------------");
 
         Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
@@ -151,12 +152,13 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
         reasoner.dispose();
 
-        logger.info("------------------------- Generated Diagnosis Model -------------------------------------");
+        logger.info("-------------------------- Generated Diagnosis Model ---------------------------");
+        logger.info("Generated in {} ms", (System.currentTimeMillis() - start));
         logger.info("{} Possibly Faulty Formulas", dm.getPossiblyFaultyFormulas().size());
         logger.info("{} Correct Formulas", dm.getCorrectFormulas().size());
         logger.info("{} Entailed Examples", dm.getEntailedExamples().size());
         logger.info("{} Not-Entailed Examples", dm.getNotEntailedExamples().size());
-        logger.info("-----------------------------------------------------------------------------------------");
+        logger.info("--------------------------------------------------------------------------------");
         return dm;
     }
 
@@ -281,7 +283,12 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
         ontologyManager.removeOntology(ontology);
         this.axiomGenerators.clear();
-        this.reasoner.dispose();
+        try {
+            this.reasoner.dispose();
+        } catch (RuntimeException rex) {
+            // we can just ignore any runtime exception since there are reasoners like HermitT, that always
+            // throw an RuntimeException (in the case of HermiT: NullPointerException)
+        }
     }
 
     public OWLOntology getDebuggingOntology() {

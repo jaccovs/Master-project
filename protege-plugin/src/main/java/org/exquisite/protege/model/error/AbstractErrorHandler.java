@@ -1,6 +1,7 @@
 package org.exquisite.protege.model.error;
 
-import javax.swing.*;
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
+
 import java.awt.*;
 
 import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus;
@@ -13,8 +14,8 @@ public abstract class AbstractErrorHandler {
           errorHappened(error, null);
      }
 
-     protected void showMessageDialog(Component parentComponent, Object message, String title, int messageType, Exception ex) {
-          JOptionPane.showMessageDialog(parentComponent, message + ((ex!=null) ? "\n" + ex.getMessage():""), title, messageType);
+     protected void showErrorDialog(Component parentComponent, String message, String title, int messageType, Exception ex) {
+          DebuggingDialog.showErrorDialog(title, message, ex);
      }
 
 }
