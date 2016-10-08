@@ -212,7 +212,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
         // update buttons
         final boolean canGoBack = pagingState.currPageNum != 1;
-        final boolean canGoFwd = pagingState.currPageNum != pagingState.lastPageNum;
+        final boolean canGoFwd = axioms.size() != 0 && pagingState.currPageNum != pagingState.lastPageNum;
         first.setEnabled(canGoBack);
         prev.setEnabled(canGoBack);
         next.setEnabled(canGoFwd);
