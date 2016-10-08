@@ -5,6 +5,7 @@ import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.list.BasicAxiomList;
+import org.exquisite.protege.ui.panel.search.SearchPanel;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -55,8 +56,13 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
         JPanel possiblyFaultyPanel = new JPanel(new BorderLayout());
         possiblyFaultyPanel.add(createPossiblyFaultyAxiomsToolBar(), BorderLayout.NORTH);
+
+        JPanel searchAndScrollPane = new JPanel(new BorderLayout());
+        searchAndScrollPane.add(new SearchPanel(getOWLEditorKit()),BorderLayout.NORTH);
         this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
-        possiblyFaultyPanel.add(this.scrollPane,BorderLayout.CENTER);
+        searchAndScrollPane.add(this.scrollPane,BorderLayout.CENTER);
+
+        possiblyFaultyPanel.add(searchAndScrollPane,BorderLayout.CENTER);
 
         box.add(possiblyFaultyPanel);
         box.add(correctAxiomsPanel);
@@ -92,7 +98,10 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
     private JToolBar createPossiblyFaultyAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
+        toolBar.setRollover(true);
+
         toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
+
         /* TODO reactivate this finder after a working version has been implemented
         toolBar.add(Box.createHorizontalStrut(20));
         JPanel axiomFinderPanel = new JPanel();
@@ -109,6 +118,9 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         toolBar.add(controls, BorderLayout.EAST);
         toolBar.setMaximumSize(toolBar.getPreferredSize());
         toolBar.setToolTipText("Axioms from the knowledge base are possible candidates for diagnoses.");
+
+
+        //toolBar.add(new SearchPanel(getOWLEditorKit()));
 
         return toolBar;
     }
