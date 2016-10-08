@@ -62,7 +62,7 @@ public class DebuggingDialog {
 
         final String title = "Set Of Faulty Axioms Found!";
         final String message = "The <b>faulty axioms</b> corresponding to your preferences (test cases) are <b>found</b>!<br><br>" +
-                "The debugger identified <font color=\"red\">(" + diagnosis.getFormulas().size() + ") faulty axioms in the " +
+                "The debugger identified <font color=\"red\">" + diagnosis.getFormulas().size() + " faulty axioms</font> in the " +
                 getOntologyName(ontology) + " ontology";
         showMessageDialog(title, message);
     }
