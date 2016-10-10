@@ -25,7 +25,6 @@ public class PossiblyFaultyAxiomsFinder extends AugmentedJTextField {
 
     private InputOntologyView parent;
 
-
     public PossiblyFaultyAxiomsFinder(InputOntologyView parent, OWLEditorKit editorKit) {
         super(20, "Filter by entity");
         putClientProperty("JTextField.variant", "start");
@@ -86,7 +85,7 @@ public class PossiblyFaultyAxiomsFinder extends AugmentedJTextField {
 
         closeResults();
         //parent.setSelectedEntity (entitiy);
-        parent.updateDisplayedPossiblyFaultyAxioms();
+        parent.getPossiblyFaultyAxiomsPanel().updateDisplayedAxioms();
         if (entity != null)
             setText(editorKit.getModelManager().getOWLEntityRenderer().render(entity));
         else
