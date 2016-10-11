@@ -8,10 +8,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Set;
 
-/**
- * @author wolfi
- */
-public class DebuggerLogicalAxiomRenderingSearchMetadataImporter extends AxiomBasedSearchMetadataImporter {
+class DebuggerLogicalAxiomRenderingSearchMetadataImporter extends AxiomBasedSearchMetadataImporter {
 
     @Override
     public boolean isImporterFor(AxiomType<?> axiomType, Set<SearchCategory> categories) {

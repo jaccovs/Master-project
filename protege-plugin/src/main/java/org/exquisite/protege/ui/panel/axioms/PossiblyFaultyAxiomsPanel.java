@@ -30,6 +30,8 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
     private JScrollPane scrollPane = null;
 
+    private SearchPanel searchPanel = null;
+
     private List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
 
     /**
@@ -48,7 +50,8 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
         // search pane containing search field and search options and ...
         JPanel searchAndScrollPane = new JPanel(new BorderLayout());
-        searchAndScrollPane.add(new SearchPanel(this, getOWLEditorKit(), getEditorKitHook()),BorderLayout.NORTH);
+        this.searchPanel = new SearchPanel(this, getOWLEditorKit(), getEditorKitHook());
+        searchAndScrollPane.add(this.searchPanel,BorderLayout.NORTH);
         // ... the list of possibly faulty axioms
         this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
         searchAndScrollPane.add(this.scrollPane,BorderLayout.CENTER);
@@ -139,8 +142,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
     }
 
     public void setAxiomsToDisplay(List<OWLLogicalAxiom> axiomsToDisplay) {
-        this.axiomsToDisplay = new ArrayList<>(axiomsToDisplay);
-        Collections.sort(this.axiomsToDisplay);
+        this.axiomsToDisplay = axiomsToDisplay;
     }
 
     private JToolBar createPossiblyFaultyAxiomsToolBar() {
@@ -228,5 +230,9 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         bar.add(next);
         bar.add(last);
         return bar;
+    }
+
+    public void resetSearchField() {
+        this.searchPanel.resetSearchField();
     }
 }

@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.panel.search;
 
 import org.exquisite.protege.model.search.DebuggerFinderPreferences;
-import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.search.SearchOptionsChangedListener;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ import java.util.*;
  * A panel containing search options.
  *
  */
-public class SearchOptionsPanel extends JPanel {
+class SearchOptionsPanel extends JPanel {
 
     private final JCheckBox caseSensitive;
 
@@ -25,10 +24,8 @@ public class SearchOptionsPanel extends JPanel {
 
     private final java.util.List<SearchOptionsChangedListener> listeners = new ArrayList<>();
 
-    private final OWLEditorKit editorKit;
 
-    public SearchOptionsPanel(OWLEditorKit editorKit) {
-        this.editorKit = editorKit;
+    SearchOptionsPanel() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 
@@ -70,7 +67,7 @@ public class SearchOptionsPanel extends JPanel {
 
     }
 
-    public void addListener(SearchOptionsChangedListener listener) {
+    void addListener(SearchOptionsChangedListener listener) {
         listeners.add(listener);
     }
 
@@ -78,7 +75,7 @@ public class SearchOptionsPanel extends JPanel {
         listeners.remove(listener);
     }
 
-    public void refresh() {
+    void refresh() {
         DebuggerFinderPreferences prefs = DebuggerFinderPreferences.getInstance();
         wholeWordsCheckbox.setSelected(prefs.isWholeWords());
         caseSensitive.setSelected(prefs.isCaseSensitive());

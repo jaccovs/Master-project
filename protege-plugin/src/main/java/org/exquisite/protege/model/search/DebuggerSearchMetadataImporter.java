@@ -10,11 +10,10 @@ import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-/**
- * @author wolfi
- */
-public class DebuggerSearchMetadataImporter implements SearchMetadataImporter {
+class DebuggerSearchMetadataImporter implements SearchMetadataImporter {
 
     @Override
     public SearchMetadataDB getSearchMetadata(OWLEditorKit editorKit, Set<SearchCategory> categories) {
@@ -36,16 +35,14 @@ public class DebuggerSearchMetadataImporter implements SearchMetadataImporter {
             final OWLOntology activeOntology = context.getEditorKit().getModelManager().getActiveOntology();
             final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = context.getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
             final List possiblyFaultyLogicalAxioms = PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(activeOntology, diagnosisModel);
-            for (OWLAxiom ax : activeOntology.getAxioms(axiomType)) {
-                if (possiblyFaultyLogicalAxioms.contains(ax)) {
-                    OWLObject subject = new AxiomSubjectProvider().getSubject(ax);
-                    if (subject instanceof OWLEntity) {
-                        OWLEntity entSubject = (OWLEntity) subject;
-                        String rendering = context.getRendering(entSubject);
-                        importer.generateSearchMetadataFor(ax, entSubject, rendering, context, db);
-                    }
+            activeOntology.getAxioms(axiomType).stream().filter((Predicate<OWLAxiom>) possiblyFaultyLogicalAxioms::contains).forEach(ax -> {
+                OWLObject subject = new AxiomSubjectProvider().getSubject(ax);
+                if (subject instanceof OWLEntity) {
+                    OWLEntity entSubject = (OWLEntity) subject;
+                    String rendering = context.getRendering(entSubject);
+                    importer.generateSearchMetadataFor(ax, entSubject, rendering, context, db);
                 }
-            }
+            });
         }
     }
 
@@ -53,13 +50,7 @@ public class DebuggerSearchMetadataImporter implements SearchMetadataImporter {
         List<AxiomBasedSearchMetadataImporter> axiomBasedSearchMetadataImporters = new ArrayList<>();
         axiomBasedSearchMetadataImporters.add(new DebuggerLogicalAxiomRenderingSearchMetadataImporter());
 
-        List<AxiomBasedSearchMetadataImporter> result = new ArrayList<>();
-        for (AxiomBasedSearchMetadataImporter importer : axiomBasedSearchMetadataImporters) {
-            if (importer.isImporterFor(axiomType, categories)) {
-                result.add(importer);
-            }
-        }
-        return result;
+        return axiomBasedSearchMetadataImporters.stream().filter(importer -> importer.isImporterFor(axiomType, categories)).collect(Collectors.toList());
     }
 
 }

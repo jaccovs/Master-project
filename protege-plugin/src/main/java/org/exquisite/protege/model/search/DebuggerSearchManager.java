@@ -2,7 +2,6 @@ package org.exquisite.protege.model.search;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
-import org.exquisite.protege.model.EditorKitHook;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.event.EventType;
@@ -31,8 +30,6 @@ public class DebuggerSearchManager extends SearchManager {
     private final Logger logger = LoggerFactory.getLogger(DebuggerSearchManager.class);
 
     public static final String PLUGIN_ID = "org.exquisite.protege.KBSearchManager";
-
-    private EditorKitHook editorKitHook;
 
     private OWLEditorKit editorKit;
 
@@ -101,10 +98,6 @@ public class DebuggerSearchManager extends SearchManager {
             service.submit(this::rebuildMetadataCache);
         }
         service.submit(new SearchCallable(lastSearchId.incrementAndGet(), searchRequest, searchResultHandler));
-    }
-
-    public void setEditorKitHook(EditorKitHook editorKitHook) {
-        this.editorKitHook = editorKitHook;
     }
 
     private void handleModelManagerEvent(OWLModelManagerChangeEvent event) {
@@ -251,7 +244,6 @@ public class DebuggerSearchManager extends SearchManager {
                     }
                 }
                 if (matchedAllPatterns) {
-
                     results.add(new DebuggerSearchResult(searchMetadata, matchesBuilder.build()));
                 }
                 count++;

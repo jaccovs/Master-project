@@ -6,9 +6,10 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 
 /**
- * @author wolfi
+ * A SearchMetadata object contains a (partial) string representation of some object that can be searched.
+ * For the ontology debugger there is just the category LOGICAL_AXIOM relevant {@link SearchCategory} .
  */
-public class DebuggerSearchMetadata extends SearchMetadata {
+class DebuggerSearchMetadata extends SearchMetadata {
 
     private OWLAxiom axiom;
 
@@ -22,13 +23,17 @@ public class DebuggerSearchMetadata extends SearchMetadata {
      *                         something which can be selected in Protege.
      * @param subjectRendering A rendering of the subject.  This rendering is used to compare search metadata objects.
      * @param searchString     The string that should be searched.
+     * @param ax               The axiom matching the search string.
      */
-    public DebuggerSearchMetadata(SearchCategory category, String groupDescription, OWLObject subject, String subjectRendering, String searchString, OWLAxiom ax) {
+    DebuggerSearchMetadata(SearchCategory category, String groupDescription, OWLObject subject, String subjectRendering, String searchString, OWLAxiom ax) {
         super(category, groupDescription, subject, subjectRendering, searchString);
         axiom = ax;
     }
 
-
+    /**
+     * The logical OWL axiom matching the search criteria.
+     * @return A logical axiom.
+     */
     public OWLAxiom getAxiom() {
         return axiom;
     }

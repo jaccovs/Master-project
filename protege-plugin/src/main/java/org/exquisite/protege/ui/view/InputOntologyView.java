@@ -54,6 +54,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
             if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
                 showAllAxioms();
+                this.possiblyFaultyAxiomsPanel.resetSearchField();
             }
             possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
             correctAxiomsPanel.updateDisplayedAxioms();

@@ -8,15 +8,15 @@ import org.protege.editor.core.prefs.PreferencesManager;
  */
 public class DebuggerFinderPreferences {
 
-    public static final String PREFERENCES_KEY = "org.exquisite.protege.finder";
+    private static final String PREFERENCES_KEY = "org.exquisite.protege.finder";
 
-    public static final String CASE_SENSITIVE_KEY = "CASE_SENSITIVE_KEY";
+    private static final String CASE_SENSITIVE_KEY = "CASE_SENSITIVE_KEY";
 
-    public static final String WHOLE_WORDS_KEY = "WHOLE_WORDS_KEY";
+    private static final String WHOLE_WORDS_KEY = "WHOLE_WORDS_KEY";
 
-    public static final String IGNORE_WHITE_SPACE_KEY = "IGNORE_WHITE_SPACE_KEY";
+    private static final String IGNORE_WHITE_SPACE_KEY = "IGNORE_WHITE_SPACE_KEY";
 
-    public static final String USE_REGULAR_EXPRESSIONS_KEY = "USE_REGULAR_EXPRESSIONS";
+    private static final String USE_REGULAR_EXPRESSIONS_KEY = "USE_REGULAR_EXPRESSIONS";
 
     private static final boolean DEFAULT_CASE_SENSITIVE_VALUE = false;
 
@@ -37,6 +37,7 @@ public class DebuggerFinderPreferences {
     private boolean useRegularExpressions;
 
     private DebuggerFinderPreferences() {
+        load();
     }
 
     private static Preferences getPreferences() {
@@ -44,11 +45,11 @@ public class DebuggerFinderPreferences {
     }
 
     private void load() {
-        Preferences prefs = getPreferences();
-        caseSensitive = prefs.getBoolean(CASE_SENSITIVE_KEY, DEFAULT_CASE_SENSITIVE_VALUE);
-        wholeWords = prefs.getBoolean(WHOLE_WORDS_KEY, DEFAULT_WHOLE_WORDS_VALUE);
-        ignoreWhiteSpace = prefs.getBoolean(IGNORE_WHITE_SPACE_KEY, DEFAULT_GNORE_WHITE_SPACE_VALUE);
-        useRegularExpressions = prefs.getBoolean(USE_REGULAR_EXPRESSIONS_KEY, DEFAULT_USE_REGULAR_EXPRESSIONS_VALUE);
+        Preferences preferences = getPreferences();
+        caseSensitive = preferences.getBoolean(CASE_SENSITIVE_KEY, DEFAULT_CASE_SENSITIVE_VALUE);
+        wholeWords = preferences.getBoolean(WHOLE_WORDS_KEY, DEFAULT_WHOLE_WORDS_VALUE);
+        ignoreWhiteSpace = preferences.getBoolean(IGNORE_WHITE_SPACE_KEY, DEFAULT_GNORE_WHITE_SPACE_VALUE);
+        useRegularExpressions = preferences.getBoolean(USE_REGULAR_EXPRESSIONS_KEY, DEFAULT_USE_REGULAR_EXPRESSIONS_VALUE);
     }
 
     public static synchronized DebuggerFinderPreferences getInstance() {

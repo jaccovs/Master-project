@@ -7,10 +7,8 @@ import org.exquisite.protege.model.search.DebuggerFinderPreferences;
 import org.exquisite.protege.model.search.DebuggerSearchManager;
 import org.exquisite.protege.model.search.DebuggerSearchResult;
 import org.exquisite.protege.ui.panel.axioms.PossiblyFaultyAxiomsPanel;
-import org.openrdf.model.vocabulary.OWL;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.OWLEditorKit;
-import org.protege.editor.owl.model.search.SearchManager;
 import org.protege.editor.owl.model.search.SearchRequest;
 import org.protege.editor.owl.model.search.SearchResult;
 import org.protege.editor.owl.ui.search.SearchOptionsChangedListener;
@@ -24,6 +22,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -47,6 +46,8 @@ public class SearchPanel extends JPanel {
 
     private PossiblyFaultyAxiomsPanel axiomsPanel;
 
+    private DebuggerSearchManager searchManager;
+
     public SearchPanel(PossiblyFaultyAxiomsPanel axiomsPanel, OWLEditorKit editorKit, EditorKitHook editorKitHook) {
         this.axiomsPanel = axiomsPanel;
         this.editorKit = editorKit;
@@ -59,7 +60,7 @@ public class SearchPanel extends JPanel {
         searchField = new AugmentedJTextField("Enter search string");
         box.add(searchField);
 
-        searchOptionsPanel = new SearchOptionsPanel(editorKit);
+        searchOptionsPanel = new SearchOptionsPanel();
         box.add(searchOptionsPanel);
 
         searchOptionsPanel.addListener(new SearchOptionsChangedListener() {
@@ -67,9 +68,7 @@ public class SearchPanel extends JPanel {
                 doSearch();
             }
 
-            public void searchResultsPresentationOptionChanged() {
-                updateSearchResultsPresentation();
-            }
+            public void searchResultsPresentationOptionChanged() {}
         });
 
         searchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -102,25 +101,26 @@ public class SearchPanel extends JPanel {
             axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
             axiomsPanel.updateDisplayedAxioms();
         } else {
-            final String defaultSearchManagerPlugin = editorKit.getSearchManagerSelector().getCurrentPluginId();
+            try {
+                SearchRequest searchRequest = createSearchRequest();
+                logger.debug(searchRequest.toString());
 
-            editorKit.getSearchManagerSelector().setCurrentPluginId(DebuggerSearchManager.PLUGIN_ID);
-            logger.debug("Searching ...");
-            SearchRequest searchRequest = createSearchRequest();
-            logger.debug(searchRequest.toString());
-
-            DebuggerSearchManager searchManager = (DebuggerSearchManager)editorKit.getSearchManager();
-            searchManager.setEditorKitHook(this.editorKitHook);
-            searchManager.performSearch(searchRequest, searchResults -> {
-                for (SearchResult result : searchResults) {
-                    final OWLAxiom axiom = ((DebuggerSearchResult)result).getAxiom();
-                    axiomsToDisplay.add((OWLLogicalAxiom)axiom);
-                }
-                axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
-                axiomsPanel.updateDisplayedAxioms();
-            });
-
-            editorKit.getSearchManagerSelector().setCurrentPluginId(defaultSearchManagerPlugin);
+                DebuggerSearchManager searchManager = getSearchManager();
+                searchManager.performSearch(searchRequest, searchResults -> {
+                    for (SearchResult result : searchResults) {
+                        final OWLAxiom axiom = ((DebuggerSearchResult) result).getAxiom();
+                        axiomsToDisplay.add((OWLLogicalAxiom) axiom);
+                    }
+                    Collections.sort(axiomsToDisplay);
+                    SwingUtilities.invokeLater(() -> {
+                                axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
+                                axiomsPanel.updateDisplayedAxioms();
+                            }
+                    );
+                });
+            } catch (PatternSyntaxException psx) {
+                logger.info("Invalid regular expression in search pattern: {}", psx.getPattern());
+            }
         }
 
     }
@@ -164,6 +164,17 @@ public class SearchPanel extends JPanel {
         return new SearchRequest(builder.build());
     }
 
-    private void updateSearchResultsPresentation() {
+    private synchronized DebuggerSearchManager getSearchManager() {
+        if (searchManager == null) {
+            searchManager = new DebuggerSearchManager();
+            searchManager.setup(this.editorKit);
+            searchManager.initialise();
+        }
+        return searchManager;
+    }
+
+    public void resetSearchField() {
+        this.searchString = "";
+        this.searchField.setText(this.searchString);
     }
 }
