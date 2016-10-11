@@ -1,14 +1,14 @@
 package org.exquisite.protege.ui.panel.search;
 
 import com.google.common.collect.ImmutableList;
+import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.search.DebuggerFinderPreferences;
+import org.exquisite.protege.model.search.DebuggerSearchManager;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.OWLEditorKit;
-import org.protege.editor.owl.model.find.OWLEntityFinderPreferences;
 import org.protege.editor.owl.model.search.SearchManager;
 import org.protege.editor.owl.model.search.SearchRequest;
 import org.protege.editor.owl.model.search.SearchResult;
-import org.protege.editor.owl.model.search.SearchResultHandler;
 import org.protege.editor.owl.ui.search.SearchOptionsChangedListener;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +16,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.util.*;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -35,10 +33,14 @@ public class SearchPanel extends JPanel {
 
     private final OWLEditorKit editorKit;
 
+    private final EditorKitHook editorKitHook;
+
     private String searchString = "";
 
-    public SearchPanel(OWLEditorKit editorKit) {
+    public SearchPanel(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
         this.editorKit = editorKit;
+        this.editorKitHook = editorKitHook;
+
         setLayout(new BorderLayout());
         Box box = new Box(BoxLayout.Y_AXIS);
         add(box, BorderLayout.NORTH);
@@ -84,16 +86,23 @@ public class SearchPanel extends JPanel {
         if (searchString.trim().isEmpty()) {
 
         } else {
+
+            final String defaultSearchManagerPlugin = editorKit.getSearchManagerSelector().getCurrentPluginId();
+
+            editorKit.getSearchManagerSelector().setCurrentPluginId(DebuggerSearchManager.PLUGIN_ID);
             logger.debug("Searching ...");
             SearchRequest searchRequest = createSearchRequest();
             logger.debug(searchRequest.toString());
 
-            SearchManager searchManager = editorKit.getSearchManager();
+            DebuggerSearchManager searchManager = (DebuggerSearchManager)editorKit.getSearchManager();
+            searchManager.setEditorKitHook(this.editorKitHook);
             searchManager.performSearch(searchRequest, searchResults -> {
                 for (SearchResult result : searchResults) {
                     logger.debug(result.toString() + "\n");
                 }
             });
+
+            editorKit.getSearchManagerSelector().setCurrentPluginId(defaultSearchManagerPlugin);
         }
     }
 

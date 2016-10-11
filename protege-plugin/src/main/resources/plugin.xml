@@ -16,6 +16,11 @@
         <editorKitId value="OWLEditorKit"/>
     </extension>
 -->
+
+    <extension id="KBSearchManager" point="org.protege.editor.owl.searchmanager">
+        <name value="KB search"/>
+        <class value="org.exquisite.protege.model.search.DebuggerSearchManager"/>
+    </extension>
     <!-- Menus -->
 
     <extension id="DebugOntology" point="org.protege.editor.core.application.EditorKitMenuAction">

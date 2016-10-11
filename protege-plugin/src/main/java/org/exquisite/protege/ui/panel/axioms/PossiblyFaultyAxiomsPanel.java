@@ -46,7 +46,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
         // search pane containing search field and search options and ...
         JPanel searchAndScrollPane = new JPanel(new BorderLayout());
-        searchAndScrollPane.add(new SearchPanel(getOWLEditorKit()),BorderLayout.NORTH);
+        searchAndScrollPane.add(new SearchPanel(getOWLEditorKit(), getEditorKitHook()),BorderLayout.NORTH);
         // ... the list of possibly faulty axioms
         this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
         searchAndScrollPane.add(this.scrollPane,BorderLayout.CENTER);
@@ -63,9 +63,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         BasicAxiomList list = possiblyFaultyAxiomsList;
 
-        List<OWLLogicalAxiom> axioms = new ArrayList<>(diagnosisModel.getPossiblyFaultyFormulas());
-        axioms.retainAll(ontology.getLogicalAxioms());
-        Collections.sort(axioms);
+        List<OWLLogicalAxiom> axioms = getPossiblyFaultyLogicalAxioms(ontology, diagnosisModel);
 
         final PagingState pagingState = getEditorKitHook().getActiveOntologyDebugger().getPagingState();
 
@@ -120,6 +118,19 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         // position scroll pane to the top position each time a new page is displayed
         this.scrollPane.getViewport().setViewPosition(TOPPOSITION);
 
+    }
+
+    /**
+     * Returns the list of axioms to be shown in the panel for possible faulty axioms.
+     * @param ontology The active ontology.
+     * @param diagnosisModel The diagnosis model backing the debugger.
+     * @return The list of axioms to be shown as candidates for possibly faulty axioms (without any search criteria)
+     */
+    public static List<OWLLogicalAxiom> getPossiblyFaultyLogicalAxioms(OWLOntology ontology, DiagnosisModel<OWLLogicalAxiom> diagnosisModel) {
+        List<OWLLogicalAxiom> axioms = new ArrayList<>(diagnosisModel.getPossiblyFaultyFormulas());
+        axioms.retainAll(ontology.getLogicalAxioms());
+        Collections.sort(axioms);
+        return axioms;
     }
 
     private JToolBar createPossiblyFaultyAxiomsToolBar() {
