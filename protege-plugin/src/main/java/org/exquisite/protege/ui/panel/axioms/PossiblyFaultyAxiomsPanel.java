@@ -30,6 +30,8 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
     private JScrollPane scrollPane = null;
 
+    private List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
+
     /**
      * Number of axioms displayed at once.
      */
@@ -46,7 +48,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
         // search pane containing search field and search options and ...
         JPanel searchAndScrollPane = new JPanel(new BorderLayout());
-        searchAndScrollPane.add(new SearchPanel(getOWLEditorKit(), getEditorKitHook()),BorderLayout.NORTH);
+        searchAndScrollPane.add(new SearchPanel(this, getOWLEditorKit(), getEditorKitHook()),BorderLayout.NORTH);
         // ... the list of possibly faulty axioms
         this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
         searchAndScrollPane.add(this.scrollPane,BorderLayout.CENTER);
@@ -60,18 +62,18 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
     private void updatePage( ) {
         final OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
+        //final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         BasicAxiomList list = possiblyFaultyAxiomsList;
 
-        List<OWLLogicalAxiom> axioms = getPossiblyFaultyLogicalAxioms(ontology, diagnosisModel);
+        List<OWLLogicalAxiom> axioms = getAxiomsToDisplay(); // getAllPossiblyFaultyLogicalAxioms(ontology, diagnosisModel);
 
         final PagingState pagingState = getEditorKitHook().getActiveOntologyDebugger().getPagingState();
 
-        //work out how many pages there are
+        // work out how many pages there are
         pagingState.lastPageNum = axioms.size() / pageSize + (axioms.size() % pageSize != 0 ? 1 : 0);
 
-        //replace the list's model with a new model containing
-        //only the entries in the current page.
+        // replace the list's model with a new model containing
+        // only the entries in the current page.
         List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
         final int start = (pagingState.currPageNum - 1) * pageSize;
         int end = start + pageSize;
@@ -91,7 +93,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         next.setEnabled(canGoFwd);
         last.setEnabled(canGoFwd);
 
-        // update tooltips
+        // update tooltips for buttons
         if (canGoBack) {
             first.setToolTipText("First " + pageSize + " axioms");
             prev.setToolTipText("Previous " + pageSize + " axioms");
@@ -99,7 +101,6 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
             first.setToolTipText(null);
             prev.setToolTipText(null);
         }
-
         if (canGoFwd) {
             int nextSize = ((end+pageSize) > axioms.size()) ? (axioms.size()-end) : pageSize;
             next.setToolTipText("Next " + nextSize + " axioms");
@@ -109,7 +110,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
             last.setToolTipText(null);
         }
 
-        // update size label
+        // update text of info label
         if (axioms.size() > 0)
             infoLabel.setText((start+1) + "-" + (end) + " of " + axioms.size());
         else
@@ -117,20 +118,29 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
         // position scroll pane to the top position each time a new page is displayed
         this.scrollPane.getViewport().setViewPosition(TOPPOSITION);
-
     }
 
     /**
      * Returns the list of axioms to be shown in the panel for possible faulty axioms.
+     *
      * @param ontology The active ontology.
      * @param diagnosisModel The diagnosis model backing the debugger.
      * @return The list of axioms to be shown as candidates for possibly faulty axioms (without any search criteria)
      */
-    public static List<OWLLogicalAxiom> getPossiblyFaultyLogicalAxioms(OWLOntology ontology, DiagnosisModel<OWLLogicalAxiom> diagnosisModel) {
+    public static List<OWLLogicalAxiom> getAllPossiblyFaultyLogicalAxioms(OWLOntology ontology, DiagnosisModel<OWLLogicalAxiom> diagnosisModel) {
         List<OWLLogicalAxiom> axioms = new ArrayList<>(diagnosisModel.getPossiblyFaultyFormulas());
         axioms.retainAll(ontology.getLogicalAxioms());
         Collections.sort(axioms);
         return axioms;
+    }
+
+    private List<OWLLogicalAxiom> getAxiomsToDisplay() {
+        return axiomsToDisplay;
+    }
+
+    public void setAxiomsToDisplay(List<OWLLogicalAxiom> axiomsToDisplay) {
+        this.axiomsToDisplay = new ArrayList<>(axiomsToDisplay);
+        Collections.sort(this.axiomsToDisplay);
     }
 
     private JToolBar createPossiblyFaultyAxiomsToolBar() {

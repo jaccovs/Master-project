@@ -1,21 +1,29 @@
 package org.exquisite.protege.ui.panel.search;
 
 import com.google.common.collect.ImmutableList;
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.EditorKitHook;
 import org.exquisite.protege.model.search.DebuggerFinderPreferences;
 import org.exquisite.protege.model.search.DebuggerSearchManager;
+import org.exquisite.protege.model.search.DebuggerSearchResult;
+import org.exquisite.protege.ui.panel.axioms.PossiblyFaultyAxiomsPanel;
+import org.openrdf.model.vocabulary.OWL;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.search.SearchManager;
 import org.protege.editor.owl.model.search.SearchRequest;
 import org.protege.editor.owl.model.search.SearchResult;
 import org.protege.editor.owl.ui.search.SearchOptionsChangedListener;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -37,7 +45,10 @@ public class SearchPanel extends JPanel {
 
     private String searchString = "";
 
-    public SearchPanel(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+    private PossiblyFaultyAxiomsPanel axiomsPanel;
+
+    public SearchPanel(PossiblyFaultyAxiomsPanel axiomsPanel, OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+        this.axiomsPanel = axiomsPanel;
         this.editorKit = editorKit;
         this.editorKitHook = editorKitHook;
 
@@ -83,10 +94,14 @@ public class SearchPanel extends JPanel {
         this.searchString = checkNotNull(s);
         searchOptionsPanel.refresh();
 
+        final java.util.List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
         if (searchString.trim().isEmpty()) {
-
+            final OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
+            final DiagnosisModel<OWLLogicalAxiom> dm = editorKitHook.getActiveOntologyDebugger().getDiagnosisModel();
+            axiomsToDisplay.addAll(PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(ontology, dm));
+            axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
+            axiomsPanel.updateDisplayedAxioms();
         } else {
-
             final String defaultSearchManagerPlugin = editorKit.getSearchManagerSelector().getCurrentPluginId();
 
             editorKit.getSearchManagerSelector().setCurrentPluginId(DebuggerSearchManager.PLUGIN_ID);
@@ -98,12 +113,16 @@ public class SearchPanel extends JPanel {
             searchManager.setEditorKitHook(this.editorKitHook);
             searchManager.performSearch(searchRequest, searchResults -> {
                 for (SearchResult result : searchResults) {
-                    logger.debug(result.toString() + "\n");
+                    final OWLAxiom axiom = ((DebuggerSearchResult)result).getAxiom();
+                    axiomsToDisplay.add((OWLLogicalAxiom)axiom);
                 }
+                axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
+                axiomsPanel.updateDisplayedAxioms();
             });
 
             editorKit.getSearchManagerSelector().setCurrentPluginId(defaultSearchManagerPlugin);
         }
+
     }
 
     private SearchRequest createSearchRequest() throws PatternSyntaxException {
@@ -146,6 +165,5 @@ public class SearchPanel extends JPanel {
     }
 
     private void updateSearchResultsPresentation() {
-
     }
 }

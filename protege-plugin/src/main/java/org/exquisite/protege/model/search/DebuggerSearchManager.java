@@ -252,7 +252,7 @@ public class DebuggerSearchManager extends SearchManager {
                 }
                 if (matchedAllPatterns) {
 
-                    results.add(new SearchResult(searchMetadata, matchesBuilder.build()));
+                    results.add(new DebuggerSearchResult(searchMetadata, matchesBuilder.build()));
                 }
                 count++;
                 int nextPercent = (int) ((count * 100) / total);

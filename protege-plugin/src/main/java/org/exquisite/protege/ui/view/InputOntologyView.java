@@ -1,10 +1,13 @@
 package org.exquisite.protege.ui.view;
 
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.exquisite.protege.ui.panel.axioms.CorrectAxiomsPanel;
 import org.exquisite.protege.ui.panel.axioms.PossiblyFaultyAxiomsPanel;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -40,6 +43,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
         add(box, BorderLayout.CENTER);
 
+        showAllAxioms();
         this.possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
         this.correctAxiomsPanel.updateDisplayedAxioms();
     }
@@ -48,6 +52,9 @@ public class InputOntologyView extends AbstractQueryViewComponent {
     public void stateChanged(ChangeEvent e) {
         final EventType type = ((OntologyDebuggerChangeEvent) e).getType();
         if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
+            if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
+                showAllAxioms();
+            }
             possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
             correctAxiomsPanel.updateDisplayedAxioms();
         }
@@ -55,6 +62,12 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
     public PossiblyFaultyAxiomsPanel getPossiblyFaultyAxiomsPanel() {
         return possiblyFaultyAxiomsPanel;
+    }
+
+    private void showAllAxioms() {
+        final OWLOntology ont = getOWLEditorKit().getModelManager().getActiveOntology();
+        final DiagnosisModel<OWLLogicalAxiom> dm = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
+        this.possiblyFaultyAxiomsPanel.setAxiomsToDisplay(PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(ont,dm));
     }
 
 }
