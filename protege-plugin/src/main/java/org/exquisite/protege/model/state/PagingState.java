@@ -26,4 +26,9 @@ public class PagingState {
     public void end() {
         currPageNum = lastPageNum;
     }
+
+    public void reset() {
+        currPageNum = 1;
+        lastPageNum = Integer.MAX_VALUE;
+    }
 }
