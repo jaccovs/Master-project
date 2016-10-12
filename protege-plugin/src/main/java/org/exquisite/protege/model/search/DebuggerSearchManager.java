@@ -24,12 +24,13 @@ import java.util.regex.Pattern;
 
 /**
  * A search manager plugin used for search in the set of possibly faulty axioms.
+ * The search architecture of Protege editor owl is reused and slightly adapted for the debugger.
  */
 public class DebuggerSearchManager extends SearchManager {
 
     private final Logger logger = LoggerFactory.getLogger(DebuggerSearchManager.class);
 
-    public static final String PLUGIN_ID = "org.exquisite.protege.KBSearchManager";
+    //public static final String PLUGIN_ID = "org.exquisite.protege.KBSearchManager";
 
     private OWLEditorKit editorKit;
 
@@ -42,8 +43,6 @@ public class DebuggerSearchManager extends SearchManager {
     private OWLModelManagerListener modelManagerListener;
 
     private AtomicLong lastSearchId = new AtomicLong(0);
-
-    private final List<ProgressMonitor> progressMonitors = new ArrayList<>();
 
     private DebuggerSearchMetadataImportManager importManager;
 
@@ -75,7 +74,7 @@ public class DebuggerSearchManager extends SearchManager {
 
     @Override
     public void addProgressMonitor(ProgressMonitor pm) {
-        progressMonitors.add(pm);
+        throw new UnsupportedOperationException(this.getClass().getCanonicalName() + " does not support progress monitors.");
     }
 
     @Override
@@ -97,7 +96,7 @@ public class DebuggerSearchManager extends SearchManager {
         if (lastSearchId.getAndIncrement() == 0) {
             service.submit(this::rebuildMetadataCache);
         }
-        service.submit(new SearchCallable(lastSearchId.incrementAndGet(), searchRequest, searchResultHandler));
+        service.submit(new SearchCallable(lastSearchId.get(), searchRequest, searchResultHandler));
     }
 
     private void handleModelManagerEvent(OWLModelManagerChangeEvent event) {
@@ -110,79 +109,22 @@ public class DebuggerSearchManager extends SearchManager {
         return event.isType(EventType.ACTIVE_ONTOLOGY_CHANGED) || event.isType(EventType.ENTITY_RENDERER_CHANGED) || event.isType(EventType.ENTITY_RENDERING_CHANGED);
     }
 
-    private void markCacheAsStale() {
+    public void markCacheAsStale() {
         lastSearchId.set(0);
     }
 
     private void rebuildMetadataCache() {
         Stopwatch stopwatch = Stopwatch.createStarted();
         logger.info("Rebuilding search metadata cache...");
-        fireIndexingStarted();
-        try {
-            searchMetadataCache.clear();
-            List<SearchMetadataImporter> importerList = importManager.getImporters();
-            for (SearchMetadataImporter importer : importerList) {
-                SearchMetadataDB db = importer.getSearchMetadata(editorKit, categories);
-                searchMetadataCache.addAll(db.getResults());
-            }
-            stopwatch.stop();
-            logger.info("    ...rebuilt search metadata cache in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+
+        searchMetadataCache.clear();
+        List<SearchMetadataImporter> importerList = importManager.getImporters();
+        for (SearchMetadataImporter importer : importerList) {
+            SearchMetadataDB db = importer.getSearchMetadata(editorKit, categories);
+            searchMetadataCache.addAll(db.getResults());
         }
-        finally {
-            fireIndexingFinished();
-        }
-
-    }
-
-    private void fireIndexingFinished() {
-        SwingUtilities.invokeLater(() -> {
-            for (ProgressMonitor pm : progressMonitors) {
-                pm.setFinished();
-                pm.setIndeterminate(false);
-
-            }
-        });
-    }
-
-    private void fireIndexingStarted() {
-        SwingUtilities.invokeLater(() -> {
-            for (ProgressMonitor pm : progressMonitors) {
-                pm.setIndeterminate(true);
-                pm.setMessage("Searching");
-                pm.setStarted();
-            }
-        });
-    }
-
-    private void fireSearchStarted() {
-        SwingUtilities.invokeLater(() -> {
-            for (ProgressMonitor pm : progressMonitors) {
-                pm.setSize(100);
-                pm.setStarted();
-            }
-        });
-    }
-
-    private void fireSearchProgressed(final long progress, final int found) {
-        SwingUtilities.invokeLater(() -> {
-            for (ProgressMonitor pm : progressMonitors) {
-                pm.setProgress(progress);
-                if (found > 1 || found == 0) {
-                    pm.setMessage(found + " results");
-                }
-                else {
-                    pm.setMessage(found + " result");
-                }
-            }
-        });
-    }
-
-    private void fireSearchFinished() {
-        SwingUtilities.invokeLater(() -> {
-            for (ProgressMonitor pm : progressMonitors) {
-                pm.setFinished();
-            }
-        });
+        stopwatch.stop();
+        logger.info("    ...rebuilt search metadata cache in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private class SearchCallable implements Runnable {
@@ -211,12 +153,7 @@ public class DebuggerSearchManager extends SearchManager {
             logger.info("Starting search {} (pattern: {})", searchId, patternString);
             List<SearchResult> results = new ArrayList<>();
 
-
             long searchStartTime = System.currentTimeMillis();
-            fireSearchStarted();
-            long count = 0;
-            int total = searchMetadataCache.size();
-            int percent = 0;
             for (SearchMetadata searchMetadata : searchMetadataCache) {
                 if (!isLatestSearch()) {
                     // New search started
@@ -246,14 +183,7 @@ public class DebuggerSearchManager extends SearchManager {
                 if (matchedAllPatterns) {
                     results.add(new DebuggerSearchResult(searchMetadata, matchesBuilder.build()));
                 }
-                count++;
-                int nextPercent = (int) ((count * 100) / total);
-                if (nextPercent != percent) {
-                    percent = nextPercent;
-                    fireSearchProgressed(percent, results.size());
-                }
             }
-            DebuggerSearchManager.this.fireSearchFinished();
             long searchEndTime = System.currentTimeMillis();
             long searchTime = searchEndTime - searchStartTime;
             logger.info("    Finished search {} in {} ms ({} results)", searchId, searchTime, results.size());
@@ -267,14 +197,10 @@ public class DebuggerSearchManager extends SearchManager {
         private void fireSearchFinished(final List<SearchResult> results, final SearchResultHandler searchResultHandler) {
             if (SwingUtilities.isEventDispatchThread()) {
                 searchResultHandler.searchFinished(results);
-            }
-            else {
-                SwingUtilities.invokeLater(() -> {
-                    searchResultHandler.searchFinished(results);
-                });
+            } else {
+                SwingUtilities.invokeLater(() -> searchResultHandler.searchFinished(results));
             }
         }
-
 
     }
 }

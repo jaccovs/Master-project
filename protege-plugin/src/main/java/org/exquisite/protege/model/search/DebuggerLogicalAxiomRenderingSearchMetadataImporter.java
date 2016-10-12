@@ -17,9 +17,9 @@ class DebuggerLogicalAxiomRenderingSearchMetadataImporter extends AxiomBasedSear
 
     @Override
     public void generateSearchMetadataFor(final OWLAxiom axiom, OWLEntity axiomSubject, String axiomSubjectRendering, final SearchMetadataImportContext context, SearchMetadataDB db) {
-        StyledString rendering = context.getStyledStringRendering(axiom);
-        String groupDescription = axiom.getAxiomType().getName();
-        DebuggerSearchMetadata md = new DebuggerSearchMetadata(SearchCategory.LOGICAL_AXIOM, groupDescription, axiomSubject, axiomSubjectRendering, rendering.getString(), axiom) {
+        final StyledString rendering = context.getStyledStringRendering(axiom);
+        final String groupDescription = axiom.getAxiomType().getName();
+        final SearchMetadata md = new DebuggerSearchMetadata(SearchCategory.LOGICAL_AXIOM, groupDescription, axiomSubject, axiomSubjectRendering, rendering.getString(), axiom) {
             @Override
             public StyledString getStyledSearchSearchString() {
                 return context.getStyledStringRendering(axiom);

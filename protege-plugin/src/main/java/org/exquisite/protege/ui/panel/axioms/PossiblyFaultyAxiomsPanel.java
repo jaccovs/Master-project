@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author wolfi
+ * Panel containing search panel and a list of all possibly faulty axioms matching the search panel if a search string
+ * is given. The panel lists at most 100 possible axioms at once and includes a navigation feature.
  */
 public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
@@ -52,6 +53,7 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         JPanel searchAndScrollPane = new JPanel(new BorderLayout());
         this.searchPanel = new SearchPanel(this, getOWLEditorKit(), getEditorKitHook());
         searchAndScrollPane.add(this.searchPanel,BorderLayout.NORTH);
+
         // ... the list of possibly faulty axioms
         this.scrollPane = ComponentFactory.createScrollPane(possiblyFaultyAxiomsList);
         searchAndScrollPane.add(this.scrollPane,BorderLayout.CENTER);
@@ -65,10 +67,9 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
 
     private void updatePage( ) {
         final OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-        //final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         BasicAxiomList list = possiblyFaultyAxiomsList;
 
-        List<OWLLogicalAxiom> axioms = getAxiomsToDisplay(); // getAllPossiblyFaultyLogicalAxioms(ontology, diagnosisModel);
+        List<OWLLogicalAxiom> axioms = getAxiomsToDisplay();
 
         final PagingState pagingState = getEditorKitHook().getActiveOntologyDebugger().getPagingState();
 
@@ -145,17 +146,14 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         this.axiomsToDisplay = axiomsToDisplay;
     }
 
+    public SearchPanel getSearchPanel() {
+        return searchPanel;
+    }
+
     private JToolBar createPossiblyFaultyAxiomsToolBar() {
         JToolBar toolBar = createToolBar();
 
         toolBar.add(createLabel("Possibly Faulty Axioms (KB)"));
-
-        /* TODO reactivate this finder after a working version has been implemented
-        toolBar.add(Box.createHorizontalStrut(20));
-        JPanel axiomFinderPanel = new JPanel();
-        axiomFinderPanel.add(new PossiblyFaultyAxiomsFinder(this,getOWLEditorKit()));
-        toolBar.add(axiomFinderPanel);
-        */
 
         toolBar.add(Box.createHorizontalGlue());
         this.infoLabel = createSizeLabel();
@@ -166,9 +164,6 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         toolBar.add(controls, BorderLayout.EAST);
         toolBar.setMaximumSize(toolBar.getPreferredSize());
         toolBar.setToolTipText("Axioms from the knowledge base are possible candidates for diagnoses.");
-
-
-        //toolBar.add(new SearchPanel(getOWLEditorKit()));
 
         return toolBar;
     }
@@ -232,7 +227,4 @@ public class PossiblyFaultyAxiomsPanel extends AbstractAxiomsPanel {
         return bar;
     }
 
-    public void resetSearchField() {
-        this.searchPanel.resetSearchField();
-    }
 }

@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.panel.search;
 
-import org.exquisite.protege.model.search.DebuggerFinderPreferences;
+import org.exquisite.protege.model.search.DebuggerSearchPreferences;
 import org.protege.editor.owl.ui.search.SearchOptionsChangedListener;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ class SearchOptionsPanel extends JPanel {
 
         caseSensitive = new JCheckBox(new AbstractAction("Case sensitive") {
             public void actionPerformed(ActionEvent e) {
-                DebuggerFinderPreferences.getInstance().setCaseSensitive(caseSensitive.isSelected());
+                DebuggerSearchPreferences.getInstance().setCaseSensitive(caseSensitive.isSelected());
                 fireSearchRequestOptionChanged();
             }
         });
@@ -42,7 +42,7 @@ class SearchOptionsPanel extends JPanel {
 
         wholeWordsCheckbox = new JCheckBox(new AbstractAction("Whole words") {
             public void actionPerformed(ActionEvent e) {
-                DebuggerFinderPreferences.getInstance().setWholeWords(wholeWordsCheckbox.isSelected());
+                DebuggerSearchPreferences.getInstance().setWholeWords(wholeWordsCheckbox.isSelected());
                 fireSearchRequestOptionChanged();
             }
         });
@@ -50,7 +50,7 @@ class SearchOptionsPanel extends JPanel {
 
         ignoreWhiteSpaceCheckbox = new JCheckBox(new AbstractAction("Ignore white space") {
             public void actionPerformed(ActionEvent e) {
-                DebuggerFinderPreferences.getInstance().setIgnoreWhiteSpace(ignoreWhiteSpaceCheckbox.isSelected());
+                DebuggerSearchPreferences.getInstance().setIgnoreWhiteSpace(ignoreWhiteSpaceCheckbox.isSelected());
                 fireSearchRequestOptionChanged();
             }
         });
@@ -59,7 +59,7 @@ class SearchOptionsPanel extends JPanel {
 
         useRegexCheckBox = new JCheckBox(new AbstractAction("Regular expression") {
             public void actionPerformed(ActionEvent e) {
-                DebuggerFinderPreferences.getInstance().setUseRegularExpressions(useRegexCheckBox.isSelected());
+                DebuggerSearchPreferences.getInstance().setUseRegularExpressions(useRegexCheckBox.isSelected());
                 fireSearchRequestOptionChanged();
             }
         });
@@ -71,12 +71,8 @@ class SearchOptionsPanel extends JPanel {
         listeners.add(listener);
     }
 
-    public void removeListener(SearchOptionsChangedListener listener) {
-        listeners.remove(listener);
-    }
-
     void refresh() {
-        DebuggerFinderPreferences prefs = DebuggerFinderPreferences.getInstance();
+        DebuggerSearchPreferences prefs = DebuggerSearchPreferences.getInstance();
         wholeWordsCheckbox.setSelected(prefs.isWholeWords());
         caseSensitive.setSelected(prefs.isCaseSensitive());
         useRegexCheckBox.setSelected(prefs.isUseRegularExpressions());
@@ -84,8 +80,6 @@ class SearchOptionsPanel extends JPanel {
     }
 
     private void fireSearchRequestOptionChanged() {
-        for (SearchOptionsChangedListener listener : new ArrayList<>(listeners)) {
-            listener.searchRequestOptionChanged();
-        }
+        new ArrayList<>(listeners).forEach(SearchOptionsChangedListener::searchRequestOptionChanged);
     }
 }

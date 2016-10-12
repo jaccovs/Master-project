@@ -43,21 +43,29 @@ public class InputOntologyView extends AbstractQueryViewComponent {
 
         add(box, BorderLayout.CENTER);
 
-        showAllAxioms();
+        setAxiomsToDisplay();
         this.possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
         this.correctAxiomsPanel.updateDisplayedAxioms();
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        final EventType type = ((OntologyDebuggerChangeEvent) e).getType();
-        if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
-            if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, INPUT_ONTOLOGY_CHANGED).contains(type)) {
-                showAllAxioms();
-                this.possiblyFaultyAxiomsPanel.resetSearchField();
-            }
-            possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
-            correctAxiomsPanel.updateDisplayedAxioms();
+        switch (((OntologyDebuggerChangeEvent) e).getType()) {
+            case ACTIVE_ONTOLOGY_CHANGED:
+                this.possiblyFaultyAxiomsPanel.getSearchPanel().resetSearchField();
+                setAxiomsToDisplay();
+                possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
+                correctAxiomsPanel.updateDisplayedAxioms();
+                break;
+            case INPUT_ONTOLOGY_CHANGED:
+                this.possiblyFaultyAxiomsPanel.getSearchPanel().clearCache();
+                this.possiblyFaultyAxiomsPanel.getSearchPanel().doSearch(); // doSearch sets the axioms to display and updates the list
+                correctAxiomsPanel.updateDisplayedAxioms();
+                break;
+            case SESSION_STATE_CHANGED:
+                possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
+                correctAxiomsPanel.updateDisplayedAxioms();
+                break;
         }
     }
 
@@ -65,7 +73,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
         return possiblyFaultyAxiomsPanel;
     }
 
-    private void showAllAxioms() {
+    private void setAxiomsToDisplay() {
         final OWLOntology ont = getOWLEditorKit().getModelManager().getActiveOntology();
         final DiagnosisModel<OWLLogicalAxiom> dm = getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
         this.possiblyFaultyAxiomsPanel.setAxiomsToDisplay(PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(ont,dm));

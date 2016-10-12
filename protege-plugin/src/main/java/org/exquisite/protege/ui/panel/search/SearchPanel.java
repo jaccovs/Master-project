@@ -3,9 +3,10 @@ package org.exquisite.protege.ui.panel.search;
 import com.google.common.collect.ImmutableList;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.search.DebuggerFinderPreferences;
 import org.exquisite.protege.model.search.DebuggerSearchManager;
+import org.exquisite.protege.model.search.DebuggerSearchPreferences;
 import org.exquisite.protege.model.search.DebuggerSearchResult;
+import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.panel.axioms.PossiblyFaultyAxiomsPanel;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.OWLEditorKit;
@@ -88,13 +89,13 @@ public class SearchPanel extends JPanel {
         });
     }
 
-    private void doSearch() {
+    public void doSearch() {
         final String s = searchField.getText().trim();
         this.searchString = checkNotNull(s);
         searchOptionsPanel.refresh();
 
         final java.util.List<OWLLogicalAxiom> axiomsToDisplay = new ArrayList<>();
-        if (searchString.trim().isEmpty()) {
+        if (isSearchStringEmpty()) {
             final OWLOntology ontology = editorKit.getModelManager().getActiveOntology();
             final DiagnosisModel<OWLLogicalAxiom> dm = editorKitHook.getActiveOntologyDebugger().getDiagnosisModel();
             axiomsToDisplay.addAll(PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(ontology, dm));
@@ -104,6 +105,7 @@ public class SearchPanel extends JPanel {
             try {
                 SearchRequest searchRequest = createSearchRequest();
                 logger.debug(searchRequest.toString());
+                final PagingState pagingState = editorKitHook.getActiveOntologyDebugger().getPagingState();
 
                 DebuggerSearchManager searchManager = getSearchManager();
                 searchManager.performSearch(searchRequest, searchResults -> {
@@ -113,6 +115,7 @@ public class SearchPanel extends JPanel {
                     }
                     Collections.sort(axiomsToDisplay);
                     SwingUtilities.invokeLater(() -> {
+                                pagingState.reset();
                                 axiomsPanel.setAxiomsToDisplay(axiomsToDisplay);
                                 axiomsPanel.updateDisplayedAxioms();
                             }
@@ -126,7 +129,7 @@ public class SearchPanel extends JPanel {
     }
 
     private SearchRequest createSearchRequest() throws PatternSyntaxException {
-        DebuggerFinderPreferences prefs = DebuggerFinderPreferences.getInstance();
+        DebuggerSearchPreferences prefs = DebuggerSearchPreferences.getInstance();
         int flags = Pattern.DOTALL | (prefs.isCaseSensitive() ? 0 : Pattern.CASE_INSENSITIVE);
 
         ImmutableList.Builder<Pattern> builder = ImmutableList.builder();
@@ -176,5 +179,13 @@ public class SearchPanel extends JPanel {
     public void resetSearchField() {
         this.searchString = "";
         this.searchField.setText(this.searchString);
+    }
+
+    public void clearCache() {
+        getSearchManager().markCacheAsStale();
+    }
+
+    private boolean isSearchStringEmpty() {
+        return this.searchString==null || this.searchString.trim().isEmpty();
     }
 }

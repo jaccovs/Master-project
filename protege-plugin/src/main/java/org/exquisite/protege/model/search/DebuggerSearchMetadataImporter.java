@@ -36,10 +36,10 @@ class DebuggerSearchMetadataImporter implements SearchMetadataImporter {
             final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = context.getEditorKitHook().getActiveOntologyDebugger().getDiagnosisModel();
             final List possiblyFaultyLogicalAxioms = PossiblyFaultyAxiomsPanel.getAllPossiblyFaultyLogicalAxioms(activeOntology, diagnosisModel);
             activeOntology.getAxioms(axiomType).stream().filter((Predicate<OWLAxiom>) possiblyFaultyLogicalAxioms::contains).forEach(ax -> {
-                OWLObject subject = new AxiomSubjectProvider().getSubject(ax);
+                final OWLObject subject = new AxiomSubjectProvider().getSubject(ax);
                 if (subject instanceof OWLEntity) {
-                    OWLEntity entSubject = (OWLEntity) subject;
-                    String rendering = context.getRendering(entSubject);
+                    final OWLEntity entSubject = (OWLEntity) subject;
+                    final String rendering = context.getRendering(entSubject);
                     importer.generateSearchMetadataFor(ax, entSubject, rendering, context, db);
                 }
             });

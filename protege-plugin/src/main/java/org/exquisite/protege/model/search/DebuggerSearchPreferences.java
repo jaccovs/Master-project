@@ -6,7 +6,7 @@ import org.protege.editor.core.prefs.PreferencesManager;
 /**
  * Preferences used for the search options in debugger's input ontology view.
  */
-public class DebuggerFinderPreferences {
+public class DebuggerSearchPreferences {
 
     private static final String PREFERENCES_KEY = "org.exquisite.protege.finder";
 
@@ -26,7 +26,7 @@ public class DebuggerFinderPreferences {
 
     private static final boolean DEFAULT_USE_REGULAR_EXPRESSIONS_VALUE = false;
 
-    private static DebuggerFinderPreferences instance;
+    private static DebuggerSearchPreferences instance;
 
     private boolean caseSensitive;
 
@@ -36,7 +36,7 @@ public class DebuggerFinderPreferences {
 
     private boolean useRegularExpressions;
 
-    private DebuggerFinderPreferences() {
+    private DebuggerSearchPreferences() {
         load();
     }
 
@@ -52,9 +52,9 @@ public class DebuggerFinderPreferences {
         useRegularExpressions = preferences.getBoolean(USE_REGULAR_EXPRESSIONS_KEY, DEFAULT_USE_REGULAR_EXPRESSIONS_VALUE);
     }
 
-    public static synchronized DebuggerFinderPreferences getInstance() {
+    public static synchronized DebuggerSearchPreferences getInstance() {
         if (instance == null) {
-            instance = new DebuggerFinderPreferences();
+            instance = new DebuggerSearchPreferences();
         }
         return instance;
     }
