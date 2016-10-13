@@ -7,7 +7,17 @@
     <groupId>org.exquisite</groupId>
     <artifactId>exquisite</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1.BETA</version>
+    <version>0.1.2.BETA-SNAPSHOT</version>
+
+    <name>exquisite</name>
+    <description>Exquisite is a free, open source ontology debugger plugin for Protege.</description>
+    <url>http://isbi.aau.at/ontodebug/</url>
+    <inceptionYear>2016</inceptionYear>
+
+    <organization>
+        <name>University Klagenfurt and TU Dortmund</name>
+        <url>http://isbi.aau.at/</url>
+    </organization>
 
     <licenses>
         <license>
@@ -42,28 +52,61 @@
 
     <developers>
         <developer>
-            <id>thomas</id>
-            <name>Thomas Schmitz</name>
+            <id>kostya</id>
+            <name>Konstantin Schekotihin</name>
+            <organization>University Klagenfurt</organization>
+            <roles>
+                <role>project leader</role>
+                <role>architect</role>
+                <role>developer</role>
+             </roles>
         </developer>
         <developer>
             <id>dietmar</id>
             <name>Dietmar Jannach</name>
+            <organization>TU Dortmund</organization>
+            <roles>
+                <role>project leader</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
-            <id>wolfi</id>
-            <name>Wolfgang Schmid</name>
+            <id>thomas</id>
+            <name>Thomas Schmitz</name>
+            <organization>TU Dortmund</organization>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
-            <id>kostya</id>
-            <name>Konstantin Schekotihin</name>
-        </developer>
-        <developer>
-            <id>patrick</id>
+            <id>pr8</id>
             <name>Patrick Rodler</name>
+            <organization>University Klagenfurt</organization>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
         <developer>
             <id>pfleiss</id>
             <name>Philipp Fleiss</name>
+            <organization>University Klagenfurt</organization>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>wolfi</id>
+            <name>Wolfgang Schmid</name>
+            <organization>University Klagenfurt</organization>
+            <roles>
+                <role>project leader</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
     </developers>
 
@@ -71,12 +114,18 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.10</junit.version>
+        <slf4j.version>1.7.13</slf4j.version>
+        <logback.version>1.1.3</logback.version>
+        <owlapi.version>4.2.6</owlapi.version>
+        <protege.version>5.0.0</protege.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!--
         <distributionRepositoryId>releases</distributionRepositoryId>
         <distributionRepositoryUrl>
             https://vcs-isbi.aau.at/nexus/content/repositories/releases  
         </distributionRepositoryUrl>
+        -->
     </properties>
 
     <repositories>
@@ -89,6 +138,7 @@
                 <checksumPolicy>warn</checksumPolicy>
             </releases>
         </repository>
+        <!--
         <repository>
             <id>local-snapshot-repository</id>
             <name>Local Snapshot Repository</name>
@@ -103,18 +153,31 @@
                 <checksumPolicy>warn</checksumPolicy>
             </releases>
         </repository>
+        -->
     </repositories>
+
+    <scm>
+        <connection>scm:git:https://git-ainf.aau.at/interactive-KB-debugging/debugger.git</connection>
+        <developerConnection>scm:git:https://git-ainf.aau.at/interactive-KB-debugging/debugger.git</developerConnection>
+        <url>https://git-ainf.aau.at/interactive-KB-debugging/debugger</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitLab Issues</system>
+        <url>https://git-ainf.aau.at/interactive-KB-debugging/debugger/issues</url>
+    </issueManagement>
 
     <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.3</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.13</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -5,26 +5,22 @@
     <parent>
         <artifactId>exquisite</artifactId>
         <groupId>org.exquisite</groupId>
-        <version>0.1.1.BETA</version>
+        <version>0.1.2.BETA-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>protege-plugin</artifactId>
 
-    <properties>
-        <protege-version>5.0.0</protege-version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-owl</artifactId>
-            <version>${protege-version}</version>
+            <version>${protege.version}</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-core</artifactId>
-            <version>${protege-version}</version>
+            <version>${protege.version}</version>
         </dependency>
         <dependency>
             <groupId>org.exquisite</groupId>

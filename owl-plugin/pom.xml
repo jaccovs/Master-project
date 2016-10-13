@@ -5,7 +5,7 @@
     <parent>
         <artifactId>exquisite</artifactId>
         <groupId>org.exquisite</groupId>
-        <version>0.1.1.BETA</version>
+        <version>0.1.2.BETA-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,12 +16,12 @@
         <dependency>
             <groupId>org.exquisite</groupId>
             <artifactId>diagnosis</artifactId>
-            <version>0.1.1.BETA</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>4.2.5</version>
+            <version>${owlapi.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
