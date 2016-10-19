@@ -19,8 +19,8 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.*;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFormulaWeights;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
-import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
-import org.exquisite.protege.model.configuration.SearchConfiguration;
+import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
+import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
@@ -433,7 +433,7 @@ public class OntologyDebugger {
         return testcases.areTestcasesEmpty();
     }
 
-    public void updateConfig(SearchConfiguration newConfiguration) {
+    public void updateConfig(DebuggerConfiguration newConfiguration) {
         getDiagnosisEngineFactory().updateConfig(newConfiguration);
     }
 
@@ -588,18 +588,11 @@ public class OntologyDebugger {
     private void doGetQuery(QueryErrorHandler errorHandler) {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
-        final SearchConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
+        final DebuggerConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
         HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine);
 
-        int minimalQueries = preference.minimalQueries;
-        int maximalQueries = preference.maximalQueries;
-        if (maximalQueries < minimalQueries) {
-            maximalQueries = minimalQueries;
-            preference.maximalQueries = maximalQueries;
-        }
-
-        heuristicConfiguration.setMinQueries(minimalQueries);
-        heuristicConfiguration.setMaxQueries(maximalQueries);
+        heuristicConfiguration.setMinQueries(1);
+        heuristicConfiguration.setMaxQueries(1);
 
         heuristicConfiguration.setEnrichQueries(preference.enrichQuery);
         switch (preference.rm) {

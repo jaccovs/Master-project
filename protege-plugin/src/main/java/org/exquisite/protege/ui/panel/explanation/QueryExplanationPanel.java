@@ -1,4 +1,4 @@
-package org.exquisite.protege.ui.panel;
+package org.exquisite.protege.ui.panel.explanation;
 
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.semanticweb.owlapi.model.OWLAxiom;

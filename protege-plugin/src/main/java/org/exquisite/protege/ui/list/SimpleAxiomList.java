@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.configuration.DiagnosisEngineFactory;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;

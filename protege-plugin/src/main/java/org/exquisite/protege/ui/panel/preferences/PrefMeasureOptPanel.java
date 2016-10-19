@@ -1,19 +1,19 @@
-package org.exquisite.protege.ui.panel;
+package org.exquisite.protege.ui.panel.preferences;
 
 import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.configuration.SearchConfiguration;
+import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 
 import javax.swing.*;
 
 import java.awt.*;
 
-import static org.exquisite.protege.model.configuration.SearchConfiguration.CostEstimator;
+import static org.exquisite.protege.model.preferences.DebuggerConfiguration.CostEstimator;
 
-class PrefMeasureOptPanel extends AbstractOptPanel {
+class PrefMeasureOptPanel extends AbstractDebuggerPreferencesPanel {
 
     private JComboBox<CostEstimator> estimatorComboBox = new JComboBox<>();
 
-    PrefMeasureOptPanel(SearchConfiguration configuration, SearchConfiguration newConfiguration, EditorKitHook editorKitHook) {
+    PrefMeasureOptPanel(DebuggerConfiguration configuration, DebuggerConfiguration newConfiguration, EditorKitHook editorKitHook) {
         super(configuration, newConfiguration);
 
         for (CostEstimator costEstimator : CostEstimator.values())

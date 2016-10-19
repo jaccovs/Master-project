@@ -2,7 +2,7 @@ package org.exquisite.protege.model;
 
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.Query;
-import org.exquisite.protege.ui.panel.QueryExplanationPanel;
+import org.exquisite.protege.ui.panel.explanation.QueryExplanationPanel;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.OWLAxiom;
