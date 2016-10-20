@@ -1,13 +1,13 @@
 package org.exquisite.protege.ui.list;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
+import static org.exquisite.protege.Debugger.TestcaseType;
 
 /**
  * List of entailed and non test cases already given the ontology.

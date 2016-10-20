@@ -1,8 +1,8 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.query.Answer;
-import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.Debugger;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -38,7 +38,7 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof QueryHistoryItem) {
             for (int number : getSelectedIndices()) {
                 QueryHistoryItem item = (QueryHistoryItem) getModel().getElementAt(number);
-                final OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
+                final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
                 debugger.doRemoveQueryHistoryAnswer(item.getAnswer());
             }
         }

@@ -7,7 +7,7 @@
 
     <!-- -->
     <extension id="EditorKitHook" point="org.protege.editor.core.application.EditorKitHook">
-        <class value="org.exquisite.protege.model.EditorKitHook"/>
+        <class value="org.exquisite.protege.EditorKitHook"/>
         <editorKitId value="OWLEditorKit"/>
     </extension>
 
@@ -94,7 +94,7 @@
 
     <extension id="querydebugger.prefs" point="org.protege.editor.core.application.preferencespanel">
         <label value="Debugger"/>
-        <class value="org.exquisite.protege.ui.panel.QueryDebuggerPreferencesPanel"/>
+        <class value="org.exquisite.protege.ui.panel.preferences.DebuggerPreferencesPanel"/>
     </extension>
 
 </plugin>

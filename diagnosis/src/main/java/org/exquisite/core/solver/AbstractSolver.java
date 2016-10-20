@@ -228,8 +228,10 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
     public void dispose() {
         this.formulasCache.clear();
         this.negationsCache.clear();
-        this.diagnosisModel.deleteObserver(this);
-        this.diagnosisModel = null;
+        if (diagnosisModel!=null) {
+            this.diagnosisModel.deleteObserver(this);
+            this.diagnosisModel = null;
+        }
     }
 
     @Override

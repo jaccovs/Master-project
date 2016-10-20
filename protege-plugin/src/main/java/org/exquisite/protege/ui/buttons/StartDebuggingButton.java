@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.ui.view.AbstractQueryViewComponent;
 
@@ -16,7 +16,7 @@ public class StartDebuggingButton extends AbstractGuiButton {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
-                        final OntologyDebugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
+                        final Debugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
 
                         if (debugger.isSessionStopped()) {
                             debugger.doStartDebugging(new QueryErrorHandler());
@@ -29,7 +29,7 @@ public class StartDebuggingButton extends AbstractGuiButton {
         );
     }
 
-    public void updateView(OntologyDebugger debugger) {
+    public void updateView(Debugger debugger) {
         if (debugger.isSessionStopped()) {
             setIcon(loadCustomIcon("player_play.png"));
             setText("Start");

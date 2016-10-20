@@ -1,12 +1,10 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.query.Query;
-import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDebugger;
-import org.exquisite.protege.model.QueryExplanation;
+import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
-import org.exquisite.protege.ui.buttons.DebugExplainButton;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
@@ -32,7 +30,7 @@ public class QueryAxiomList extends AbstractAxiomList {
     @Override
     protected List<MListButton> getButtons(Object value) {
         List<MListButton> buttons = new ArrayList<>();
-        OntologyDebugger debugger = editorKitHook.getActiveOntologyDebugger();
+        Debugger debugger = editorKitHook.getActiveOntologyDebugger();
         OWLLogicalAxiom axiom = ((AxiomListItem) value).getAxiom();
         buttons.addAll(super.getButtons(value));
         buttons.add(new AxiomIsEntailedButton(this,debugger.isMarkedEntailed(axiom)));
@@ -47,7 +45,7 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     public void handleEntailed() {
         OWLLogicalAxiom axiom = ((AxiomListItem) getSelectedValue()).getAxiom()  ;
-        OntologyDebugger debugger = editorKitHook.getActiveOntologyDebugger();
+        Debugger debugger = editorKitHook.getActiveOntologyDebugger();
         if (debugger.isMarkedEntailed(axiom)) {
             debugger.doRemoveAxiomsMarkedEntailed(axiom);
         } else if (debugger.isMarkedNonEntailed(axiom)) {
@@ -60,7 +58,7 @@ public class QueryAxiomList extends AbstractAxiomList {
 
     public void handleNotEntailed() {
         OWLLogicalAxiom axiom = ((AxiomListItem) getSelectedValue()).getAxiom()  ;
-        OntologyDebugger debugger = editorKitHook.getActiveOntologyDebugger();
+        Debugger debugger = editorKitHook.getActiveOntologyDebugger();
         if (debugger.isMarkedNonEntailed(axiom)) {
             debugger.doRemoveAxiomsMarkedNonEntailed(axiom);
         } else if (debugger.isMarkedEntailed(axiom)) {
@@ -87,7 +85,7 @@ public class QueryAxiomList extends AbstractAxiomList {
         setListData(new ArrayList<>().toArray());
     }
 
-    public void updateList(OntologyDebugger debugger, OWLOntology ontology) {
+    public void updateList(Debugger debugger, OWLOntology ontology) {
         Query<OWLLogicalAxiom> query = debugger.getActualQuery();
         if (query!=null && !query.formulas.isEmpty()) {
             List<Object> items = query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology)).collect(Collectors.toList());

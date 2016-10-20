@@ -1,6 +1,6 @@
 package org.exquisite.protege.model.search;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.search.SearchMetadataImportContext;
 

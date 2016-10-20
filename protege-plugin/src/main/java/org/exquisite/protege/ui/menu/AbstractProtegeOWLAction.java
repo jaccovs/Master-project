@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.menu;
 
-import org.exquisite.protege.model.EditorKitHook;
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.Debugger;
 import org.protege.editor.owl.ui.action.ProtegeOWLAction;
 
 import javax.swing.event.ChangeEvent;
@@ -16,7 +16,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
      * Get the active OntologyDebugger instance.
      * @return The active OntologyDebugger instance.
      */
-    OntologyDebugger getActiveOntologyDebugger() {
+    Debugger getActiveOntologyDebugger() {
         EditorKitHook editorKitHook = getOWLModelManager().get("org.exquisite.protege.EditorKitHook");
         return editorKitHook.getActiveOntologyDebugger();
     }
@@ -27,7 +27,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
      * <code>false</code> if the state is in STOPPED.
      */
     boolean isSessionRunning() {
-        OntologyDebugger debugger = getActiveOntologyDebugger();
+        Debugger debugger = getActiveOntologyDebugger();
         return debugger != null && debugger.isSessionRunning();
     }
 

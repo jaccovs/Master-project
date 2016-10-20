@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.editor;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.action.CreateOWLEntityAction;
 import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
 import org.protege.editor.core.ui.util.VerifyingOptionPane;

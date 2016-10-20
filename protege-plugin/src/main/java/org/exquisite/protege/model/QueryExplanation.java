@@ -2,7 +2,9 @@ package org.exquisite.protege.model;
 
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.Query;
-import org.exquisite.protege.ui.panel.QueryExplanationPanel;
+import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.Debugger;
+import org.exquisite.protege.ui.panel.explanation.QueryExplanationPanel;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -40,7 +42,7 @@ public class QueryExplanation extends ExplanationService {
     @Override
     public void dispose() throws Exception {}
 
-    private OntologyDebugger getOntologyDebugger() {
+    private Debugger getOntologyDebugger() {
         return getEditorKitHook().getActiveOntologyDebugger();
     }
 
@@ -59,7 +61,7 @@ public class QueryExplanation extends ExplanationService {
      * @param axiom The OWL Axiom to check.
      * @return <code>true</code> if axiom has been inferred by query computation, <code>false</code> otherwise.
      */
-    public static boolean isAxiomInferredFromDebugger(final OntologyDebugger debugger, final OWLAxiom axiom) {
+    public static boolean isAxiomInferredFromDebugger(final Debugger debugger, final OWLAxiom axiom) {
         if (!(axiom instanceof OWLLogicalAxiom)) // TODO clarify if this is a correct assumption
             return false;
 

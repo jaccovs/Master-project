@@ -4,7 +4,7 @@ import org.exquisite.protege.ui.dialog.DebuggingDialog;
 
 import java.awt.*;
 
-import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus;
+import static org.exquisite.protege.Debugger.ErrorStatus;
 
 public abstract class AbstractErrorHandler {
 

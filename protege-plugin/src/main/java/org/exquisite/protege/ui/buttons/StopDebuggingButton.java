@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.ui.view.AbstractQueryViewComponent;
 
 import javax.swing.*;
@@ -14,8 +14,8 @@ public class StopDebuggingButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        final OntologyDebugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
-                        debugger.doStopDebugging(OntologyDebugger.SessionStopReason.INVOKED_BY_USER);
+                        final Debugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
+                        debugger.doStopDebugging(Debugger.SessionStopReason.INVOKED_BY_USER);
                     }
                 }
         );
@@ -23,7 +23,7 @@ public class StopDebuggingButton extends AbstractGuiButton {
         updateView(toolboxView.getEditorKitHook().getActiveOntologyDebugger());
     }
 
-    public void updateView(OntologyDebugger debugger) {
+    public void updateView(Debugger debugger) {
         setEnabled(!debugger.isSessionStopped());
     }
 

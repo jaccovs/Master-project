@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.ui.view.QueryView;
 
@@ -20,7 +20,7 @@ public class CommitAndGetNextButton extends AbstractGuiButton {
                 }
         );
 
-        final OntologyDebugger debugger = queryView.getEditorKitHook().getActiveOntologyDebugger();
+        final Debugger debugger = queryView.getEditorKitHook().getActiveOntologyDebugger();
         setEnabled(debugger.isSessionRunning() && debugger.sizeOfEntailedAndNonEntailedAxioms() > 0);
 
     }

@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -23,7 +23,7 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
     }
 
     private void updateView() {
-        final OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
+        final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
 
         // sort and show the list of diagnoses depending on their measures in descending order
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = new TreeSet<>((o1, o2) -> o2.compareTo(o1));
