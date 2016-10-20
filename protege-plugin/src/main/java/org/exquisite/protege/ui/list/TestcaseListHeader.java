@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.protege.editor.core.ui.list.MListSectionHeader;
 
-import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
+import static org.exquisite.protege.Debugger.TestcaseType;
 
 public class TestcaseListHeader implements MListSectionHeader {
 

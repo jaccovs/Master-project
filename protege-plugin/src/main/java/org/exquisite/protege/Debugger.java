@@ -1,4 +1,4 @@
-package org.exquisite.protege.model;
+package org.exquisite.protege;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
@@ -19,6 +19,9 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.*;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFormulaWeights;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
+import org.exquisite.protege.model.DebuggingSession;
+import org.exquisite.protege.model.listener.OntologyChangeListener;
+import org.exquisite.protege.model.TestcasesModel;
 import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
@@ -44,12 +47,12 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus.NO_ERROR;
-import static org.exquisite.protege.model.OntologyDebugger.ErrorStatus.SOLVER_EXCEPTION;
+import static org.exquisite.protege.Debugger.ErrorStatus.NO_ERROR;
+import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
 
-public class OntologyDebugger {
+public class Debugger {
 
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyDebugger.class.getCanonicalName());
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
 
     public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
@@ -108,7 +111,7 @@ public class OntologyDebugger {
      */
     private OntologyChangeListener ontologyChangeListener;
 
-    public OntologyDebugger(OWLEditorKit editorKit) {
+    public Debugger(OWLEditorKit editorKit) {
         modelManager = editorKit.getModelManager();
         reasonerManager = modelManager.getOWLReasonerManager();
         diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), reasonerManager);
@@ -734,6 +737,11 @@ public class OntologyDebugger {
         CostsEstimator<OWLLogicalAxiom> estimator = getSearchCreator().getSearch().getCostsEstimator();
         ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
         */
+    }
+
+    public void dispose(EditorKitHook editorKitHook) {
+        removeChangeListener(editorKitHook);
+        this.diagnosisEngineFactory.dispose();
     }
 
     @Override

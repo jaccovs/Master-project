@@ -167,4 +167,28 @@ class ConfigFileManager {
     }
 
 
+    public static void dispose(DebuggerConfiguration config) {
+        try {
+            if (havePropertiesChanged(config)) {
+                writeConfiguration(config);
+            }
+        } catch (Exception e) {
+            logger.error("Final synchronization of debugger preferences failed.");
+        }
+    }
+
+    private static boolean havePropertiesChanged(DebuggerConfiguration config) {
+        File confFile = getConfFile();
+
+        Properties properties = new Properties();
+
+        try {
+            properties.load(new FileInputStream(confFile));
+        } catch (IOException e) {
+            logger.error("Cannot load " + confFile + " to load properties", e);
+            throw new DiagnosisRuntimeException("Error when loading preferences from " + confFile, e);
+        }
+
+        return config.hasConfigurationChanged(properties);
+    }
 }

@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
 
 import javax.swing.event.ChangeListener;

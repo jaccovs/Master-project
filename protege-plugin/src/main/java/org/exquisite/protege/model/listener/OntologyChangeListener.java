@@ -1,5 +1,6 @@
-package org.exquisite.protege.model;
+package org.exquisite.protege.model.listener;
 
+import org.exquisite.protege.Debugger;
 import org.semanticweb.owlapi.model.OWLException;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -13,13 +14,13 @@ import java.util.List;
 /**
  * Listens to ontology changes. These ontology changes have also an effect on the debuggin session.
  */
-class OntologyChangeListener implements OWLOntologyChangeListener  {
+public class OntologyChangeListener implements OWLOntologyChangeListener  {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(OntologyChangeListener.class);
 
-    private OntologyDebugger debugger;
+    private Debugger debugger;
 
-    OntologyChangeListener(OntologyDebugger debugger) {
+    public OntologyChangeListener(Debugger debugger) {
         this.debugger = debugger;
     }
 
@@ -27,7 +28,7 @@ class OntologyChangeListener implements OWLOntologyChangeListener  {
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
         if (areChangesRelevant(changes) && debugger.isSessionRunning()) {
                 logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
-                debugger.doStopDebugging(OntologyDebugger.SessionStopReason.ONTOLOGY_CHANGED);
+                debugger.doStopDebugging(Debugger.SessionStopReason.ONTOLOGY_CHANGED);
         }
     }
 

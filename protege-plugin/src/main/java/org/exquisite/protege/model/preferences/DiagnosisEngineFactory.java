@@ -7,7 +7,7 @@ import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.TreeSet;
 
-import static org.exquisite.protege.model.OntologyDebugger.SessionStopReason;
+import static org.exquisite.protege.Debugger.SessionStopReason;
 
 public class DiagnosisEngineFactory {
 
@@ -29,7 +29,7 @@ public class DiagnosisEngineFactory {
 
     private IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine;
 
-    private OntologyDebugger debugger;
+    private Debugger debugger;
 
     private OWLOntology ontology;
 
@@ -37,7 +37,7 @@ public class DiagnosisEngineFactory {
 
     private OWLReasonerManager reasonerMan;
 
-    public DiagnosisEngineFactory(OntologyDebugger debugger, OWLOntology ontology, OWLReasonerManager reasonerMan) {
+    public DiagnosisEngineFactory(Debugger debugger, OWLOntology ontology, OWLReasonerManager reasonerMan) {
         this.debugger = debugger;
         this.ontology = ontology;
         this.reasonerMan = reasonerMan;
@@ -79,7 +79,10 @@ public class DiagnosisEngineFactory {
     }
 
     public void dispose() {
-        this.diagnosisEngine.dispose();
+        // always remember the last preference settings before we close the application
+        ConfigFileManager.dispose(config);
+        if (this.diagnosisEngine != null )
+            this.diagnosisEngine.dispose();
     }
 
     public void reset() {

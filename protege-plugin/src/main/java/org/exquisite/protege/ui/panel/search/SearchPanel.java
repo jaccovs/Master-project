@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.panel.search;
 
 import com.google.common.collect.ImmutableList;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.search.DebuggerSearchManager;
 import org.exquisite.protege.model.search.DebuggerSearchPreferences;
 import org.exquisite.protege.model.search.DebuggerSearchResult;

@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.panel.preferences;
 
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;

@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.panel.preferences;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 

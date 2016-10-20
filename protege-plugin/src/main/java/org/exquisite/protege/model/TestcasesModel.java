@@ -1,11 +1,12 @@
 package org.exquisite.protege.model;
 
+import org.exquisite.protege.Debugger;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
+import static org.exquisite.protege.Debugger.TestcaseType;
 
 /**
  * A model of the test cases that differs between the original entailed and non-entailed test cases and
@@ -19,7 +20,7 @@ import static org.exquisite.protege.model.OntologyDebugger.TestcaseType;
  */
 public class TestcasesModel {
 
-    private OntologyDebugger debugger;
+    private Debugger debugger;
 
     private Set<OWLLogicalAxiom> originalEntailedTestcases;
 
@@ -29,7 +30,7 @@ public class TestcasesModel {
 
     private Set<OWLLogicalAxiom> acquiredNonEntailedTestcases;
 
-    TestcasesModel(OntologyDebugger debugger) {
+    public TestcasesModel(Debugger debugger) {
         this.debugger = debugger;
         this.originalEntailedTestcases = new TreeSet<>();
         this.originalNonEntailedTestcases = new TreeSet<>();
@@ -61,7 +62,7 @@ public class TestcasesModel {
         return acquiredNonEntailedTestcases;
     }
 
-    void addTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
+    public void addTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
             this.debugger.getDiagnosisModel().getEntailedExamples().addAll(testcaseAxioms);
             if (type==TestcaseType.ACQUIRED_ENTAILED_TC)
@@ -77,7 +78,7 @@ public class TestcasesModel {
         }
     }
 
-    void removeTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
+    public void removeTestcase(Set<OWLLogicalAxiom> testcaseAxioms, TestcaseType type) {
 
         if (type==TestcaseType.ACQUIRED_ENTAILED_TC || type==TestcaseType.ORIGINAL_ENTAILED_TC) {
             this.debugger.getDiagnosisModel().getEntailedExamples().removeAll(testcaseAxioms);
@@ -94,11 +95,11 @@ public class TestcasesModel {
         }
     }
 
-    boolean areTestcasesEmpty() {
+    public boolean areTestcasesEmpty() {
         return this.acquiredEntailedTestcases.isEmpty() && this.acquiredNonEntailedTestcases.isEmpty();
     }
 
-    void reset() {
+    public void reset() {
         debugger.getDiagnosisModel().getEntailedExamples().removeAll(this.acquiredEntailedTestcases);
         debugger.getDiagnosisModel().getNotEntailedExamples().removeAll(this.acquiredNonEntailedTestcases);
 

@@ -1,15 +1,16 @@
 package org.exquisite.protege.model.preferences;
 
-import org.exquisite.core.DiagnosisRuntimeException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * The applied preferences and configuration used for diagnoses search and query computation.
  */
 public class DebuggerConfiguration {
+
 
     /**
      * Configuration possibility to use diverse diagnosis engines.
@@ -150,6 +151,10 @@ public class DebuggerConfiguration {
 
     public boolean hasConfigurationChanged(DebuggerConfiguration newConfiguration) {
         return !this.equals(newConfiguration);
+    }
+
+    public boolean hasConfigurationChanged(Properties properties) {
+        return true;
     }
 
     public boolean hasCheckTypeChanged(DebuggerConfiguration newConfiguration) {

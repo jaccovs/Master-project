@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.panel.axioms;
 
-import org.exquisite.protege.model.EditorKitHook;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;

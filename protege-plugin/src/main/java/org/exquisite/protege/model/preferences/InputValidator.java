@@ -11,6 +11,10 @@ public class InputValidator {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(InputValidator.class.getCanonicalName());
 
+
+    private static final Double MIN_VALUE_DOUBLE = Double.parseDouble(Integer.MIN_VALUE+"");
+    private static final Double MAX_VALUE_DOUBLE = Double.parseDouble(Integer.MAX_VALUE+"");
+
     /**
      * Parses and validates the diagnosis engine type preference.
      *
@@ -220,11 +224,12 @@ public class InputValidator {
      * @return Value of property.
      */
     static Double parseDouble(Properties properties, String key, Double defaultValue) {
-        return parseDouble(properties, key, Double.MIN_VALUE, Double.MAX_VALUE, defaultValue);
+        return parseDouble(properties, key, MIN_VALUE_DOUBLE, MAX_VALUE_DOUBLE, defaultValue);
     }
 
     /**
      * Helper method to parse double property with fall back to default value.
+     * This method has to avoid loss of precision and avoid mantissa and exponent
      *
      * @param properties Properties.
      * @param key Key of property.
@@ -243,7 +248,7 @@ public class InputValidator {
         Double value;
         try {
             if (aValue instanceof String) {
-                value = Double.parseDouble((String) aValue);
+                value = Double.parseDouble((String) aValue);// we have to avoid loss of precision and
             } else {
                 value = (Double) aValue;
             }
@@ -260,6 +265,8 @@ public class InputValidator {
             logger.warn("The preference value {} is not a valid number! Applying default value {}.", aValue, defaultValue);
             value = defaultValue;
         }
-        return value.toString();
+
+        final String s = value.toString();
+        return s;
     }
 }

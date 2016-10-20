@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.view;
 
-import org.exquisite.protege.model.OntologyDebugger;
+import org.exquisite.protege.Debugger;
 import org.exquisite.protege.ui.buttons.CommitAndGetNextButton;
 import org.exquisite.protege.ui.buttons.StartDebuggingButton;
 import org.exquisite.protege.ui.buttons.StopDebuggingButton;
@@ -51,7 +51,7 @@ public class QueryView extends AbstractListQueryViewComponent {
     }
 
     private void updateView() {
-        final OntologyDebugger debugger = getEditorKitHook().getActiveOntologyDebugger();
+        final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
         getList().updateList(debugger, debugger.getDiagnosisEngineFactory().getOntology());
     }
 
@@ -67,7 +67,7 @@ public class QueryView extends AbstractListQueryViewComponent {
     @Override
     public void stateChanged(ChangeEvent e) {
 
-        final OntologyDebugger debugger = (OntologyDebugger) e.getSource();
+        final Debugger debugger = (Debugger) e.getSource();
         switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
                 OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
