@@ -28,12 +28,11 @@ class PrefMeasureOptPanel extends AbstractDebuggerPreferencesPanel {
         Box holder = Box.createVerticalBox();
 
         OptionGroupBox optionGroupCostEstimator = new OptionGroupBox("Cost Estimation");
-        optionGroupCostEstimator.addOptionBox(new OptionBox("costEstimator", getListener(), new JLabel("Preference Function: "), estimatorComboBox));
+        optionGroupCostEstimator.addOptionBox(new OptionBox("costEstimator", new JLabel("Preference Function: "), estimatorComboBox));
 
         holder.add(optionGroupCostEstimator);
 
         add(holder, BorderLayout.NORTH);
-        add(getHelpAreaPane(),BorderLayout.SOUTH);
     }
 
     private void loadConfiguration() {

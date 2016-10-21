@@ -3,6 +3,7 @@ package org.exquisite.protege.ui.panel.preferences;
 import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.preferences.InputValidator;
+import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
     private Integer numOfLeadingDiags = null; // this value is either set while loading the configuration or when numOfLeadingDiags is changed in DiagnosisOptPanel
 
     // Query computation
-    private JCheckBox enrichQueryCheckbox = new JCheckBox("enrich query ", DefaultPreferences.getDefaultEnrichQuery());
+    private JCheckBox enrichQueryCheckbox = new JCheckBox("enrich and optimize query ", DefaultPreferences.getDefaultEnrichQuery());
     private JComboBox<DebuggerConfiguration.SortCriterion> sortCriterionCombobox = new JComboBox<>();
     private JComboBox<DebuggerConfiguration.RM> rmComboBox = new JComboBox<>();
     private JSpinner entropyThresholdSpinner = new JSpinner(
@@ -42,6 +43,8 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
     private OptionBox cautiousParameterOptionBox;
     private OptionBox cardinalityThresholdOptionBox;
 
+    private Component learningParametersLabel;
+
     QueryComputationPreferencesPanel(DebuggerConfiguration configuration, DebuggerConfiguration newConfiguration) {
         super(configuration,newConfiguration);
 
@@ -60,26 +63,47 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
 
     private void createPanel() {
         setLayout(new BorderLayout());
-        Box holder = Box.createVerticalBox();
 
-        OptionGroupBox holderQueryComputation = new OptionGroupBox("Query Computation");
+        add(getHelpLabel("<html><body>Query Computation is a 3-stage process...</body><html>"), BorderLayout.NORTH);
 
-        holderQueryComputation.addOptionBox(new OptionBox("enrichquery",getListener(), enrichQueryCheckbox));
+        Box stages = Box.createVerticalBox();
+        OptionGroupBox stage1 = createStage1Panel();
+        OptionGroupBox stage2 = createStage2Panel();
+        OptionGroupBox stage3 = createStage3Panel();
+        stages.add(stage1);
+        stages.add(stage2);
+        stages.add(stage3);
+        add(stages,BorderLayout.CENTER);
 
-        OptionGroupBox holderQueryMeasurements = new OptionGroupBox("Measurements");
-        holderQueryMeasurements.addOptionBox(new OptionBox("sortcriterion",getListener(),new JLabel("Sort Criterion: "), sortCriterionCombobox));
-        holderQueryMeasurements.addOptionBox(new OptionBox("rm",getListener(),new JLabel("Requirements Measure: "), rmComboBox));
+        // call the listener implementation for RM immediately after creation
+        handleRMChanged((DebuggerConfiguration.RM) this.rmComboBox.getSelectedItem());
+    }
+
+    private OptionGroupBox createStage1Panel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addHelpText("<html><body>" +
+                "Goal: minimize the overall # of queries in debugging session. " +
+                "There are several Query Quality Measures for this purpose (default: Entropy)." +
+                "</body></html>");
+
+        panel.addLabelledGroupComponent("Query Quality Measure: ", new OptionBox("rm", rmComboBox));
         rmComboBox.addActionListener(e -> {
             handleRMChanged((DebuggerConfiguration.RM) ((JComboBox<DebuggerConfiguration.RM>) e.getSource()).getSelectedItem());
         });
 
-        OptionGroupBox holderQueryThresholds = new OptionGroupBox("Thresholds");
+        panel.addHelpText("<html><body>" +
+                "Approx. parameters control the quality of the found query w.r.t the selected measure.<br>" +
+                "Lower values signalize better quality, but with a potentially longer query comp.time." +
+                "</body></html>");
+
         entropyThresholdSpinner.setPreferredSize(new Dimension(60, 22));
-        entropyThresholdOptionBox = new OptionBox("entropythreshold", getListener(), new JLabel("Entropy Threshold: "), entropyThresholdSpinner);
-        holderQueryThresholds.addOptionBox(entropyThresholdOptionBox);
+        entropyThresholdOptionBox = new OptionBox("entropythreshold", entropyThresholdSpinner, new JLabel(" Entropy"));
+        panel.addLabelledGroupComponent("Approx. Parameters: ", entropyThresholdOptionBox);
+
         cardinalityThresholdSpinner.setPreferredSize(new Dimension(60, 22));
-        cardinalityThresholdOptionBox = new OptionBox("cardinalitythreshold", getListener(), new JLabel("Cardinality Threshold: "), cardinalityThresholdSpinner);
-        holderQueryThresholds.addOptionBox(cardinalityThresholdOptionBox);
+        cardinalityThresholdOptionBox = new OptionBox("cardinalitythreshold", cardinalityThresholdSpinner, new JLabel(" Cardinality"));
+        panel.addLabelledGroupComponent(null, cardinalityThresholdOptionBox);
+
         cautiousParameterSpinner.setPreferredSize(new Dimension(60, 22));
         cautiousParameterSpinner = new JSpinner(
                 new SpinnerNumberModel(
@@ -87,17 +111,67 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
                         getCautiousLowerBound(),
                         getCautiousUpperBound(),
                         0.01));
-        cautiousParameterOptionBox = new OptionBox("cautiousparameter", getListener(), new JLabel("Cautious Parameter: "), cautiousParameterSpinner);
-        holderQueryThresholds.addOptionBox(cautiousParameterOptionBox);
+        cautiousParameterOptionBox = new OptionBox("cautiousparameter", cautiousParameterSpinner, new JLabel("Cautiousness"));
+        panel.addLabelledGroupComponent("Learning Parameters: ", cautiousParameterOptionBox);
+        this.learningParametersLabel = getLearningParametersLabel(panel);
 
-        holder.add(holderQueryComputation);
-        holder.add(holderQueryMeasurements);
-        holder.add(holderQueryThresholds);
+        final OptionGroupBox stage1 = new OptionGroupBox("Stage 1");
+        stage1.add(panel);
+        return stage1;
+    }
 
-        add(holder, BorderLayout.NORTH);
-        add(getHelpAreaPane(),BorderLayout.SOUTH);
+    /**
+     * This is a quick and dirty helper method to get the label of the labelled group component from the PreferenceLayoutPanel.
+     * <p>
+     * <b>Notice that this depends heavily on the implementation of org.protege.editor.core.ui.preferences.PreferenceLayoutPanel and that the method is
+     * called immediately after PreferenceLayoutPanel.addLabelledGroupComponent(label,component) has been called!!!</b>
+     * </p>
+     * @param panel an instance of PreferenceLayoutPanel
+     * @return either the JLabel instance created in PreferenceLayoutPanel.addLabelledGroupComponent(label,component) or
+     * <code>null</code> if not found or the implementation of PreferenceLayoutPanel has changed.
+     * @see org.protege.editor.core.ui.preferences.PreferencesLayoutPanel
+     */
+    private JLabel getLearningParametersLabel(PreferencesLayoutPanel panel) {
+        final Component[] components = panel.getComponents();
+        if (components != null && components.length == 1) {
+            final Component aComponent = components[0];
+            if (aComponent instanceof JPanel) {
+                final Component[] backingPanelComponents = ((JPanel) aComponent).getComponents();
+                final int len = backingPanelComponents.length;
+                if (len >= 2 && backingPanelComponents[len-2] instanceof JLabel) {
+                    return (JLabel)backingPanelComponents[len-2];
+                }
+            }
+        }
+        return null;
+    }
 
-        handleRMChanged((DebuggerConfiguration.RM) this.rmComboBox.getSelectedItem());
+    private OptionGroupBox createStage2Panel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addHelpText("<html><body>" +
+                "Goal: minimize the # of axioms per query (MinCard) or the complexity of the query axioms (MinSum: tries to minimize the overall complexity<br>" +
+                "of all query axioms; MinMax: tries to min. the complexity of the most complex query axiom). Axiom complexity is estimated from syntax<br>" +
+                "fault probabilities - the higher the estimated fault prob. of the axiom, the higher the estimated complexity of it.<br>" +
+                "There are several Query Quality Measures for this purpose (default: Entropy)." +
+                "</body></html>");
+
+        panel.addLabelledGroupComponent("Criterion: ", new OptionBox("sortcriterion", sortCriterionCombobox));
+        final OptionGroupBox stage2 = new OptionGroupBox("Stage 2");
+        stage2.add(panel);
+        return stage2;
+    }
+
+    private OptionGroupBox createStage3Panel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addHelpText("<html><body>" +
+                "Goal: tries to make query easier to understand for theuser by simplifying axioms in teh query.  Users can select axiom types considered easy.<br>" +
+                "These are used to enrich the query of Stage 2 first.<br>" +
+                "Second the enriched query is optimized, i.e. a smallest and easiest possible subset of it is determined." +
+                "</body></html>");
+        final OptionGroupBox stage3 = new OptionGroupBox("Stage 3");
+        panel.addGroupComponent(new OptionBox("enrichquery", enrichQueryCheckbox));
+        stage3.add(panel);
+        return stage3;
     }
 
     private void handleRMChanged(DebuggerConfiguration.RM selectedItem) {
@@ -130,6 +204,7 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
         this.cardinalityThresholdSpinner.setEnabled(card);
         this.cardinalityThresholdOptionBox.setEnabledLabel(card);
 
+        if (this.learningParametersLabel != null) this.learningParametersLabel.setEnabled(caut);
         this.cautiousParameterSpinner.setEnabled(caut);
         this.cautiousParameterOptionBox.setEnabledLabel(caut);
 
