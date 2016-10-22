@@ -3,6 +3,7 @@ package org.exquisite.protege.ui.panel.preferences;
 import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.preferences.InputValidator;
+import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,16 +49,38 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private void createPanel() {
         setLayout(new BorderLayout());
-        Box holder = Box.createVerticalBox();
+        Box box = Box.createVerticalBox();
 
+        OptionGroupBox groupEngineType = createEngineTypePanel();
+        OptionGroupBox groupCostEstimator = createCostEstimationPanel();
+        OptionGroupBox groupDiagnosisCalculation = createDiagnosisCalculationPanel();
+
+        box.add(groupEngineType);
+        box.add(groupCostEstimator);
+        box.add(groupDiagnosisCalculation);
+
+        add(box, BorderLayout.NORTH);
+    }
+
+    private OptionGroupBox createEngineTypePanel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addLabelledGroupComponent("Diagnosis Engine: ", new OptionBox("enginetype", engineTypeCombobox));
         OptionGroupBox holderEngineType = new OptionGroupBox("Engine Type");
-        holderEngineType.addOptionBox(new OptionBox("enginetype", getListener(),new JLabel("Diagnosis Engine: "), engineTypeCombobox));
+        holderEngineType.add(panel);
+        return holderEngineType;
+    }
 
+    private OptionGroupBox createCostEstimationPanel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addLabelledGroupComponent("Preference Function: ", new OptionBox("costEstimator", estimatorComboBox));
         OptionGroupBox optionGroupCostEstimator = new OptionGroupBox("Cost Estimation");
-        optionGroupCostEstimator.addOptionBox(new OptionBox("costEstimator", getListener(), new JLabel("Preference Function: "), estimatorComboBox));
+        optionGroupCostEstimator.add(panel);
+        return optionGroupCostEstimator;
+    }
 
-        OptionGroupBox holderCalculation = new OptionGroupBox("Diagnoses Calculation");
-        holderCalculation.addOptionBox(new OptionBox("numofleadingdiags", getListener(), new JLabel("Number of Faulty Axiom Sets: "), numOfLeadingDiagsSpinner));
+    private OptionGroupBox createDiagnosisCalculationPanel() {
+        final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addLabelledGroupComponent("Number of Faulty Axiom Sets: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
         numOfLeadingDiagsSpinner.addChangeListener(e ->
                 queryComputationPreferencesPanel.updateThresholdParameter(
                         Integer.parseInt(
@@ -69,15 +92,12 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                                 )
                         )
                 ));
-        holderCalculation.addOptionBox(new OptionBox("testincoherencyinconsistency", getListener(), reduceIncoherencyCheckbox));
-        //holderCalculation.addOptionBox(new OptionBox("extractModules", getListener(), extractModulesCheckbox));
+        panel.addGroupComponent(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
+        //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
 
-        holder.add(holderEngineType);
-        holder.add(optionGroupCostEstimator);
-        holder.add(holderCalculation);
-
-        add(holder, BorderLayout.NORTH);
-        add(getHelpAreaPane(),BorderLayout.SOUTH);
+        OptionGroupBox holderCalculation = new OptionGroupBox("Diagnoses Calculation");
+        holderCalculation.add(panel);
+        return holderCalculation;
     }
 
     private void loadConfiguration() {

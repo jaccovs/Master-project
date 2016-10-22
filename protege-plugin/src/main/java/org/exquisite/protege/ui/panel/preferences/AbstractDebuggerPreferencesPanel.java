@@ -1,6 +1,7 @@
 package org.exquisite.protege.ui.panel.preferences;
 
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.protege.editor.owl.ui.preferences.OWLPreferencesPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,23 +12,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-class AbstractDebuggerPreferencesPanel extends JPanel {
+class AbstractDebuggerPreferencesPanel extends OWLPreferencesPanel {
 
     private DebuggerConfiguration configuration;
 
     private DebuggerConfiguration newConfiguration;
-
-    private ComponentHooverListener listener;
-
-    private JEditorPane helpAreaPane;
 
     private final String PREFIX = "> ";
 
     AbstractDebuggerPreferencesPanel(DebuggerConfiguration configuration, DebuggerConfiguration newConfiguration) {
         this.newConfiguration = newConfiguration;
         this.configuration = configuration;
-        helpAreaPane = createHelpEditorPane();
-        listener = new ComponentHooverListener(helpAreaPane);
     }
 
     protected DebuggerConfiguration getConfiguration() {
@@ -38,12 +33,14 @@ class AbstractDebuggerPreferencesPanel extends JPanel {
         return newConfiguration;
     }
 
-    ComponentHooverListener getListener() {
-        return listener;
-    }
-
-    JEditorPane getHelpAreaPane() {
-        return helpAreaPane;
+    static JLabel getHelpLabel(String helpText) {
+        JLabel label = new JLabel(helpText);
+        label.setFont(label.getFont().deriveFont(Font.PLAIN, 10f));
+        label.setForeground(Color.GRAY);
+        label.setBorder(BorderFactory.createEmptyBorder(3, 20, 7, 0));
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        label.setHorizontalTextPosition(SwingConstants.LEFT);
+        return label;
     }
 
     public void saveChanges() {
@@ -56,6 +53,21 @@ class AbstractDebuggerPreferencesPanel extends JPanel {
         helpArea.setEditable(false);
         helpArea.setText(PREFIX);
         return helpArea;
+    }
+
+    @Override
+    public void applyChanges() {
+
+    }
+
+    @Override
+    public void initialise() throws Exception {
+
+    }
+
+    @Override
+    public void dispose() throws Exception {
+
     }
 
     private class ComponentHooverListener extends MouseAdapter {
@@ -106,44 +118,37 @@ class AbstractDebuggerPreferencesPanel extends JPanel {
         private String id;
 
         private JComponent label;
+        private JComponent component;
 
-        OptionBox(String id, ComponentHooverListener listener, JComponent component) {
-            this(id,listener,null,component);
+
+        OptionBox(String id, JComponent component) {
+            this(id,null,component);
         }
 
-        OptionBox(String id, ComponentHooverListener listener, JComponent label, JComponent component) {
+        OptionBox(String id, JComponent label, JComponent component) {
             super(BoxLayout.X_AXIS);
             this.id = id;
+            this.label = label;
+            this.component = component;
+
             if (label == null)
-                constructBox(Collections.singletonList(component),listener);
+                constructBox(Collections.singletonList(component));
             else {
                 this.label = label;
                 List<JComponent> list = new LinkedList<>();
                 list.add(label);
                 list.add(component);
-                constructBox(list,listener);
+                constructBox(list);
             }
         }
 
-        void addListenerToComboBox(JComboBox comboBox, ComponentHooverListener listener) {
-            for (Component component : comboBox.getComponents()) {
-                if (component instanceof AbstractButton)
-                    component.addMouseListener(listener);
-            }
-        }
-
-        void constructBox(List<JComponent> components, ComponentHooverListener listener) {
+        void constructBox(List<JComponent> components) {
             for (JComponent component : components) {
                 component.setMaximumSize(component.getPreferredSize());
-                if (component instanceof JComboBox)
-                    addListenerToComboBox((JComboBox)component, listener);
-                else
-                    component.addMouseListener(listener);
                 add(component);
 
             }
             add(Box.createHorizontalGlue());
-            addMouseListener(listener);
 
         }
 
@@ -154,6 +159,10 @@ class AbstractDebuggerPreferencesPanel extends JPanel {
         void setEnabledLabel(boolean b) {
             if (this.label != null)
                 this.label.setEnabled(b);
+
+            if (this.component != null) {
+                this.component.setEnabled(b);
+            }
         }
 
     }
@@ -168,6 +177,12 @@ class AbstractDebuggerPreferencesPanel extends JPanel {
         void addOptionBox(OptionBox box) {
             add(box);
             add(Box.createVerticalStrut(10));
+        }
+
+        void addHelpText(String helpText) {
+            add(getHelpLabel(helpText));
+
+            add(Box.createVerticalStrut(5));
         }
     }
 }
