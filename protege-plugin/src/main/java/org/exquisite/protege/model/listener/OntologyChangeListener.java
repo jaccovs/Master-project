@@ -27,8 +27,13 @@ public class OntologyChangeListener implements OWLOntologyChangeListener  {
     @Override
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
         if (areChangesRelevant(changes) && debugger.isSessionRunning()) {
-                logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
-                debugger.doStopDebugging(Debugger.SessionStopReason.ONTOLOGY_CHANGED);
+            if (areChangesRelevant(changes)) {
+                debugger.setDiagnosisModelStaleFlag();
+                if (debugger.isSessionRunning()) {
+                    logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
+                    debugger.doStopDebugging(Debugger.SessionStopReason.ONTOLOGY_CHANGED);
+                }
+            }
         }
     }
 

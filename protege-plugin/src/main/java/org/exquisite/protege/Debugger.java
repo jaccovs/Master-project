@@ -106,6 +106,14 @@ public class Debugger {
     // state information for the paging mode of the InputOntologyView
     private PagingState pagingState;
 
+    /** This flag signals that the diagnosis model has to be (re-)created when user starts the next debugging session. */
+    private boolean diagnosisModelStale = true;
+
+    /** Signals this debugger that the diagnosis model has to be (re-)created when the user starts the next debugging session with this ontology. */
+    public void setDiagnosisModelStaleFlag() {
+        diagnosisModelStale = true;
+    }
+
     /**
      * Singleton instance of an listener to ontology changes. Registered in the EditorKitHook.
      */
@@ -219,6 +227,16 @@ public class Debugger {
 
             logger.info("------------------------ Starting new Debugging Session ------------------------");
 
+            if (diagnosisModelStale) {
+                diagnosisModelStale = false;
+                try {
+                    createNewDiagnosisModel();
+                } catch (DiagnosisModelCreationException e) {
+                    logger.error("An error occurred during creation of a new diagnosis model for " +
+                            DebuggingDialog.getOntologyName(getDiagnosisEngineFactory().getOntology()), e);
+                }
+            }
+
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
             notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
@@ -280,6 +298,7 @@ public class Debugger {
 
 
             // we need to create a new diagnosis model when ...
+            /*
             switch (reason) {
                 case PREFERENCES_CHANGED: // ... switching between coherency/consistency and consistency-only check
                 case ONTOLOGY_RELOADED:   // ... the ontology has been reloaded
@@ -293,7 +312,7 @@ public class Debugger {
                     break;
 
             }
-
+            */
             notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
             // notify the user why session has stopped
@@ -303,15 +322,19 @@ public class Debugger {
                     reasonMsg = "an unexpected error occured!";
                     break;
                 case ONTOLOGY_RELOADED:
+                    setDiagnosisModelStaleFlag();
                     reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
                     break;
                 case ONTOLOGY_CHANGED:
+                    setDiagnosisModelStaleFlag();
                     reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
                     break;
                 case PREFERENCES_CHANGED:
+                    setDiagnosisModelStaleFlag();
                     reasonMsg = "the preferences have been modified!";
                     break;
                 case REASONER_CHANGED:
+                    setDiagnosisModelStaleFlag();
                     reasonMsg = "the reasoner has been changed!";
                     break;
                 case DEBUGGING_ONTOLOGY_SELECTED:
@@ -329,6 +352,12 @@ public class Debugger {
 
             if (reasonMsg != null)
                 DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
+        } else {
+            switch (reason) {
+                case ONTOLOGY_RELOADED:
+                    setDiagnosisModelStaleFlag();
+                    break;
+            }
         }
     }
 

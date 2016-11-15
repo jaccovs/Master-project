@@ -67,6 +67,7 @@ public class DiagnosisEngineFactory {
                 // we must generate a new diagnosis model when ... switching between coherency/consistency and consistency-only check
                 // even when no session is running
                 // TODO this is a temporary fix that works for the active ontology only (all other loaded ontology do not get this notifiction yet)
+                /*
                 if (hasCheckTypeChanged)
                     try {
                         debugger.createNewDiagnosisModel();
@@ -74,6 +75,8 @@ public class DiagnosisEngineFactory {
                         logger.error("An error occurred during creation of a new diagnosis model for " +
                                 DebuggingDialog.getOntologyName(getOntology()), e);
                     }
+                */
+                debugger.setDiagnosisModelStaleFlag();
             }
         }
     }
