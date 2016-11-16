@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Listens to ontology changes. These ontology changes have also an effect on the debuggin session.
+ * Listens to ontology changes. These ontology changes have also an effect on the debugging session.
  */
 public class OntologyChangeListener implements OWLOntologyChangeListener  {
 
@@ -26,13 +26,11 @@ public class OntologyChangeListener implements OWLOntologyChangeListener  {
 
     @Override
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
-        if (areChangesRelevant(changes) && debugger.isSessionRunning()) {
-            if (areChangesRelevant(changes)) {
-                debugger.setDiagnosisModelStaleFlag();
-                if (debugger.isSessionRunning()) {
-                    logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
-                    debugger.doStopDebugging(Debugger.SessionStopReason.ONTOLOGY_CHANGED);
-                }
+        if (areChangesRelevant(changes)) {
+            debugger.setDiagnosisModelStaleFlag();
+            if (debugger.isSessionRunning()) {
+                logger.debug("Ontology has changed while debugging session is running -> stopping debugging session.");
+                debugger.doStopDebugging(Debugger.SessionStopReason.ONTOLOGY_CHANGED);
             }
         }
     }
