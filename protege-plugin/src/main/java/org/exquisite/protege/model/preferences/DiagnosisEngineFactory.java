@@ -136,7 +136,7 @@ public class DiagnosisEngineFactory {
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
 
-            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology/*, reasonerFactory, config.extractModules, config.reduceIncoherency*/);
 
             for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
                 diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
@@ -150,6 +150,18 @@ public class DiagnosisEngineFactory {
 
             return diagnosisModel;
         } catch (OWLOntologyCreationException | ReasonerInternalException e) {
+            throw new DiagnosisModelCreationException(e);
+        }
+    }
+
+    public DiagnosisModel<OWLLogicalAxiom> consistencyCheck(DiagnosisModel<OWLLogicalAxiom> dm) throws DiagnosisModelCreationException  {
+        try {
+            final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+
+            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
+
+            return diagnosisModel;
+        } catch (ReasonerInternalException e) {
             throw new DiagnosisModelCreationException(e);
         }
     }

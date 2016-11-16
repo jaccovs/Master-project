@@ -52,7 +52,8 @@ class AbstractTest {
 
     protected ExquisiteOWLReasoner createReasoner(OWLOntology ontology, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
         ReasonerFactory reasonerFactory = new ReasonerFactory();
-        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology, reasonerFactory, extractModule, reduceIncoherencyToInconsistency);
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology/*, reasonerFactory, extractModule, reduceIncoherencyToInconsistency*/);
+        diagnosisModel = ExquisiteOWLReasoner.consistencyCheck(diagnosisModel, ontology, reasonerFactory, extractModule, reduceIncoherencyToInconsistency);
 
         for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
