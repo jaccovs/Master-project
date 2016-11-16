@@ -6,7 +6,6 @@ import org.protege.editor.owl.model.classexpression.OWLExpressionParserException
 import org.protege.editor.owl.model.parser.ParserUtil;
 import org.protege.editor.owl.model.parser.ProtegeOWLEntityChecker;
 import org.protege.editor.owl.ui.clsdescriptioneditor.OWLExpressionChecker;
-import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
@@ -27,7 +26,7 @@ public class AxiomChecker implements OWLExpressionChecker<Set<OWLLogicalAxiom>> 
 
     public Set<OWLLogicalAxiom> createObject(String text) throws OWLExpressionParserException {
 
-        Set<OWLLogicalAxiom> axioms = new LinkedHashSet<OWLLogicalAxiom>();
+        Set<OWLLogicalAxiom> axioms = new LinkedHashSet<>();
 
         String[] splitted = text.split(",");
         for (String a : splitted) {
@@ -36,7 +35,7 @@ public class AxiomChecker implements OWLExpressionChecker<Set<OWLLogicalAxiom>> 
             try {
                 OWLAxiom ax = parser.parseAxiom();
                 axioms.add((OWLLogicalAxiom) ax);
-            } catch (ParserException e) {
+            } catch (org.semanticweb.owlapi.manchestersyntax.renderer.ParserException e) {
                 throw ParserUtil.convertException(e);
             }
         }
