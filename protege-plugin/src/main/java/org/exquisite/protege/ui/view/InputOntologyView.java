@@ -63,6 +63,7 @@ public class InputOntologyView extends AbstractQueryViewComponent {
                 correctAxiomsPanel.updateDisplayedAxioms();
                 break;
             case SESSION_STATE_CHANGED:
+                setAxiomsToDisplay();
                 possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
                 correctAxiomsPanel.updateDisplayedAxioms();
                 break;

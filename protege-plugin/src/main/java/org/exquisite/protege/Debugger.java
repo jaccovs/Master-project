@@ -121,6 +121,20 @@ public class Debugger {
         this.pagingState = new PagingState();
     }
 
+    /**
+     * Signals to the debugger that the diagnosis model has to be synced with the underlying ontology
+     * because of an event (such as ontology change, reload, etc.) that demands the recreation of the diagnosis model.
+     */
+    public void syncDiagnosisModel() {
+        try {
+            this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
+        } catch (DiagnosisModelCreationException e) {
+            logger.error("An error occurred during creation of a new diagnosis model for " +
+                    DebuggingDialog.getOntologyName(getDiagnosisEngineFactory().getOntology()), e);
+        }
+    }
+
     public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
     }
@@ -278,22 +292,6 @@ public class Debugger {
             this.cautiousParameter = null;
             this.previousCautiousParameter = null;
 
-
-            // we need to create a new diagnosis model when ...
-            switch (reason) {
-                case PREFERENCES_CHANGED: // ... switching between coherency/consistency and consistency-only check
-                case ONTOLOGY_RELOADED:   // ... the ontology has been reloaded
-                case REASONER_CHANGED:    // ... the reasoner has been changed
-                    try {
-                        createNewDiagnosisModel();
-                    } catch (DiagnosisModelCreationException e) {
-                        logger.error("An error occurred during creation of a new diagnosis model for " +
-                                DebuggingDialog.getOntologyName(getDiagnosisEngineFactory().getOntology()), e);
-                    }
-                    break;
-
-            }
-
             notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
             // notify the user why session has stopped
@@ -303,15 +301,19 @@ public class Debugger {
                     reasonMsg = "an unexpected error occured!";
                     break;
                 case ONTOLOGY_RELOADED:
+                    syncDiagnosisModel();
                     reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
                     break;
                 case ONTOLOGY_CHANGED:
+                    syncDiagnosisModel();
                     reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
                     break;
                 case PREFERENCES_CHANGED:
+                    syncDiagnosisModel();
                     reasonMsg = "the preferences have been modified!";
                     break;
                 case REASONER_CHANGED:
+                    syncDiagnosisModel();
                     reasonMsg = "the reasoner has been changed!";
                     break;
                 case DEBUGGING_ONTOLOGY_SELECTED:
@@ -329,6 +331,15 @@ public class Debugger {
 
             if (reasonMsg != null)
                 DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
+        } else {
+            switch (reason) {
+                case REASONER_CHANGED:
+                case PREFERENCES_CHANGED:
+                case ONTOLOGY_CHANGED:
+                case ONTOLOGY_RELOADED:
+                    syncDiagnosisModel();
+                    break;
+            }
         }
     }
 
