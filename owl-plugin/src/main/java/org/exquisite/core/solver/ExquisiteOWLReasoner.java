@@ -125,7 +125,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
 
 
-        logger.info("------------------------ Settings on Consistency Check -------------------------");
+        logger.info("------------------------ Settings for Consistency Check ------------------------");
         logger.info("Ontology: {}", ontology.getOntologyID());
         logger.info("OWLOntologyManager: {}", manager);
         logger.info("OWLReasonerFactory: {}", reasonerFactory);
@@ -135,7 +135,6 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         logger.info("OWLReasoner: {}", reasoner);
         logger.info("Configuration [extractModules]: {}", extractModule);
         logger.info("Configuration [reduceIncoherency]: {}", reduceIncoherencyToInconsistency);
-        logger.info("--------------------------------------------------------------------------------");
 
         Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
 
@@ -160,13 +159,12 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
             // instantiate unsat classes thus reducing the incoherency to inconsistency
             if (reduceIncoherencyToInconsistency) {
+                final List<OWLLogicalAxiom> correctFormulas = dm.getCorrectFormulas();
                 for (OWLClass cl : classes) {
                     OWLDataFactory df = manager.getOWLDataFactory();
                     OWLIndividual ind = df.getOWLAnonymousIndividual();
                     final OWLClassAssertionAxiom axiom = df.getOWLClassAssertionAxiom(cl, ind);
-                    final List<OWLLogicalAxiom> correctFormulas = dm.getCorrectFormulas();
-                    if (!correctFormulas.contains(axiom))
-                        correctFormulas.add(axiom);
+                    addIfAxiomIsAbsent(correctFormulas, axiom);
                 }
             }
         } else
@@ -188,6 +186,34 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         logger.info("{} Not-Entailed Examples", dm.getNotEntailedExamples().size());
         logger.info("--------------------------------------------------------------------------------");
         return dm;
+    }
+
+    /**
+     * A method that checks it there is already an anonymous individual axiom defined in the list of correct formulas.
+     *
+     * @param correctFormulas
+     * @param axiom
+     * @return
+     */
+    private static boolean addIfAxiomIsAbsent(final List<OWLLogicalAxiom> correctFormulas, final OWLClassAssertionAxiom axiom) {
+        boolean isAxiomAlreadyPresent = false;
+        final int size = correctFormulas.size();
+        for (int i = 0; i < size && !isAxiomAlreadyPresent; i++) {
+            final OWLLogicalAxiom _ax = correctFormulas.get(i);
+            if (_ax instanceof OWLClassAssertionAxiom) {
+                final OWLClassAssertionAxiom ax = (OWLClassAssertionAxiom) _ax;
+                final Set<OWLClass> axClassesInSignature = ax.getClassesInSignature();
+                final OWLIndividual axIndividual = ax.getIndividual();
+
+                final Set<OWLClass> axiomClassesInSignature = axiom.getClassesInSignature();
+                final OWLIndividual axiomIndividual = axiom.getIndividual();
+
+                final boolean areEqualClassesInSignature = axClassesInSignature.equals(axiomClassesInSignature);
+                isAxiomAlreadyPresent = (areEqualClassesInSignature && axIndividual.isAnonymous() && axiomIndividual.isAnonymous());
+            }
+        }
+
+        return !isAxiomAlreadyPresent && correctFormulas.add(axiom);
     }
 
 
