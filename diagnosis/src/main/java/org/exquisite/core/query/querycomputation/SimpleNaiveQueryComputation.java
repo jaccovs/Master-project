@@ -204,6 +204,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
             }
         }
         query.score = querySelection.getScore(query);
+        query.qPartition.computeProbabilities();
         return query;
     }
 
