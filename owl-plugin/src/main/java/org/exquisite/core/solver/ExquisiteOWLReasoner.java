@@ -28,7 +28,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(ExquisiteOWLReasoner.class.getCanonicalName());
 
     private final OWLReasoner reasoner;
-    private InferenceType[] interenceTypes = new InferenceType[]{InferenceType.CLASS_HIERARCHY,
+    private InferenceType[] inferenceTypes = new InferenceType[]{InferenceType.CLASS_HIERARCHY,
             InferenceType.CLASS_ASSERTIONS, InferenceType.DISJOINT_CLASSES, InferenceType.DIFFERENT_INDIVIDUALS,
             InferenceType.SAME_INDIVIDUAL};
     private HashSet<InferredAxiomGenerator<? extends OWLLogicalAxiom>> axiomGenerators = new HashSet<>();
@@ -71,21 +71,6 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             throws OWLOntologyCreationException {
 
         final long start = System.currentTimeMillis();
-        //OWLOntologyManager manager = ontology.getOWLOntologyManager();
-
-
-        logger.info("---------------------- Diagnosis Model Creation Settings -----------------------");
-        logger.info("Ontology: {}", ontology.getOntologyID());
-        //logger.info("OWLOntologyManager: {}", manager);
-        //logger.info("OWLReasonerFactory: {}", reasonerFactory);
-/*
-        OWLReasoner reasoner = reasonerFactory.createReasoner(ontology);
-
-        logger.info("OWLReasoner: {}", reasoner);
-        logger.info("Configuration [extractModules]: {}", extractModule);
-        logger.info("Configuration [reduceIncoherency]: {}", reduceIncoherencyToInconsistency);
-*/
-        logger.info("--------------------------------------------------------------------------------");
 
         Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
@@ -112,37 +97,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                 }
             }
         }
-/*
-        // in case the ontology is consistent we assume that the user wants to debug the incoherency.
-        if (reasoner.isConsistent()) {
-            reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
-            Set<OWLClass> classes = reasoner.getBottomClassNode().getEntities();
-            classes.remove(manager.getOWLDataFactory().getOWLNothing());
 
-            if (extractModule && classes.size() > 1) {
-                SyntacticLocalityModuleExtractor extractor = new SyntacticLocalityModuleExtractor(manager,
-                        ontology, ModuleType.STAR);
-
-                Set<OWLEntity> entities = classes.stream()
-                        .map(o -> (OWLEntity) o).collect(Collectors.toSet());
-
-                possiblyFaulty = extractor.extract(entities).stream().filter(OWLLogicalAxiom.class::isInstance).
-                        map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
-
-            } else
-                possiblyFaulty.addAll(ontology.getLogicalAxioms());
-
-            // instantiate unsat classes thus reducing the incoherency to inconsistency
-            if (reduceIncoherencyToInconsistency) {
-                for (OWLClass cl : classes) {
-                    OWLDataFactory df = manager.getOWLDataFactory();
-                    OWLIndividual ind = df.getOWLAnonymousIndividual();
-                    dm.getCorrectFormulas().add(df.getOWLClassAssertionAxiom(cl, ind));
-                }
-            }
-        } else
-            possiblyFaulty.addAll(ontology.getLogicalAxioms());
-*/
         possiblyFaulty.addAll(ontology.getLogicalAxioms());
         // make sure that all sets are disjoint
         possiblyFaulty.removeAll(dm.getCorrectFormulas());
@@ -150,9 +105,9 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         possiblyFaulty.removeAll(dm.getNotEntailedExamples());
 
         dm.setPossiblyFaultyFormulas(possiblyFaulty);
-        //reasoner.dispose();
 
         logger.info("-------------------------- Generated Diagnosis Model ---------------------------");
+        logger.info("Ontology: {}", ontology.getOntologyID());
         logger.info("Generated in {} ms", (System.currentTimeMillis() - start));
         logger.info("{} Possibly Faulty Formulas", dm.getPossiblyFaultyFormulas().size());
         logger.info("{} Correct Formulas", dm.getCorrectFormulas().size());
@@ -242,7 +197,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
      * @param infType entailment type
      */
     public void setEntailmentTypes(InferenceType... infType) {
-        this.interenceTypes = infType;
+        this.inferenceTypes = infType;
         HashSet<InferredAxiomGenerator<? extends OWLLogicalAxiom>> types = new HashSet<>(12);
 
         for (InferenceType type : infType) {
@@ -296,7 +251,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         start(TIMER_SOLVER_CALCULATE_ENTAILMENTS);
         incrementCounter(COUNTER_SOLVER_CALCULATE_ENTAILMENTS);
         try {
-            this.reasoner.precomputeInferences(this.interenceTypes);
+            this.reasoner.precomputeInferences(this.inferenceTypes);
             OWLOntology ontology = this.reasoner.getRootOntology();
 
             return this.axiomGenerators.stream().flatMap(inferredAxiomGenerator ->
