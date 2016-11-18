@@ -42,7 +42,7 @@ public class SplitInHalfMeasure<F> implements IQPartitionRequirementsMeasure<F> 
     @Override
     public boolean isOptimal(QPartition<F> pBest) {
         final double halfSizeOfD = getHalfSizeOfD(pBest);
-        return Math.abs(pBest.dx.size() - Math.floor(halfSizeOfD)) <= this.tm.doubleValue();
+        return Math.abs(pBest.dx.size() - halfSizeOfD) <= this.tm.doubleValue();
     }
 
     @Override

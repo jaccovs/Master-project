@@ -47,7 +47,9 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
             final int pAbs = Math.abs(n - pDxSize);
             final int pBestAbs = Math.abs(n - pBestDxSize);
 
-            if (pAbs < pBestAbs)
+            if (pBestDxSize < n)
+                return p;
+            else if (pAbs < pBestAbs)
                 return p;
             else if (pAbs == pBestAbs)
                 if (HALF.subtract(p.probDx).abs().compareTo(HALF.subtract(pBest.probDx).abs()) < 0) // if (Math.abs(0.5 - p.probDx) < Math.abs(0.5 - pBest.probDx))
@@ -75,7 +77,7 @@ public class RiskOptimizationMeasure<F> implements IQPartitionRequirementsMeasur
         if (pBest.dx.size() == n) {
             if (p.dx.size() > n)
                 return true;
-            if (p.probDx.compareTo(pBest.probDx) > 0 && p.probDx.compareTo(HALF) >= 0) // (p.probDx > pBest.probDx && p.probDx >= 0.5)
+            if (p.probDx.subtract(HALF).compareTo(pBest.probDx.subtract(HALF).abs()) >= 0) // ((p.probDx - 0.5) >= Math.abs(pBest.probDx - 0.5))
                 return true;
         }
 
