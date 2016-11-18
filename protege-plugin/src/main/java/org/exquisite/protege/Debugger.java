@@ -235,23 +235,32 @@ public class Debugger {
 
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
-            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
-            doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
 
-            switch (diagnoses.size()) {
-                case 0:
-                    doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
-                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    else
-                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    break;
-                case 1:
-                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
-                    break;
-                default:
-                    break;
+            // TODO start reasoner here
+            try {
+                this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
+
+                notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
+                doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
+
+                switch (diagnoses.size()) {
+                    case 0:
+                        doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
+                        if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
+                            DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                        else
+                            DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                        break;
+                    case 1:
+                        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
+                        DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
+                        break;
+                    default:
+                        break;
+                }
+            } catch (DiagnosisModelCreationException e) {
+                logger.error(e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
             }
         }
     }
