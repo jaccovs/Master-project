@@ -10,6 +10,7 @@
 - Fix: Unified formatting for logging (80 chars maximal)
 - Removed unused preferences for min, max queries
 - Algorithmic updates for RIO, Ent and SPL measures
+- Minor layout modification: exchanged display of possibly faulty with correct axioms list
 0.1.1.BETA (September 14, 2016)
 - Layout-Redesign
   the views of the ontology debugger are rearranged and icons and buttons are redesigned
