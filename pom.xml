@@ -7,7 +7,7 @@
     <groupId>org.exquisite</groupId>
     <artifactId>exquisite</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2.BETA-SNAPSHOT</version>
+    <version>0.1.2.BETA</version>
 
     <name>exquisite</name>
     <description>Exquisite is a free, open source ontology debugger plugin for Protege.</description>
@@ -119,12 +119,6 @@
         <protege.version>5.0.0</protege.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!--
-        <distributionRepositoryId>releases</distributionRepositoryId>
-        <distributionRepositoryUrl>
-            https://vcs-isbi.aau.at/nexus/content/repositories/releases  
-        </distributionRepositoryUrl>
-        -->
     </properties>
 
     <repositories>
@@ -137,22 +131,6 @@
                 <checksumPolicy>warn</checksumPolicy>
             </releases>
         </repository>
-        <!--
-        <repository>
-            <id>local-snapshot-repository</id>
-            <name>Local Snapshot Repository</name>
-            <url>https://vcs-isbi.aau.at/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>local-public</id>
-            <name>Local Public Repository (custom + maven2)</name>
-            <url>https://vcs-isbi.aau.at/nexus/content/groups/public/</url>
-            <releases>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-        </repository>
-        -->
     </repositories>
 
     <scm>

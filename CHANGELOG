@@ -1,2 +1,23 @@
+0.1.2.BETA (November 22, 2016)
+- New: Paging and navigating through the set of possible faulty axioms showing at most 100 axioms (useful for large ontologies) (Issue #44)
+- New: Search feature for the possible faulty axioms (Issue #45)
+- New: Preference layout redesign for query computation (Issue #51)
+- New: Pretty-print dialogs boxes with more useful information
+- Fix: Loading ontologies without expensive reasoner calls (Issue #46)
+- Fix: Recognize change from no reasoner to a reasoner (Issue #47)
+- Fix: Preference values input validation to prevent undesirable behaviour (Issue #49)
+- Fix: Sync Diagnosis Model with Ontology Changes (Issue #52)
+- Fix: Unified formatting for logging (80 chars maximal)
+- Removed unused preferences for min, max queries
+- Algorithmic updates for RIO, Ent and SPL measures
+0.1.1.BETA (September 14, 2016)
+- Layout-Redesign
+  the views of the ontology debugger are rearranged and icons and buttons are redesigned
+  Note: Clients that used the ontology debugger v0.1.0.BETA have to call Windows->Reset selected tab to default state to make these changes visible.
+- Redesign of lifecycle of debugging session (Start, Stop and Restart Session)
+- Renaming of components (e.g. diagnoses are renamed to fauly axioms) make components more understandable
+- Fix for usage of anonymous ontologies: the user is not anymore asked to store anonymous ontologies created by the debugger (see http://protege-project.136.n4.nabble.com/Protege-5-0-Debug-ontologies-td4666420.html). Now only running debugging sessions are creating and using these debugging ontologies which are then visible. When a session is stopped the debugging ontology is removed.
+- The Ontology Debugger tab has been removed. The Debugger can be opened in Tools->Debug Ontology... or in Window->Tabs->Debugger
+- other fixes
 0.1.0.BETA (August 02, 2016)
 - initial release version for public Protégé central repository for plugins
