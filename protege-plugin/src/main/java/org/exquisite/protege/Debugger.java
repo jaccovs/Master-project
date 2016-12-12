@@ -32,6 +32,7 @@ import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.AxiomListItem;
+import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -39,6 +40,7 @@ import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -52,7 +54,7 @@ import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
 
 public class Debugger {
 
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
+    private Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
 
     public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
@@ -93,6 +95,8 @@ public class Debugger {
 
     private IQueryComputation<OWLLogicalAxiom> qc = null;
 
+    private OWLEditorKit editorKit = null;
+
     private final OWLModelManager modelManager;
 
     private final OWLReasonerManager reasonerManager;
@@ -111,14 +115,18 @@ public class Debugger {
      */
     private OntologyChangeListener ontologyChangeListener;
 
+    private DebuggerProgressUI progressUI;
+
     public Debugger(OWLEditorKit editorKit) {
-        modelManager = editorKit.getModelManager();
-        reasonerManager = modelManager.getOWLReasonerManager();
-        diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), reasonerManager);
-        debuggingSession = new DebuggingSession();
+        this.editorKit = editorKit;
+        this.modelManager = editorKit.getModelManager();
+        this.reasonerManager = this.modelManager.getOWLReasonerManager();
+        this.diagnosisEngineFactory = new DiagnosisEngineFactory(this, this.modelManager.getActiveOntology(), this.reasonerManager);
+        this.debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
         this.diagnosisModel = new DiagnosisModel<>();
         this.pagingState = new PagingState();
+        this.progressUI = new DebuggerProgressUI(this);
     }
 
     /**
@@ -137,6 +145,10 @@ public class Debugger {
 
     public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+    }
+
+    public OWLEditorKit getEditorKit() {
+        return editorKit;
     }
 
     public PagingState getPagingState() {
@@ -232,6 +244,7 @@ public class Debugger {
             }
 
             logger.info("------------------------ Starting new Debugging Session ------------------------");
+
 
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
@@ -593,11 +606,14 @@ public class Debugger {
      * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(QueryErrorHandler errorHandler) {
+        progressUI.showWindow("Calculating query...");
         boolean noErrorOccurred = doCalculateDiagnoses(errorHandler);
         if (noErrorOccurred) {
-            if (diagnoses.size() > 1)
+            if (diagnoses.size() > 1) {
                 doGetQuery(errorHandler);
+            }
         } else {
+            progressUI.closeWindow();
             doStopDebugging(SessionStopReason.ERROR_OCCURRED);
         }
     }
@@ -612,7 +628,7 @@ public class Debugger {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DebuggerConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
-        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine);
+        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine,this.logger);
 
         heuristicConfiguration.setMinQueries(1);
         heuristicConfiguration.setMaxQueries(1);
@@ -666,12 +682,15 @@ public class Debugger {
         qc = new HeuristicQueryComputation<>(heuristicConfiguration);
 
         try {
+
             qc.initialize(diagnoses);
 
             if ( qc.hasNext()) {
+                progressUI.closeWindow();
                 this.answer.query = qc.next();
                 logger.debug("query configuration: " + qc);
             } else {
+                progressUI.closeWindow();
                 errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
                 resetQuery();

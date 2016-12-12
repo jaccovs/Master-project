@@ -18,7 +18,7 @@ public class ENTScenario1 extends TestScenario1 {
 
     @Override
     public HeuristicQueryComputation<Integer> getHeuristicQC() {
-        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new EntropyBasedMeasure<>(tEnt)));
+        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new EntropyBasedMeasure<>(tEnt), logger));
     }
 
     @Override

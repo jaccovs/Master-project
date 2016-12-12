@@ -24,7 +24,7 @@ public class TestInverseEngineHeuristicQueryComputationRIO extends AbstractTestQ
 
     @Override
     protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine) {
-        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine);
+        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine, logger);
 
         config.setRm(new RiskOptimizationMeasure<>(new BigDecimal("0.05"),new BigDecimal("0"),new BigDecimal("0.3")));  // RIO
         return new HeuristicQueryComputation<>(config);

@@ -5,6 +5,7 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.Ent
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.ISortCriterion;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -62,17 +63,19 @@ public class HeuristicConfiguration<F> {
 
     boolean enrichQueries;
 
+    Logger logger;
+
     /* *************************** Constructor ************************************ */
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine) {
-        this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES);
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, Logger logger) {
+        this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, logger);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm) {
-        this(diagnosisEngine, rm, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES);
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, Logger logger) {
+        this(diagnosisEngine, rm, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, logger);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries) {
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries, Logger logger) {
         this.diagnosisEngine = diagnosisEngine;
         this.rm = rm;
         this.sortCriterion = sortCriterion;
@@ -80,6 +83,7 @@ public class HeuristicConfiguration<F> {
         this.minQueries = minQueries;
         this.maxQueries = maxQueries;
         this.enrichQueries = enrichQueries;
+        this.logger = logger;
     }
 
 
@@ -139,16 +143,8 @@ public class HeuristicConfiguration<F> {
         this.enrichQueries = enrichQueries;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("tm=").append(rm);
-        sb.append(", sortCriterion=").append(sortCriterion);
-        sb.append(", timeout=").append(timeout);
-        sb.append(", minQueries=").append(minQueries);
-        sb.append(", maxQueries=").append(maxQueries);
-        sb.append(", enrichQueries=").append(enrichQueries);
-        sb.append(", engine=").append(diagnosisEngine);
-        return sb.toString();
+    public Logger getLogger() {
+        return logger;
     }
 
     @Override
@@ -165,7 +161,9 @@ public class HeuristicConfiguration<F> {
         if (diagnosisEngine != null ? !diagnosisEngine.equals(that.diagnosisEngine) : that.diagnosisEngine != null)
             return false;
         if (rm != null ? !rm.equals(that.rm) : that.rm != null) return false;
-        return sortCriterion != null ? sortCriterion.equals(that.sortCriterion) : that.sortCriterion == null;
+        if (sortCriterion != null ? !sortCriterion.equals(that.sortCriterion) : that.sortCriterion != null)
+            return false;
+        return logger != null ? logger.equals(that.logger) : that.logger == null;
 
     }
 
@@ -178,6 +176,20 @@ public class HeuristicConfiguration<F> {
         result = 31 * result + minQueries;
         result = 31 * result + maxQueries;
         result = 31 * result + (enrichQueries ? 1 : 0);
+        result = 31 * result + (logger != null ? logger.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("tm=").append(rm);
+        sb.append(", sortCriterion=").append(sortCriterion);
+        sb.append(", timeout=").append(timeout);
+        sb.append(", minQueries=").append(minQueries);
+        sb.append(", maxQueries=").append(maxQueries);
+        sb.append(", enrichQueries=").append(enrichQueries);
+        sb.append(", engine=").append(diagnosisEngine);
+        return sb.toString();
+    }
+
 }

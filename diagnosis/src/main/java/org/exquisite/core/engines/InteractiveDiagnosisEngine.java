@@ -91,7 +91,7 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
         this.innerEngine = new HSTreeEngine<>(solver);
         DiagnosisModel<F> diagnosisModel = this.innerEngine.getSolver().getDiagnosisModel();
         this.costsEstimator = new FormulaWeightsCostEstimator<>(diagnosisModel.getPossiblyFaultyFormulas(), diagnosisModel.getFormulaWeights());
-        HeuristicConfiguration<F> config = new HeuristicConfiguration<>(this.innerEngine);
+        HeuristicConfiguration<F> config = new HeuristicConfiguration<>(this.innerEngine, logger);
         this.queryComputation = new HeuristicQueryComputation<>(config);
         this.queryAnswering = queryAnswering;
     }
