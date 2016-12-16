@@ -19,7 +19,7 @@ public class StartDebuggingButton extends AbstractGuiButton {
                         final Debugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
 
                         if (debugger.isSessionStopped()) {
-                            debugger.doStartDebugging(new QueryErrorHandler());
+                            debugger.doStartDebuggingAsync(new QueryErrorHandler());
                         } else if (debugger.isSessionRunning()) {
                             debugger.doRestartDebugging(new QueryErrorHandler());
                         }

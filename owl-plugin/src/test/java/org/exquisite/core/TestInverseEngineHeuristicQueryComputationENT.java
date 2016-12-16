@@ -24,7 +24,7 @@ public class TestInverseEngineHeuristicQueryComputationENT extends AbstractTestQ
 
     @Override
     protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine) {
-        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine, logger);
+        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine, monitor);
         config.setRm(new EntropyBasedMeasure<>(new BigDecimal("0.05")));                                          // ENT
         return new HeuristicQueryComputation<>(config);
     }

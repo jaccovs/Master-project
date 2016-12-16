@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.progress;
 
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.protege.Debugger;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionEvent;
 /**
  * @author wolfi
  */
-public class DebuggerProgressUI {
+public class DebuggerProgressUI implements ExquisiteProgressMonitor {
 
     public static final int PADDING = 5;
 
@@ -25,9 +26,11 @@ public class DebuggerProgressUI {
 
     private Action cancelledAction;
 
+    private boolean taskIsRunning = false;
+
     public DebuggerProgressUI(Debugger debugger) {
         this.debugger = debugger;
-        this.progressBar = new JProgressBar(SwingConstants.HORIZONTAL,0,3);
+        this.progressBar = new JProgressBar();
     }
 
     private void initWindow() {
@@ -91,4 +94,47 @@ public class DebuggerProgressUI {
     }
 
 
+    @Override
+    public void taskStarted(String taskName) {
+        if (taskIsRunning)
+            return;
+        taskIsRunning = true;
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setIndeterminate(false);
+            progressBar.setValue(0);
+        });
+        showWindow(taskName);
+    }
+
+    @Override
+    public void taskBusy(String message) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setIndeterminate(true);
+        });
+    }
+
+    @Override
+    public void taskProgressChanged(String message, int value, int max) {
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setIndeterminate(false);
+            progressBar.setMaximum(max);
+            progressBar.setValue(value);
+        });
+    }
+
+    @Override
+    public void taskStopped() {
+        if (!taskIsRunning)
+            return;
+        taskIsRunning = false;
+        SwingUtilities.invokeLater(() -> {
+            if (taskIsRunning)
+                return;
+            initWindow();
+            if (!window.isVisible())
+                return;
+            taskLabel.setText("");
+            window.setVisible(false);
+        });
+    }
 }

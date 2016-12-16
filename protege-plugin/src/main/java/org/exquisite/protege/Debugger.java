@@ -230,13 +230,19 @@ public class Debugger {
         return this.ontologyChangeListener;
     }
 
+    public void doStartDebuggingAsync(QueryErrorHandler errorHandler) {
+        Thread thread = new Thread(new StartDebuggingSessionRunner(errorHandler));
+        thread.start();
+
+    }
+
     /**
      * Starts a new debugging session. This step initiates the search for a diagnosis and the presentation of a
      * query.
      *
      * @param errorHandler An error handler.
      */
-    public void doStartDebugging(QueryErrorHandler errorHandler) {
+    private void doStartDebugging(QueryErrorHandler errorHandler) {
         if (!isSessionRunning()) {
             if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
                 DebuggingDialog.showNoReasonerSelectedMessage();
@@ -251,11 +257,14 @@ public class Debugger {
 
             // TODO start reasoner here
             try {
+                this.progressUI.taskStarted("Checking consistency ...");
+                this.progressUI.taskBusy("checking ...");
                 this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
+                this.progressUI.taskStopped();
 
                 notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
                 doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
-
+                /*
                 switch (diagnoses.size()) {
                     case 0:
                         doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
@@ -271,6 +280,7 @@ public class Debugger {
                     default:
                         break;
                 }
+                */
             } catch (DiagnosisModelCreationException e) {
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
@@ -285,7 +295,7 @@ public class Debugger {
      */
     public void doRestartDebugging(QueryErrorHandler errorHandler) {
         doStopDebugging(SessionStopReason.SESSION_RESTARTED);
-        doStartDebugging(errorHandler);
+        doStartDebuggingAsync(errorHandler);
     }
 
     /**
@@ -493,6 +503,12 @@ public class Debugger {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
+
+    public void asynchCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
+        Thread thread = new Thread(new CommitAndGetNewQueryRunner(errorHandler));
+        thread.start();
+    }
+
     /**
      * Commit the response from the expert, calculate the new diagnoses and get the new queries.
      *
@@ -501,7 +517,12 @@ public class Debugger {
     public void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
         this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
+        doCalculateDiagnosesAndGetQuery(errorHandler);
+
+        /*
+        this.progressUI.taskStarted("Calculating Diagnoses");
         boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
+        this.progressUI.taskStopped();
         if (noErrorOccur) {
             switch (diagnoses.size()) {
                 case 0:
@@ -522,6 +543,7 @@ public class Debugger {
         } else {
             doStopDebugging(SessionStopReason.ERROR_OCCURRED);
         }
+        */
     }
 
     public void doGetAlternativeQuery() {
@@ -606,14 +628,37 @@ public class Debugger {
      * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(QueryErrorHandler errorHandler) {
-        progressUI.showWindow("Calculating query...");
+        /*
         boolean noErrorOccurred = doCalculateDiagnoses(errorHandler);
         if (noErrorOccurred) {
             if (diagnoses.size() > 1) {
                 doGetQuery(errorHandler);
             }
         } else {
-            progressUI.closeWindow();
+            doStopDebugging(SessionStopReason.ERROR_OCCURRED);
+        }
+        */
+        this.progressUI.taskStarted("Calculating Diagnoses");
+        boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
+        this.progressUI.taskStopped();
+        if (noErrorOccur) {
+            switch (diagnoses.size()) {
+                case 0:
+                    doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
+                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
+                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    else
+                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    break;
+                case 1:
+                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
+                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
+                    break;
+                default:
+                    doGetQuery(errorHandler);
+                    break;
+            }
+        } else {
             doStopDebugging(SessionStopReason.ERROR_OCCURRED);
         }
     }
@@ -628,7 +673,7 @@ public class Debugger {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DebuggerConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
-        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine,this.logger);
+        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine,this.progressUI);
 
         heuristicConfiguration.setMinQueries(1);
         heuristicConfiguration.setMaxQueries(1);
@@ -686,11 +731,9 @@ public class Debugger {
             qc.initialize(diagnoses);
 
             if ( qc.hasNext()) {
-                progressUI.closeWindow();
                 this.answer.query = qc.next();
                 logger.debug("query configuration: " + qc);
             } else {
-                progressUI.closeWindow();
                 errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
                 resetQuery();
@@ -791,5 +834,31 @@ public class Debugger {
                 '}';
     }
 
+
+    private class StartDebuggingSessionRunner implements Runnable {
+        QueryErrorHandler errorHandler;
+
+        public StartDebuggingSessionRunner(QueryErrorHandler errorHandler) {
+            this.errorHandler = errorHandler;
+        }
+
+        @Override
+        public void run() {
+            doStartDebugging(errorHandler);
+        }
+    }
+
+    private class CommitAndGetNewQueryRunner implements Runnable {
+        QueryErrorHandler errorHandler;
+
+        public CommitAndGetNewQueryRunner(QueryErrorHandler errorHandler) {
+            this.errorHandler = errorHandler;
+        }
+
+        @Override
+        public void run() {
+            doCommitAndGetNewQuery(errorHandler);
+        }
+    }
 
 }

@@ -23,6 +23,8 @@ class AbstractTest {
 
     protected final Logger logger = LoggerFactory.getLogger(AbstractTest.class);
 
+    protected final ExquisiteProgressMonitor monitor = null;
+
     OWLLogicalAxiom parse(String axiom) {
         this.parser.setStringToParse(axiom);
         return (OWLLogicalAxiom) this.parser.parseAxiom();

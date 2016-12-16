@@ -1,11 +1,11 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.ISortCriterion;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
-import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -63,19 +63,19 @@ public class HeuristicConfiguration<F> {
 
     boolean enrichQueries;
 
-    Logger logger;
+    ExquisiteProgressMonitor monitor;
 
     /* *************************** Constructor ************************************ */
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, Logger logger) {
-        this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, logger);
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, ExquisiteProgressMonitor monitor) {
+        this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, monitor);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, Logger logger) {
-        this(diagnosisEngine, rm, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, logger);
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ExquisiteProgressMonitor monitor) {
+        this(diagnosisEngine, rm, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, monitor);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries, Logger logger) {
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries, ExquisiteProgressMonitor monitor) {
         this.diagnosisEngine = diagnosisEngine;
         this.rm = rm;
         this.sortCriterion = sortCriterion;
@@ -83,7 +83,7 @@ public class HeuristicConfiguration<F> {
         this.minQueries = minQueries;
         this.maxQueries = maxQueries;
         this.enrichQueries = enrichQueries;
-        this.logger = logger;
+        this.monitor = monitor;
     }
 
 
@@ -143,8 +143,8 @@ public class HeuristicConfiguration<F> {
         this.enrichQueries = enrichQueries;
     }
 
-    public Logger getLogger() {
-        return logger;
+    public ExquisiteProgressMonitor getMonitor() {
+        return monitor;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class HeuristicConfiguration<F> {
         if (rm != null ? !rm.equals(that.rm) : that.rm != null) return false;
         if (sortCriterion != null ? !sortCriterion.equals(that.sortCriterion) : that.sortCriterion != null)
             return false;
-        return logger != null ? logger.equals(that.logger) : that.logger == null;
+        return monitor != null ? monitor.equals(that.monitor) : that.monitor == null;
 
     }
 
@@ -176,7 +176,7 @@ public class HeuristicConfiguration<F> {
         result = 31 * result + minQueries;
         result = 31 * result + maxQueries;
         result = 31 * result + (enrichQueries ? 1 : 0);
-        result = 31 * result + (logger != null ? logger.hashCode() : 0);
+        result = 31 * result + (monitor != null ? monitor.hashCode() : 0);
         return result;
     }
 

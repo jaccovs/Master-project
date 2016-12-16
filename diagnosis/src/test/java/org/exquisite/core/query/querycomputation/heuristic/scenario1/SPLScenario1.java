@@ -18,7 +18,7 @@ public class SPLScenario1 extends TestScenario1 {
 
     @Override
     public HeuristicQueryComputation<Integer> getHeuristicQC() {
-        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new SplitInHalfMeasure<>(tEnt), logger));
+        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new SplitInHalfMeasure<>(tEnt), monitor));
     }
 
     @Override
