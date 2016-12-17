@@ -282,8 +282,10 @@ public class Debugger {
                 }
                 */
             } catch (DiagnosisModelCreationException e) {
+                this.progressUI.taskStopped();
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
+                debuggingSession.stopSession();
             }
         }
     }

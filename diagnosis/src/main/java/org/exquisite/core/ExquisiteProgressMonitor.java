@@ -6,7 +6,7 @@ package org.exquisite.core;
  *
  * The contract is that class(es) responsible for time consuming operations (such as Diagnosis and QueryComputation)
  * will call {@link #taskStarted(String)} then call either {@link #taskBusy(String)} or {@link #taskProgressChanged(String, int, int)} any
- * number of times and finally call {@link #taskStopped()} when the task ends or has been interupted. This cycle may
+ * number of times and finally call {@link #taskStopped()} when the task ends or has been interrupted. This cycle may
  * be repeated.
  *
  * @author wolfi
