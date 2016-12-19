@@ -1,5 +1,6 @@
 package org.exquisite.core.engines;
 
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
@@ -21,14 +22,18 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 
-    final Logger logger = LoggerFactory.getLogger(HSTreeEngine.class);
+    private final Logger logger = LoggerFactory.getLogger(HSTreeEngine.class);
 
     private Node<F> root = null;
 
     private TreeSet<Node<F>> openNodes;
 
     public HSTreeEngine(ISolver<F> solver) {
-        super(solver);
+        this(solver, null);
+    }
+
+    public HSTreeEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+        super(solver, monitor);
         openNodes = new TreeSet<>(getNodeComparator());
     }
 
@@ -64,6 +69,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
         start(TIMER_DIAGNOSIS_SESSION);
+        if (getMonitor() != null) getMonitor().taskStarted(ExquisiteProgressMonitor.DIAGNOSES_CALCULATION); // progress
         try {
             // generate root if there is none
             if (!hasRoot()) {
@@ -92,6 +98,8 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
             }
             return getDiagnoses();
         } finally {
+            if (getMonitor() != null)
+                getMonitor().taskStopped(); // progress
             stop(TIMER_DIAGNOSIS_SESSION);
         }
     }
@@ -114,6 +122,9 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
                 logger.debug("A diagnosis is found: {}", node.getPathLabels());
                 node.setStatus(Node.Status.Diagnosis);
                 getDiagnoses().add(new Diagnosis<F>(node.getPathLabels(), node.getCosts()));
+                if (getMonitor() != null)
+                    getMonitor().taskProgressChanged(getDiagnoses().size() + " of " + getMaxNumberOfDiagnoses() + " diagnoses found.", getDiagnoses().size(), getMaxNumberOfDiagnoses());
+
                 return;
             }
             node.setNodeLabel(selectConflict(conflicts));
@@ -123,7 +134,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
     /**
      * This method is called when a new label for a node, e.g. a conflict, must be computed
      *
-     * @param node
+     * @param node A node.
      * @return a set of labels
      */
     protected Set<Set<F>> computeLabel(Node<F> node) throws DiagnosisException {

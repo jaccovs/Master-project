@@ -1,5 +1,6 @@
 package org.exquisite.core.engines;
 
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
@@ -27,14 +28,25 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
     private ICostsEstimator<F> costsEstimator;
     private Set<Set<F>> conflicts = new HashSet<>();
     private Set<Diagnosis<F>> diagnoses = new HashSet<>();
+    private ExquisiteProgressMonitor monitor;
 
-    public AbstractDiagnosisEngine(
-            ISolver<F> solver) {
-        this.solver = solver;
-        searcher = new QuickXPlain<>(solver);
-        this.costsEstimator = new SimpleCostsEstimator<F>();
+    public AbstractDiagnosisEngine(ISolver<F> solver) {
+        this(solver,null);
     }
 
+    public AbstractDiagnosisEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+        this.solver = solver;
+        searcher = new QuickXPlain<>(solver);
+        this.costsEstimator = new SimpleCostsEstimator<>();
+        this.monitor = monitor;
+    }
+
+    /**
+     * @return Returns a progress monitor if one has been defined, otherwise <code>null</code> is returned
+     */
+    public ExquisiteProgressMonitor getMonitor() {
+        return monitor;
+    }
 
     public int getMaxNumberOfDiagnoses() {
         return maxNumberOfDiagnoses;
@@ -96,6 +108,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
     public void resetEngine() {
         this.conflicts.clear();
         this.diagnoses.clear();
+        if (this.monitor != null) this.monitor.taskStopped();
     }
 
     @Override
@@ -103,5 +116,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
         this.solver.dispose();
         this.conflicts.clear();
         this.diagnoses.clear();
+        if (this.monitor != null) this.monitor.taskStopped();
+        this.monitor = null;
     }
 }

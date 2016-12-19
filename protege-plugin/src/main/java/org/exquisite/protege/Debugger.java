@@ -2,6 +2,7 @@ package org.exquisite.protege;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.costestimators.CardinalityCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
@@ -33,6 +34,7 @@ import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
+import org.exquisite.protege.ui.progress.ReasonerProgressUI;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -40,6 +42,7 @@ import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +64,7 @@ public class Debugger {
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
 
-    public enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
+    public enum QuerySearchStatus { IDLE, ASKING_QUERY }
 
     /**
      * When calling doStopSession() use this flag to inform the user, why the debugging session has stopped.
@@ -69,7 +72,7 @@ public class Debugger {
     public enum SessionStopReason { PREFERENCES_CHANGED, INVOKED_BY_USER, CONSISTENT_ONTOLOGY,
         ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED, ONTOLOGY_CHANGED, SESSION_RESTARTED,
         DEBUGGING_ONTOLOGY_SELECTED
-    };
+    }
 
     private DebuggingSession debuggingSession;
 
@@ -97,8 +100,6 @@ public class Debugger {
 
     private OWLEditorKit editorKit = null;
 
-    private final OWLModelManager modelManager;
-
     private final OWLReasonerManager reasonerManager;
 
     private Double cautiousParameter, previousCautiousParameter;
@@ -117,16 +118,19 @@ public class Debugger {
 
     private DebuggerProgressUI progressUI;
 
+    private org.protege.editor.owl.ui.inference.ReasonerProgressUI reasonerProgressUI;
+
     public Debugger(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
-        this.modelManager = editorKit.getModelManager();
-        this.reasonerManager = this.modelManager.getOWLReasonerManager();
-        this.diagnosisEngineFactory = new DiagnosisEngineFactory(this, this.modelManager.getActiveOntology(), this.reasonerManager);
+        OWLModelManager modelManager = editorKit.getModelManager();
+        this.reasonerManager = modelManager.getOWLReasonerManager();
+        this.diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), this.reasonerManager);
         this.debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
         this.diagnosisModel = new DiagnosisModel<>();
         this.pagingState = new PagingState();
         this.progressUI = new DebuggerProgressUI(this);
+        this.reasonerProgressUI = new org.protege.editor.owl.ui.inference.ReasonerProgressUI(this.getEditorKit());
     }
 
     /**
@@ -143,8 +147,16 @@ public class Debugger {
         }
     }
 
-    public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
+    void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+    }
+
+    public ExquisiteProgressMonitor getExquisiteProgressMonitor() {
+        return progressUI;
+    }
+
+    public ReasonerProgressMonitor getReasonerProgressMonitor() {
+        return reasonerProgressUI;
     }
 
     public OWLEditorKit getEditorKit() {
@@ -215,7 +227,7 @@ public class Debugger {
         changeListeners.add(listener);
     }
 
-    void removeChangeListener(ChangeListener listener) {
+    private void removeChangeListener(ChangeListener listener) {
         changeListeners.remove(listener);
     }
 
@@ -255,34 +267,11 @@ public class Debugger {
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
 
-            // TODO start reasoner here
             try {
-                this.progressUI.taskStarted("Checking consistency ...");
-                this.progressUI.taskBusy("checking ...");
                 this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
-                this.progressUI.taskStopped();
-
                 notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
                 doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
-                /*
-                switch (diagnoses.size()) {
-                    case 0:
-                        doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                        if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
-                            DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                        else
-                            DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                        break;
-                    case 1:
-                        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                        DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
-                        break;
-                    default:
-                        break;
-                }
-                */
             } catch (DiagnosisModelCreationException e) {
-                this.progressUI.taskStopped();
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
                 debuggingSession.stopSession();
@@ -520,32 +509,6 @@ public class Debugger {
         this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
         doCalculateDiagnosesAndGetQuery(errorHandler);
-
-        /*
-        this.progressUI.taskStarted("Calculating Diagnoses");
-        boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
-        this.progressUI.taskStopped();
-        if (noErrorOccur) {
-            switch (diagnoses.size()) {
-                case 0:
-                    doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
-                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    else
-                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    break;
-                case 1:
-                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
-                    break;
-                default:
-                    doGetQuery(errorHandler);
-                    break;
-            }
-        } else {
-            doStopDebugging(SessionStopReason.ERROR_OCCURRED);
-        }
-        */
     }
 
     public void doGetAlternativeQuery() {
@@ -630,19 +593,7 @@ public class Debugger {
      * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(QueryErrorHandler errorHandler) {
-        /*
-        boolean noErrorOccurred = doCalculateDiagnoses(errorHandler);
-        if (noErrorOccurred) {
-            if (diagnoses.size() > 1) {
-                doGetQuery(errorHandler);
-            }
-        } else {
-            doStopDebugging(SessionStopReason.ERROR_OCCURRED);
-        }
-        */
-        this.progressUI.taskStarted("Calculating Diagnoses");
         boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
-        this.progressUI.taskStopped();
         if (noErrorOccur) {
             switch (diagnoses.size()) {
                 case 0:

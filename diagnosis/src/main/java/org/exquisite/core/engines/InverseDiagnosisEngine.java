@@ -2,9 +2,12 @@ package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
+import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +25,26 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
+    final Logger logger = LoggerFactory.getLogger(InverseDiagnosisEngine.class);
+
+    private int diagsFound;
+
     public InverseDiagnosisEngine(ISolver<F> solver) {
         super(solver);
+    }
+
+    public InverseDiagnosisEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+        super(solver, monitor);
     }
 
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
         start(TIMER_INVERSE_DIAGNOSES);
+
+        this.diagsFound = 0;
+        if (getMonitor() != null)
+            getMonitor().taskStarted(ExquisiteProgressMonitor.DIAGNOSES_CALCULATION); // progress
+
         try {
             InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
 
@@ -49,15 +65,22 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             incrementCounter(COUNTER_INVERSE_DIAGNOSES);
             return diagnoses;
         } finally {
+            if (getMonitor() != null) getMonitor().taskStopped(); // progress
             stop(TIMER_INVERSE_DIAGNOSES);
         }
     }
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses) throws DiagnosisException {
+        // progress monitor
+        if (getMonitor()!=null && diagnoses.size() > diagsFound) {
+            diagsFound = diagnoses.size();
+            getMonitor().taskProgressChanged(diagsFound + " of " + getMaxNumberOfDiagnoses() + " diagnoses found.",diagnoses.size(), getMaxNumberOfDiagnoses());
+        }
 
         // terminate computations if the required number of diagnoses is reached
-        if (diagnoses.size() >= getMaxNumberOfDiagnoses())
+        if (diagnoses.size() >= getMaxNumberOfDiagnoses()) {
             return diagnoses;
+        }
 
         Set<Set<F>> newDiagnoses = inverseQuickXPlain.findConflicts(this.getDiagnosisModel().getPossiblyFaultyFormulas());
         assert newDiagnoses.size() <= 1; // InverseQuickXPlain just finds zero or one diagnosis
@@ -74,6 +97,8 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
                 } catch (DiagnosisRuntimeException | DiagnosisException e) {
                     // this exception occurs only if we added an inconsistent set of formulas to the CorrectFormulas
                     // checkInput() may throw this DiagnosisException
+                    logger.warn("This exception occurs only if an inconsistent set of formulas has been added to the " +
+                            "correct formulas. checkInput() may throw this DiagnosisException",e);
                 } finally {
                     model.getCorrectFormulas().remove(formula);
                     model.getPossiblyFaultyFormulas().add(formula);

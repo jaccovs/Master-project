@@ -129,7 +129,7 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
         assert(this.diagnosisModel.getCorrectFormulas().stream().
                 noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         assert(this.diagnosisModel.getEntailedExamples().stream().
-                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
+                noneMatch(o -> o!=null && this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         assert(this.diagnosisModel.getNotEntailedExamples().stream().
                 noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         if (!isConsistent(Collections.emptySet()))
