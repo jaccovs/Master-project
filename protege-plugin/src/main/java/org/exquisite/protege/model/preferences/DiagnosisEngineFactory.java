@@ -159,7 +159,7 @@ public class DiagnosisEngineFactory {
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
             return ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency, this.debugger.getReasonerProgressMonitor(), this.debugger.getExquisiteProgressMonitor());
-        } catch (ReasonerInternalException e) {
+        } catch (RuntimeException e) {
             throw new DiagnosisModelCreationException(e);
         }
     }

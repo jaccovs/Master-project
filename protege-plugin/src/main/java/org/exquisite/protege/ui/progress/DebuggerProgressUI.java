@@ -52,13 +52,13 @@ public class DebuggerProgressUI extends AbstractProgressUI implements ExquisiteP
             return;
         taskIsRunning = false;
         SwingUtilities.invokeLater(() -> {
+            clearMessages();
             if (taskIsRunning)
                 return;
             initWindow();
             if (!window.isVisible())
                 return;
             taskLabel.setText("");
-            clearMessages();
             window.setVisible(false);
         });
     }

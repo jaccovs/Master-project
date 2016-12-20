@@ -92,8 +92,12 @@ public class AbstractProgressUI {
 
     protected void setCancelled() {
         SwingUtilities.invokeLater(() -> {
-            closeWindow();
+            clearMessages();
+            initWindow();
+            taskLabel.setText("Cancelled.  Waiting for debugger to terminate...");
+            cancelledAction.setEnabled(false);
         });
+        // debugger.cancel(); TODO
     }
 
     public void showWindow(final String message) {

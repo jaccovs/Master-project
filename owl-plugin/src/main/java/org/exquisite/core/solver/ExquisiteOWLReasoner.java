@@ -137,7 +137,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             logger.info("OWLOntologyManager: {}", manager);
             logger.info("OWLReasonerFactory: {}", reasonerFactory);
 
-            OWLReasoner reasoner = createReasoner(ontology, reasonerFactory, reasonerProgressMonitor); /*reasonerFactory.createReasoner(ontology);*/
+            OWLReasoner reasoner = createReasoner(ontology, reasonerFactory, reasonerProgressMonitor);
 
             logger.info("OWLReasoner: {}", reasoner);
             logger.info("Configuration [extractModules]: {}", extractModule);
@@ -146,11 +146,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
 
             // in case the ontology is consistent we assume that the user wants to debug the incoherency.
-            if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskProgressChanged("Checking consisitency of ontology ...", 1, 3);
+            if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Checking consistency of ontology ...");
             if (reasoner.isConsistent()) {
-                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskProgressChanged("Precomputing inferences for InferenceType.CLASS_HIERARCHY  ...", 2, 3);
+                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Precomputing inferences ...");
                 reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
-                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskProgressChanged("reasoner.getBottomClassNode()  ...", 3, 3);
+                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Getting classes ...");
                 Set<OWLClass> classes = reasoner.getBottomClassNode().getEntities();
                 classes.remove(manager.getOWLDataFactory().getOWLNothing());
 
@@ -196,9 +196,10 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             logger.info("{} Not-Entailed Examples", dm.getNotEntailedExamples().size());
             logger.info("--------------------------------------------------------------------------------");
             return dm;
-        } catch (ReasonerInternalException e) {
-            throw e;
         } finally {
+            // In the advent of some exception (which might occur, depending on the reasoners and their support
+            // of the given ontology, in any case we stop all tasks.
+            if (reasonerProgressMonitor != null) reasonerProgressMonitor.reasonerTaskStopped();
             if (exquisiteProgressMonitor != null) exquisiteProgressMonitor.taskStopped();
         }
     }
