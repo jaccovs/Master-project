@@ -20,8 +20,9 @@ public class SimpleDiagnosisList extends AbstractAxiomList {
 
     public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses, OWLOntology ontology, String headerPref, boolean isIncludeMeasure) {
         List<Object> items = new ArrayList<>();
+        int cnt = 0;
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-            items.add(new DiagnosisListHeader(diagnosis,headerPref,isIncludeMeasure));
+            items.add(new DiagnosisListHeader(diagnosis,(++cnt) + ". " + headerPref,isIncludeMeasure));
             items.addAll(diagnosis.getFormulas().stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
@@ -30,8 +31,5 @@ public class SimpleDiagnosisList extends AbstractAxiomList {
 
         setListData(items.toArray());
     }
-
-
-
 
 }
