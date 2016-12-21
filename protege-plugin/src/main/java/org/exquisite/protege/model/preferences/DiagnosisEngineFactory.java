@@ -1,7 +1,6 @@
 package org.exquisite.protege.model.preferences;
 
 import org.exquisite.core.DiagnosisRuntimeException;
-import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.engines.HSDAGEngine;
 import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;

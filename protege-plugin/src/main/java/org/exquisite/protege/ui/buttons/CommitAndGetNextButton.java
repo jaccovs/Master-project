@@ -15,7 +15,7 @@ public class CommitAndGetNextButton extends AbstractGuiButton {
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        queryView.getEditorKitHook().getActiveOntologyDebugger().asynchCommitAndGetNewQuery(new QueryErrorHandler());
+                        queryView.getEditorKitHook().getActiveOntologyDebugger().doCommitAndGetNewQueryAsync(new QueryErrorHandler());
                     }
                 }
         );

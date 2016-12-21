@@ -34,12 +34,10 @@ import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.AxiomListItem;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
-import org.exquisite.protege.ui.progress.ReasonerProgressUI;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
-import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
@@ -243,9 +241,7 @@ public class Debugger {
     }
 
     public void doStartDebuggingAsync(QueryErrorHandler errorHandler) {
-        Thread thread = new Thread(new StartDebuggingSessionRunner(errorHandler));
-        thread.start();
-
+        new Thread(() -> doStartDebugging(errorHandler)).start();
     }
 
     /**
@@ -418,6 +414,22 @@ public class Debugger {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.INPUT_ONTOLOGY_CHANGED));
     }
 
+    /**
+     * This method removes axioms of a certain TestcaseType from the history and <strong>additionally</strong>
+     * recalculates the diagnoses and computes a new query afterwards (asynchronously).
+     * @param axioms entailed or non entailed axioms from acquired or original test cases (answers)
+     * @param type either ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC or ACQUIRED_NON_ENTAILED_TC.
+     */
+    public void doRemoveTestcaseAsync(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+        doRemoveTestcase(axioms, type);
+        // When removing acquired test cases (see method doRemoveQueryHistoryAnswer())
+        // this method is called twice.
+        // We need to calculate the queries only after the second call of this method.
+        if (isSessionRunning()) {
+            new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+        }
+    }
+
     public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
         this.testcases.removeTestcase(axioms, type);
 
@@ -451,8 +463,11 @@ public class Debugger {
 
         }
 
-        if (isSessionRunning())
-            doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
+        // When removing acquired test cases (see method doRemoveQueryHistoryAnswer())
+        // this method is called twice.
+        // We need to calculate the queries only after the second call of this method.
+        //if (shallNewQueryBeComputed && isSessionRunning())
+        //    doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
     }
 
     public void doAddTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type, AbstractErrorHandler errorHandler) {
@@ -495,9 +510,8 @@ public class Debugger {
     }
 
 
-    public void asynchCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
-        Thread thread = new Thread(new CommitAndGetNewQueryRunner(errorHandler));
-        thread.start();
+    public void doCommitAndGetNewQueryAsync(QueryErrorHandler errorHandler) {
+        new Thread(() -> doCommitAndGetNewQuery(errorHandler)).start();
     }
 
     /**
@@ -761,17 +775,8 @@ public class Debugger {
 
     public void doRemoveQueryHistoryAnswer(Answer<OWLLogicalAxiom> answer) {
         queryHistory.remove(answer);
-        // TODO FIX THIS DOUBLE CALCULATION
         doRemoveTestcase(answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
-        doRemoveTestcase(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
-    }
-
-    public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {
-        // TODO
-        /*
-        CostsEstimator<OWLLogicalAxiom> estimator = getSearchCreator().getSearch().getCostsEstimator();
-        ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
-        */
+        doRemoveTestcaseAsync(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
     }
 
     public void dispose(EditorKitHook editorKitHook) {
@@ -781,37 +786,9 @@ public class Debugger {
 
     @Override
     public String toString() {
-        //return "OntologyDebugger{" + "engine=" + diagnosisEngineFactory.getDiagnosisEngine() +
         return "OntologyDebugger{" + "ontology=" + diagnosisEngineFactory.getOntology() +
                 "reasonerManager=" + diagnosisEngineFactory.getReasonerManager() +
                 '}';
-    }
-
-
-    private class StartDebuggingSessionRunner implements Runnable {
-        QueryErrorHandler errorHandler;
-
-        public StartDebuggingSessionRunner(QueryErrorHandler errorHandler) {
-            this.errorHandler = errorHandler;
-        }
-
-        @Override
-        public void run() {
-            doStartDebugging(errorHandler);
-        }
-    }
-
-    private class CommitAndGetNewQueryRunner implements Runnable {
-        QueryErrorHandler errorHandler;
-
-        public CommitAndGetNewQueryRunner(QueryErrorHandler errorHandler) {
-            this.errorHandler = errorHandler;
-        }
-
-        @Override
-        public void run() {
-            doCommitAndGetNewQuery(errorHandler);
-        }
     }
 
 }
