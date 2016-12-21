@@ -16,7 +16,7 @@ public class DefaultPreferences {
 
     public static int getMinNumOfLeadingDiags() { return 2; }
 
-    public static int getMaxNumOfLeadingDiags() { return 20; }
+    public static int getMaxNumOfLeadingDiags() { return 100; }
 
     public static boolean getDefaultReduceIncoherency() { return true; }
 
