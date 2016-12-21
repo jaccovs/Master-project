@@ -6,8 +6,6 @@ import org.exquisite.core.ExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +22,6 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  * @author wolfi
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
-
-    final Logger logger = LoggerFactory.getLogger(InverseDiagnosisEngine.class);
 
     private int diagsFound;
 
@@ -97,8 +93,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
                 } catch (DiagnosisRuntimeException | DiagnosisException e) {
                     // this exception occurs only if we added an inconsistent set of formulas to the CorrectFormulas
                     // checkInput() may throw this DiagnosisException
-                    logger.warn("This exception occurs only if an inconsistent set of formulas has been added to the " +
-                            "correct formulas. checkInput() may throw this DiagnosisException",e);
                 } finally {
                     model.getCorrectFormulas().remove(formula);
                     model.getPossiblyFaultyFormulas().add(formula);
