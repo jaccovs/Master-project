@@ -30,12 +30,12 @@ abstract public class AbstractTestQueryComputation<T> extends AbstractTest {
 
     @BeforeClass
     public static void init() {
-        mapping.put(getSet("A", "C", "E", "F", "M", "X", "Z"),  new BigDecimal("0.10"));
-        mapping.put(getSet("C", "F", "H", "M", "X", "Z"),       new BigDecimal("0.27"));
-        mapping.put(getSet("E", "F", "H", "K", "X"),            new BigDecimal("0.15"));
-        mapping.put(getSet("B", "C", "F", "H", "X"),            new BigDecimal("0.04"));
-        mapping.put(getSet("E", "F", "H", "M", "X"),            new BigDecimal("0.36"));
-        mapping.put(getSet("A", "C", "F", "G", "H", "M", "Z"),  new BigDecimal("0.08"));
+        mapping.put(getSet("A", "C", "E", "F", "M", "X", "Z"),  new BigDecimal("0.04"));
+        mapping.put(getSet("C", "F", "H", "M", "X", "Z"),       new BigDecimal("0.07"));
+        mapping.put(getSet("E", "F", "H", "K", "X"),            new BigDecimal("0.33"));
+        mapping.put(getSet("B", "C", "F", "H", "X"),            new BigDecimal("0.14"));
+        mapping.put(getSet("E", "F", "H", "M", "X"),            new BigDecimal("0.01"));
+        mapping.put(getSet("A", "C", "F", "G", "H", "M", "Z"),  new BigDecimal("0.41"));
     }
 
     @Test
