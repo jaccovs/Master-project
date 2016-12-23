@@ -92,8 +92,8 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
                 model.getPossiblyFaultyFormulas().remove(formula);
                 try {
                     path.add(formula);
-                    model.getCorrectFormulas().add(formula); // this addition can throw an exception causing backtracking
-                    diagnoses = recDepthFirstSearch(inverseQuickXPlain, diagnoses, path);
+                    model.getCorrectFormulas().add(formula);
+                    diagnoses = recDepthFirstSearch(inverseQuickXPlain, diagnoses, path); // findConflicts() in recDepthFirstSearch may throw DiagnosisException
                 } catch (DiagnosisRuntimeException | DiagnosisException e) {
                     // this exception occurs only if we added an inconsistent set of formulas to the CorrectFormulas
                     // checkInput() may throw this DiagnosisException
