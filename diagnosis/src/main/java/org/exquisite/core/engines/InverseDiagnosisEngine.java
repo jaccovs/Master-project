@@ -3,13 +3,12 @@ package org.exquisite.core.engines;
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.Utils;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
@@ -47,7 +46,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
             final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
 
-            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses());
+            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new HashSet<>());
 
             // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
             // therefore we restore the original order.
@@ -66,7 +65,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         }
     }
 
-    private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses) throws DiagnosisException {
+    private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, Set<F> path) throws DiagnosisException {
         // progress monitor
         if (getMonitor()!=null && diagnoses.size() > diagsFound) {
             diagsFound = diagnoses.size();
@@ -78,28 +77,41 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             return diagnoses;
         }
 
-        Set<Set<F>> newDiagnoses = inverseQuickXPlain.findConflicts(this.getDiagnosisModel().getPossiblyFaultyFormulas());
+        Set<Set<F>> newDiagnoses = getReusableDiagnosis(diagnoses, path);
+        if (newDiagnoses == null)
+            newDiagnoses = inverseQuickXPlain.findConflicts(this.getDiagnosisModel().getPossiblyFaultyFormulas()); // findConflicts() throws a DiagnosisException if conflict finding is not possible!
+
         assert newDiagnoses.size() <= 1; // InverseQuickXPlain just finds zero or one diagnosis
 
         for (Set<F> diagnosis : newDiagnoses) {
+
             diagnoses.add(new Diagnosis<>(diagnosis));
 
             for (F formula : diagnosis) {
                 DiagnosisModel<F> model = getSolver().getDiagnosisModel();
                 model.getPossiblyFaultyFormulas().remove(formula);
                 try {
-                    model.getCorrectFormulas().add(formula);
-                    diagnoses = recDepthFirstSearch(inverseQuickXPlain, diagnoses);
+                    path.add(formula);
+                    model.getCorrectFormulas().add(formula); // this addition can throw an exception causing backtracking
+                    diagnoses = recDepthFirstSearch(inverseQuickXPlain, diagnoses, path);
                 } catch (DiagnosisRuntimeException | DiagnosisException e) {
                     // this exception occurs only if we added an inconsistent set of formulas to the CorrectFormulas
                     // checkInput() may throw this DiagnosisException
                 } finally {
                     model.getCorrectFormulas().remove(formula);
+                    path.remove(formula);
                     model.getPossiblyFaultyFormulas().add(formula);
                 }
             }
         }
         return diagnoses;
+    }
+
+    private Set<Set<F>> getReusableDiagnosis(Set<Diagnosis<F>> diagnoses, Set<F> path) {
+        for (Diagnosis<F> diagnosis : diagnoses)
+            if (!Utils.hasIntersection(diagnosis.getFormulas(), path))
+                return Collections.singleton(diagnosis.getFormulas());
+        return null;
     }
 
     @Override

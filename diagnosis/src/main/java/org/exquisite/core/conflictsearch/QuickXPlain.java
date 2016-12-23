@@ -32,12 +32,13 @@ public class QuickXPlain<F> implements IConflictSearcher<F> {
 
     @Override
     public Set<Set<F>> findConflicts(Collection<F> formulas) throws DiagnosisException {
-        incrementCounter(COUNTER_QXP_CALLS);
         if (checkInput(formulas))
             return Collections.emptySet();
 
         ArrayList<F> b = new ArrayList<>(formulas.size());
         ArrayList<F> c = new ArrayList<>(formulas);
+
+        incrementCounter(COUNTER_QXP_CALLS);
         List<F> conflict = quickXPlain(b, b, c);
         return Collections.singleton(new HashSet<>(conflict));
     }
