@@ -2,7 +2,7 @@ package org.exquisite.core.engines;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.Utils;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
@@ -22,13 +22,13 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
-    private int diagsFound;
+    private int diagsFound; // used for progress
 
     public InverseDiagnosisEngine(ISolver<F> solver) {
         super(solver);
     }
 
-    public InverseDiagnosisEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+    public InverseDiagnosisEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
         super(solver, monitor);
     }
 
@@ -37,8 +37,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         start(TIMER_INVERSE_DIAGNOSES);
 
         this.diagsFound = 0;
-        if (getMonitor() != null)
-            getMonitor().taskStarted(ExquisiteProgressMonitor.DIAGNOSES_CALCULATION); // progress
+        notifyTaskStarted(); // progress
 
         try {
             InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
@@ -46,7 +45,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
             final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
 
-            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new HashSet<>());
+            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new ArrayList<>());
 
             // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
             // therefore we restore the original order.
@@ -60,20 +59,20 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             incrementCounter(COUNTER_INVERSE_DIAGNOSES);
             return diagnoses;
         } finally {
-            if (getMonitor() != null) getMonitor().taskStopped(); // progress
+            notifyTaskStopped(); // progress
             stop(TIMER_INVERSE_DIAGNOSES);
         }
     }
 
-    private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, Set<F> path) throws DiagnosisException {
-        // progress monitor
-        if (getMonitor()!=null && diagnoses.size() > diagsFound) {
-            diagsFound = diagnoses.size();
-            getMonitor().taskProgressChanged(diagsFound + " of " + getMaxNumberOfDiagnoses() + " diagnoses found.",diagnoses.size(), getMaxNumberOfDiagnoses());
+    private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, List<F> path) throws DiagnosisException {
+        final int diagsSize = diagnoses.size();
+        if (diagsSize > diagsFound) {
+            diagsFound = diagsSize;
+            notifyTaskProgress(diagsFound); // progress
         }
 
         // terminate computations if the required number of diagnoses is reached
-        if (diagnoses.size() >= getMaxNumberOfDiagnoses()) {
+        if (diagsSize >= getMaxNumberOfDiagnoses() || isCancelled()) {
             return diagnoses;
         }
 
@@ -107,7 +106,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         return diagnoses;
     }
 
-    private Set<Set<F>> getReusableDiagnosis(Set<Diagnosis<F>> diagnoses, Set<F> path) {
+    private Set<Set<F>> getReusableDiagnosis(Set<Diagnosis<F>> diagnoses, List<F> path) {
         for (Diagnosis<F> diagnosis : diagnoses)
             if (!Utils.hasIntersection(diagnosis.getFormulas(), path))
                 return Collections.singleton(diagnosis.getFormulas());

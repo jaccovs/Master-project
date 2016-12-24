@@ -8,8 +8,6 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxParserImpl;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.mansyntax.ManchesterOWLSyntaxParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -21,9 +19,7 @@ class AbstractTest {
 
     protected ManchesterOWLSyntaxParser parser;
 
-    protected final Logger logger = LoggerFactory.getLogger(AbstractTest.class);
-
-    protected final ExquisiteProgressMonitor monitor = null;
+    protected final IExquisiteProgressMonitor monitor = null;
 
     OWLLogicalAxiom parse(String axiom) {
         this.parser.setStringToParse(axiom);

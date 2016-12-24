@@ -2,7 +2,7 @@ package org.exquisite.protege;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.costestimators.CardinalityCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
@@ -149,7 +149,7 @@ public class Debugger {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
     }
 
-    public ExquisiteProgressMonitor getExquisiteProgressMonitor() {
+    public IExquisiteProgressMonitor getExquisiteProgressMonitor() {
         return progressUI;
     }
 

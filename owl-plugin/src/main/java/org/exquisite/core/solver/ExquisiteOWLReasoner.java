@@ -1,6 +1,6 @@
 package org.exquisite.core.solver;
 
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.model.DiagnosisModel;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
@@ -122,11 +122,11 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     }
 
     public static DiagnosisModel<OWLLogicalAxiom> consistencyCheck(DiagnosisModel<OWLLogicalAxiom> dm, OWLOntology ontology,
-                                                                   OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency, ReasonerProgressMonitor reasonerProgressMonitor, ExquisiteProgressMonitor exquisiteProgressMonitor)
+                                                                   OWLReasonerFactory reasonerFactory, boolean extractModule, boolean reduceIncoherencyToInconsistency, ReasonerProgressMonitor reasonerProgressMonitor, IExquisiteProgressMonitor exquisiteProgressMonitor)
     {
 
         try {
-            if (exquisiteProgressMonitor != null) exquisiteProgressMonitor.taskStarted(ExquisiteProgressMonitor.CONSISTENCY_CHECK);
+            if (exquisiteProgressMonitor != null) exquisiteProgressMonitor.taskStarted(IExquisiteProgressMonitor.CONSISTENCY_CHECK);
 
             final long start = System.currentTimeMillis();
             OWLOntologyManager manager = ontology.getOWLOntologyManager();

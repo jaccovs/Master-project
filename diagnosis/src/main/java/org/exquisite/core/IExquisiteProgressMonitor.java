@@ -14,7 +14,7 @@ package org.exquisite.core;
  * </p>
  * @author wolfi
  */
-public interface ExquisiteProgressMonitor {
+public interface IExquisiteProgressMonitor {
 
     /** A standard name for the task of consistency check. */
     String CONSISTENCY_CHECK = "Checking ontology consistency";
@@ -68,4 +68,17 @@ public interface ExquisiteProgressMonitor {
      */
     void taskStopped();
 
+    /**
+     * This method should be called by the time consuming operation when it is possible to cancel the operation.
+     *
+     * @param isEnabled <code>true</code> enables the cancel feature, <code>false</code> disables the cancel feature.
+     */
+    void setCancel(boolean isEnabled);
+
+    /**
+     * The time consuming operation can check with this method if the user wishes to cancel the long lasting operation.
+     *
+     * @return returns <code>true</code> if the user cancelled the time consuming operation.
+     */
+    boolean isCancelled();
 }

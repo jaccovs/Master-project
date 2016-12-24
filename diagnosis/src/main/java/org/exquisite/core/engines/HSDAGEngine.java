@@ -1,6 +1,6 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
         this(solver, null);
     }
 
-    public HSDAGEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+    public HSDAGEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
         super(solver, monitor);
     }
 

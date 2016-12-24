@@ -1,6 +1,6 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
@@ -28,23 +28,24 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
     private ICostsEstimator<F> costsEstimator;
     private Set<Set<F>> conflicts = new HashSet<>();
     private Set<Diagnosis<F>> diagnoses = new HashSet<>();
-    private ExquisiteProgressMonitor monitor;
+    private IExquisiteProgressMonitor monitor;
 
     public AbstractDiagnosisEngine(ISolver<F> solver) {
         this(solver,null);
     }
 
-    public AbstractDiagnosisEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+    public AbstractDiagnosisEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
         this.solver = solver;
         searcher = new QuickXPlain<>(solver);
         this.costsEstimator = new SimpleCostsEstimator<>();
         this.monitor = monitor;
+        if (monitor != null) monitor.setCancel(false);
     }
 
     /**
      * @return Returns a progress monitor if one has been defined, otherwise <code>null</code> is returned
      */
-    public ExquisiteProgressMonitor getMonitor() {
+    public IExquisiteProgressMonitor getMonitor() {
         return monitor;
     }
 
@@ -119,4 +120,28 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
         if (this.monitor != null) this.monitor.taskStopped();
         this.monitor = null;
     }
+
+    protected void notifyTaskStarted() {
+        if (monitor != null) {
+            monitor.taskStarted(IExquisiteProgressMonitor.DIAGNOSES_CALCULATION);
+            monitor.taskBusy("Start searching diagnoses ... (max. " + getMaxNumberOfDiagnoses() + ")");
+        }
+    }
+
+    protected void notifyTaskStopped() {
+        if (monitor != null)
+            monitor.taskStopped();
+    }
+
+    protected void notifyTaskProgress(int diagnosesSize) {
+        if (monitor != null) {
+            monitor.taskBusy(diagnosesSize + (diagnosesSize==1 ? " diagnosis found" : " diagnoses found"));
+            monitor.setCancel(diagnosesSize > 1);
+        }
+    }
+
+    protected boolean isCancelled() {
+        return monitor != null && monitor.isCancelled();
+    }
+
 }

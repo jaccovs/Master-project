@@ -1,7 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.HSTreeEngine;
@@ -15,8 +15,6 @@ import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.Spl
 import org.exquisite.core.solver.SimpleConflictSubsetSolver;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -33,9 +31,7 @@ public class TestHeuristicQueryComputation {
 
     private AbstractDiagnosisEngine<Integer> engine;
 
-    private final Logger logger = LoggerFactory.getLogger(TestHeuristicQueryComputation.class);
-
-    private final ExquisiteProgressMonitor monitor = null;
+    private final IExquisiteProgressMonitor monitor = null;
 
     /**
      * Standard threshold value for ENT, SPL and RIO

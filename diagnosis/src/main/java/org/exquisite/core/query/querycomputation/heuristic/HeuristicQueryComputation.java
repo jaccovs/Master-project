@@ -1,6 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.Utils;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
@@ -46,27 +47,31 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public Query<F> next() {
         Set<F> originalQuery = queriesIterator.next(); // (next) query computed in steps (1) and (2) -> see calcQuery()
         Set<F> query = originalQuery;
+        IExquisiteProgressMonitor monitor = config.getMonitor();
+
         if (config.enrichQueries) {
+            if (monitor !=null) {
+                monitor.taskBusy("Enriching query ... ");
+                monitor.setCancel(true);
+            }
 
             // (3) in order to come up with a query that is as simple and easy to answer as possible for the
             // respective user U, the query can optionally enriched by additional logical formulas by invoking
             // a reasoner for entailments calculation.
-            if (config.getMonitor()!=null) config.getMonitor().taskProgressChanged("Enriching query ... ",3,4);
-
             Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
 
             // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
-            if (config.getMonitor()!=null) config.getMonitor().taskProgressChanged("Optimizing query ... ", 4, 4);
+            if (monitor !=null) monitor.taskBusy("Optimizing query ... ");
 
             Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
             query = optimizedQuery;
         }
 
-        if (config.getMonitor()!=null) config.getMonitor().taskStopped();
+        if (monitor !=null) monitor.taskStopped();
 
         Query<F> nextQuery = new Query<>(query, qPartition);
         nextQuery.score = config.getRm().getScore(nextQuery);
@@ -92,11 +97,14 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      */
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
 
-        if (config.getMonitor() != null) config.getMonitor().taskStarted("Query Calculation");
+        IExquisiteProgressMonitor monitor = config.getMonitor();
+        if (monitor != null) {
+            monitor.taskStarted("Query Calculation");
+            monitor.taskBusy("Computing query ...");
+        }
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
         // q-partition can be extracted in the next step by selectQueriesForQPartition
-        if (config.getMonitor() != null) config.getMonitor().taskProgressChanged("Finding qPartition ... ", 1, config.enrichQueries?4:2);
         qPartition = findQPartition(leadingDiagnoses, this.config.rm);
 
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_TRAITS, qPartition.diagsTraits.size()); // Nr of DiagTraits
@@ -119,7 +127,6 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         // (2) after a suitable q-partition has been identified, q query Q with qPartition(Q) is calculated such
         // that Q is optimal as to some criterion such as minimum cardinality or maximum likeliness of being
         // answered correctly.
-        if (config.getMonitor() != null) config.getMonitor().taskProgressChanged("Selecting queries for qPartition ... ", 1, config.enrichQueries?4:2);
         Set<Set<F>> queries = selectQueriesForQPartition(qPartition);
 
         assert queries.size() == 1;

@@ -1,7 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.DiagnosisException;
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.costestimators.FormulaWeightsCostEstimator;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.engines.HSTreeEngine;
@@ -28,7 +28,7 @@ public abstract class AbstractTestHeuristicQC {
 
     protected final static double delta = 0.000001;
 
-    protected ExquisiteProgressMonitor monitor = null;
+    protected IExquisiteProgressMonitor monitor = null;
 
     @Before
     public void initialize() {

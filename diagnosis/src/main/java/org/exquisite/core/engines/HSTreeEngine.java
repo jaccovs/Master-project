@@ -1,6 +1,6 @@
 package org.exquisite.core.engines;
 
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
@@ -32,7 +32,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
         this(solver, null);
     }
 
-    public HSTreeEngine(ISolver<F> solver, ExquisiteProgressMonitor monitor) {
+    public HSTreeEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
         super(solver, monitor);
         openNodes = new TreeSet<>(getNodeComparator());
     }
@@ -69,7 +69,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
         start(TIMER_DIAGNOSIS_SESSION);
-        if (getMonitor() != null) getMonitor().taskStarted(ExquisiteProgressMonitor.DIAGNOSES_CALCULATION); // progress
+        notifyTaskStarted(); // progress
         try {
             // generate root if there is none
             if (!hasRoot()) {
@@ -98,8 +98,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
             }
             return getDiagnoses();
         } finally {
-            if (getMonitor() != null)
-                getMonitor().taskStopped(); // progress
+            notifyTaskStopped(); // progress
             stop(TIMER_DIAGNOSIS_SESSION);
         }
     }
@@ -122,9 +121,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
                 logger.debug("A diagnosis is found: {}", node.getPathLabels());
                 node.setStatus(Node.Status.Diagnosis);
                 getDiagnoses().add(new Diagnosis<F>(node.getPathLabels(), node.getCosts()));
-                if (getMonitor() != null)
-                    getMonitor().taskProgressChanged(getDiagnoses().size() + " of " + getMaxNumberOfDiagnoses() + " diagnoses found.", getDiagnoses().size(), getMaxNumberOfDiagnoses());
-
+                notifyTaskProgress(getDiagnoses().size());
                 return;
             }
             node.setNodeLabel(selectConflict(conflicts));
@@ -153,7 +150,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
      */
 
     private boolean stopComputations() {
-        return getMaxNumberOfDiagnoses() != 0 && getMaxNumberOfDiagnoses() <= getDiagnoses().size();
+        return isCancelled() || (getMaxNumberOfDiagnoses() != 0 && getMaxNumberOfDiagnoses() <= getDiagnoses().size());
     }
 
     /**

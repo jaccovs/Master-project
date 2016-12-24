@@ -1,6 +1,6 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
-import org.exquisite.core.ExquisiteProgressMonitor;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.EntropyBasedMeasure;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
@@ -63,19 +63,19 @@ public class HeuristicConfiguration<F> {
 
     boolean enrichQueries;
 
-    ExquisiteProgressMonitor monitor;
+    IExquisiteProgressMonitor monitor;
 
     /* *************************** Constructor ************************************ */
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, ExquisiteProgressMonitor monitor) {
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IExquisiteProgressMonitor monitor) {
         this(diagnosisEngine, DEFAULT_REQUIREMENTS_MEASURE, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, monitor);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ExquisiteProgressMonitor monitor) {
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, IExquisiteProgressMonitor monitor) {
         this(diagnosisEngine, rm, DEFAULT_SORT_CRITIERION, DEFAULT_TIMEOUT, DEFAULT_MIN_QUERIES, DEFAULT_MAX_QUERIES, DEFAULT_ENRICH_QUERIES, monitor);
     }
 
-    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries, ExquisiteProgressMonitor monitor) {
+    public HeuristicConfiguration(AbstractDiagnosisEngine<F> diagnosisEngine, IQPartitionRequirementsMeasure rm, ISortCriterion sortCriterion, long timeout, int minQueries, int maxQueries, boolean enrichQueries, IExquisiteProgressMonitor monitor) {
         this.diagnosisEngine = diagnosisEngine;
         this.rm = rm;
         this.sortCriterion = sortCriterion;
@@ -143,7 +143,7 @@ public class HeuristicConfiguration<F> {
         this.enrichQueries = enrichQueries;
     }
 
-    public ExquisiteProgressMonitor getMonitor() {
+    public IExquisiteProgressMonitor getMonitor() {
         return monitor;
     }
 
