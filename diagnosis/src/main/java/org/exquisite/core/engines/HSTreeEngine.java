@@ -265,4 +265,9 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
     protected boolean addConflicts(Set<Set<F>> conflicts) {
         return getConflicts().addAll(conflicts);
     }
+
+    @Override
+    public String toString() {
+        return "HSTreeEngine";
+    }
 }

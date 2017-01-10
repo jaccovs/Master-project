@@ -173,4 +173,9 @@ public class InteractiveDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> im
     public IQueryComputation<F> getQueryComputation() {
         return queryComputation;
     }
+
+    @Override
+    public String toString() {
+        return "InteractiveDiagnosisEngine";
+    }
 }

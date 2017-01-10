@@ -123,7 +123,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
 
     protected void notifyTaskStarted() {
         if (monitor != null) {
-            monitor.taskStarted(IExquisiteProgressMonitor.DIAGNOSES_CALCULATION);
+            monitor.taskStarted(IExquisiteProgressMonitor.DIAGNOSES_CALCULATION + " using " + this);
             monitor.taskBusy("Start searching diagnoses ... (max. " + getMaxNumberOfDiagnoses() + ")");
         }
     }

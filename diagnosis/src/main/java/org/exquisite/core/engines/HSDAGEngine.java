@@ -149,4 +149,9 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "HSDAGEngine";
+    }
 }
