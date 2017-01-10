@@ -17,7 +17,10 @@ package org.exquisite.core;
 public interface IExquisiteProgressMonitor {
 
     /** A standard name for the task of consistency check. */
-    String CONSISTENCY_CHECK = "Checking ontology consistency";
+    String CONSISTENCY_CHECK = "Checking consistency";
+
+    /** A standard name for the task of consistency and coherency check. */
+    String CONSISTENCY_COHERENCY_CHECK = "Checking consistency & coherency";
 
     /** A standard name for the task of calculation of the diagnoses. */
     String DIAGNOSES_CALCULATION = "Calculating diagnoses";

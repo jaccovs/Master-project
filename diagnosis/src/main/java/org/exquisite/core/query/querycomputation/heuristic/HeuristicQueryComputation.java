@@ -51,7 +51,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
         if (config.enrichQueries) {
             if (monitor !=null) {
-                monitor.taskBusy("Enriching query ... ");
+                monitor.taskBusy("enriching query...");
                 monitor.setCancel(false); // TODO enable the cancel button as soon as we have at least the canonical queries. this will probably be implemented together with implementation of timeout implementation see issue #58 See documentation of OWLReasoner.interrupt
             }
 
@@ -64,7 +64,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
-            if (monitor !=null) monitor.taskBusy("Optimizing query ... ");
+            if (monitor !=null) monitor.taskBusy("optimizing query...");
 
             Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
@@ -100,8 +100,8 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
 
         if (config.getMonitor() != null) {
-            config.getMonitor().taskStarted("Query Calculation");
-            config.getMonitor().taskBusy("Calculating query based on " + leadingDiagnoses.size() + " found diagnoses ...");
+            config.getMonitor().taskStarted(IExquisiteProgressMonitor.QUERY_COMPUTATION + " using " + config.getRm() + ")");
+            config.getMonitor().taskBusy("calculating query based on " + leadingDiagnoses.size() + " diagnoses...");
         }
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
@@ -231,7 +231,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      */
     private Set<F> getEntailments(Set<F> set) {
         if (config.getMonitor() != null)
-            config.getMonitor().taskBusy("calculating entailments of " + set.size() + " axioms ...");
+            config.getMonitor().taskBusy("calculating entailments of " + set.size() + " axioms...");
         Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);
         return entailments;
     }

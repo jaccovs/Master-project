@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import uk.ac.manchester.cs.owlapi.modularity.SyntacticLocalityModuleExtractor;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
@@ -33,9 +30,9 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private HashSet<InferredAxiomGenerator<? extends OWLLogicalAxiom>> axiomGenerators = new HashSet<>();
 
     /**
-     * An anonymous ontology that is used by the internal OWLreasoner for debugging sessions.
+     * An anonymous ontology that is used by the internal OWLReasoner for debugging sessions.
      */
-    private OWLOntology debuggingOntology = null;
+    private OWLOntology debuggingOntology;
 
     /**
      * Default constructor of the reasoner
@@ -71,7 +68,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
         final long start = System.currentTimeMillis();
 
-        Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
+        Set<OWLLogicalAxiom> possiblyFaulty = new TreeSet<>();
         DiagnosisModel<OWLLogicalAxiom> dm = new DiagnosisModel<>();
         for (OWLLogicalAxiom axiom : ontology.getLogicalAxioms()) {
             Set<OWLAnnotationProperty> propertiesInSignature = axiom.getAnnotationPropertiesInSignature();
@@ -126,35 +123,40 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     {
 
         try {
-            if (exquisiteProgressMonitor != null) exquisiteProgressMonitor.taskStarted(IExquisiteProgressMonitor.CONSISTENCY_CHECK);
 
             final long start = System.currentTimeMillis();
+            OWLReasoner reasoner = createReasoner(ontology, reasonerFactory, reasonerProgressMonitor);
             OWLOntologyManager manager = ontology.getOWLOntologyManager();
+
+            // start a new progress monitor task for consistency/coherency check
+            if (exquisiteProgressMonitor != null)
+                exquisiteProgressMonitor.taskStarted((reduceIncoherencyToInconsistency?IExquisiteProgressMonitor.CONSISTENCY_COHERENCY_CHECK:IExquisiteProgressMonitor.CONSISTENCY_CHECK) + " using " + getReasonerName(reasoner));
 
 
             logger.info("------------------------ Settings for Consistency Check ------------------------");
             logger.info("Ontology: {}", ontology.getOntologyID());
             logger.info("OWLOntologyManager: {}", manager);
             logger.info("OWLReasonerFactory: {}", reasonerFactory);
-
-            OWLReasoner reasoner = createReasoner(ontology, reasonerFactory, reasonerProgressMonitor);
-
             logger.info("OWLReasoner: {}", reasoner);
             logger.info("Configuration [extractModules]: {}", extractModule);
             logger.info("Configuration [reduceIncoherency]: {}", reduceIncoherencyToInconsistency);
 
-            Set<OWLLogicalAxiom> possiblyFaulty = new HashSet<>(ontology.getLogicalAxiomCount());
+            Set<OWLLogicalAxiom> possiblyFaulty = new TreeSet<>();
 
             // in case the ontology is consistent we assume that the user wants to debug the incoherency.
-            if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Checking consistency of ontology ...");
+            if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("checking consistency of ontology...");
             if (reasoner.isConsistent()) {
-                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Precomputing inferences ...");
+                if ( exquisiteProgressMonitor != null ) {
+                    exquisiteProgressMonitor.taskBusy("... the ontology is consistent!");
+                    exquisiteProgressMonitor.taskBusy("pre-computing inferences of " + InferenceType.CLASS_HIERARCHY + "...");
+                }
                 reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
-                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("Getting classes ...");
+                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("detecting entities of bottom hierarchy nodes...");
                 Set<OWLClass> classes = reasoner.getBottomClassNode().getEntities();
                 classes.remove(manager.getOWLDataFactory().getOWLNothing());
 
-                if (extractModule && classes.size() > 1) {
+                if (extractModule && classes.size() > 0) {
+                    if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("module extraction with signature of " + classes.size() + " entities...");
                     SyntacticLocalityModuleExtractor extractor = new SyntacticLocalityModuleExtractor(manager,
                             ontology, ModuleType.STAR);
 
@@ -164,11 +166,13 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                     possiblyFaulty = extractor.extract(entities).stream().filter(OWLLogicalAxiom.class::isInstance).
                             map(o -> (OWLLogicalAxiom) o).collect(Collectors.toSet());
 
-                } else
+                } else {
                     possiblyFaulty.addAll(ontology.getLogicalAxioms());
+                }
 
                 // instantiate unsat classes thus reducing the incoherency to inconsistency
                 if (reduceIncoherencyToInconsistency) {
+                    if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("checking coherency of ontology...");
                     final List<OWLLogicalAxiom> correctFormulas = dm.getCorrectFormulas();
                     for (OWLClass cl : classes) {
                         OWLDataFactory df = manager.getOWLDataFactory();
@@ -177,8 +181,10 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
                         addIfAxiomIsAbsent(correctFormulas, axiom);
                     }
                 }
-            } else
+            } else {
+                if ( exquisiteProgressMonitor != null ) exquisiteProgressMonitor.taskBusy("... the ontology is inconsistent!");
                 possiblyFaulty.addAll(ontology.getLogicalAxioms());
+            }
 
             // make sure that all sets are disjoint
             possiblyFaulty.removeAll(dm.getCorrectFormulas());
@@ -371,8 +377,15 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         return debuggingOntology;
     }
 
+    private static String getReasonerName(OWLReasoner reasoner) {
+        if (reasoner.getReasonerName() !=null)
+            return reasoner.getReasonerName();
+        else
+            return reasoner.getClass().getName();
+    }
+
     @Override
     public String toString() {
-        return "ExquisiteOWLReasoner(" + reasoner + ")";
+        return "ExquisiteOWLReasoner(" + getReasonerName(reasoner) + ")";
     }
 }

@@ -52,7 +52,7 @@ public class DebuggerProgressUI implements IExquisiteProgressMonitor {
         window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         // cancel button
-        cancelledAction = new AbstractAction("Cancel") {
+        cancelledAction = new AbstractAction("Continue >") {
             private static final long serialVersionUID = 3688085823398242640L;
             public void actionPerformed(ActionEvent e) {
                 setCancelled();
@@ -60,7 +60,7 @@ public class DebuggerProgressUI implements IExquisiteProgressMonitor {
         };
         JButton cancelledButton = new JButton(cancelledAction);
         JPanel buttonHolder = new JPanel(new FlowLayout(FlowLayout.RIGHT, PADDING, 2));
-        cancelledButton.setToolTipText("Cancel the current task");
+        cancelledButton.setToolTipText("Stops the current task and continues with next task");
         buttonHolder.add(cancelledButton);
 
         // text area
