@@ -47,12 +47,12 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public Query<F> next() {
         Set<F> originalQuery = queriesIterator.next(); // (next) query computed in steps (1) and (2) -> see calcQuery()
         Set<F> query = originalQuery;
-        IExquisiteProgressMonitor monitor = config.getMonitor();
+        final IExquisiteProgressMonitor monitor = config.getMonitor();
 
         if (config.enrichQueries) {
             if (monitor !=null) {
                 monitor.taskBusy("Enriching query ... ");
-                monitor.setCancel(true);
+                monitor.setCancel(false); // TODO enable the cancel button as soon as we have at least the canonical queries. this will probably be implemented together with implementation of timeout implementation see issue #58 See documentation of OWLReasoner.interrupt
             }
 
             // (3) in order to come up with a query that is as simple and easy to answer as possible for the
@@ -87,6 +87,8 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public void reset() {
         this.qPartition = null;
         this.queriesIterator = null;
+        if (config != null && config.getMonitor() != null)
+            config.getMonitor().taskStopped();
     }
 
     /**
@@ -97,10 +99,9 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      */
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
 
-        IExquisiteProgressMonitor monitor = config.getMonitor();
-        if (monitor != null) {
-            monitor.taskStarted("Query Calculation");
-            monitor.taskBusy("Computing query ...");
+        if (config.getMonitor() != null) {
+            config.getMonitor().taskStarted("Query Calculation");
+            config.getMonitor().taskBusy("Calculating query based on " + leadingDiagnoses.size() + " found diagnoses ...");
         }
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
@@ -229,6 +230,8 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @return Entailed formulas
      */
     private Set<F> getEntailments(Set<F> set) {
+        if (config.getMonitor() != null)
+            config.getMonitor().taskBusy("calculating entailments of " + set.size() + " axioms ...");
         Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);
         return entailments;
     }

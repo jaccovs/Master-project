@@ -60,6 +60,7 @@ public class DebuggerProgressUI implements IExquisiteProgressMonitor {
         };
         JButton cancelledButton = new JButton(cancelledAction);
         JPanel buttonHolder = new JPanel(new FlowLayout(FlowLayout.RIGHT, PADDING, 2));
+        cancelledButton.setToolTipText("Cancel the current task");
         buttonHolder.add(cancelledButton);
 
         // text area
@@ -87,9 +88,15 @@ public class DebuggerProgressUI implements IExquisiteProgressMonitor {
     }
 
     private void addMessage(String msg) {
-        this.messages.append(" ");
+        this.messages.append("[");
+        this.messages.append(getTimeStamp());
+        this.messages.append("] ");
         this.messages.append(msg);
         this.messages.append("\n");
+    }
+
+    private String getTimeStamp() {
+        return new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date ());
     }
 
     private void clearMessages() {
