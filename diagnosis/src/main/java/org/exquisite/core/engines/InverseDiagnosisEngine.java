@@ -22,7 +22,7 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
-    private int diagsFound; // used for progress
+    private int sizeAlreadyFoundDiagnoses; // we save the number of already found diagnoses to notify the progress
 
     public InverseDiagnosisEngine(ISolver<F> solver) {
         super(solver);
@@ -36,7 +36,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
         start(TIMER_INVERSE_DIAGNOSES);
 
-        this.diagsFound = 0;
+        this.sizeAlreadyFoundDiagnoses = 0;
         notifyTaskStarted(); // progress
 
         try {
@@ -66,9 +66,9 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, List<F> path) throws DiagnosisException {
         final int diagsSize = diagnoses.size();
-        if (diagsSize > diagsFound) {
-            diagsFound = diagsSize;
-            notifyTaskProgress(diagsFound); // progress
+        if (diagsSize > sizeAlreadyFoundDiagnoses) {
+            sizeAlreadyFoundDiagnoses = diagsSize;
+            notifyTaskProgress(sizeAlreadyFoundDiagnoses); // progress
         }
 
         // terminate computations if the required number of diagnoses is reached

@@ -23,7 +23,7 @@ public interface IExquisiteProgressMonitor {
     String CONSISTENCY_COHERENCY_CHECK = "Checking consistency & coherency";
 
     /** A standard name for the task of calculation of the diagnoses. */
-    String DIAGNOSES_CALCULATION = "Calculating diagnoses";
+    String DIAGNOSES_CALCULATION = "Searching diagnoses";
 
     /** A standard name for the taks of generation of queries. */
     String QUERY_COMPUTATION = "Generating queries";

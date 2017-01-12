@@ -135,8 +135,8 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
 
     protected void notifyTaskProgress(int diagnosesSize) {
         if (monitor != null) {
-            monitor.taskBusy(diagnosesSize + (diagnosesSize==1 ? " diagnosis found" : " diagnoses found"));
-            monitor.setCancel(diagnosesSize > 1);
+            monitor.taskBusy("found diagnosis " + diagnosesSize + " of max. " + getMaxNumberOfDiagnoses());
+            monitor.setCancel(diagnosesSize > 1); // when more than one diagnoses have been found, the user can continue
         }
     }
 
