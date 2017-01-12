@@ -95,7 +95,7 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
         //final HSDAGEngine<OWLLogicalAxiom> hsdagEngine = new HSDAGEngine<>(reasoner);
         IDiagnosisEngine<OWLLogicalAxiom>[] diagnosisEngines = new IDiagnosisEngine[]{inverseDiagnosisEngine/*, hsTreeEngine, hsdagEngine*/};
 
-        HeuristicQueryComputation<OWLLogicalAxiom> hqc = new HeuristicQueryComputation<>(new HeuristicConfiguration((AbstractDiagnosisEngine)inverseDiagnosisEngine));
+        HeuristicQueryComputation<OWLLogicalAxiom> hqc = new HeuristicQueryComputation<>(new HeuristicConfiguration((AbstractDiagnosisEngine)inverseDiagnosisEngine, monitor));
         SimpleNaiveQueryComputation<OWLLogicalAxiom> sqc = new SimpleNaiveQueryComputation<>(inverseDiagnosisEngine, new MinScoreQSS<>());
         IQueryComputation<OWLLogicalAxiom>[] queryComputations = new IQueryComputation[]{ hqc, sqc};
 

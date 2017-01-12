@@ -76,7 +76,7 @@ abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
         if (this.getSelectedValue() instanceof TestcaseListItem) {
             for (int number : getSelectedIndices()) {
                 TestcaseListItem item = (TestcaseListItem) getModel().getElementAt(number);
-                getEditorKitHook().getActiveOntologyDebugger().doRemoveTestcase(item.getTestcase(),item.getType());
+                getEditorKitHook().getActiveOntologyDebugger().doRemoveTestcaseAsync(item.getTestcase(),item.getType());
             }
         }
     }

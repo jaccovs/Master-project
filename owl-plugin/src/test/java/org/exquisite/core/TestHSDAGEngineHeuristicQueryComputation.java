@@ -19,7 +19,7 @@ public class TestHSDAGEngineHeuristicQueryComputation extends AbstractTestQueryC
     }
     @Override
     protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine) {
-        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine);
+        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine, monitor);
         return new HeuristicQueryComputation<>(config);
     }
 }

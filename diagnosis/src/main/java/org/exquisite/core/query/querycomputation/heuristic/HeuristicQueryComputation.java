@@ -1,6 +1,7 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.Utils;
 import org.exquisite.core.engines.AbstractDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
@@ -46,7 +47,13 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public Query<F> next() {
         Set<F> originalQuery = queriesIterator.next(); // (next) query computed in steps (1) and (2) -> see calcQuery()
         Set<F> query = originalQuery;
+        final IExquisiteProgressMonitor monitor = config.getMonitor();
+
         if (config.enrichQueries) {
+            if (monitor !=null) {
+                monitor.taskBusy("enriching query...");
+                monitor.setCancel(false); // TODO enable the cancel button as soon as we have at least the canonical queries. this will probably be implemented together with implementation of timeout implementation see issue #58 See documentation of OWLReasoner.interrupt
+            }
 
             // (3) in order to come up with a query that is as simple and easy to answer as possible for the
             // respective user U, the query can optionally enriched by additional logical formulas by invoking
@@ -57,10 +64,15 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
             // which constructs a set-minimal query where most complex sentences in terms of the logical construct
             // and term fault estimates are eliminated from Q and the most simple ones retained
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
+            if (monitor !=null) monitor.taskBusy("optimizing query...");
+
             Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
             incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
             query = optimizedQuery;
         }
+
+        if (monitor !=null) monitor.taskStopped();
+
         Query<F> nextQuery = new Query<>(query, qPartition);
         nextQuery.score = config.getRm().getScore(nextQuery);
         return nextQuery;
@@ -75,6 +87,8 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     public void reset() {
         this.qPartition = null;
         this.queriesIterator = null;
+        if (config != null && config.getMonitor() != null)
+            config.getMonitor().taskStopped();
     }
 
     /**
@@ -84,6 +98,11 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @param leadingDiagnoses the leading diagnoses.
      */
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
+
+        if (config.getMonitor() != null) {
+            config.getMonitor().taskStarted(IExquisiteProgressMonitor.QUERY_COMPUTATION + " using " + config.getRm() + ")");
+            config.getMonitor().taskBusy("computing basic query based on " + leadingDiagnoses.size() + " diagnoses...");
+        }
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this
         // q-partition can be extracted in the next step by selectQueriesForQPartition
@@ -211,6 +230,8 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @return Entailed formulas
      */
     private Set<F> getEntailments(Set<F> set) {
+        if (config.getMonitor() != null)
+            config.getMonitor().taskBusy("calculating entailments of " + set.size() + " axioms...");
         Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);
         return entailments;
     }

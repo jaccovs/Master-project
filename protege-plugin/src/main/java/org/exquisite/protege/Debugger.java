@@ -2,6 +2,7 @@ package org.exquisite.protege;
 
 import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.costestimators.CardinalityCostEstimator;
 import org.exquisite.core.costestimators.ICostsEstimator;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
@@ -32,13 +33,15 @@ import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.AxiomListItem;
+import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
-import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
+import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -52,14 +55,14 @@ import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
 
 public class Debugger {
 
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
+    private Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
 
     public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
 
-    public enum QuerySearchStatus { IDLE, SEARCH_DIAG, GENERATING_QUERY, MINIMZE_QUERY, ASKING_QUERY }
+    public enum QuerySearchStatus { IDLE, ASKING_QUERY }
 
     /**
      * When calling doStopSession() use this flag to inform the user, why the debugging session has stopped.
@@ -67,7 +70,7 @@ public class Debugger {
     public enum SessionStopReason { PREFERENCES_CHANGED, INVOKED_BY_USER, CONSISTENT_ONTOLOGY,
         ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED, ONTOLOGY_CHANGED, SESSION_RESTARTED,
         DEBUGGING_ONTOLOGY_SELECTED
-    };
+    }
 
     private DebuggingSession debuggingSession;
 
@@ -93,7 +96,7 @@ public class Debugger {
 
     private IQueryComputation<OWLLogicalAxiom> qc = null;
 
-    private final OWLModelManager modelManager;
+    private OWLEditorKit editorKit = null;
 
     private final OWLReasonerManager reasonerManager;
 
@@ -111,14 +114,21 @@ public class Debugger {
      */
     private OntologyChangeListener ontologyChangeListener;
 
+    private DebuggerProgressUI progressUI;
+
+    private org.protege.editor.owl.ui.inference.ReasonerProgressUI reasonerProgressUI;
+
     public Debugger(OWLEditorKit editorKit) {
-        modelManager = editorKit.getModelManager();
-        reasonerManager = modelManager.getOWLReasonerManager();
-        diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), reasonerManager);
-        debuggingSession = new DebuggingSession();
+        this.editorKit = editorKit;
+        OWLModelManager modelManager = editorKit.getModelManager();
+        this.reasonerManager = modelManager.getOWLReasonerManager();
+        this.diagnosisEngineFactory = new DiagnosisEngineFactory(this, modelManager.getActiveOntology(), this.reasonerManager);
+        this.debuggingSession = new DebuggingSession();
         this.testcases = new TestcasesModel(this);
         this.diagnosisModel = new DiagnosisModel<>();
         this.pagingState = new PagingState();
+        this.progressUI = new DebuggerProgressUI(this);
+        this.reasonerProgressUI = new org.protege.editor.owl.ui.inference.ReasonerProgressUI(this.getEditorKit());
     }
 
     /**
@@ -135,8 +145,20 @@ public class Debugger {
         }
     }
 
-    public void createNewDiagnosisModel() throws DiagnosisModelCreationException {
+    void createNewDiagnosisModel() throws DiagnosisModelCreationException {
         this.diagnosisModel = diagnosisEngineFactory.createDiagnosisModel();
+    }
+
+    public IExquisiteProgressMonitor getExquisiteProgressMonitor() {
+        return progressUI;
+    }
+
+    public ReasonerProgressMonitor getReasonerProgressMonitor() {
+        return reasonerProgressUI;
+    }
+
+    public OWLEditorKit getEditorKit() {
+        return editorKit;
     }
 
     public PagingState getPagingState() {
@@ -203,7 +225,7 @@ public class Debugger {
         changeListeners.add(listener);
     }
 
-    void removeChangeListener(ChangeListener listener) {
+    private void removeChangeListener(ChangeListener listener) {
         changeListeners.remove(listener);
     }
 
@@ -218,13 +240,17 @@ public class Debugger {
         return this.ontologyChangeListener;
     }
 
+    public void doStartDebuggingAsync(QueryErrorHandler errorHandler) {
+        new Thread(() -> doStartDebugging(errorHandler)).start();
+    }
+
     /**
      * Starts a new debugging session. This step initiates the search for a diagnosis and the presentation of a
      * query.
      *
      * @param errorHandler An error handler.
      */
-    public void doStartDebugging(QueryErrorHandler errorHandler) {
+    private void doStartDebugging(QueryErrorHandler errorHandler) {
         if (!isSessionRunning()) {
             if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
                 DebuggingDialog.showNoReasonerSelectedMessage();
@@ -233,34 +259,18 @@ public class Debugger {
 
             logger.info("------------------------ Starting new Debugging Session ------------------------");
 
+
             diagnosisEngineFactory.reset();                 // create new engine
             debuggingSession.startSession();                // start session
 
-            // TODO start reasoner here
             try {
                 this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
-
                 notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
                 doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
-
-                switch (diagnoses.size()) {
-                    case 0:
-                        doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                        if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
-                            DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                        else
-                            DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                        break;
-                    case 1:
-                        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                        DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
-                        break;
-                    default:
-                        break;
-                }
             } catch (DiagnosisModelCreationException e) {
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
+                debuggingSession.stopSession();
             }
         }
     }
@@ -272,7 +282,7 @@ public class Debugger {
      */
     public void doRestartDebugging(QueryErrorHandler errorHandler) {
         doStopDebugging(SessionStopReason.SESSION_RESTARTED);
-        doStartDebugging(errorHandler);
+        doStartDebuggingAsync(errorHandler);
     }
 
     /**
@@ -404,6 +414,22 @@ public class Debugger {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.INPUT_ONTOLOGY_CHANGED));
     }
 
+    /**
+     * This method removes axioms of a certain TestcaseType from the history and <strong>additionally</strong>
+     * recalculates the diagnoses and computes a new query afterwards (asynchronously).
+     * @param axioms entailed or non entailed axioms from acquired or original test cases (answers)
+     * @param type either ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC or ACQUIRED_NON_ENTAILED_TC.
+     */
+    public void doRemoveTestcaseAsync(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+        doRemoveTestcase(axioms, type);
+        // When removing acquired test cases (see method doRemoveQueryHistoryAnswer())
+        // this method is called twice.
+        // We need to calculate the queries only after the second call of this method.
+        if (isSessionRunning()) {
+            new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+        }
+    }
+
     public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
         this.testcases.removeTestcase(axioms, type);
 
@@ -437,8 +463,11 @@ public class Debugger {
 
         }
 
-        if (isSessionRunning())
-            doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
+        // When removing acquired test cases (see method doRemoveQueryHistoryAnswer())
+        // this method is called twice.
+        // We need to calculate the queries only after the second call of this method.
+        //if (shallNewQueryBeComputed && isSessionRunning())
+        //    doCalculateDiagnosesAndGetQuery(new QueryErrorHandler());
     }
 
     public void doAddTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type, AbstractErrorHandler errorHandler) {
@@ -480,6 +509,11 @@ public class Debugger {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_ANSWER_EVENT));
     }
 
+
+    public void doCommitAndGetNewQueryAsync(QueryErrorHandler errorHandler) {
+        new Thread(() -> doCommitAndGetNewQuery(errorHandler)).start();
+    }
+
     /**
      * Commit the response from the expert, calculate the new diagnoses and get the new queries.
      *
@@ -488,27 +522,7 @@ public class Debugger {
     public void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
         this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
-        boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
-        if (noErrorOccur) {
-            switch (diagnoses.size()) {
-                case 0:
-                    doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
-                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
-                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    else
-                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
-                    break;
-                case 1:
-                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
-                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
-                    break;
-                default:
-                    doGetQuery(errorHandler);
-                    break;
-            }
-        } else {
-            doStopDebugging(SessionStopReason.ERROR_OCCURRED);
-        }
+        doCalculateDiagnosesAndGetQuery(errorHandler);
     }
 
     public void doGetAlternativeQuery() {
@@ -593,10 +607,24 @@ public class Debugger {
      * @param errorHandler The error handler.
      */
     private void doCalculateDiagnosesAndGetQuery(QueryErrorHandler errorHandler) {
-        boolean noErrorOccurred = doCalculateDiagnoses(errorHandler);
-        if (noErrorOccurred) {
-            if (diagnoses.size() > 1)
-                doGetQuery(errorHandler);
+        boolean noErrorOccur = doCalculateDiagnoses(errorHandler);
+        if (noErrorOccur) {
+            switch (diagnoses.size()) {
+                case 0:
+                    doStopDebugging(SessionStopReason.CONSISTENT_ONTOLOGY);
+                    if (diagnosisEngineFactory.getSearchConfiguration().reduceIncoherency)
+                        DebuggingDialog.showCoherentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    else
+                        DebuggingDialog.showConsistentOntologyMessage(getDiagnosisEngineFactory().getOntology());
+                    break;
+                case 1:
+                    notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_FOUND));
+                    DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
+                    break;
+                default:
+                    doGetQuery(errorHandler);
+                    break;
+            }
         } else {
             doStopDebugging(SessionStopReason.ERROR_OCCURRED);
         }
@@ -612,7 +640,7 @@ public class Debugger {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DebuggerConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
-        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine);
+        HeuristicConfiguration<OWLLogicalAxiom> heuristicConfiguration = new HeuristicConfiguration<>((AbstractDiagnosisEngine)diagnosisEngine,this.progressUI);
 
         heuristicConfiguration.setMinQueries(1);
         heuristicConfiguration.setMaxQueries(1);
@@ -666,6 +694,7 @@ public class Debugger {
         qc = new HeuristicQueryComputation<>(heuristicConfiguration);
 
         try {
+
             qc.initialize(diagnoses);
 
             if ( qc.hasNext()) {
@@ -746,17 +775,8 @@ public class Debugger {
 
     public void doRemoveQueryHistoryAnswer(Answer<OWLLogicalAxiom> answer) {
         queryHistory.remove(answer);
-        // TODO FIX THIS DOUBLE CALCULATION
         doRemoveTestcase(answer.positive, TestcaseType.ACQUIRED_ENTAILED_TC);
-        doRemoveTestcase(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
-    }
-
-    public void updateProbab(Map<ManchesterOWLSyntax, BigDecimal> map) {
-        // TODO
-        /*
-        CostsEstimator<OWLLogicalAxiom> estimator = getSearchCreator().getSearch().getCostsEstimator();
-        ((OWLAxiomKeywordCostsEstimator)estimator).updateKeywordProb(map);
-        */
+        doRemoveTestcaseAsync(answer.negative, TestcaseType.ACQUIRED_NON_ENTAILED_TC);
     }
 
     public void dispose(EditorKitHook editorKitHook) {
@@ -766,11 +786,9 @@ public class Debugger {
 
     @Override
     public String toString() {
-        //return "OntologyDebugger{" + "engine=" + diagnosisEngineFactory.getDiagnosisEngine() +
         return "OntologyDebugger{" + "ontology=" + diagnosisEngineFactory.getOntology() +
                 "reasonerManager=" + diagnosisEngineFactory.getReasonerManager() +
                 '}';
     }
-
 
 }

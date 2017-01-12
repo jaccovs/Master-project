@@ -7,6 +7,8 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.QPartitionOperations;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -23,6 +25,8 @@ import static org.junit.Assert.fail;
 public abstract class TestScenario1 extends AbstractTestHeuristicQC {
 
     public Diagnosis<Integer> D1, D2, D3, D4, D5, D6;
+
+    protected final Logger logger = LoggerFactory.getLogger(TestScenario1.class);
 
     @Override
     public Set<Diagnosis<Integer>> calculateDiagnoses() throws DiagnosisException {

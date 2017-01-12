@@ -24,7 +24,7 @@ public class TestInverseEngineHeuristicQueryComputationSPL extends AbstractTestQ
 
     @Override
     protected IQueryComputation<OWLLogicalAxiom> getQueryComputation(IDiagnosisEngine engine) {
-        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine);
+        HeuristicConfiguration config = new HeuristicConfiguration<OWLLogicalAxiom>((AbstractDiagnosisEngine)engine, monitor);
         config.setRm(new SplitInHalfMeasure<>(BigDecimal.ZERO));                                                  // SPL
         return new HeuristicQueryComputation<>(config);
     }

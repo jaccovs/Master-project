@@ -1,6 +1,5 @@
 package org.exquisite.protege;
 
-import com.google.common.base.Optional;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
@@ -131,18 +130,20 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
         notifyActiveDebuggerListeners(
                 new OntologyDebuggerChangeEvent(getActiveOntologyDebugger(), ACTIVE_ONTOLOGY_CHANGED));
 
-        final Optional<IRI> ontologyIRI = activeOntology.getOntologyID().getOntologyIRI();
-        if (ontologyIRI.isPresent())
-            logger.debug("ontology changed to " + ontologyIRI.get().getShortForm());
+        if (activeOntology.getOntologyID().getOntologyIRI().isPresent())
+            logger.debug("ontology changed to " + activeOntology.getOntologyID().getOntologyIRI().get().getShortForm());
     }
 
 
     @Override
     public void stateChanged(ChangeEvent e) {
         Debugger activeDebugger = ontologyDebuggerMap.get(getEditorKit().getModelManager().getActiveOntology());
-        if (activeDebugger.equals(e.getSource())) {
+        if (activeDebugger != null && e != null && activeDebugger.equals(e.getSource())) {
             // something in the active ontology searcher has changed
             notifyActiveDebuggerListeners((OntologyDebuggerChangeEvent) e);
+        } else {
+            logger.warn("Unexpected NULL value for either the active debugger (value:" +
+                    activeDebugger + ") or changeEvent (value: " + e + ")");
         }
     }
 
@@ -155,8 +156,13 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
     }
 
     private void notifyActiveDebuggerListeners(OntologyDebuggerChangeEvent event) {
-        for (ChangeListener listener : changeListeners)
-            listener.stateChanged(event);
+        for (ChangeListener listener : changeListeners) {
+            if (listener != null)
+                listener.stateChanged(event);
+            else
+                logger.warn("Unexpected NULL value for a change listener");
+        }
+
     }
 
 }

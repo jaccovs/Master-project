@@ -19,6 +19,8 @@ class AbstractTest {
 
     protected ManchesterOWLSyntaxParser parser;
 
+    protected final IExquisiteProgressMonitor monitor = null;
+
     OWLLogicalAxiom parse(String axiom) {
         this.parser.setStringToParse(axiom);
         return (OWLLogicalAxiom) this.parser.parseAxiom();

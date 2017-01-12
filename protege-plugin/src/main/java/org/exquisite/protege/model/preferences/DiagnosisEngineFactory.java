@@ -96,13 +96,13 @@ public class DiagnosisEngineFactory {
 
             switch (config.engineType) {
                 case HSDAG:
-                    diagnosisEngine = new HSDAGEngine<>(reasoner);
+                    diagnosisEngine = new HSDAGEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
                     break;
                 case HSTree:
-                    diagnosisEngine = new HSTreeEngine<>(reasoner);
+                    diagnosisEngine = new HSTreeEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
                     break;
                 case Inverse:
-                    diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+                    diagnosisEngine = new InverseDiagnosisEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
                     break;
                 default:
 
@@ -157,11 +157,8 @@ public class DiagnosisEngineFactory {
     public DiagnosisModel<OWLLogicalAxiom> consistencyCheck(DiagnosisModel<OWLLogicalAxiom> dm) throws DiagnosisModelCreationException  {
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-
-            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency);
-
-            return diagnosisModel;
-        } catch (ReasonerInternalException e) {
+            return ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency, this.debugger.getReasonerProgressMonitor(), this.debugger.getExquisiteProgressMonitor());
+        } catch (RuntimeException e) {
             throw new DiagnosisModelCreationException(e);
         }
     }

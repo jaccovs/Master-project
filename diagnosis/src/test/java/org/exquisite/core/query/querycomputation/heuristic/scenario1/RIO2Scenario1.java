@@ -20,7 +20,7 @@ public class RIO2Scenario1 extends TestScenario1 {
 
     @Override
     public HeuristicQueryComputation<Integer> getHeuristicQC() {
-        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new RiskOptimizationMeasure(tEnt, tCard, c)));
+        return new HeuristicQueryComputation<>(new HeuristicConfiguration<>(getEngine(), new RiskOptimizationMeasure(tEnt, tCard, c), monitor));
     }
 
     @Override

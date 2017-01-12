@@ -1,5 +1,6 @@
 package org.exquisite.core.engines;
 
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
 import org.slf4j.Logger;
@@ -18,12 +19,16 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
  */
 public class HSDAGEngine<F> extends HSTreeEngine<F> {
 
-    final Logger logger = LoggerFactory.getLogger(HSDAGEngine.class);
-    Map<Set<F>, List<Node<F>>> conflicts = new HashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(HSDAGEngine.class);
+    private Map<Set<F>, List<Node<F>>> conflicts = new HashMap<>();
     private Map<Set<F>, Node<F>> nodesLookup = new HashMap<>();
 
     public HSDAGEngine(ISolver<F> solver) {
-        super(solver);
+        this(solver, null);
+    }
+
+    public HSDAGEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
+        super(solver, monitor);
     }
 
     /**
@@ -143,5 +148,10 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
             this.conflicts.put(conflict, new LinkedList<>());
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "HSDAGEngine";
     }
 }

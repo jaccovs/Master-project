@@ -40,6 +40,7 @@ public class QueryHistoryAxiomList extends AbstractAxiomList {
                 QueryHistoryItem item = (QueryHistoryItem) getModel().getElementAt(number);
                 final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
                 debugger.doRemoveQueryHistoryAnswer(item.getAnswer());
+                //debugger.doRemoveQueryHistoryAnswerAsync(item.getAnswer());
             }
         }
     }
