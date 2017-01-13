@@ -3,9 +3,11 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.query.Query;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.Debugger;
+import org.exquisite.protege.model.QueryExplanation;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
 import org.protege.editor.core.ui.list.MListButton;
+import org.protege.editor.core.ui.list.MListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -14,9 +16,12 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.protege.editor.owl.ui.framelist.OWLFrameList.INFERRED_BG_COLOR;
 
 public class QueryAxiomList extends AbstractAxiomList {
 
@@ -35,10 +40,6 @@ public class QueryAxiomList extends AbstractAxiomList {
         buttons.addAll(super.getButtons(value));
         buttons.add(new AxiomIsEntailedButton(this,debugger.isMarkedEntailed(axiom)));
         buttons.add(new AxiomIsNotEntailedButton(this,debugger.isMarkedNonEntailed(axiom)));
-
-        // TODO activate explanation button once we have a good explanation component for the query computation
-        //if (QueryExplanation.isAxiomInferredFromDebugger(debugger,axiom))
-        //    buttons.add(new DebugExplainButton(this));
 
         return buttons;
     }
@@ -88,9 +89,19 @@ public class QueryAxiomList extends AbstractAxiomList {
     public void updateList(Debugger debugger, OWLOntology ontology) {
         Query<OWLLogicalAxiom> query = debugger.getActualQuery();
         if (query!=null && !query.formulas.isEmpty()) {
-            List<Object> items = query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology)).collect(Collectors.toList());
+            List<Object> items = query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology, debugger)).collect(Collectors.toList());
             setListData(items.toArray());
         }
+    }
+
+    @Override
+    protected Color getItemBackgroundColor(MListItem item) {
+        if (item instanceof AxiomListItem) {
+            if (QueryExplanation.isAxiomInferredFromDebugger(editorKitHook.getActiveOntologyDebugger(), ((AxiomListItem) item).axiom)) {
+                return INFERRED_BG_COLOR;
+            }
+        }
+        return super.getItemBackgroundColor(item);
     }
 
 }
