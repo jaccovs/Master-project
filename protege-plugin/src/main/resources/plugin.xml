@@ -29,6 +29,14 @@
         <editorKitId value="OWLEditorKit"/>
     </extension>
 
+    <extension id="DebugOntology.OnlineHelp" point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Online Documentation"/>
+        <toolTip value="View online documentation of the debugger"/>
+        <url value="https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/onto-debugger"/>
+        <path value="org.protege.editor.owl.menu.tools/SlotO-C"/>
+        <editorKitId value="OWLEditorKit"/>
+    </extension>
+
     <!-- Tabs -->
 
     <extension id="OntologyDebugging" point="org.protege.editor.core.application.WorkspaceTab">
