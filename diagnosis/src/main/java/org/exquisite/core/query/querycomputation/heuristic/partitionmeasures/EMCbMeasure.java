@@ -76,4 +76,9 @@ public class EMCbMeasure<F> implements IQPartitionRequirementsMeasure<F> {
         final BigDecimal normalizedMaxMeasure = maxMeasure.divide(sum, MathContext.DECIMAL128);
         return normalizedMaxMeasure;
     }
+
+    @Override
+    public String toString() {
+        return "EMCb";
+    }
 }

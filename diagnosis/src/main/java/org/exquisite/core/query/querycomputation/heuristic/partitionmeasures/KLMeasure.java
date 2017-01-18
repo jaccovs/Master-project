@@ -135,4 +135,10 @@ public class KLMeasure<F> implements IQPartitionRequirementsMeasure<F> {
             this.set = set;
         }
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("KL(").append(tm).append(')').toString();
+
+    }
 }

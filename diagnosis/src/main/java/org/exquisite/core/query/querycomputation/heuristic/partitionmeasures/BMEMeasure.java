@@ -122,4 +122,9 @@ public class BMEMeasure<F> implements IQPartitionRequirementsMeasure<F> {
         final BigDecimal normalizedMinMeasure = minMeasure.divide(sum, MathContext.DECIMAL128);
         return normalizedMinMeasure;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("BME(").append(tm).append(')').toString();
+    }
 }
