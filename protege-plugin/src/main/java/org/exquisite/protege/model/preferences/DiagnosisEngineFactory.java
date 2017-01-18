@@ -7,6 +7,7 @@ import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
+import org.exquisite.core.solver.ISolver;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -96,13 +97,13 @@ public class DiagnosisEngineFactory {
 
             switch (config.engineType) {
                 case HSDAG:
-                    diagnosisEngine = new HSDAGEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
+                    diagnosisEngine = new HSDAGEngine<OWLLogicalAxiom>(reasoner, config.createConflictSearcher(reasoner), debugger.getExquisiteProgressMonitor());
                     break;
                 case HSTree:
-                    diagnosisEngine = new HSTreeEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
+                    diagnosisEngine = new HSTreeEngine<OWLLogicalAxiom>(reasoner, config.createConflictSearcher(reasoner), debugger.getExquisiteProgressMonitor());
                     break;
                 case Inverse:
-                    diagnosisEngine = new InverseDiagnosisEngine<>(reasoner, debugger.getExquisiteProgressMonitor());
+                    diagnosisEngine = new InverseDiagnosisEngine<OWLLogicalAxiom>(reasoner, config.createConflictSearcher(reasoner), debugger.getExquisiteProgressMonitor());
                     break;
                 default:
 

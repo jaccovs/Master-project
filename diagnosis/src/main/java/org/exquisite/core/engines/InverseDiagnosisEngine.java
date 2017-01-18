@@ -4,6 +4,7 @@ import org.exquisite.core.DiagnosisException;
 import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.Utils;
+import org.exquisite.core.conflictsearch.IConflictSearcher;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
@@ -24,12 +25,45 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     private int sizeAlreadyFoundDiagnoses; // we save the number of already found diagnoses to notify the progress
 
+    /**
+     * Creates an inverse diagnosis engine with a specific solver. No progress monitor and QuickXPlain as conflict searcher will be
+     * applied.
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     */
     public InverseDiagnosisEngine(ISolver<F> solver) {
-        super(solver);
+        this(solver, null, null);
     }
 
+    /**
+     * Creates an inverse diagnosis engine with a specific solver and conflict searcher.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     */
+    public InverseDiagnosisEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher) {
+        this(solver, conflictSearcher, null);
+    }
+
+    /**
+     * Creates an inverse diagnosis engine with a specific solver and progress monitor. As conflict searcher QuickXPlain will be
+     * applied.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
     public InverseDiagnosisEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
-        super(solver, monitor);
+        this(solver, null, monitor);
+    }
+
+    /**
+     * Creates an inverse diagnosis engine with a specific solver, conflict searcher and progress monitor.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
+    public InverseDiagnosisEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher, IExquisiteProgressMonitor monitor) {
+        super(solver, conflictSearcher, monitor);
     }
 
     @Override
@@ -115,6 +149,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     @Override
     public String toString() {
-        return "InverseDiagnosisEngine";
+        return "InverseDiagnosisEngine("+getSearcher()+")";
     }
 }

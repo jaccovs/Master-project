@@ -30,13 +30,46 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
     private Set<Diagnosis<F>> diagnoses = new HashSet<>();
     private IExquisiteProgressMonitor monitor;
 
+    /**
+     * Creates a diagnosis engine with a specific solver. No progress monitor and QuickXPlain as conflict searcher will be
+     * applied.
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     */
     public AbstractDiagnosisEngine(ISolver<F> solver) {
-        this(solver,null);
+        this(solver,null,null);
     }
 
+    /**
+     * Creates a diagnosis engine with a specific solver and conflict searcher.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     */
+    public AbstractDiagnosisEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher) {
+        this(solver, conflictSearcher, null);
+    }
+
+    /**
+     * Creates a diagnosis engine with a specific solver and progress monitor. As conflict searcher QuickXPlain will be
+     * applied.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
     public AbstractDiagnosisEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
+        this(solver,null, monitor);
+    }
+
+    /**
+     * Creates a diagnosis engine with a specific solver, conflict searcher and progress monitor.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
+    public AbstractDiagnosisEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher, IExquisiteProgressMonitor monitor) {
         this.solver = solver;
-        searcher = new QuickXPlain<>(solver);
+        searcher = (conflictSearcher == null) ? new QuickXPlain<>(solver) : conflictSearcher;
         this.costsEstimator = new SimpleCostsEstimator<>();
         this.monitor = monitor;
         if (monitor != null) monitor.setCancel(false);

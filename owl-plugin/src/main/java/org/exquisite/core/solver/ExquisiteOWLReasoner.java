@@ -340,8 +340,22 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     protected void sync(Set<OWLLogicalAxiom> addFormulas, Set<OWLLogicalAxiom> removeFormulas) {
         OWLOntology ontology = this.reasoner.getRootOntology();
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        manager.removeAxioms(ontology, removeFormulas);
-        manager.addAxioms(ontology, addFormulas);
+
+        List<OWLAxiomChange> changes = new ArrayList<>(removeFormulas.size() + addFormulas.size() + 2);
+
+        //removeFormulas.stream().map(e -> new RemoveAxiom(ontology,e)).collect(Collectors.toCollection(() -> changes));
+
+        for (OWLAxiom ax : removeFormulas){
+            assert ax != null;
+            changes.add(new RemoveAxiom(ontology, ax));
+        }
+
+        for (OWLAxiom ax : addFormulas){
+            assert ax != null;
+            changes.add(new AddAxiom(ontology, ax));
+        }
+
+        manager.applyChanges(changes);
         this.reasoner.flush();
     }
 

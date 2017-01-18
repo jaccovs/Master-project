@@ -93,7 +93,7 @@ public abstract class AbstractDiagnosisEngineTest {
         assertEquals(getSet(getDiagnosis(3), getDiagnosis(2, 4)), diagnoses);
     }
 
-    @Test @Ignore // TODO Test fails for InverseDiagnosesEngine, therefore temporarily deactivated unit test
+    @Test
     public void testEngine3() throws DiagnosisException {
         List<Set<Integer>> conflicts = new LinkedList<>();
         conflicts.add(getSet(2, 3));

@@ -1,5 +1,10 @@
 package org.exquisite.protege.model.preferences;
 
+import org.exquisite.core.conflictsearch.IConflictSearcher;
+import org.exquisite.core.conflictsearch.MergeXPlain;
+import org.exquisite.core.conflictsearch.Progression;
+import org.exquisite.core.conflictsearch.QuickXPlain;
+import org.exquisite.core.solver.ISolver;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 
 import java.util.ArrayList;
@@ -8,9 +13,10 @@ import java.util.Properties;
 
 /**
  * The applied preferences and configuration used for diagnoses search and query computation.
+ *
+ * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
-public class DebuggerConfiguration {
-
+public class DebuggerConfiguration<F> {
 
     /**
      * Configuration possibility to use diverse diagnosis engines.
@@ -66,6 +72,9 @@ public class DebuggerConfiguration {
         }
     }
 
+    /**
+     * Configuration to use diverse sort criteria.
+     */
     public enum SortCriterion {
         MINCARD,
         MINSUM,
@@ -106,8 +115,34 @@ public class DebuggerConfiguration {
         }
     }
 
+    /**
+     * Configuration to use the appropriate conflict searcher during diagnosis search.
+     */
+    public enum ConflictSearcher {
+        QuickXPlain,
+        MergeXPlain,
+        Progression;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case QuickXPlain:
+                    return "QuickXPlain";
+                case MergeXPlain:
+                    return "MergeXPlain";
+                case Progression:
+                    return "Progression";
+                default:
+                    return DefaultPreferences.getDefaultConflictSearcher().toString();
+            }
+        }
+
+    }
+
     /** The diagnoses engine to be used: possible values are: HSDag, HSTree and InverseQuickXPlain (FastDiag). Default: HSTree  */
     public DiagnosisEngineType engineType = DefaultPreferences.getDefaultDiagnosisEngineType();
+
+    public ConflictSearcher conflictSearcher = DefaultPreferences.getDefaultConflictSearcher();
 
     /** The maximum number of leading diagnoses to search for. Default: 9. */
     public Integer numOfLeadingDiags = DefaultPreferences.getDefaultNumOfLeadingDiags();
@@ -161,6 +196,18 @@ public class DebuggerConfiguration {
         return !this.reduceIncoherency.equals(newConfiguration.reduceIncoherency);
     }
 
+    public IConflictSearcher<F> createConflictSearcher(ISolver<F> solver) {
+        switch (conflictSearcher) {
+            case QuickXPlain:
+                return new QuickXPlain<>(solver);
+            case MergeXPlain:
+                return new MergeXPlain<F>(solver);
+            case Progression:
+                return new Progression<F>(solver);
+        }
+        throw new IllegalArgumentException("Unknown conflictSearcher " + conflictSearcher + "! Only QuickXPlain, MergeXPlain or Progression allowed.");
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -170,6 +217,7 @@ public class DebuggerConfiguration {
         DebuggerConfiguration that = (DebuggerConfiguration) o;
 
         if (engineType != that.engineType) return false;
+        if (conflictSearcher != that.conflictSearcher) return false;
         if (numOfLeadingDiags != null ? !numOfLeadingDiags.equals(that.numOfLeadingDiags) : that.numOfLeadingDiags != null)
             return false;
         if (reduceIncoherency != null ? !reduceIncoherency.equals(that.reduceIncoherency) : that.reduceIncoherency != null)
@@ -192,6 +240,7 @@ public class DebuggerConfiguration {
     @Override
     public int hashCode() {
         int result = engineType != null ? engineType.hashCode() : 0;
+        result = 31 * result + (conflictSearcher != null ? conflictSearcher.hashCode() : 0);
         result = 31 * result + (numOfLeadingDiags != null ? numOfLeadingDiags.hashCode() : 0);
         result = 31 * result + (reduceIncoherency != null ? reduceIncoherency.hashCode() : 0);
         result = 31 * result + (extractModules != null ? extractModules.hashCode() : 0);
@@ -208,6 +257,7 @@ public class DebuggerConfiguration {
     @Override
     public String toString() {
         return "EngineType: " +  engineType + ", " +
+                "conflictSearcher: " + conflictSearcher + "," +
                 "numOfLeadingDiags: " + numOfLeadingDiags + ", " +
                 "reduceIncoherency: " + reduceIncoherency + ", " +
                 "extractModules:" + extractModules + ", " +

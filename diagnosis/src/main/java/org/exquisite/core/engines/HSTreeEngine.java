@@ -1,6 +1,7 @@
 package org.exquisite.core.engines;
 
 import org.exquisite.core.IExquisiteProgressMonitor;
+import org.exquisite.core.conflictsearch.IConflictSearcher;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
@@ -16,24 +17,58 @@ import static org.exquisite.core.Utils.hasIntersection;
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
 /**
- * A basic class that is extended by all tree-like conflictsearch engines.
+ * A basic class that is extended by all tree-like conflict search engines.
  *
  * @param <F> Formulas, Statements, Axioms, Logical Sentences, Constraints etc.
  */
 public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> {
 
-    private final Logger logger = LoggerFactory.getLogger(HSTreeEngine.class);
+    protected Logger logger;
 
     private Node<F> root = null;
 
     private TreeSet<Node<F>> openNodes;
 
+    /**
+     * Creates a HSTree diagnosis engine with a specific solver. No progress monitor and QuickXPlain as conflict searcher will be
+     * applied.
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     */
     public HSTreeEngine(ISolver<F> solver) {
-        this(solver, null);
+        this(solver, null, null);
     }
 
+    /**
+     * Creates a HSTree diagnosis engine with a specific solver and conflict searcher.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     */
+    public HSTreeEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher) {
+        this(solver, conflictSearcher, null);
+    }
+
+    /**
+     * Creates a HSTree diagnosis engine with a specific solver and progress monitor. As conflict searcher QuickXPlain will be
+     * applied.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
     public HSTreeEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
-        super(solver, monitor);
+        this(solver, null, monitor);
+    }
+
+    /**
+     * Creates a HSTree diagnosis engine with a specific solver, conflict searcher and progress monitor.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
+    public HSTreeEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher, IExquisiteProgressMonitor monitor) {
+        super(solver, conflictSearcher, monitor);
+        this.logger = LoggerFactory.getLogger(HSTreeEngine.class);
         openNodes = new TreeSet<>(getNodeComparator());
     }
 
@@ -75,14 +110,14 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
             if (!hasRoot()) {
                 Set<Set<F>> conflicts = getSearcher().findConflicts(getDiagnosisModel().getPossiblyFaultyFormulas());
                 if (conflicts == null || conflicts.isEmpty()) {
-                    logger.debug("The provided diagnosis model is correct");
+                    //logger.debug("The provided diagnosis model is correct");
                     return getDiagnoses();
                 }
                 addConflicts(conflicts);
                 Node<F> root = Node.createRoot(selectConflict(conflicts));
 
                 incrementCounter(COUNTER_CONSTRUCTED_NODES);
-                logger.debug("Initializing the tree with the root {}", root);
+                //logger.debug("Initializing the tree with the root {}", root);
 
                 expand(root);
             }
@@ -90,7 +125,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
             while (hasNodesToExpand()) {
                 Node<F> node = getNextNode();
                 if (skipNode(node)) continue;
-                logger.debug("Processing node {}", node);
+                //logger.debug("Processing node {}", node);
                 label(node);
                 if (node.getStatus() == Node.Status.Open)
                     expand(node);
@@ -110,15 +145,15 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
      */
     protected void label(Node<F> node) throws DiagnosisException {
         if (node.getNodeLabel() == null) {
-            logger.debug("The node has no label yet, let's compute one!");
+            //logger.debug("The node has no label yet, let's compute one!");
             Set<Set<F>> conflicts = getReusableConflicts(node);
             // compute conflicts if there are none to reuse
             if (conflicts.isEmpty()) {
-                logger.debug("There is nothing to reuse, computing a new conflict");
+                //logger.debug("There is nothing to reuse, computing a new conflict");
                 conflicts = computeLabel(node);
             }
             if (conflicts.isEmpty()) {
-                logger.debug("A diagnosis is found: {}", node.getPathLabels());
+                logger.debug("Diagnosis #{} is found: {}", (getDiagnoses().size()+1), node.getPathLabels());
                 node.setStatus(Node.Status.Diagnosis);
                 getDiagnoses().add(new Diagnosis<F>(node.getPathLabels(), node.getCosts()));
                 notifyTaskProgress(getDiagnoses().size());
@@ -209,7 +244,7 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
      * The method that expands a tree node.
      */
     protected void expand(Node<F> nodeToExpand) {
-        logger.debug("Generate the children nodes of a node {}", nodeToExpand);
+        //logger.debug("Generate the children nodes of a node {}", nodeToExpand);
         for (F label : nodeToExpand.getNodeLabel()) {
             Node<F> node = new Node<>(nodeToExpand, label, getCostsEstimator());
             incrementCounter(COUNTER_CONSTRUCTED_NODES);
@@ -268,6 +303,6 @@ public class HSTreeEngine<F> extends AbstractDiagnosisEngine<F> implements IDiag
 
     @Override
     public String toString() {
-        return "HSTreeEngine";
+        return "HSTreeEngine("+getSearcher()+")";
     }
 }

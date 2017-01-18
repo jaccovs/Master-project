@@ -1,9 +1,9 @@
 package org.exquisite.core.engines;
 
 import org.exquisite.core.IExquisiteProgressMonitor;
+import org.exquisite.core.conflictsearch.IConflictSearcher;
 import org.exquisite.core.solver.ISolver;
 import org.exquisite.core.DiagnosisException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -19,16 +19,49 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.incrementCo
  */
 public class HSDAGEngine<F> extends HSTreeEngine<F> {
 
-    private final Logger logger = LoggerFactory.getLogger(HSDAGEngine.class);
     private Map<Set<F>, List<Node<F>>> conflicts = new HashMap<>();
     private Map<Set<F>, Node<F>> nodesLookup = new HashMap<>();
 
+    /**
+     * Creates a HS-DAG diagnosis engine with a specific solver. No progress monitor and QuickXPlain as conflict searcher will be
+     * applied.
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     */
     public HSDAGEngine(ISolver<F> solver) {
-        this(solver, null);
+        this(solver, null, null);
     }
 
+    /**
+     * Creates a HS-DAG diagnosis engine with a specific solver and conflict searcher.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     */
+    public HSDAGEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher) {
+        this(solver, conflictSearcher, null);
+    }
+
+    /**
+     * Creates a HS-DAG diagnosis engine with a specific solver and progress monitor. As conflict searcher QuickXPlain will be
+     * applied.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
     public HSDAGEngine(ISolver<F> solver, IExquisiteProgressMonitor monitor) {
-        super(solver, monitor);
+        this(solver, null, monitor);
+    }
+
+    /**
+     * Creates a HS-DAG diagnosis engine with a specific solver, conflict searcher and progress monitor.
+     *
+     * @param solver Applies a given solver to this engine. <strong>Must not be <code>null</code></strong>.
+     * @param conflictSearcher A conflict searcher. If <code>null</code> QuickXPlain will be used as conflict searcher.
+     * @param monitor A progress monitor which can be <code>null</code> if no progress monitoring is necessary/required.
+     */
+    public HSDAGEngine(ISolver<F> solver, IConflictSearcher<F> conflictSearcher, IExquisiteProgressMonitor monitor) {
+        super(solver, conflictSearcher, monitor);
+        this.logger = LoggerFactory.getLogger(HSDAGEngine.class);
     }
 
     /**
@@ -112,7 +145,7 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
 
     @Override
     protected void expand(Node<F> nodeToExpand) {
-        logger.debug("Generate the children nodes of a node {}", nodeToExpand);
+        // logger.debug("Generate the children nodes of a node {}", nodeToExpand);
         for (F label : nodeToExpand.getNodeLabel()) {
             // rule 1.a - reuse node
             Node<F> node = getReusableNode(nodeToExpand.getPathLabels(), label);
@@ -152,6 +185,6 @@ public class HSDAGEngine<F> extends HSTreeEngine<F> {
 
     @Override
     public String toString() {
-        return "HSDAGEngine";
+        return "HSDAGEngine("+getSearcher()+")";
     }
 }

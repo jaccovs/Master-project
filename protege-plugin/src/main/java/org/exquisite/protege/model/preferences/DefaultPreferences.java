@@ -4,6 +4,7 @@ import static org.exquisite.protege.model.preferences.DebuggerConfiguration.Cost
 import static org.exquisite.protege.model.preferences.DebuggerConfiguration.DiagnosisEngineType;
 import static org.exquisite.protege.model.preferences.DebuggerConfiguration.RM;
 import static org.exquisite.protege.model.preferences.DebuggerConfiguration.SortCriterion;
+import static org.exquisite.protege.model.preferences.DebuggerConfiguration.ConflictSearcher;
 
 /**
  * The default, max and min preference values for parameters of the Debugger.
@@ -11,6 +12,8 @@ import static org.exquisite.protege.model.preferences.DebuggerConfiguration.Sort
 public class DefaultPreferences {
 
     public static DiagnosisEngineType getDefaultDiagnosisEngineType() { return DiagnosisEngineType.HSTree; }
+
+    public static ConflictSearcher getDefaultConflictSearcher() { return ConflictSearcher.QuickXPlain; }
 
     public static int getDefaultNumOfLeadingDiags() { return 9; }
 
@@ -54,6 +57,7 @@ public class DefaultPreferences {
 
         // fault localization preferences
         conf.engineType = getDefaultDiagnosisEngineType();
+        conf.conflictSearcher = getDefaultConflictSearcher();
         conf.numOfLeadingDiags = getDefaultNumOfLeadingDiags();
         conf.reduceIncoherency = getDefaultReduceIncoherency();
         conf.extractModules = getDefaultExtractModules();

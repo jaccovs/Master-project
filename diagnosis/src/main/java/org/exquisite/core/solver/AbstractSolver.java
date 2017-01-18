@@ -103,12 +103,14 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
             }
         }
 
-        checkFormulas.addAll(formulas);
+        // filter out all null-axioms to avoid assertion exception in OWL-API (MergeXPlain.mergeXPlain() adds null axioms)
+        formulas.stream().filter(e -> e != null).collect(Collectors.toCollection(() -> checkFormulas));
 
         // sync the formulas with the solver
         HashSet<F> remove = new HashSet<>(this.formulasCache);
-        HashSet<F> add = checkFormulas.stream().filter(e -> e != null).collect(Collectors.toCollection(HashSet<F>::new));
-        remove.removeAll(checkFormulas);
+        HashSet<F> add = new HashSet<>(checkFormulas);
+
+        remove.removeAll(add);
         add.removeAll(this.formulasCache);
 
         sync(Collections.unmodifiableSet(add), Collections.unmodifiableSet(remove));
@@ -126,12 +128,15 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
      * or return a value.
      */
     void checkDiagnosisModel() {
-        assert(this.diagnosisModel.getCorrectFormulas().stream().
+        // The following 3 assertions have been deactivated because InverseDiagnosisEngine.recDepthFirstSearch causes
+        // a call of this method on each model.getPossiblyFaultyFormulas().remove(formula) which might cause
+        // that these assertions might fail.
+        /*assert(this.diagnosisModel.getCorrectFormulas().stream().
                 noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         assert(this.diagnosisModel.getEntailedExamples().stream().
                 noneMatch(o -> o!=null && this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
         assert(this.diagnosisModel.getNotEntailedExamples().stream().
-                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));
+                noneMatch(o -> this.diagnosisModel.getPossiblyFaultyFormulas().contains(o)));*/
         if (!isConsistent(Collections.emptySet()))
             throw new DiagnosisRuntimeException("Inconsistent diagnosis model!");
     }

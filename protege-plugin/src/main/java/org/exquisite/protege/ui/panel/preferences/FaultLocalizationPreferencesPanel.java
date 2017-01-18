@@ -27,6 +27,8 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private JComboBox<DebuggerConfiguration.DiagnosisEngineType> engineTypeCombobox = new JComboBox<>();
 
+    private JComboBox<DebuggerConfiguration.ConflictSearcher> conflictSearcherJComboBox = new JComboBox<>();
+
     private JComboBox<DebuggerConfiguration.CostEstimator> estimatorComboBox = new JComboBox<>();
 
     // A reference to the query computation preferences is necessary to listen to events
@@ -42,6 +44,9 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
         for (DebuggerConfiguration.DiagnosisEngineType type : DebuggerConfiguration.DiagnosisEngineType.values())
             engineTypeCombobox.addItem(type);
+
+        for (DebuggerConfiguration.ConflictSearcher conflictSearcher : DebuggerConfiguration.ConflictSearcher.values())
+            conflictSearcherJComboBox.addItem(conflictSearcher);
 
         loadConfiguration();
         createPanel();
@@ -65,6 +70,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     private OptionGroupBox createEngineTypePanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addLabelledGroupComponent("Diagnosis Engine: ", new OptionBox("enginetype", engineTypeCombobox));
+        panel.addLabelledGroupComponent("Conflict Searcher: ", new OptionBox("conflictsearcher", conflictSearcherJComboBox));
         OptionGroupBox holderEngineType = new OptionGroupBox("Engine Type");
         holderEngineType.add(panel);
         return holderEngineType;
@@ -102,6 +108,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private void loadConfiguration() {
         engineTypeCombobox.setSelectedItem(InputValidator.validateEngineType(getConfiguration().engineType));
+        conflictSearcherJComboBox.setSelectedItem(InputValidator.validateConflictSearcher(getConfiguration().conflictSearcher));
         estimatorComboBox.setSelectedItem(getConfiguration().costEstimator);
         numOfLeadingDiagsSpinner.setValue(
                 Integer.parseInt(
@@ -120,6 +127,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     @Override
     public void saveChanges() {
         getNewConfiguration().engineType = InputValidator.validateEngineType(engineTypeCombobox.getSelectedItem());
+        getNewConfiguration().conflictSearcher = InputValidator.validateConflictSearcher(conflictSearcherJComboBox.getSelectedItem());
         getNewConfiguration().costEstimator = (DebuggerConfiguration.CostEstimator) estimatorComboBox.getSelectedItem();
         getNewConfiguration().numOfLeadingDiags = Integer.parseInt(
                 InputValidator.validateInt(

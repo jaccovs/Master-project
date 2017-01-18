@@ -49,6 +49,39 @@ public class InputValidator {
     }
 
     /**
+     * Parses and validates the conflict searcher.
+     *
+     * @param conflictSearcher the string value.
+     * @return The conflict searcher if known or the default otherwise.
+     */
+    static DebuggerConfiguration.ConflictSearcher parseConflictSearcher(String conflictSearcher) {
+        return validateConflictSearcher(conflictSearcher);
+    }
+
+    /**
+     * Validates the pretended conflict searcher. If unkonwn the default conflict searcher is returned.
+     *
+     * @param aConflictSearcher a conflict searcher. Instances of type <code>String</code> and <code>ConflictSearcher</code> are expected.
+     * @return a valid conflict searcher or the default conflict searcher if invalid.
+     * @see org.exquisite.protege.model.preferences.DebuggerConfiguration.ConflictSearcher
+     */
+    public static DebuggerConfiguration.ConflictSearcher validateConflictSearcher(Object aConflictSearcher) {
+        if (aConflictSearcher instanceof String) {
+            final String sConflictSearcher = (String)aConflictSearcher;
+            for (DebuggerConfiguration.ConflictSearcher validConflictSearcher : DebuggerConfiguration.ConflictSearcher.values())
+                if (sConflictSearcher.trim().equalsIgnoreCase(validConflictSearcher.toString()))
+                    return validConflictSearcher;
+        } else if (aConflictSearcher instanceof DebuggerConfiguration.ConflictSearcher) {
+            final DebuggerConfiguration.ConflictSearcher conflictSearcher = (DebuggerConfiguration.ConflictSearcher) aConflictSearcher;
+            for (DebuggerConfiguration.ConflictSearcher validConflictSearcher : DebuggerConfiguration.ConflictSearcher.values())
+                if (conflictSearcher.equals(validConflictSearcher))
+                    return conflictSearcher;
+        }
+        logger.warn("Unknown ConflictSearcher {}. Applying default: {}.", aConflictSearcher, DefaultPreferences.getDefaultConflictSearcher());
+        return DefaultPreferences.getDefaultConflictSearcher();
+    }
+
+    /**
      * Parses and validates the requirements measurement preference.
      *
      * @param rm the string value.
@@ -81,7 +114,6 @@ public class InputValidator {
         logger.warn("Unknown Requirements Measurement {}. Applying default: {}", anRM, DefaultPreferences.getDefaultRM());
         return DefaultPreferences.getDefaultRM();
     }
-
 
     /**
      * Parses and validates the sort criterion preference.

@@ -47,6 +47,7 @@ class ConfigFileManager {
 
         // fault localization preferences
         c.engineType = InputValidator.parseEngineType((String) properties.get("enginetype"));
+        c.conflictSearcher = InputValidator.parseConflictSearcher((String) properties.get("conflictsearcher"));
         c.numOfLeadingDiags = InputValidator.parseInt(properties,"numOfLeadingDiags", DefaultPreferences.getMinNumOfLeadingDiags(), DefaultPreferences.getMaxNumOfLeadingDiags(), DefaultPreferences.getDefaultNumOfLeadingDiags());
         c.reduceIncoherency = InputValidator.parseBoolean(properties,"reduceIncoherency", DefaultPreferences.getDefaultReduceIncoherency());
         c.extractModules = InputValidator.parseBoolean(properties,"extractModules", DefaultPreferences.getDefaultExtractModules());
@@ -83,6 +84,7 @@ class ConfigFileManager {
 
         // fault localization preferences
         properties.put("enginetype", InputValidator.validateEngineType(configuration.engineType).toString());
+        properties.put("conflictsearcher", InputValidator.validateConflictSearcher(configuration.conflictSearcher).toString());
         properties.put("numOfLeadingDiags",
                 InputValidator.validateInt(
                         configuration.numOfLeadingDiags,

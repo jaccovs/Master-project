@@ -15,22 +15,22 @@ import java.io.File;
  * Created by kostya on 21-Mar-16.
  */
 
-class AbstractTest {
+public class AbstractTest {
 
     protected ManchesterOWLSyntaxParser parser;
 
     protected final IExquisiteProgressMonitor monitor = null;
 
-    OWLLogicalAxiom parse(String axiom) {
+    protected OWLLogicalAxiom parse(String axiom) {
         this.parser.setStringToParse(axiom);
         return (OWLLogicalAxiom) this.parser.parseAxiom();
     }
 
-    ExquisiteOWLReasoner createReasoner(File file) throws OWLOntologyCreationException, DiagnosisException {
+    protected ExquisiteOWLReasoner createReasoner(File file) throws OWLOntologyCreationException, DiagnosisException {
         return createReasoner(file, false, false);
     }
 
-    ExquisiteOWLReasoner createReasoner(File file, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
+    protected ExquisiteOWLReasoner createReasoner(File file, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
         OWLOntologyManager man = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = man.loadOntologyFromOntologyDocument(file);
 
@@ -39,7 +39,7 @@ class AbstractTest {
         return createReasoner(ontology, extractModule, reduceIncoherencyToInconsistency);
     }
 
-    ExquisiteOWLReasoner createReasoner(String... axioms) throws OWLOntologyCreationException, DiagnosisException {
+    protected ExquisiteOWLReasoner createReasoner(String... axioms) throws OWLOntologyCreationException, DiagnosisException {
         OWLOntologyManager man = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = man.createOntology();
 
