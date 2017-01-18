@@ -109,4 +109,9 @@ public class QuickXPlain<F> implements IConflictSearcher<F> {
     }
 
     public enum Split {Half, One}
+
+    @Override
+    public String toString() {
+        return "QuickXPlain";
+    }
 }

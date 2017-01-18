@@ -66,4 +66,9 @@ public class MergeXPlain<F> extends QuickXPlain<F> {
         }
         return g;
     }
+
+    @Override
+    public String toString() {
+        return "MergeXPlain";
+    }
 }

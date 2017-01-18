@@ -88,4 +88,9 @@ public class Progression<F> implements IConflictSearcher<F> {
     }
 
     public enum Split {Half, One}
+
+    @Override
+    public String toString() {
+        return "Progression";
+    }
 }
