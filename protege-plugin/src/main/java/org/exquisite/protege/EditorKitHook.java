@@ -1,6 +1,7 @@
 package org.exquisite.protege;
 
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
+import org.exquisite.protege.model.KeyValueMap;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.owl.OWLEditorKit;
@@ -35,11 +36,10 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
 
     public void initialise() throws Exception {
         if (!initialized) {
-            ontologyDebuggerMap = new LinkedHashMap<>();
+            ontologyDebuggerMap = new KeyValueMap<>();
             getEditorKit().getModelManager().addListener(this);
             id = cnt++;
             logger.debug("initialised editorKitHook " + id);
-            logger.debug("this is ls4j logger");
             initialized = true;
         }
         else
