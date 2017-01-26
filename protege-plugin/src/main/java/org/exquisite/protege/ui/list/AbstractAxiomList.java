@@ -11,12 +11,15 @@ import java.awt.*;
 
 abstract class AbstractAxiomList extends MList implements LinkedObjectComponent {
 
+    protected OWLEditorKit editorKit;
+
     private LinkedObjectComponentMediator mediator;
 
     AbstractAxiomList(OWLEditorKit editorKit) {
         this.mediator = new LinkedObjectComponentMediator(editorKit, this);
         setCellRenderer(new BasicAxiomListItemRenderer(editorKit));
         getMouseListeners();
+        this.editorKit = editorKit;
     }
 
     @Override
@@ -53,5 +56,9 @@ abstract class AbstractAxiomList extends MList implements LinkedObjectComponent 
     @Override
     public JComponent getComponent() {
         return this;
+    }
+
+    public OWLEditorKit getEditorKit() {
+        return editorKit;
     }
 }

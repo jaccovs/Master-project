@@ -10,17 +10,17 @@ public class AxiomListItem implements MListItem {
 
     protected OWLOntology ontology;
 
+    public AxiomListItem(OWLLogicalAxiom axiom, OWLOntology ontology) {
+        this.axiom = axiom;
+        this.ontology = ontology;
+    }
+
     public OWLLogicalAxiom getAxiom() {
         return axiom;
     }
 
     public OWLOntology getOntology() {
         return ontology;
-    }
-
-    public AxiomListItem(OWLLogicalAxiom axiom, OWLOntology ontology) {
-        this.axiom = axiom;
-        this.ontology = ontology;
     }
 
     @Override

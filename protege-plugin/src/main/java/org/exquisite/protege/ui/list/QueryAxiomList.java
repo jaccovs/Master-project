@@ -23,13 +23,10 @@ import java.util.stream.Collectors;
 
 import static org.protege.editor.owl.ui.framelist.OWLFrameList.INFERRED_BG_COLOR;
 
-public class QueryAxiomList extends AbstractAxiomList {
-
-    private EditorKitHook editorKitHook;
+public class QueryAxiomList extends AssertedOrInferredAxiomList {
 
     public QueryAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
-        super(editorKit);
-        this.editorKitHook = editorKitHook;
+        super(editorKit, editorKitHook);
     }
 
     @Override
@@ -92,16 +89,6 @@ public class QueryAxiomList extends AbstractAxiomList {
             List<Object> items = query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology, debugger)).collect(Collectors.toList());
             setListData(items.toArray());
         }
-    }
-
-    @Override
-    protected Color getItemBackgroundColor(MListItem item) {
-        if (item instanceof AxiomListItem) {
-            if (QueryExplanation.isAxiomInferredFromDebugger(editorKitHook.getActiveOntologyDebugger(), ((AxiomListItem) item).axiom)) {
-                return INFERRED_BG_COLOR;
-            }
-        }
-        return super.getItemBackgroundColor(item);
     }
 
 }

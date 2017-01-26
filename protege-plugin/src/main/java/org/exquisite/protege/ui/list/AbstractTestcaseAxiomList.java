@@ -1,12 +1,15 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.model.QueryExplanation;
 import org.exquisite.protege.ui.editor.TestCaseHeaderEditor;
+import org.protege.editor.core.ui.list.MListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -14,17 +17,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.exquisite.protege.Debugger.TestcaseType;
+import static org.protege.editor.owl.ui.framelist.OWLFrameList.INFERRED_BG_COLOR;
 
-abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
-
-    private EditorKitHook editorKitHook;
-
-    private OWLEditorKit editorKit;
+abstract public class AbstractTestcaseAxiomList extends AssertedOrInferredAxiomList {
 
     AbstractTestcaseAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
-        super(editorKit);
-        this.editorKitHook = editorKitHook;
-        this.editorKit = editorKit;
+        super(editorKit, editorKitHook);
         setupKeyboardHandlers();
         updateView();
     }
@@ -93,7 +91,7 @@ abstract public class AbstractTestcaseAxiomList extends AbstractAxiomList {
         OWLOntology ontology = getEditorKit().getModelManager().getActiveOntology();
 
         items.add(new TestcaseListHeader(type));
-        items.addAll(testcases.stream().map(axiom -> new TestcaseListItem(axiom, type, ontology)).collect(Collectors.toList()));
+        items.addAll(testcases.stream().map(axiom -> new TestcaseListItem(axiom, type, ontology, this.editorKitHook.getActiveOntologyDebugger())).collect(Collectors.toList()));
         items.add(" ");
     }
 
