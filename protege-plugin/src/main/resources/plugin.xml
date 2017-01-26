@@ -30,8 +30,8 @@
     </extension>
 
     <extension id="DebugOntology.OnlineHelp" point="org.protege.editor.core.application.EditorKitMenuAction">
-        <name value="Online Documentation"/>
-        <toolTip value="View online documentation of the debugger"/>
+        <name value="Debugger documentation"/>
+        <toolTip value="Open an online documentation for the debugger in your browser"/>
         <url value="https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/onto-debugger"/>
         <path value="org.protege.editor.owl.menu.tools/SlotO-C"/>
         <editorKitId value="OWLEditorKit"/>
