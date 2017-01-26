@@ -52,49 +52,49 @@
     <extension id="QueryView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Queries"/>
         <class value="org.exquisite.protege.ui.view.QueryView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="QueryHistoryView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Answers"/>
         <class value="org.exquisite.protege.ui.view.QueryHistoryView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="DiagnosesView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Faulty Axioms"/>
         <class value="org.exquisite.protege.ui.view.DiagnosesView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="ConflictsView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Conflicts"/>
         <class value="org.exquisite.protege.ui.view.ConflictsView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="InputOntologyView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Input Ontology"/>
         <class value="org.exquisite.protege.ui.view.InputOntologyView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="OriginalTestcasesView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Original Test Cases"/>
         <class value="org.exquisite.protege.ui.view.OriginalTestcasesView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
     <extension id="AcquiredTestcasesView" point="org.protege.editor.core.application.ViewComponent">
         <label value="Acquired Test Cases"/>
         <class value="org.exquisite.protege.ui.view.AcquiredTestcasesView"/>
-        <headerColor value="810000"/>
+        <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
 
