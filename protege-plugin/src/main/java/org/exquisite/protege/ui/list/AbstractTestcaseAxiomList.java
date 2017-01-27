@@ -1,15 +1,14 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.QueryExplanation;
 import org.exquisite.protege.ui.editor.TestCaseHeaderEditor;
-import org.protege.editor.core.ui.list.MListItem;
+import org.exquisite.protege.ui.list.header.TestcaseListHeader;
+import org.exquisite.protege.ui.list.item.TestcaseListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.exquisite.protege.Debugger.TestcaseType;
-import static org.protege.editor.owl.ui.framelist.OWLFrameList.INFERRED_BG_COLOR;
 
 abstract public class AbstractTestcaseAxiomList extends AssertedOrInferredAxiomList {
 

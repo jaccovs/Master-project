@@ -1,4 +1,4 @@
-package org.exquisite.protege.ui.list;
+package org.exquisite.protege.ui.list.header;
 
 import org.protege.editor.core.ui.list.MListSectionHeader;
 
@@ -8,7 +8,7 @@ public class TestcaseListHeader implements MListSectionHeader {
 
     private TestcaseType type;
 
-    TestcaseListHeader(TestcaseType type) {
+    public TestcaseListHeader(TestcaseType type) {
         this.type = type;
     }
 

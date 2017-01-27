@@ -1,4 +1,4 @@
-package org.exquisite.protege.ui.list;
+package org.exquisite.protege.ui.list.item;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.QueryExplanation;

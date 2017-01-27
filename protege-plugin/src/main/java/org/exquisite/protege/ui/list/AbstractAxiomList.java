@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.list;
 
+import org.exquisite.protege.ui.list.renderer.BasicAxiomListItemRenderer;
 import org.protege.editor.core.ui.list.MList;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.renderer.LinkedObjectComponent;

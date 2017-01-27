@@ -1,6 +1,6 @@
 package org.exquisite.protege.ui.buttons;
 
-import org.exquisite.protege.ui.list.AxiomListItem;
+import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.exquisite.protege.ui.view.InputOntologyView;
 
 import java.awt.*;

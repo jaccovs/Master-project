@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.buttons;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.error.QueryErrorHandler;
-import org.exquisite.protege.ui.view.AbstractQueryViewComponent;
+import org.exquisite.protege.ui.view.AbstractViewComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 
 public class StartDebuggingButton extends AbstractGuiButton {
 
-    public StartDebuggingButton(final AbstractQueryViewComponent toolboxView) {
+    public StartDebuggingButton(final AbstractViewComponent toolboxView) {
         super("Start","Start a new debugging session","player_play.png",KeyEvent.VK_D,
                 new AbstractAction() {
                     @Override

@@ -2,6 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.QueryExplanation;
+import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.protege.editor.core.ui.list.MListItem;
 import org.protege.editor.owl.OWLEditorKit;
 
@@ -26,7 +27,7 @@ public class AssertedOrInferredAxiomList extends AbstractAxiomList {
     @Override
     protected Color getItemBackgroundColor(MListItem item) {
         if (item instanceof AxiomListItem) {
-            if (QueryExplanation.isAxiomInferredFromDebugger(this.editorKitHook.getActiveOntologyDebugger(), ((AxiomListItem) item).axiom)) {
+            if (QueryExplanation.isAxiomInferredFromDebugger(this.editorKitHook.getActiveOntologyDebugger(), ((AxiomListItem) item).getAxiom())) {
                 return INFERRED_BG_COLOR;
             }
         }

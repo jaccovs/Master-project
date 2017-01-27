@@ -1,21 +1,21 @@
-package org.exquisite.protege.ui.list;
+package org.exquisite.protege.ui.list.header;
 
 import org.exquisite.core.query.Answer;
 import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
-class QueryHistoryItem implements MListItem {
+public class AnswerHistoryListHeader implements MListItem {
 
     private Answer<OWLLogicalAxiom> answer;
 
-    private Integer num;
+    private String name;
 
-    QueryHistoryItem(Answer<OWLLogicalAxiom> answer, int num) {
+    public AnswerHistoryListHeader(Answer<OWLLogicalAxiom> answer, String name) {
         this.answer = answer;
-        this.num = num;
+        this.name = name;
     }
 
-    Answer<OWLLogicalAxiom> getAnswer() {
+    public Answer<OWLLogicalAxiom> getAnswer() {
         return this.answer;
     }
 
@@ -26,7 +26,7 @@ class QueryHistoryItem implements MListItem {
     }
 
     public String getTooltip() {
-        return "Answer " + num ;
+        return name ;
     }
 
     public boolean isDeleteable() {
@@ -34,7 +34,7 @@ class QueryHistoryItem implements MListItem {
     }
 
     public String toString() {
-        return "Answer " + num;
+        return name;
     }
 
     public boolean isEditable() {

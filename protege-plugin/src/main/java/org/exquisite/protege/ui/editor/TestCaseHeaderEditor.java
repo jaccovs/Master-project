@@ -3,7 +3,7 @@ package org.exquisite.protege.ui.editor;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
-import org.exquisite.protege.ui.list.TestcaseListHeader;
+import org.exquisite.protege.ui.list.header.TestcaseListHeader;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.slf4j.LoggerFactory;

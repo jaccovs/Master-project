@@ -5,6 +5,7 @@ import org.exquisite.protege.ui.buttons.CommitAndGetNextButton;
 import org.exquisite.protege.ui.buttons.StartDebuggingButton;
 import org.exquisite.protege.ui.buttons.StopDebuggingButton;
 import org.exquisite.protege.ui.list.QueryAxiomList;
+import org.protege.editor.core.ui.list.MList;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
@@ -14,11 +15,10 @@ import java.awt.*;
 /**
  * A view used for stating queries to the user.
  */
-public class QueryView extends AbstractListQueryViewComponent {
+public class QueryView extends AbstractListViewComponent {
 
     private StartDebuggingButton startDebuggingButton;
     private StopDebuggingButton stopDebuggingButton;
-    //private GetAlternativeQueryButton getAlternativeQueryButton;
     private CommitAndGetNextButton commitAndGetNextButton;
 
     private JToolBar createNewQueryToolBar() {
@@ -33,9 +33,7 @@ public class QueryView extends AbstractListQueryViewComponent {
 
         toolBar.add(Box.createHorizontalGlue());
 
-        //getAlternativeQueryButton = new GetAlternativeQueryButton(this);
         commitAndGetNextButton = new CommitAndGetNextButton(this);
-        //toolBar.add(getAlternativeQueryButton);
         toolBar.add(commitAndGetNextButton);
 
         toolBar.setMaximumSize(toolBar.getPreferredSize());
@@ -52,15 +50,11 @@ public class QueryView extends AbstractListQueryViewComponent {
 
     private void updateView() {
         final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
-        getList().updateList(debugger, debugger.getDiagnosisEngineFactory().getOntology());
-    }
-
-    public QueryAxiomList getList() {
-        return (QueryAxiomList) super.getList();
+        ((QueryAxiomList)getList()).updateList(debugger, debugger.getDiagnosisEngineFactory().getOntology());
     }
 
     @Override
-    protected JComponent createListForComponent() {
+    protected MList createListForComponent() {
         return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook());
     }
 
@@ -71,16 +65,15 @@ public class QueryView extends AbstractListQueryViewComponent {
         switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
                 OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                getList().updateList(debugger,ontology);
+                ((QueryAxiomList)getList()).updateList(debugger,ontology);
                 break;
             case IDLE:
-                getList().clearList();
+                ((QueryAxiomList)getList()).clearList();
                 break;
         }
 
         startDebuggingButton.updateView(debugger);
         stopDebuggingButton.updateView(debugger);
-        //getAlternativeQueryButton.setEnabled(false); // TODO NOT YET IMPLEMENTED
         commitAndGetNextButton.setEnabled(debugger.isSessionRunning() && debugger.sizeOfEntailedAndNonEntailedAxioms() > 0);
     }
 

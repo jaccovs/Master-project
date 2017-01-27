@@ -2,6 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.ui.buttons.MoveToCorrectAxiomsButton;
 import org.exquisite.protege.ui.buttons.MoveToPossiblyFaultyAxiomsButton;
+import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.exquisite.protege.ui.view.InputOntologyView;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;

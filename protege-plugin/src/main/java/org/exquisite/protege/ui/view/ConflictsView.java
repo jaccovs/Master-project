@@ -3,14 +3,18 @@ package org.exquisite.protege.ui.view;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
+import org.exquisite.protege.ui.list.ConflictAxiomList;
+import org.protege.editor.core.ui.list.MList;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.event.ChangeEvent;
-import java.awt.*;
 import java.util.EnumSet;
+import java.util.Set;
 
 import static org.exquisite.protege.model.event.EventType.*;
 
-public class ConflictsView extends AbstractAxiomSetView {
+public class ConflictsView extends AbstractListViewComponent {
 
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -20,13 +24,12 @@ public class ConflictsView extends AbstractAxiomSetView {
     }
 
     @Override
-    protected Color getHeaderColor() {
-        return new Color(52, 79, 255, 139);
+    protected MList createListForComponent() {
+        return new ConflictAxiomList(getOWLEditorKit(), getEditorKitHook());
     }
 
-    @Override
-    protected String getHeaderPrefix() {
-        return "Conflict ";
+    protected void updateList(Set<Set<OWLLogicalAxiom>> setOfAxiomsets) {
+        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
+        ((ConflictAxiomList)getList()).updateList(setOfAxiomsets, ontology);
     }
-
 }
