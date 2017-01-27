@@ -32,7 +32,7 @@ import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
-import org.exquisite.protege.ui.list.AxiomListItem;
+import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;

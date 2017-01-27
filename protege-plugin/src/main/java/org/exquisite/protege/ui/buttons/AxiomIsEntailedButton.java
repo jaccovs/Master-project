@@ -8,9 +8,14 @@ public class AxiomIsEntailedButton extends AbstractAnswerButton {
 
     private boolean isMarkedEntailed;
 
-    public AxiomIsEntailedButton(final QueryAxiomList list, boolean isMarkedEntailed) {
-        super("Yes, this axiom in entailed in the ontology", Color.GREEN.darker(), e -> list.handleEntailed());
+    public AxiomIsEntailedButton(final String name, final QueryAxiomList list, boolean isMarkedEntailed) {
+        super(name, Color.GREEN.darker(), e -> list.handleEntailed());
         this.isMarkedEntailed = isMarkedEntailed;
+    }
+
+    public AxiomIsEntailedButton(final String name) {
+        super(name, Color.GREEN.darker(), null);
+        this.isMarkedEntailed = true;
     }
 
     public void paintButtonContent(Graphics2D g) {

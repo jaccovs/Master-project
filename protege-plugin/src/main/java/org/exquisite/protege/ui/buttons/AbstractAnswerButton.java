@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 public abstract class AbstractAnswerButton extends MListButton  {
 
+    protected int sizeMultiple = 4;
+
     protected AbstractAnswerButton(String name, Color rollOverColor, ActionListener actionListener) {
         super(name, rollOverColor, actionListener);
     }
@@ -21,7 +23,7 @@ public abstract class AbstractAnswerButton extends MListButton  {
 
     @Override
     protected int getSizeMultiple() {
-        return 4;
+        return sizeMultiple;
     }
 
 }

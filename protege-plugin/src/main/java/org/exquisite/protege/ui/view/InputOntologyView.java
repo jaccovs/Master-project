@@ -1,7 +1,6 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.ui.list.BasicAxiomList;
 import org.exquisite.protege.ui.panel.axioms.CorrectAxiomsPanel;
@@ -12,15 +11,12 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.util.EnumSet;
-
-import static org.exquisite.protege.model.event.EventType.*;
 
 /**
  * A view to present the set of correct and possibly faulty axioms in our input ontology.
  * To be more precise, this view represents a direct mapping of the diagnosis model used in the debugger.
  */
-public class InputOntologyView extends AbstractQueryViewComponent {
+public class InputOntologyView extends AbstractViewComponent {
 
     private CorrectAxiomsPanel correctAxiomsPanel;
 

@@ -4,22 +4,34 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
+import org.exquisite.protege.ui.list.DiagnosisAxiomList;
+import org.protege.editor.core.ui.list.MList;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.event.ChangeEvent;
-import java.awt.*;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static org.exquisite.protege.model.event.EventType.*;
 
-public class DiagnosesView extends AbstractDiagnosesSetView {
+public class DiagnosesView extends AbstractListViewComponent {
 
     @Override
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         updateView();
+    }
+
+    @Override
+    protected MList createListForComponent() {
+        return new DiagnosisAxiomList(getOWLEditorKit());
+    }
+
+    protected void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
+        OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
+        ((DiagnosisAxiomList)getList()).updateList(diagnoses,ontology);
     }
 
     private void updateView() {
@@ -38,19 +50,5 @@ public class DiagnosesView extends AbstractDiagnosesSetView {
             updateView();
     }
 
-    @Override
-    protected Color getHeaderColor() {
-        return new Color(85, 255, 97, 174);
-    }
-
-    @Override
-    protected String getHeaderPrefix() {
-        return "Faulty Axioms ";
-    }
-
-    @Override
-    protected boolean isIncludeMeasure() {
-        return true;
-    }
 
 }

@@ -3,11 +3,11 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.query.Query;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.Debugger;
-import org.exquisite.protege.model.QueryExplanation;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
+import org.exquisite.protege.ui.list.item.AxiomListItem;
+import org.exquisite.protege.ui.list.item.QueryAxiomListItem;
 import org.protege.editor.core.ui.list.MListButton;
-import org.protege.editor.core.ui.list.MListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -16,12 +16,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.protege.editor.owl.ui.framelist.OWLFrameList.INFERRED_BG_COLOR;
 
 public class QueryAxiomList extends AssertedOrInferredAxiomList {
 
@@ -35,8 +32,8 @@ public class QueryAxiomList extends AssertedOrInferredAxiomList {
         Debugger debugger = editorKitHook.getActiveOntologyDebugger();
         OWLLogicalAxiom axiom = ((AxiomListItem) value).getAxiom();
         buttons.addAll(super.getButtons(value));
-        buttons.add(new AxiomIsEntailedButton(this,debugger.isMarkedEntailed(axiom)));
-        buttons.add(new AxiomIsNotEntailedButton(this,debugger.isMarkedNonEntailed(axiom)));
+        buttons.add(new AxiomIsEntailedButton("Yes, this axiom in entailed in the ontology", this, debugger.isMarkedEntailed(axiom)));
+        buttons.add(new AxiomIsNotEntailedButton("No, this axiom is not entailed in this ontology", this, debugger.isMarkedNonEntailed(axiom)));
 
         return buttons;
     }
