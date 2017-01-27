@@ -56,9 +56,9 @@
         <category value="Debugger"/>
     </extension>
 
-    <extension id="QueryHistoryView" point="org.protege.editor.core.application.ViewComponent">
-        <label value="Answers"/>
-        <class value="org.exquisite.protege.ui.view.QueryHistoryView"/>
+    <extension id="AnswerHistoryView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Answer History"/>
+        <class value="org.exquisite.protege.ui.view.AnswerHistoryView"/>
         <headerColor value="7A9438"/>
         <category value="Debugger"/>
     </extension>
