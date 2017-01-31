@@ -24,20 +24,20 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
     private JSpinner entropyThresholdSpinner = new JSpinner(
             new SpinnerNumberModel(
                     DefaultPreferences.getDefaultEntropyThreshold(),
-                    DefaultPreferences.getMinEntropyThreshold(),//0,
-                    DefaultPreferences.getMaxEntropyThreshold(),//0.5,
+                    DefaultPreferences.getMinEntropyThreshold(),
+                    DefaultPreferences.getMaxEntropyThreshold(),
                     0.01));
     private JSpinner cardinalityThresholdSpinner = new JSpinner
             (new SpinnerNumberModel(
                     DefaultPreferences.getDefaultCardinalityThreshold(),
-                    DefaultPreferences.getMinCardinalityThreshold(),//0,
-                    DefaultPreferences.getMaxCardinalityThreshold(),//100,
+                    DefaultPreferences.getMinCardinalityThreshold(),
+                    DefaultPreferences.getMaxCardinalityThreshold(),
                     1));
     private JSpinner cautiousParameterSpinner = new JSpinner(
             new SpinnerNumberModel(
                     DefaultPreferences.getDefaultCautiousParameter(),
-                    DefaultPreferences.getMinCautiousParameter(),//0.1,
-                    DefaultPreferences.getMaxCautiousParameter(),//1,
+                    DefaultPreferences.getMinCautiousParameter(),
+                    DefaultPreferences.getMaxCautiousParameter(),
                     0.01));
     private OptionBox entropyThresholdOptionBox;
     private OptionBox cautiousParameterOptionBox;

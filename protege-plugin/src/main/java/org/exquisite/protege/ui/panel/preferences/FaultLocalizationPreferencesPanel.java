@@ -54,8 +54,14 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private void createPanel() {
         setLayout(new BorderLayout());
-        Box box = Box.createVerticalBox();
 
+        add(getHelpLabel("<html><body>" +
+                "Fault Localization is the search for <u>candidate sets of faulty axioms</u> " +
+                "(so called <u>diagnoses</u>). They explain inconsistencies/incoherencies in ontologies.<br>" +
+                "Diagnoses are required for the computation of queries in the debugger." +
+                "</body></html>"), BorderLayout.NORTH);
+
+        Box box = Box.createVerticalBox();
         OptionGroupBox groupEngineType = createEngineTypePanel();
         OptionGroupBox groupCostEstimator = createCostEstimationPanel();
         OptionGroupBox groupDiagnosisCalculation = createDiagnosisCalculationPanel();
@@ -64,12 +70,19 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
         box.add(groupCostEstimator);
         box.add(groupDiagnosisCalculation);
 
-        add(box, BorderLayout.NORTH);
+        add(box, BorderLayout.CENTER);
     }
 
     private OptionGroupBox createEngineTypePanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addHelpText("<html><body>" +
+                "The Diagnosis Engine is responsible for the computation of diagnoses in faulty ontologies based on hitting sets over all conflict sets (default: HS-Tree)." +
+                "</body></html>");
         panel.addLabelledGroupComponent("Diagnosis Engine: ", new OptionBox("enginetype", engineTypeCombobox));
+        panel.addHelpText("<html><body>" +
+                "Conflict sets are minimal subsets of axioms in the ontology such that ontologies become inconsistent.<br>" +
+                "Conflict searchers find such minimal conflict sets (default: QuickXPlain)." +
+                "</body></html>");
         panel.addLabelledGroupComponent("Conflict Searcher: ", new OptionBox("conflictsearcher", conflictSearcherJComboBox));
         OptionGroupBox holderEngineType = new OptionGroupBox("Engine Type");
         holderEngineType.add(panel);
@@ -78,6 +91,10 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private OptionGroupBox createCostEstimationPanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
+        panel.addHelpText("<html><body>" +
+                "Depending on the selected preference function diagnoses are sorted differently. <u>Cardinality</u> prefers diagnoses with fewer axioms.<br>" +
+                "<u>EqualCosts</u> has no preference while <u>Syntax</u> depends on keywords that occur in the axioms of diagnoses (default: Cardinality)" +
+                "</body></html>");
         panel.addLabelledGroupComponent("Preference Function: ", new OptionBox("costEstimator", estimatorComboBox));
         OptionGroupBox optionGroupCostEstimator = new OptionGroupBox("Cost Estimation");
         optionGroupCostEstimator.add(panel);
@@ -86,7 +103,11 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private OptionGroupBox createDiagnosisCalculationPanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
-        panel.addLabelledGroupComponent("Number of Faulty Axiom Sets: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
+        panel.addHelpText("<html><body>" +
+                "Searches for a max. number of diagnoses. The diagnoses calculation stops when the max. number of diagnoses is found or when there exist only fewer diagnoses.<br>" +
+                "At least 2 diagnoses are required for Query Computation. Higher number of diagnoses generate better queries but at the expense of time (default: 9)." +
+                "</body></html>");
+        panel.addLabelledGroupComponent("Max. Number of Faulty Axiom Sets: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
         numOfLeadingDiagsSpinner.addChangeListener(e ->
                 queryComputationPreferencesPanel.updateThresholdParameter(
                         Integer.parseInt(
@@ -98,6 +119,9 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                                 )
                         )
                 ));
+        panel.addHelpText("<html><body>" +
+                "Shall the Diagnosis Engine only check for consistency in the ontology or also check for coherency (default: check both)?" +
+                "</body></html>");
         panel.addGroupComponent(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
         //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
 
