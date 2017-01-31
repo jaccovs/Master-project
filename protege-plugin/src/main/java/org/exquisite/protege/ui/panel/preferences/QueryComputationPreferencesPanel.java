@@ -149,10 +149,9 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
     private OptionGroupBox createStage2Panel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "Goal: minimize the # of axioms per query (MinCard) or the complexity of the query axioms (MinSum: tries to minimize the overall complexity<br>" +
-                "of all query axioms; MinMax: tries to min. the complexity of the most complex query axiom). Axiom complexity is estimated from syntax<br>" +
-                "fault probabilities - the higher the estimated fault prob. of the axiom, the higher the estimated complexity of it.<br>" +
-                "There are several Query Quality Measures for this purpose (default: Entropy)." +
+                "Goal: minimize the # of axioms per query (<u>MinCard</u>) or the complexity of the query axioms (<u>MinSum</u>: tries to minimize the overall complexity<br>" +
+                "of all query axioms; <u>MinMax</u>: tries to min. the complexity of the most complex query axiom). Axiom complexity is estimated from syntax<br>" +
+                "fault probabilities - the higher the estimated fault prob. of the axiom, the higher the estimated complexity of it (default: MinCard).<br>" +
                 "</body></html>");
 
         panel.addLabelledGroupComponent("Criterion: ", new OptionBox("sortcriterion", sortCriterionCombobox));
@@ -164,9 +163,9 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
     private OptionGroupBox createStage3Panel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "Goal: tries to make query easier to understand for theuser by simplifying axioms in teh query.  Users can select axiom types considered easy.<br>" +
-                "These are used to enrich the query of Stage 2 first.<br>" +
-                "Second the enriched query is optimized, i.e. a smallest and easiest possible subset of it is determined." +
+                "Goal: tries to make query easier to understand for the user by simplifying axioms in the query.  Users can select axiom types considered easy.<br>" +
+                "These are used to <u>enrich</u> the query of Stage 2 first.<br>" +
+                "Then the enriched query is <u>optimized</u>, i.e. a smallest and easiest possible subset of it is determined (default: enabled)." +
                 "</body></html>");
         final OptionGroupBox stage3 = new OptionGroupBox("Stage 3");
         panel.addGroupComponent(new OptionBox("enrichquery", enrichQueryCheckbox));
