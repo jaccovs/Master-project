@@ -124,13 +124,13 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
         try {
 
+            // start a new progress monitor task for consistency/coherency check
+            if (exquisiteProgressMonitor != null)
+                exquisiteProgressMonitor.taskStarted((reduceIncoherencyToInconsistency?IExquisiteProgressMonitor.CONSISTENCY_COHERENCY_CHECK:IExquisiteProgressMonitor.CONSISTENCY_CHECK) + " using " + ((reasonerFactory.getReasonerName()!=null)?reasonerFactory.getReasonerName():"HermiT"));
+
             final long start = System.currentTimeMillis();
             OWLReasoner reasoner = createReasoner(ontology, reasonerFactory, reasonerProgressMonitor);
             OWLOntologyManager manager = ontology.getOWLOntologyManager();
-
-            // start a new progress monitor task for consistency/coherency check
-            if (exquisiteProgressMonitor != null)
-                exquisiteProgressMonitor.taskStarted((reduceIncoherencyToInconsistency?IExquisiteProgressMonitor.CONSISTENCY_COHERENCY_CHECK:IExquisiteProgressMonitor.CONSISTENCY_CHECK) + " using " + getReasonerName(reasoner));
 
 
             logger.info("------------------------ Settings for Consistency Check ------------------------");
