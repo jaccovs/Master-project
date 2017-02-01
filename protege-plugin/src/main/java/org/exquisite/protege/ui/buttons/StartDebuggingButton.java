@@ -15,7 +15,7 @@ public class StartDebuggingButton extends AbstractGuiButton {
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        this.setEnabled(false);
                         final Debugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
 
                         if (debugger.isSessionStopped()) {
@@ -30,6 +30,7 @@ public class StartDebuggingButton extends AbstractGuiButton {
     }
 
     public void updateView(Debugger debugger) {
+        this.getAction().setEnabled(true);
         if (debugger.isSessionStopped()) {
             setIcon(loadCustomIcon("player_play.png"));
             setText("Start");
