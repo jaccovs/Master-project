@@ -16,6 +16,17 @@ import java.util.TreeSet;
 
 import static org.exquisite.protege.model.event.EventType.*;
 
+/**
+ * <p>
+ *     A view that represents the current diagnoses with respect to the given diagnosis problem instance (DPI) consisting of
+ *     possibly faulty and correct axioms, original test cases and acquired test cases.
+ * </p>
+ * <p>
+ *     The diagnoses (more user friendly titled as Faulty Axioms Sets) are listed in descending order of their measures.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class DiagnosesView extends AbstractListViewComponent {
 
     @Override

@@ -4,6 +4,13 @@ import org.protege.editor.core.ui.list.MListSectionHeader;
 
 import static org.exquisite.protege.Debugger.TestcaseType;
 
+/**
+ * <p>
+ *     Section header for the test cases.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class TestcaseListHeader implements MListSectionHeader {
 
     private TestcaseType type;

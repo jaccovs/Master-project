@@ -6,8 +6,12 @@ import org.protege.editor.owl.ui.view.AbstractOWLViewComponent;
 import javax.swing.event.ChangeListener;
 
 /**
- * The top level view component for the debugger plugin.
- * Each debugger view inherits from this abstract class.
+ * <p>
+ *     The top level view component for the debugger plugin.
+ *     Each debugger view inherits from this abstract class.
+ * </p>
+ *
+ * @author wolfi
  */
 public abstract class AbstractViewComponent extends AbstractOWLViewComponent implements ChangeListener {
 

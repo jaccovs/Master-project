@@ -5,6 +5,13 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Set;
 
+/**
+ * <p>
+ *     Section header for one minimal conflict set in the conflicts view.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class ConflictListHeader implements MListSectionHeader {
 
     private Set<OWLLogicalAxiom> axioms;

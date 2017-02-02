@@ -14,6 +14,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+/**
+ * <p>
+ *     A list containing the minimal conflict sets.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class ConflictAxiomList extends AbstractAxiomList {
 
     public ConflictAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
@@ -24,13 +31,13 @@ public class ConflictAxiomList extends AbstractAxiomList {
         updateList(conflicts, ontology);
     }
 
-    public void updateList(Set<Set<OWLLogicalAxiom>> setsOfAxioms, OWLOntology ontology) {
+    public void updateList(Set<Set<OWLLogicalAxiom>> minimalConflictSets, OWLOntology ontology) {
         List<Object> items = new ArrayList<>();
         int cnt = 0;
-        for (Set<OWLLogicalAxiom> _axioms : setsOfAxioms) {
-            Set<OWLLogicalAxiom> sortedAxioms = new TreeSet<>(_axioms);
-            items.add(new ConflictListHeader(sortedAxioms,createHeaderName(++cnt, sortedAxioms)));
-            items.addAll(sortedAxioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
+        for (Set<OWLLogicalAxiom> minimalConflictSet : minimalConflictSets) {
+            Set<OWLLogicalAxiom> sortedAxioms = new TreeSet<>(minimalConflictSet); // list the axioms in a sorted order
+            items.add(new ConflictListHeader(sortedAxioms,createHeaderName(++cnt, sortedAxioms))); // section header for one conflict set
+            items.addAll(sortedAxioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList())); // the conflict axioms of the conflict set
             items.add(" ");
         }
         if (items.size()>0)

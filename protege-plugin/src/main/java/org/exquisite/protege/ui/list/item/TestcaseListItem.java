@@ -9,6 +9,13 @@ import java.util.TreeSet;
 
 import static org.exquisite.protege.Debugger.TestcaseType;
 
+/**
+ * <p>
+ *     A list item for the test cases view (either acquired or original).
+ * </p>
+ *
+ * @author wolfi
+ */
 public class TestcaseListItem extends AssertedOrInferredAxiomListItem {
 
     private Set<OWLLogicalAxiom> testCaseAxioms;

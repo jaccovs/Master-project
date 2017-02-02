@@ -10,6 +10,7 @@ import java.awt.*;
  * A view component containing an MList instance.
  *
  * @see MList
+ * @author wolfi
  */
 public abstract class AbstractListViewComponent extends AbstractViewComponent {
 

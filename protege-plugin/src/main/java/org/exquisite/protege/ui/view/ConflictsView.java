@@ -14,6 +14,11 @@ import java.util.Set;
 
 import static org.exquisite.protege.model.event.EventType.*;
 
+/**
+ * A view for the minimal conflict sets.
+ *
+ * @author wolfi
+ */
 public class ConflictsView extends AbstractListViewComponent {
 
     @Override

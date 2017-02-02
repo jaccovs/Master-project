@@ -4,6 +4,13 @@ import org.exquisite.core.query.Answer;
 import org.protege.editor.core.ui.list.MListItem;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
+/**
+ * <p>
+ *     Header for the answer history.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class AnswerHistoryListHeader implements MListItem {
 
     private Answer<OWLLogicalAxiom> answer;

@@ -4,6 +4,13 @@ import org.exquisite.core.model.Diagnosis;
 import org.protege.editor.core.ui.list.MListSectionHeader;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
+/**
+ * <p>
+ *     Section header for the diagnoses.
+ * </p>
+ *
+ * @author wolfi
+ */
 public class DiagnosisListHeader implements MListSectionHeader {
 
     private Diagnosis<OWLLogicalAxiom> diagnosis;

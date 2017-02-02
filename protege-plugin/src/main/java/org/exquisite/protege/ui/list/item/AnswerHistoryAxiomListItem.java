@@ -5,7 +5,11 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
- * Axiom in query history classified as entailed or not entailed.
+ * <p>
+ *     Axiom in query history classified as entailed or not entailed.
+ * </p>
+ *
+ * @author wolfi
  */
 public class AnswerHistoryAxiomListItem extends AssertedOrInferredAxiomListItem {
 

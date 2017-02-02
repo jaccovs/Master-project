@@ -12,7 +12,9 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * An axiom list item with look and feel tooltip information about asserted and inferred axioms.
+ * <p>
+ *     An axiom list item with look and feel tooltip information about asserted and inferred axioms.
+ * </p>
  *
  * @author wolfi
  */

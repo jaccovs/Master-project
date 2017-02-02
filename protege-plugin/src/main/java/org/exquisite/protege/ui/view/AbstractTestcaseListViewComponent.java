@@ -9,6 +9,11 @@ import java.util.EnumSet;
 
 import static org.exquisite.protege.model.event.EventType.*;
 
+/**
+ * Abstract super class for the acquired and orginal testcase view.
+ *
+ * @author wolfi
+ */
 abstract public class AbstractTestcaseListViewComponent extends AbstractListViewComponent {
 
     @Override

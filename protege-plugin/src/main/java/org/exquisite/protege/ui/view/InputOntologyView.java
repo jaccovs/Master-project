@@ -13,8 +13,14 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 
 /**
- * A view to present the set of correct and possibly faulty axioms in our input ontology.
- * To be more precise, this view represents a direct mapping of the diagnosis model used in the debugger.
+ * <p>
+ *     A view to present the set of correct and possibly faulty axioms in our input ontology.
+ * </p>
+ * <p>
+ *     To be more precise, this view represents a direct mapping of the diagnosis model used in the debugger.
+ * </p>
+ *
+ * @author wolfi
  */
 public class InputOntologyView extends AbstractViewComponent {
 
