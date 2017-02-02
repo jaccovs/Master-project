@@ -20,7 +20,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                     DefaultPreferences.getMaxNumOfLeadingDiags() ,
                     1));
 
-    private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also check for incoherency", DefaultPreferences.getDefaultReduceIncoherency());
+    private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also repair incoherency", DefaultPreferences.getDefaultReduceIncoherency());
 
     // TODO: at the moment the extract modules option causes a major bug (see Issue #1) therefore the preferences does not show the option to change it.
     // private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules of unsatisfiable classes it the ontology is consistent, but its terminology is incoherent", DefaultConfiguration.getDefaultExtractModules());
@@ -56,9 +56,9 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
         setLayout(new BorderLayout());
 
         add(getHelpLabel("<html><body>" +
-                "Fault Localization is the search for <u>candidate sets of faulty axioms</u> " +
-                "(so called <u>diagnoses</u>). They explain inconsistencies/incoherencies in ontologies.<br>" +
-                "Diagnoses are required for the computation of queries in the debugger." +
+                "Fault Localization is the search for <u>ontology repairs</u> (also called <u>diagnoses</u>). Each axiom in one ontology repair must be appropriately<br>" +
+                "modified or deleted in order to repair the inconsistency/incoherency of the faulty ontology. Queries serve to discriminate between multiple possible ontology repairs.<br>" +
+                "Sequential answering of queries provides information enabling the debugger to gradually reduce the set of possible ontology repairs." +
                 "</body></html>"), BorderLayout.NORTH);
 
         Box box = Box.createVerticalBox();
@@ -76,14 +76,14 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     private OptionGroupBox createEngineTypePanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "The Diagnosis Engine is responsible for the computation of diagnoses in faulty ontologies based on hitting sets over all conflict sets (default: HS-Tree)." +
-                "</body></html>");
-        panel.addLabelledGroupComponent("Diagnosis Engine: ", new OptionBox("enginetype", engineTypeCombobox));
-        panel.addHelpText("<html><body>" +
-                "Conflict sets are minimal subsets of axioms in the ontology such that ontologies become inconsistent.<br>" +
-                "Conflict searchers find such minimal conflict sets (default: QuickXPlain)." +
+                "Conflict sets are minimal fault-preserving subsets of ontology axioms.<br>" +
+                "At least one axiom out of each conflict set must be deleted or modified in order to repair the ontology (default: QuickXPlain)." +
                 "</body></html>");
         panel.addLabelledGroupComponent("Conflict Searcher: ", new OptionBox("conflictsearcher", conflictSearcherJComboBox));
+        panel.addHelpText("<html><body>" +
+                "The Diagnosis Engine is responsible for the computation of ontology repairs based on conflict sets (default: HS-Tree)." +
+                "</body></html>");
+        panel.addLabelledGroupComponent("Diagnosis Engine: ", new OptionBox("enginetype", engineTypeCombobox));
         OptionGroupBox holderEngineType = new OptionGroupBox("Engine Type");
         holderEngineType.add(panel);
         return holderEngineType;
@@ -92,11 +92,11 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     private OptionGroupBox createCostEstimationPanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "Depending on the selected preference function diagnoses are sorted differently. <u>Cardinality</u> prefers diagnoses with fewer axioms.<br>" +
-                "<u>EqualCosts</u> has no preference while <u>Syntax</u> depends on keywords that occur in the axioms of diagnoses (default: Cardinality)" +
+                "Depending on the selected preference function ontology repairs are computed in a different order. <u>Cardinality</u> prefers repairs with fewer axioms.<br>" +
+                "<u>EqualCosts</u> means no preference. <u>Syntax</u> depends on specified fault probabilities of keywords that occur in the axioms of repairs (default: Cardinality)" +
                 "</body></html>");
         panel.addLabelledGroupComponent("Preference Function: ", new OptionBox("costEstimator", estimatorComboBox));
-        OptionGroupBox optionGroupCostEstimator = new OptionGroupBox("Cost Estimation");
+        OptionGroupBox optionGroupCostEstimator = new OptionGroupBox("Repair Preference Order");
         optionGroupCostEstimator.add(panel);
         return optionGroupCostEstimator;
     }
@@ -104,10 +104,10 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     private OptionGroupBox createDiagnosisCalculationPanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "Searches for a max. number of diagnoses. The diagnoses calculation stops when the max. number of diagnoses is found or when there exist only fewer diagnoses.<br>" +
-                "At least 2 diagnoses are required for Query Computation. Higher number of diagnoses generate better queries but at the expense of time (default: 9)." +
+                "The repair calculation stops when the specified max. number of repairs is found or when no further repairs exist.<br>" +
+                "At least 2 repairs are required for Query Computation. Higher number of repairs tends to generate better queries at the expense of higher computation time (default: 9)." +
                 "</body></html>");
-        panel.addLabelledGroupComponent("Max. Number of Faulty Axiom Sets: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
+        panel.addLabelledGroupComponent("Max. Number of Computed Ontology Repairs per Iteration: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
         numOfLeadingDiagsSpinner.addChangeListener(e ->
                 queryComputationPreferencesPanel.updateThresholdParameter(
                         Integer.parseInt(
@@ -120,12 +120,13 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                         )
                 ));
         panel.addHelpText("<html><body>" +
-                "Shall the Diagnosis Engine only check for consistency in the ontology or also check for coherency (default: check both)?" +
+                //"Should only the inconsistency or also the incoherency of the ontology be repaired? (default: repair both)?" +
+                "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired." +
                 "</body></html>");
         panel.addGroupComponent(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
         //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
 
-        OptionGroupBox holderCalculation = new OptionGroupBox("Diagnoses Calculation");
+        OptionGroupBox holderCalculation = new OptionGroupBox("Repair Calculation");
         holderCalculation.add(panel);
         return holderCalculation;
     }

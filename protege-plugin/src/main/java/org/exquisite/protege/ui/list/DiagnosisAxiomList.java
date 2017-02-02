@@ -36,7 +36,7 @@ public class DiagnosisAxiomList extends AbstractAxiomList {
 
     private String createHeaderName(final int position, final Diagnosis<OWLLogicalAxiom> diagnosis) {
         final String roundedMeas = diagnosis.getMeasure().round(new java.math.MathContext(6)).toEngineeringString();
-        return "Faulty Axioms Set #" + (position) + " (Size: " + diagnosis.getFormulas().size() + ", Measure: " + roundedMeas + ')';
+        return "Repair #" + (position) + " (Axioms: " + diagnosis.getFormulas().size() + ", Preference Value: " + roundedMeas + ')';
     }
 
 }

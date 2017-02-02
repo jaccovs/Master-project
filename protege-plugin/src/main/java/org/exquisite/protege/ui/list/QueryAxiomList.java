@@ -42,9 +42,9 @@ public class QueryAxiomList extends AssertedOrInferredAxiomList {
             Debugger debugger = editorKitHook.getActiveOntologyDebugger();
             OWLLogicalAxiom axiom = ((QueryAxiomListItem) value).getAxiom();
             buttons.addAll(super.getButtons(value));
-            buttons.add(new NotSureButton("I am not sure about this axiom", this, !(debugger.isMarkedEntailed(axiom) || debugger.isMarkedNonEntailed(axiom))));
-            buttons.add(new AxiomIsNotEntailedButton("No, this axiom is not entailed in this ontology", this, debugger.isMarkedNonEntailed(axiom)));
-            buttons.add(new AxiomIsEntailedButton("Yes, this axiom in entailed in the ontology", this, debugger.isMarkedEntailed(axiom)));
+            buttons.add(new NotSureButton("I am not sure about this statement", this, !(debugger.isMarkedEntailed(axiom) || debugger.isMarkedNonEntailed(axiom))));
+            buttons.add(new AxiomIsNotEntailedButton("No, this statement is not true", this, debugger.isMarkedNonEntailed(axiom)));
+            buttons.add(new AxiomIsEntailedButton("Yes, this statement is true", this, debugger.isMarkedEntailed(axiom)));
             return buttons;
         } else {
             return super.getButtons(value);

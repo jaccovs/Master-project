@@ -13,7 +13,7 @@ public class QueryListHeader implements MListSectionHeader {
 
     @Override
     public String getName() {
-        return "Please answer if these axioms are true (+) or false (-) for your ontology. Select not sure (?) for axioms you cannot answer.";
+        return "Please answer if these statements are true (+) or false (-) in your intended domain. Select not sure (?) for statements you cannot answer.";
     }
 
     @Override
