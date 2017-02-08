@@ -157,7 +157,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
     protected void notifyTaskStarted() {
         if (monitor != null) {
             monitor.taskStarted(IExquisiteProgressMonitor.DIAGNOSES_CALCULATION + " using " + this);
-            monitor.taskBusy("Start searching diagnoses ... (max. " + getMaxNumberOfDiagnoses() + ")");
+            monitor.taskBusy("Searching ontology repairs ... (max. " + getMaxNumberOfDiagnoses() + ")");
         }
     }
 
@@ -168,7 +168,7 @@ public abstract class AbstractDiagnosisEngine<F> implements IDiagnosisEngine<F> 
 
     protected void notifyTaskProgress(int diagnosesSize) {
         if (monitor != null) {
-            monitor.taskBusy("found diagnosis " + diagnosesSize + " of max. " + getMaxNumberOfDiagnoses());
+            monitor.taskBusy("found repair " + diagnosesSize + " of max. " + getMaxNumberOfDiagnoses());
             monitor.setCancel(diagnosesSize > 1); // when more than one diagnoses have been found, the user can continue
         }
     }

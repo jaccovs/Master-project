@@ -101,7 +101,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
         if (config.getMonitor() != null) {
             config.getMonitor().taskStarted(IExquisiteProgressMonitor.QUERY_COMPUTATION + " using " + config.getRm() + ")");
-            config.getMonitor().taskBusy("computing basic query based on " + leadingDiagnoses.size() + " diagnoses...");
+            config.getMonitor().taskBusy("computing basic query based on " + leadingDiagnoses.size() + " repairs...");
         }
 
         // (1) we start with the search for an (nearly) optimal q-partition, such that a query associated with this

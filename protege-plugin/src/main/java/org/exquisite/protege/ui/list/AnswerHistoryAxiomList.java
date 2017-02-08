@@ -46,7 +46,7 @@ public class AnswerHistoryAxiomList extends AssertedOrInferredAxiomList {
 
         for (int i = queryHistory.size() - 1; i >= 0; i--) {
             Answer<OWLLogicalAxiom> answer = queryHistory.get(i);
-            items.add(new AnswerHistoryListHeader(answer,"Answer " + (i+1)));
+            items.add(new AnswerHistoryListHeader(answer,"Your Answer(s) from Iteration " + (i+1)));
             items.addAll(answer.positive.stream().map(axiom -> new AnswerHistoryAxiomListItem(true, axiom, ontology, debugger)).collect(Collectors.toList()));
             items.addAll(answer.negative.stream().map(axiom -> new AnswerHistoryAxiomListItem(false, axiom, ontology, debugger)).collect(Collectors.toList()));
             items.add(" ");
