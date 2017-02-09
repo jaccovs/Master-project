@@ -1,3 +1,16 @@
+0.1.3.BETA (February 10, 2017)
+- New: Usability improvements by the addition of a progress window (Issues #34 and #48)
+- New: Underline inferred axiom to support common view look and feel (Issue #57)
+- New: Use Sections in Debugger Views to support common view look and feel (Issue #70)
+- New: Add help for debugger views (active in Protege 5.1.1) (Issues #60 and #61 )
+- New: Added Documentation menu entry referring to wiki (Issue #60)
+- New: Preference layout redesign for Fault Localization (Issue #64)
+- New: Enable selection of conflict searcher in preferences (Issue #7)
+- New: Added preference option for choosing the desired Repair Preference Order (Issue #24)
+- New: Changed Header Color for Debugger Views from #810000 to #7A9438
+- Fix: Renaming active ontology's IRI causes loss to the reference of its debugger instance (Issue #69)
+- Fix: Improved InverseQuickXPlainEngine
+- Other minor fixes and improvements
 0.1.2.BETA (November 22, 2016)
 - New: Paging and navigating through the set of possible faulty axioms showing at most 100 axioms (useful for large ontologies) (Issue #44)
 - New: Search feature for the possible faulty axioms (Issue #45)
