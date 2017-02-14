@@ -14,3 +14,7 @@
 # Maven
 log/
 target/
+
+# additional unversioned files for .gitignore
+owl-plugin/src/evaluation/resources/ontologies/catalog-v001.xml
+owl-plugin/src/test/resources/ontologies/catalog-v001.xml
