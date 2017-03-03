@@ -6,6 +6,7 @@ import org.exquisite.protege.model.preferences.InputValidator;
 import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -120,13 +121,19 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                         )
                 ));
         panel.addHelpText("<html><body>" +
-                //"Should only the inconsistency or also the incoherency of the ontology be repaired? (default: repair both)?" +
                 "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired." +
                 "</body></html>");
-        panel.addGroupComponent(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
-        //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
+
+        JPanel lastPanel = new JPanel(new BorderLayout(150, 0));
+        lastPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox), BorderLayout.WEST);
+        JButton defaultButton = new JButton("Reset to default preferences...");
+        lastPanel.add(defaultButton, BorderLayout.EAST);
+        defaultButton.addActionListener(e -> resetValues());
+        panel.addGroupComponent(lastPanel);
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Repair Calculation");
+        //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
+
         holderCalculation.add(panel);
         return holderCalculation;
     }
@@ -166,4 +173,25 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
         //getNewConfiguration().extractModules = extractModulesCheckbox.isSelected(); // TODO deactivated because of issue #1
     }
 
+
+    /**
+     * Button action when user wishes to reset preferences to default values.
+     */
+    private void resetValues() {
+        engineTypeCombobox.setSelectedItem(DefaultPreferences.getDefaultDiagnosisEngineType());
+        conflictSearcherJComboBox.setSelectedItem(DefaultPreferences.getDefaultConflictSearcher());
+        estimatorComboBox.setSelectedItem(DefaultPreferences.getDefaultCostEstimator());
+        numOfLeadingDiagsSpinner.setValue(
+                Integer.parseInt(
+                        InputValidator.validateInt(
+                                DefaultPreferences.getDefaultNumOfLeadingDiags(),
+                                DefaultPreferences.getMinNumOfLeadingDiags(),
+                                DefaultPreferences.getMaxNumOfLeadingDiags(),
+                                DefaultPreferences.getDefaultNumOfLeadingDiags()
+                        )
+                )
+        );
+        reduceIncoherencyCheckbox.setSelected(DefaultPreferences.getDefaultReduceIncoherency());
+        //extractModulesCheckbox.setSelected(DefaultPreferences.getDefaultExtractModules()); // TODO deactivated because of issue #1
+    }
 }

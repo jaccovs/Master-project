@@ -168,7 +168,12 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
                 "Then the enriched query is <u>optimized</u>, i.e. a smallest and easiest possible subset of it is determined (default: enabled)." +
                 "</body></html>");
         final OptionGroupBox stage3 = new OptionGroupBox("Stage 3");
-        panel.addGroupComponent(new OptionBox("enrichquery", enrichQueryCheckbox));
+        JPanel lastPanel = new JPanel (new BorderLayout(150,0));
+        lastPanel.add(new OptionBox("enrichquery", enrichQueryCheckbox), BorderLayout.WEST);
+        JButton defaultButton = new JButton("Reset to default preferences...");
+        lastPanel.add(defaultButton, BorderLayout.EAST);
+        defaultButton.addActionListener(e -> resetValues());
+        panel.addGroupComponent(lastPanel);
         stage3.add(panel);
         return stage3;
     }
@@ -286,6 +291,47 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
 
     }
 
+    /**
+     * Button action when user wishes to reset preferences to default values.
+     */
+    private void resetValues() {
+        enrichQueryCheckbox.setSelected(DefaultPreferences.getDefaultEnrichQuery());
+        sortCriterionCombobox.setSelectedItem(DefaultPreferences.getDefaultSortCriterion());
+        rmComboBox.setSelectedItem(DefaultPreferences.getDefaultRM());
+        entropyThresholdSpinner.setValue(
+                Double.parseDouble(
+                        InputValidator.validateDouble(
+                                DefaultPreferences.getDefaultEntropyThreshold(),
+                                DefaultPreferences.getMinEntropyThreshold(),
+                                DefaultPreferences.getMaxEntropyThreshold(),
+                                DefaultPreferences.getDefaultEntropyThreshold()
+                        )
+                )
+        );
+        cardinalityThresholdSpinner.setValue(
+                Double.parseDouble(
+                        InputValidator.validateDouble(
+                                DefaultPreferences.getDefaultCardinalityThreshold(),
+                                DefaultPreferences.getMinCardinalityThreshold(),
+                                DefaultPreferences.getMaxCardinalityThreshold(),
+                                DefaultPreferences.getDefaultCardinalityThreshold()
+                        )
+                )
+        );
+
+        updateMaxCardinalityParameter();
+        cautiousParameterSpinner.setValue(
+                Double.parseDouble(
+                        InputValidator.validateDouble(
+                                DefaultPreferences.getDefaultCautiousParameter(),
+                                DefaultPreferences.getMinCautiousParameter(),
+                                DefaultPreferences.getMaxCautiousParameter(),
+                                DefaultPreferences.getDefaultCautiousParameter()
+                        )
+                )
+        );
+    }
+
     void updateThresholdParameter(int numOfLeadingDiags) {
         this.numOfLeadingDiags = numOfLeadingDiags;
         updateCautiousParameter();
@@ -388,4 +434,5 @@ class QueryComputationPreferencesPanel extends AbstractDebuggerPreferencesPanel 
         bd = bd.setScale(places, roundingMode);
         return bd.doubleValue();
     }
+
 }
