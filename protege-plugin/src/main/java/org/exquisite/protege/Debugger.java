@@ -270,7 +270,8 @@ public class Debugger {
             } catch (DiagnosisModelCreationException e) {
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
-                debuggingSession.stopSession();
+                //debuggingSession.stopSession();
+                doStopDebugging(SessionStopReason.ERROR_OCCURRED);
             }
         }
     }
