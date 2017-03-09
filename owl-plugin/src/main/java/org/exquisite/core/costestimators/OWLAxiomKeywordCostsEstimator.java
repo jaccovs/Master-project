@@ -6,6 +6,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -224,5 +225,20 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
 
         return cnt;
 
+    }
+
+    /**
+     * Extracts all logical axioms from an ontology and assigns a formula weight to them.
+     *
+     * @param ontology An ontology.
+     * @return mapping from ontologies formulas to their weights.
+     */
+    public Map<OWLLogicalAxiom, Float> getFormulaWeights(OWLOntology ontology) {
+        Map<OWLLogicalAxiom, Float> formulaWeights = new HashMap<>();
+        for (OWLLogicalAxiom formula : ontology.getLogicalAxioms()) {
+            BigDecimal formulaCosts = getFormulaCosts(formula);
+            formulaWeights.put(formula, formulaCosts.floatValue());
+        }
+        return formulaWeights;
     }
 }

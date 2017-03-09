@@ -682,10 +682,10 @@ public class Debugger {
                 heuristicConfiguration.setSortCriterion(new MinQueryCardinality<>());
                 break;
             case MINSUM:
-                heuristicConfiguration.setSortCriterion(new MinSumFormulaWeights<>(new HashMap<>())); // TODO find a method to automatically calculate formula weights
+                heuristicConfiguration.setSortCriterion(new MinSumFormulaWeights<>(new OWLAxiomKeywordCostsEstimator(getDiagnosisModel()).getFormulaWeights(getDiagnosisEngineFactory().getOntology())));
                 break;
             case MINMAX:
-                heuristicConfiguration.setSortCriterion(new MinMaxFormulaWeights<>(new HashMap<>())); // TODO find a method to automatically calculate formula weights
+                heuristicConfiguration.setSortCriterion(new MinMaxFormulaWeights<>(new OWLAxiomKeywordCostsEstimator(getDiagnosisModel()).getFormulaWeights(getDiagnosisEngineFactory().getOntology())));
                 break;
             default:
                 errorHandler.errorHappened(ErrorStatus.UNKNOWN_SORTCRITERION);
