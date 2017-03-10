@@ -128,9 +128,9 @@ public class DebuggingDialog {
             stackTraceArea.setEditable(false);
             stackTraceArea.setWrapStyleWord(true);
 
-            // build the strack trace information for the stackTraceArea
+            // build the stack trace information for the stackTraceArea
             StringWriter w = new StringWriter();
-            w.write(ex.getLocalizedMessage() + "\n");
+            w.write((ex.getLocalizedMessage()!=null?ex.getLocalizedMessage():ex.getClass().getCanonicalName()) + "\n");
             StackTraceElement[] elements = ex.getStackTrace();
             for (int i = 0; i < elements.length; i++)
                 w.write("  at " + elements[i].toString() + "\n");

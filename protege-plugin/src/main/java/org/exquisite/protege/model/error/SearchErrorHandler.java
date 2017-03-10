@@ -9,6 +9,9 @@ public class SearchErrorHandler extends AbstractErrorHandler {
     @Override
     public void errorHappened(ErrorStatus error, Exception ex) {
         switch (error) {
+            case RUNTIME_EXCEPTION:
+                showErrorDialog(null, "There is an unexpected type of error", "Unexpected Error", JOptionPane.ERROR_MESSAGE, ex);
+                break;
             case SOLVER_EXCEPTION:
                 showErrorDialog(null, "There are problems with the solver", "IReasoner Exception", JOptionPane.ERROR_MESSAGE, ex);
                 break;

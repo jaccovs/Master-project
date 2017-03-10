@@ -51,6 +51,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.exquisite.protege.Debugger.ErrorStatus.NO_ERROR;
+import static org.exquisite.protege.Debugger.ErrorStatus.RUNTIME_EXCEPTION;
 import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
 
 public class Debugger {
@@ -60,7 +61,7 @@ public class Debugger {
     public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
-        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION}
+        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION}
 
     public enum QuerySearchStatus { IDLE, ASKING_QUERY }
 
@@ -597,6 +598,12 @@ public class Debugger {
             diagnoses.clear(); // reset diagnoses and conflicts
             conflicts.clear();
             return false;
+        } catch (RuntimeException e) {
+            errorHandler.errorHappened(RUNTIME_EXCEPTION, e);
+            logger.error("Unexpected exception occurred while calculating diagnoses.", e);
+            diagnoses.clear(); // reset diagnoses and conflicts
+            conflicts.clear();
+            return false;
         }
 
     }
@@ -622,7 +629,9 @@ public class Debugger {
                     DebuggingDialog.showDiagnosisFoundMessage(diagnoses, getDiagnosisEngineFactory().getOntology());
                     break;
                 default:
-                    doGetQuery(errorHandler);
+                    noErrorOccur = doGetQuery(errorHandler);
+                    if (!noErrorOccur)
+                        doStopDebugging(SessionStopReason.ERROR_OCCURRED);
                     break;
             }
         } else {
@@ -636,7 +645,7 @@ public class Debugger {
      *
      * @param errorHandler An error handler.
      */
-    private void doGetQuery(QueryErrorHandler errorHandler) {
+    private boolean doGetQuery(QueryErrorHandler errorHandler) {
 
         final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = diagnosisEngineFactory.getDiagnosisEngine();
         final DebuggerConfiguration preference = diagnosisEngineFactory.getSearchConfiguration();
@@ -675,6 +684,7 @@ public class Debugger {
                 break;
             default:
                 errorHandler.errorHappened(ErrorStatus.UNKNOWN_RM);
+                return false;
         }
 
         switch (preference.sortCriterion) {
@@ -689,6 +699,7 @@ public class Debugger {
                 break;
             default:
                 errorHandler.errorHappened(ErrorStatus.UNKNOWN_SORTCRITERION);
+                return false;
         }
 
         qc = new HeuristicQueryComputation<>(heuristicConfiguration);
@@ -697,18 +708,23 @@ public class Debugger {
 
             qc.initialize(diagnoses);
 
-            if ( qc.hasNext()) {
+            if (qc.hasNext()) {
                 this.answer.query = qc.next();
                 logger.debug("query configuration: " + qc);
             } else {
                 errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
                 resetQuery();
+                return false;
             }
             querySearchStatus = QuerySearchStatus.ASKING_QUERY;
-
+            return true;
         } catch (DiagnosisException e) {
-            errorHandler.errorHappened(ErrorStatus.SOLVER_EXCEPTION);
+            errorHandler.errorHappened(ErrorStatus.SOLVER_EXCEPTION, e);
+            return false;
+        } catch (RuntimeException e) {
+            errorHandler.errorHappened(ErrorStatus.RUNTIME_EXCEPTION, e);
+            return false;
         } finally {
             notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.QUERY_CALCULATED));
         }
