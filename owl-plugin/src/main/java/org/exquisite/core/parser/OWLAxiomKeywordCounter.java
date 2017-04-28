@@ -3,7 +3,6 @@ package org.exquisite.core.parser;
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -24,15 +23,12 @@ import java.util.Map;
  *     <li>ManchesterOWLSyntax.EQUIVALENT_TO,</li>
  *     <li>ManchesterOWLSyntax.AND,</li>
  *     <li>ManchesterOWLSyntax.OR,</li>
+ *     <li>ManchesterOWLSyntax.NOT,</li>
  *     <li>ManchesterOWLSyntax.SOME,</li>
  *     <li>ManchesterOWLSyntax.ONLY,</li>
- *
- *
- *
  *     <li>ManchesterOWLSyntax.MIN,</li>
  *     <li>ManchesterOWLSyntax.MAX,</li>
  *     <li>ManchesterOWLSyntax.EXACTLY,</li>
- *     <li>ManchesterOWLSyntax.NOT,</li>
  *     <li>ManchesterOWLSyntax.VALUE,</li>
  *     <li>ManchesterOWLSyntax.INVERSE,</li>
  *     <li>ManchesterOWLSyntax.DISJOINT_CLASSES,</li>
@@ -53,12 +49,18 @@ import java.util.Map;
  *     <tr><td>ManchesterOWLSyntax.TYPE</td><td>OWLClassAssertionAxiom</td></tr>
  *     <tr><td>ManchesterOWLSyntax.SAME_AS</td><td>OWLSameIndividualAxiom</td></tr>
  *     <tr><td>ManchesterOWLSyntax.SUBCLASS_OF</td><td>OWLSubClassOfAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DISJOINT_WITH</td><td>OWLDisjointDataPropertiesAxiom,OWLDisjointObjectPropertiesAxiom,OWLDisjointClassesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.EQUIVALENT_TO</td><td>OWLEquivalentClassesAxiom,OWLEquivalentDataPropertiesAxiom,OWLEquivalentObjectPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.AND</td><td>OWLObjectIntersectionOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.OR</td><td>OWLObjectUnionOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SOME</td><td>OWLDataSomeValuesFrom, OWLObjectSomeValuesFrom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.ONLY</td><td></td></tr>
+ *     <tr><td>ManchesterOWLSyntax.DISJOINT_WITH</td><td>OWLDisjointClassesAxiom, OWLDisjointObjectPropertiesAxiom, OWLDisjointDataPropertiesAxiom</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.EQUIVALENT_TO</td><td>OWLEquivalentClassesAxiom, OWLEquivalentObjectPropertiesAxiom, OWLEquivalentDataPropertiesAxiom</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.AND</td><td>OWLObjectIntersectionOf, OWLDataIntersectionOf</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.OR</td><td>OWLObjectUnionOf, OWLDataUnionOf</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.NOT</td><td>OWLObjectComplementOf, OWLDataComplementOf</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.SOME</td><td>OWLObjectSomeValuesFrom, OWLDataSomeValuesFrom</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.ONLY</td><td>OWLObjectAllValuesFrom, OWLDataAllValuesFrom</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.MIN</td><td>OWLObjectMinCardinality, OWLDataMinCardinality</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.MAX</td><td>OWLObjectMaxCardinality, OWLDataMaxCardinality</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.EXACTLY</td><td>OWLObjectExactCardinality, OWLDataExactCardinality</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.VALUE</td><td>OWLObjectHasValue, OWLDataHasValue</td></tr>
+ *     <tr><td></td><td></td></tr>
  *     <tr><td></td><td></td></tr>
  *     <tr><td></td><td></td></tr>
  *     <tr><td></td><td></td></tr>
@@ -70,7 +72,7 @@ import java.util.Map;
  * @author wolfi
  * @see OWLAxiomKeywordCounter
  */
-public class OWLAxiomKeywordCounter extends OWLClassExpressionVisitorAdapter implements OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor {
+public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor  {
 
     private Map<ManchesterOWLSyntax,Integer> map = new HashMap<>();
 
@@ -400,6 +402,36 @@ public class OWLAxiomKeywordCounter extends OWLClassExpressionVisitorAdapter imp
 
     @Override
     public void visit(@Nonnull OWLAnnotationProperty owlAnnotationProperty) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDatatype owlDatatype) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataOneOf owlDataOneOf) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataComplementOf owlDataComplementOf) {
+        increment(ManchesterOWLSyntax.NOT);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataIntersectionOf owlDataIntersectionOf) {
+        increment(ManchesterOWLSyntax.AND);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataUnionOf owlDataUnionOf) {
+        increment(ManchesterOWLSyntax.OR);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDatatypeRestriction owlDatatypeRestriction) {
 
     }
 }
