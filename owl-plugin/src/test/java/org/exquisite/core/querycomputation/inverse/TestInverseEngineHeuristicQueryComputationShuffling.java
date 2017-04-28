@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
-import utils.OWLUtils;
+import org.exquisite.core.utils.OWLUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
