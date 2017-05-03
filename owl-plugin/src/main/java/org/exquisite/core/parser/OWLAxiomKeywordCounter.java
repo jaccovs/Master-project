@@ -36,6 +36,7 @@ import java.util.Map;
  *     <li>ManchesterOWLSyntax.ONLY,</li>
  *     <li>ManchesterOWLSyntax.MIN,</li>
  *     <li>ManchesterOWLSyntax.MAX,</li>
+ *     <li>ManchesterOWLSyntax.SELF</li>
  *     <li>ManchesterOWLSyntax.EXACTLY,</li>
  *     <li>ManchesterOWLSyntax.VALUE,</li>
  *     <li>ManchesterOWLSyntax.INVERSE,</li>
@@ -80,6 +81,7 @@ import java.util.Map;
  *     <tr><td>ManchesterOWLSyntax.ONLY</td><td>OWLObjectAllValuesFrom, OWLDataAllValuesFrom</td></tr>
  *     <tr><td>ManchesterOWLSyntax.MIN</td><td>OWLObjectMinCardinality, OWLDataMinCardinality</td></tr>
  *     <tr><td>ManchesterOWLSyntax.MAX</td><td>OWLObjectMaxCardinality, OWLDataMaxCardinality</td></tr>
+ *     <tr><td>ManchesterOWLSyntax.SELF</td><td>OWLObjectHasSelf</td></tr>
  *     <tr><td>ManchesterOWLSyntax.EXACTLY</td><td>OWLObjectExactCardinality, OWLDataExactCardinality</td></tr>
  *     <tr><td>ManchesterOWLSyntax.VALUE</td><td>OWLObjectHasValue, OWLDataHasValue</td></tr>
  *     <tr><td>ManchesterOWLSyntax.INVERSE</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
