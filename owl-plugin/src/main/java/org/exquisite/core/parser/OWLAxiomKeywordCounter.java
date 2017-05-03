@@ -10,55 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A visitor that parses instances of type OWLAxiom and counts the occurrences of ManchesterOWLSyntax-keywords.
- * A mapping between Functional-Style owl-api and Manchester Syntax keywords is implemented in this visitor pattern.
+ * A visitor that parses instances of type OWLAxiom and counts the occurrences of keywords from Manchester Syntax (MS).
+ * Since the instances of OWLAxiom are expressed in a Functional-Style Syntax (FSS) this class is responsible to find
+ * the appropriate FSS style objects and increments the appropriate MS keyword by one.
+ * A mapping between Functional-Style owl-api and Manchester Syntax keywords is implemented in this visitor pattern according to
+ * the <a href="https://www.w3.org/TR/2012/NOTE-owl2-manchester-syntax-20121211/">OWL 2 Web Ontology Language Manchester Syntax (Second Edition) Specification</a>
  * <p>
- * The keywords that are been counted are listed in the class member named <i>keywords</i> in {@link OWLAxiomKeywordCounter}
- * and comprise those keywords:
- * <ul>
- *     <li>ManchesterOWLSyntax.TYPE,</li>
- *     <li>ManchesterOWLSyntax.SAME_AS,</li>
- *     <li>ManchesterOWLSyntax.SAME_INDIVIDUAL,</li>
- *     <li>ManchesterOWLSyntax.DIFFERENT_FROM,</li>
- *     <li>ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS,</li>
- *     <li>ManchesterOWLSyntax.SUBCLASS_OF,</li>
- *     <li>ManchesterOWLSyntax.DISJOINT_WITH,</li>
- *     <li>ManchesterOWLSyntax.DISJOINT_CLASSES,</li>
- *     <li>ManchesterOWLSyntax.DISJOINT_PROPERTIES</li>
- *     <li>ManchesterOWLSyntax.DISJOINT_UNION_OF</li>
- *     <li>ManchesterOWLSyntax.EQUIVALENT_TO,</li>
- *     <li>ManchesterOWLSyntax.EQUIVALENT_CLASSES,</li>
- *     <li>ManchesterOWLSyntax.EQUIVALENT_PROPERTIES,</li>
- *     <li>ManchesterOWLSyntax.AND,</li>
- *     <li>ManchesterOWLSyntax.OR,</li>
- *     <li>ManchesterOWLSyntax.NOT,</li>
- *     <li>ManchesterOWLSyntax.SOME,</li>
- *     <li>ManchesterOWLSyntax.ONLY,</li>
- *     <li>ManchesterOWLSyntax.MIN,</li>
- *     <li>ManchesterOWLSyntax.MAX,</li>
- *     <li>ManchesterOWLSyntax.SELF</li>
- *     <li>ManchesterOWLSyntax.EXACTLY,</li>
- *     <li>ManchesterOWLSyntax.VALUE,</li>
- *     <li>ManchesterOWLSyntax.INVERSE,</li>
- *     <li>ManchesterOWLSyntax.INVERSE_OF,</li>
- *     <li>ManchesterOWLSyntax.ONE_OF_DELIMETER,</li>
- *     <li>ManchesterOWLSyntax.THAT,</li>
- *     <li>ManchesterOWLSyntax.HAS_KEY</li>
- *     <li>ManchesterOWLSyntax.DOMAIN,</li>
- *     <li>ManchesterOWLSyntax.RANGE,</li>
- *     <li>ManchesterOWLSyntax.FUNCTIONAL,</li>
- *     <li>ManchesterOWLSyntax.INVERSE_FUNCTIONAL</li>
- *     <li>ManchesterOWLSyntax.REFLEXIVE</li>
- *     <li>ManchesterOWLSyntax.IRREFLEXIVE</li>
- *     <li>ManchesterOWLSyntax.SYMMETRIC</li>
- *     <li>ManchesterOWLSyntax.ASYMMETRIC</li>
- *     <li>ManchesterOWLSyntax.TRANSITIVE,</li>
- *     <li>ManchesterOWLSyntax.SUB_PROPERTY_OF,</li>
- *     <li>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</li>
- * </ul>
- *
+ *     The keywords are only counted when they do occur in the keywords list of class {@link OWLAxiomKeywordCostsEstimator}
+ * </p>
+ * <p>
  * An overview of the mapping from Manchester Syntax keywords to Functional-Style OWL-API axiom classes.
- *
  * <table summary="Mapping between Manchester Syntax and Funtional-Style OWL-Api Classes" border="1">
  *     <tr><th>Manchester-Syntax</th><th>Functional-Style Syntax</th></tr>
  *     <tr><td>ManchesterOWLSyntax.TYPE</td><td>OWLClassAssertionAxiom</td></tr>
@@ -101,7 +62,6 @@ import java.util.Map;
  *     <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_OF</td><td>OWLSubObjectPropertyOfAxiom, OWLSubDataPropertyOfAxiom</td></tr>
  *     <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</td><td>OWLSubPropertyChainOfAxiom</td></tr>
  * </table>
- *
  * </p>
  * @author wolfi
  * @see OWLAxiomKeywordCounter
@@ -117,17 +77,16 @@ public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressi
     }
 
     /**
-     * Increments the occurrence of a keyword by one.
-     * @param keyword
+     * Increments the occurrence of a (Manchester Syntax) keyword by one.
+     *
+     * @param keyword The Manchester Syntax keyword.
      */
     private void increment(ManchesterOWLSyntax keyword) {
         // assert that the keyword is in the list of the keywords
         if (Arrays.asList(OWLAxiomKeywordCostsEstimator.keywords).contains(keyword)) {
             Integer i = map.get(keyword);
-            if (i == null)
-                map.put(keyword, 1);
-            else
-                map.put(keyword, i + 1);
+            if (i == null) map.put(keyword, 1);
+            else map.put(keyword, i + 1);
         }
     }
 
