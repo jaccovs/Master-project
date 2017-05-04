@@ -258,19 +258,24 @@ public class Debugger {
                 return;
             }
 
-            logger.info("------------------------ Starting new Debugging Session ------------------------");
-
-
-            diagnosisEngineFactory.reset();                 // create new engine
-            debuggingSession.startSession();                // start session
-
             try {
+                logger.info("------------------------ Starting new Debugging Session ------------------------");
+                debuggingSession.startSession();                // sets the start session flag
+                diagnosisEngineFactory.reset();                 // create new engine
                 this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
                 notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
                 doCalculateDiagnosesAndGetQuery(errorHandler);  // calculate diagnoses and compute query
             } catch (DiagnosisModelCreationException e) {
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Error consistency check", e.getMessage(), e);
+                doStopDebugging(SessionStopReason.ERROR_OCCURRED);
+            } catch (DiagnosisRuntimeException e) {
+                logger.error(e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Diagnosis runtime exception occurred", e.getMessage(), e);
+                doStopDebugging(SessionStopReason.ERROR_OCCURRED);
+            } catch (RuntimeException e) {
+                logger.error(e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Unexptected exception occurred", e.getMessage(), e);
                 doStopDebugging(SessionStopReason.ERROR_OCCURRED);
             }
         }
