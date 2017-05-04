@@ -559,7 +559,6 @@ public class Debugger {
 
         this.diagnoses.clear();
         this.conflicts.clear();
-
         diagnosisEngine.resetEngine();
 
         // set the cost estimator
