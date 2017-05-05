@@ -8,13 +8,17 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A visitor that parses instances of type OWLAxiom and counts the occurrences of keywords from Manchester Syntax (MS).
  * Since the instances of OWLAxiom are expressed in a Functional-Style Syntax (FSS) this class is responsible to find
  * the appropriate FSS style objects and increments the appropriate MS keyword by one.
+ * <p>
  * A mapping between Functional-Style owl-api and Manchester Syntax keywords is implemented in this visitor pattern according to
  * the <a href="https://www.w3.org/TR/2012/NOTE-owl2-manchester-syntax-20121211/">OWL 2 Web Ontology Language Manchester Syntax (Second Edition) Specification</a>
+ * </p>
+ * <p>The OWLAxiom traversal implementation is a copy of {{@link uk.ac.manchester.cs.owl.owlapi.AbstractEntityRegistrationManager}}</p>
  * <p>
  *     The keywords are only counted when they do occur in the keywords list of class {@link OWLAxiomKeywordCostsEstimator}
  * </p>
@@ -66,7 +70,7 @@ import java.util.Map;
  * @author wolfi
  * @see OWLAxiomKeywordCounter
  */
-public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor  {
+public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor*/
 
     private Map<ManchesterOWLSyntax,Integer> map = new HashMap<>();
 
@@ -77,216 +81,281 @@ public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressi
     }
 
     /**
-     * Increments the occurrence of a (Manchester Syntax) keyword by one.
+     * Increments the occurrence of a (Manchester Syntax) keyword by one (if keyword is registered).
      *
      * @param keyword The Manchester Syntax keyword.
      */
     private void increment(ManchesterOWLSyntax keyword) {
+        increment(keyword, 1);
+    }
+
+    /**
+     * Increments the occurrence of a (Manchester Syntax) keyword by inc (if keyword is registered).
+     *
+     * @param keyword The Manchester Syntax keyword.
+     */
+    private void increment(final ManchesterOWLSyntax keyword, final int inc) {
         // assert that the keyword is in the list of the keywords
         if (Arrays.asList(OWLAxiomKeywordCostsEstimator.keywords).contains(keyword)) {
             Integer i = map.get(keyword);
-            if (i == null) map.put(keyword, 1);
-            else map.put(keyword, i + 1);
+            if (i == null) map.put(keyword, inc);
+            else map.put(keyword, i + inc);
+        }
+    }
+
+    // OWLAxiomVisitor
+
+    @Override
+    public void visit(@Nonnull OWLDeclarationAxiom axiom) {
+        axiom.getEntity().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
+        increment(ManchesterOWLSyntax.EQUIVALENT_TO); // todo check this
+        axiom.getDatatype().accept(this);
+        axiom.getDataRange().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLSubClassOfAxiom axiom) {
+        increment(ManchesterOWLSyntax.SUBCLASS_OF);
+        axiom.getSubClass().accept(this);
+        axiom.getSuperClass().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom axiom) {
+        increment(ManchesterOWLSyntax.NOT);
+        axiom.getSubject().accept(this);
+        axiom.getProperty().accept(this);
+        axiom.getObject().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
+        increment(ManchesterOWLSyntax.ASYMMETRIC);// TODO check this case
+        axiom.getProperty().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
+        increment(ManchesterOWLSyntax.REFLEXIVE); // TODO CHECK THIS CASE
+        axiom.getProperty().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDisjointClassesAxiom axiom) {
+        increment(ManchesterOWLSyntax.DISJOINT_CLASSES); //TODO CHECK THIS CASE
+        increment(ManchesterOWLSyntax.DISJOINT_WITH);
+        for (OWLClassExpression desc : axiom.getClassExpressions()) {
+            desc.accept(this);
         }
     }
 
     @Override
-    public void visit(@Nonnull OWLDeclarationAxiom owlDeclarationAxiom) {
-
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDatatypeDefinitionAxiom owlDatatypeDefinitionAxiom) {
-        increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom) {
-
-    }
-
-    @Override
-    public void visit(@Nonnull OWLSubAnnotationPropertyOfAxiom owlSubAnnotationPropertyOfAxiom) {
-
-    }
-
-    @Override
-    public void visit(@Nonnull OWLAnnotationPropertyDomainAxiom owlAnnotationPropertyDomainAxiom) {
-
-    }
-
-    @Override
-    public void visit(@Nonnull OWLAnnotationPropertyRangeAxiom owlAnnotationPropertyRangeAxiom) {
-
-    }
-
-    @Override
-    public void visit(@Nonnull OWLSubClassOfAxiom owlSubClassOfAxiom) {
-        increment(ManchesterOWLSyntax.SUBCLASS_OF);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom owlNegativeObjectPropertyAssertionAxiom) {
-        increment(ManchesterOWLSyntax.NOT);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLAsymmetricObjectPropertyAxiom owlAsymmetricObjectPropertyAxiom) {
-        increment(ManchesterOWLSyntax.ASYMMETRIC);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLReflexiveObjectPropertyAxiom owlReflexiveObjectPropertyAxiom) {
-        increment(ManchesterOWLSyntax.REFLEXIVE);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDisjointClassesAxiom owlDisjointClassesAxiom) {
-        increment(ManchesterOWLSyntax.DISJOINT_CLASSES);
-        increment(ManchesterOWLSyntax.DISJOINT_WITH);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataPropertyDomainAxiom owlDataPropertyDomainAxiom) {
+    public void visit(@Nonnull OWLDataPropertyDomainAxiom axiom) {
         increment(ManchesterOWLSyntax.DOMAIN);
+        axiom.getDomain().accept(this);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLObjectPropertyDomainAxiom owlObjectPropertyDomainAxiom) {
+    public void visit(@Nonnull OWLObjectPropertyDomainAxiom axiom) {
         increment(ManchesterOWLSyntax.DOMAIN);
+        axiom.getDomain().accept(this);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLEquivalentObjectPropertiesAxiom owlEquivalentObjectPropertiesAxiom) {
+    public void visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES);
+        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES); // TODO CHECK THIS CASE
+        for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
+            prop.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom owlNegativeDataPropertyAssertionAxiom) {
+    public void visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom axiom) {
         increment(ManchesterOWLSyntax.NOT);
+        axiom.getSubject().accept(this);
+        axiom.getProperty().accept(this);
+        axiom.getObject().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLDifferentIndividualsAxiom owlDifferentIndividualsAxiom) {
+    public void visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
         increment(ManchesterOWLSyntax.DIFFERENT_FROM);
         increment(ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS);
+        for (OWLIndividual ind : axiom.getIndividuals()) {
+            ind.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDisjointDataPropertiesAxiom owlDisjointDataPropertiesAxiom) {
+    public void visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.DISJOINT_WITH);
         increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES);
+        for (OWLDataPropertyExpression prop : axiom.getProperties()) {
+            prop.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom owlDisjointObjectPropertiesAxiom) {
+    public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.DISJOINT_WITH);
         increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES);
+        for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
+            prop.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLObjectPropertyRangeAxiom owlObjectPropertyRangeAxiom) {
+    public void visit(@Nonnull OWLObjectPropertyRangeAxiom axiom) {
         increment(ManchesterOWLSyntax.RANGE);
+        axiom.getRange().accept(this);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLObjectPropertyAssertionAxiom owlObjectPropertyAssertionAxiom) {
-
+    public void visit(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
+        axiom.getSubject().accept(this);
+        axiom.getProperty().accept(this);
+        axiom.getObject().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLFunctionalObjectPropertyAxiom owlFunctionalObjectPropertyAxiom) {
+    public void visit(@Nonnull OWLFunctionalObjectPropertyAxiom axiom) {
         increment(ManchesterOWLSyntax.FUNCTIONAL);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLSubObjectPropertyOfAxiom owlSubObjectPropertyOfAxiom) {
+    public void visit(@Nonnull OWLSubObjectPropertyOfAxiom axiom) {
         increment(ManchesterOWLSyntax.SUB_PROPERTY_OF);
+        axiom.getSubProperty().accept(this);
+        axiom.getSuperProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLDisjointUnionAxiom owlDisjointUnionAxiom) {
+    public void visit(@Nonnull OWLDisjointUnionAxiom axiom) {
         increment(ManchesterOWLSyntax.DISJOINT_UNION_OF);
+        axiom.getOWLClass().accept((OWLEntityVisitor) this);
+        for (OWLClassExpression desc : axiom.getClassExpressions()) {
+            desc.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLSymmetricObjectPropertyAxiom owlSymmetricObjectPropertyAxiom) {
+    public void visit(@Nonnull OWLSymmetricObjectPropertyAxiom axiom) {
         increment(ManchesterOWLSyntax.SYMMETRIC);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLDataPropertyRangeAxiom owlDataPropertyRangeAxiom) {
+    public void visit(@Nonnull OWLDataPropertyRangeAxiom axiom) {
         increment(ManchesterOWLSyntax.RANGE);
+        axiom.getProperty().accept(this);
+        axiom.getRange().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLFunctionalDataPropertyAxiom owlFunctionalDataPropertyAxiom) {
+    public void visit(@Nonnull OWLFunctionalDataPropertyAxiom axiom) {
         increment(ManchesterOWLSyntax.FUNCTIONAL);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom owlEquivalentDataPropertiesAxiom) {
+    public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.EQUIVALENT_TO);
         increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES);
+        for (OWLDataPropertyExpression prop : axiom.getProperties()) {
+            prop.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLClassAssertionAxiom owlClassAssertionAxiom) {
+    public void visit(@Nonnull OWLClassAssertionAxiom axiom) {
         increment(ManchesterOWLSyntax.TYPE);
+        axiom.getClassExpression().accept(this);
+        axiom.getIndividual().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLEquivalentClassesAxiom owlEquivalentClassesAxiom) {
+    public void visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
         increment(ManchesterOWLSyntax.EQUIVALENT_TO);
         increment(ManchesterOWLSyntax.EQUIVALENT_CLASSES);
+        for (OWLClassExpression desc : axiom.getClassExpressions()) {
+            desc.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDataPropertyAssertionAxiom owlDataPropertyAssertionAxiom) {
-
+    public void visit(@Nonnull OWLDataPropertyAssertionAxiom axiom) {
+        axiom.getSubject().accept(this);
+        axiom.getProperty().accept(this);
+        axiom.getObject().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLTransitiveObjectPropertyAxiom owlTransitiveObjectPropertyAxiom) {
+    public void visit(@Nonnull OWLTransitiveObjectPropertyAxiom axiom) {
         increment(ManchesterOWLSyntax.TRANSITIVE);
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom owlIrreflexiveObjectPropertyAxiom) {
-        increment(ManchesterOWLSyntax.IRREFLEXIVE);
+    public void visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
+        increment(ManchesterOWLSyntax.IRREFLEXIVE); // TODO CHECK THIS CASE
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLSubDataPropertyOfAxiom owlSubDataPropertyOfAxiom) {
+    public void visit(@Nonnull OWLSubDataPropertyOfAxiom axiom) {
         increment(ManchesterOWLSyntax.SUB_PROPERTY_OF);
+        axiom.getSubProperty().accept(this);
+        axiom.getSuperProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom owlInverseFunctionalObjectPropertyAxiom) {
-        increment(ManchesterOWLSyntax.INVERSE_FUNCTIONAL);
+    public void visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
+        increment(ManchesterOWLSyntax.INVERSE_FUNCTIONAL); // TODO CHECK THIS CASE
+        axiom.getProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLSameIndividualAxiom owlSameIndividualAxiom) {
+    public void visit(@Nonnull OWLSameIndividualAxiom axiom) {
         increment(ManchesterOWLSyntax.SAME_AS);
         increment(ManchesterOWLSyntax.SAME_INDIVIDUAL);
+        for (OWLIndividual ind : axiom.getIndividuals()) {
+            ind.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLSubPropertyChainOfAxiom owlSubPropertyChainOfAxiom) {
+    public void visit(@Nonnull OWLSubPropertyChainOfAxiom axiom) {
         increment(ManchesterOWLSyntax.SUB_PROPERTY_CHAIN);
+        for (OWLObjectPropertyExpression prop : axiom.getPropertyChain()) {
+            prop.accept(this);
+        }
+        axiom.getSuperProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLInverseObjectPropertiesAxiom owlInverseObjectPropertiesAxiom) {
-        increment(ManchesterOWLSyntax.INVERSE);
+    public void visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
+        increment(ManchesterOWLSyntax.INVERSE); // todo check this case
         increment(ManchesterOWLSyntax.INVERSE_OF);
+        axiom.getFirstProperty().accept(this);
+        axiom.getSecondProperty().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLHasKeyAxiom owlHasKeyAxiom) {
+    public void visit(@Nonnull OWLHasKeyAxiom axiom) {
         increment(ManchesterOWLSyntax.HAS_KEY);
+        axiom.getClassExpression().accept(this);
+        for (OWLPropertyExpression prop : axiom.getPropertyExpressions()) {
+            prop.accept(this);
+        }
     }
 
     @Override
@@ -295,94 +364,185 @@ public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressi
     }
 
     @Override
+    public void visit(@Nonnull SWRLClassAtom swrlClassAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLDataRangeAtom swrlDataRangeAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLObjectPropertyAtom swrlObjectPropertyAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLDataPropertyAtom swrlDataPropertyAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLBuiltInAtom swrlBuiltInAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLVariable swrlVariable) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLIndividualArgument swrlIndividualArgument) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLLiteralArgument swrlLiteralArgument) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLSameIndividualAtom swrlSameIndividualAtom) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull SWRLDifferentIndividualsAtom swrlDifferentIndividualsAtom) {
+
+    }
+
+    // OWLClassExpressionVisitor
+
+    @Override
+    public void visit(@Nonnull OWLObjectIntersectionOf ce) {
+        assert ce.getOperands().size() >= 2;
+        increment(ManchesterOWLSyntax.AND, ce.getOperands().size() - 1);
+        increment(ManchesterOWLSyntax.THAT); // TODO CHECK THIS CASE
+        for (OWLClassExpression operand : ce.getOperands()) {
+            operand.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectUnionOf ce) {
+        assert ce.getOperands().size() >= 2;
+        increment(ManchesterOWLSyntax.OR, ce.getOperands().size() - 1);
+        for (OWLClassExpression operand : ce.getOperands()) {
+            operand.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectComplementOf ce) {
+        increment(ManchesterOWLSyntax.NOT);
+        ce.getOperand().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectSomeValuesFrom ce) {
+        increment(ManchesterOWLSyntax.SOME);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectAllValuesFrom ce) {
+        increment(ManchesterOWLSyntax.ONLY);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectHasValue ce) {
+        increment(ManchesterOWLSyntax.VALUE);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectMinCardinality ce) {
+        increment(ManchesterOWLSyntax.MIN);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectExactCardinality ce) {
+        increment(ManchesterOWLSyntax.EXACTLY);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectMaxCardinality ce) {
+        increment(ManchesterOWLSyntax.MAX);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectHasSelf ce) {
+        increment(ManchesterOWLSyntax.SELF);
+        ce.getProperty().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLObjectOneOf ce) {
+        for (OWLIndividual ind : ce.getIndividuals()) {
+            increment(ManchesterOWLSyntax.ONE_OF_DELIMETER);
+            ind.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataSomeValuesFrom ce) {
+        increment(ManchesterOWLSyntax.SOME);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataAllValuesFrom ce) {
+        increment(ManchesterOWLSyntax.ONLY);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataHasValue ce) {
+        increment(ManchesterOWLSyntax.VALUE);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataMinCardinality ce) {
+        increment(ManchesterOWLSyntax.MIN);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataExactCardinality ce) {
+        increment(ManchesterOWLSyntax.EXACTLY);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLDataMaxCardinality ce) {
+        increment(ManchesterOWLSyntax.MAX);
+        ce.getProperty().accept(this);
+        ce.getFiller().accept(this);
+    }
+
+    // OWLEntityVisitor
+
+    @Override
     public void visit(@Nonnull OWLClass owlClass) {
 
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectIntersectionOf owlObjectIntersectionOf) {
-        increment(ManchesterOWLSyntax.AND);
-        increment(ManchesterOWLSyntax.THAT);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectUnionOf owlObjectUnionOf) {
-        increment(ManchesterOWLSyntax.OR);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectComplementOf owlObjectComplementOf) {
-        increment(ManchesterOWLSyntax.NOT);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectSomeValuesFrom owlObjectSomeValuesFrom) {
-        increment(ManchesterOWLSyntax.SOME);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectAllValuesFrom owlObjectAllValuesFrom) {
-        increment(ManchesterOWLSyntax.ONLY);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectHasValue owlObjectHasValue) {
-        increment(ManchesterOWLSyntax.VALUE);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectMinCardinality owlObjectMinCardinality) {
-        increment(ManchesterOWLSyntax.MIN);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectExactCardinality owlObjectExactCardinality) {
-        increment(ManchesterOWLSyntax.EXACTLY);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectMaxCardinality owlObjectMaxCardinality) {
-        increment(ManchesterOWLSyntax.MAX);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectHasSelf owlObjectHasSelf) {
-        increment(ManchesterOWLSyntax.SELF);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLObjectOneOf owlObjectOneOf) {
-        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataSomeValuesFrom owlDataSomeValuesFrom) {
-        increment(ManchesterOWLSyntax.SOME);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataAllValuesFrom owlDataAllValuesFrom) {
-        increment(ManchesterOWLSyntax.ONLY);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataHasValue owlDataHasValue) {
-        increment(ManchesterOWLSyntax.VALUE);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataMinCardinality owlDataMinCardinality) {
-        increment(ManchesterOWLSyntax.MIN);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataExactCardinality owlDataExactCardinality) {
-        increment(ManchesterOWLSyntax.EXACTLY);
-    }
-
-    @Override
-    public void visit(@Nonnull OWLDataMaxCardinality owlDataMaxCardinality) {
-        increment(ManchesterOWLSyntax.MAX);
     }
 
     @Override
@@ -391,12 +551,12 @@ public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressi
     }
 
     @Override
-    public void visit(@Nonnull OWLObjectInverseOf owlObjectInverseOf) {
-        increment(ManchesterOWLSyntax.INVERSE);
+    public void visit(@Nonnull OWLDataProperty owlDataProperty) {
+
     }
 
     @Override
-    public void visit(@Nonnull OWLDataProperty owlDataProperty) {
+    public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
 
     }
 
@@ -406,32 +566,121 @@ public class OWLAxiomKeywordCounter implements OWLAxiomVisitor, OWLClassExpressi
     }
 
     @Override
-    public void visit(@Nonnull OWLDatatype owlDatatype) {
+    public void visit(@Nonnull OWLObjectInverseOf property) {
+        increment(ManchesterOWLSyntax.INVERSE);
+        property.getInverse().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLOntology owlOntology) {
+
+    }
+
+    // OWLDataVisitor
+
+    @Override
+    public void visit(@Nonnull OWLDatatype node) {
 
     }
 
     @Override
-    public void visit(@Nonnull OWLDataOneOf owlDataOneOf) {
-        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER);
+    public void visit(@Nonnull OWLDataOneOf node) {
+        assert node.getValues().size() >= 2;
+        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER, node.getValues().size() - 1);
+        for (OWLLiteral val : node.getValues()) {
+            val.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDataComplementOf owlDataComplementOf) {
+    public void visit(@Nonnull OWLDataComplementOf node) {
         increment(ManchesterOWLSyntax.NOT);
+        node.getDataRange().accept(this);
     }
 
     @Override
-    public void visit(@Nonnull OWLDataIntersectionOf owlDataIntersectionOf) {
-        increment(ManchesterOWLSyntax.AND);
+    public void visit(@Nonnull OWLDataIntersectionOf node) {
+        assert node.getOperands().size() >= 2;
+        increment(ManchesterOWLSyntax.AND, node.getOperands().size() - 1);
+        for (OWLDataRange dr : node.getOperands()) {
+            dr.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDataUnionOf owlDataUnionOf) {
-        increment(ManchesterOWLSyntax.OR);
+    public void visit(@Nonnull OWLDataUnionOf node) {
+        assert node.getOperands().size() >= 2;
+        increment(ManchesterOWLSyntax.OR, node.getOperands().size() - 1);
+        for (OWLDataRange dr : node.getOperands()) {
+            dr.accept(this);
+        }
     }
 
     @Override
-    public void visit(@Nonnull OWLDatatypeRestriction owlDatatypeRestriction) {
+    public void visit(@Nonnull OWLDatatypeRestriction node) {
+        node.getDatatype().accept(this);
+        for (OWLFacetRestriction facetRestriction : node.getFacetRestrictions()) {
+            facetRestriction.accept(this);
+        }
+    }
+
+
+    @Override
+    public void visit(@Nonnull OWLFacetRestriction node) {
+        node.getFacetValue().accept(this);
+    }
+
+    // OWLAnnotationObjectVisitor
+
+    @Override
+    public void visit(@Nonnull OWLAnnotation node) {
+        node.getProperty().accept(this);
+        node.getValue().accept(this);
+        for (OWLAnnotation anno : node.getAnnotations()) {
+            anno.accept(this);
+        }
+    }
+
+    // OWLAnnotationValueVisitor
+
+    @Override
+    public void visit(@Nonnull IRI iri) {
 
     }
+
+    @Override
+    public void visit(@Nonnull OWLAnonymousIndividual owlAnonymousIndividual) {
+
+    }
+
+    @Override
+    public void visit(@Nonnull OWLLiteral node) {
+        node.getDatatype().accept(this);
+    }
+
+    // OWLAnnotationAxiomVisitor
+
+    @Override
+    public void visit(@Nonnull OWLAnnotationAssertionAxiom axiom) {
+        axiom.getSubject().accept(this);
+        axiom.getProperty().accept(this);
+        axiom.getValue().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLSubAnnotationPropertyOfAxiom axiom) {
+        axiom.getSubProperty().accept(this);
+        axiom.getSuperProperty().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLAnnotationPropertyDomainAxiom axiom) {
+        axiom.getProperty().accept(this);
+    }
+
+    @Override
+    public void visit(@Nonnull OWLAnnotationPropertyRangeAxiom axiom) {
+        axiom.getProperty().accept(this);
+    }
+
 }

@@ -5,7 +5,6 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.parser.OWLAxiomKeywordCounter;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
-import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -69,15 +68,15 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
 
         return max;
     }
-
+/*
     public void updateKeywordProb(Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities) {
         this.keywordProbabilities = keywordProbabilities;
         updateAxiomProbabilities();
     }
-
+*/
     private Map<ManchesterOWLSyntax, BigDecimal> createKeywordProbs() {
 
-        Map<ManchesterOWLSyntax, BigDecimal> map = new HashMap<ManchesterOWLSyntax, BigDecimal>();
+        Map<ManchesterOWLSyntax, BigDecimal> map = new HashMap<>();
 
         for (ManchesterOWLSyntax keyword : keywords)
             map.put(keyword, new BigDecimal("0.01"));
@@ -91,34 +90,36 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
 
     @Override
     public BigDecimal getFormulaCosts(OWLLogicalAxiom axiom) {
-
-        //NEU bei null wird 1 zurückgegeben
         if (axiom == null)
             return new BigDecimal(0.5);
 
         BigDecimal p = axiomsProbabilities.get(axiom);
-        if (p != null)
-            return p;
-
-        BigDecimal result = getAxiomScore(axiom);
-        result = BigDecimal.ONE.subtract(result);
-        // no keyword is known
-        if (result.compareTo(new BigDecimal("0.0")) == 0)
-            result = new BigDecimal("0.000000000000000000000000000000000000000000001");
-
-        return result;
+        if (p == null) {
+            p = computeAxiomProbability(axiom);
+            axiomsProbabilities.put(axiom, p);
+        }
+        return p;
     }
 
+    /**
+     * Computes the axiom score depending on the keyword probabilities:
+     * The product of (1 - keyword_probability) ^ keyword_occurrence (for all occurring keywords)
+     *
+     * @param axiom The axiom.
+     * @return The axiom score.
+     */
     private BigDecimal getAxiomScore(OWLLogicalAxiom axiom) {
         BigDecimal result = BigDecimal.ONE;
+        OWLAxiomKeywordCounter visitor = new OWLAxiomKeywordCounter();
+        axiom.accept(visitor);
         for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
-            int occurrence = getNumOccurrences(keyword, axiom);
-            BigDecimal probability = getProbability(keyword);
-
-            BigDecimal temp = BigDecimal.ONE.subtract(probability);
-            temp = temp.pow(occurrence, MathContext.DECIMAL128);
-
-            result = result.multiply(temp);
+            final int occurrence = visitor.get(keyword);
+            if (occurrence > 0) {
+                final BigDecimal probability = keywordProbabilities.get(keyword);
+                BigDecimal temp = BigDecimal.ONE.subtract(probability);
+                temp = temp.pow(occurrence, MathContext.DECIMAL128);
+                result = result.multiply(temp);
+            }
         }
         return result;
     }
@@ -137,15 +138,15 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     /**
      * Updates the diagnosis measures measures according to the keywordProbabilities.
      *
-     * @param formulaSets The diagnoses.
+     * @param diagnoses The diagnoses.
      */
-    public void updateDiagnosisProbabilities(Set<Diagnosis<OWLLogicalAxiom>> formulaSets) {
+    public void updateDiagnosisProbabilities(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
 
-        if (formulaSets == null)
+        if (diagnoses == null)
             return;
-        if (!formulaSets.isEmpty()) {
+        if (!diagnoses.isEmpty()) {
             BigDecimal sum = BigDecimal.ZERO;
-            for (Diagnosis<OWLLogicalAxiom> diagnosis : formulaSets) {
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
                 BigDecimal measure = getFormulasCosts(diagnosis.getFormulas());
                 diagnosis.setMeasure(measure);
                 sum = sum.add(measure);
@@ -153,9 +154,9 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             // now normalize all diagnoses measures to a sum that equals ONE
             BigDecimal normalizedSum = BigDecimal.ZERO;
             int i = 0;
-            for (Diagnosis<OWLLogicalAxiom> diagnosis : formulaSets) {
+            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
                 BigDecimal normalizedMeasure;
-                if (i++ == formulaSets.size() - 1) { // this step guarantees that the sum always equals ONE (no rounding errors can happen with division)
+                if (i++ == diagnoses.size() - 1) { // this step guarantees that the sum always equals ONE (no rounding errors can happen with division)
                     normalizedMeasure = BigDecimal.ONE.subtract(normalizedSum);
                 } else {
                     normalizedMeasure = diagnosis.getMeasure().divide(sum, MathContext.DECIMAL128); // this calculates the normalized measure
@@ -171,29 +172,29 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
         Collection<OWLLogicalAxiom> activeFormulas = getPossiblyFaultyFormulas();
         for (OWLLogicalAxiom axiom : activeFormulas) {
 
-            BigDecimal result = getAxiomScore(axiom);
-
-            result = BigDecimal.ONE.subtract(result);
-            // no keyword is known
-            if (result.compareTo(BigDecimal.ZERO) == 0)
-                result = new BigDecimal("0.000000000000000000000000000000000000000000001");
+            BigDecimal result = computeAxiomProbability(axiom);
             axiomsProbs.put(axiom, result);
         }
 
         this.axiomsProbabilities = Collections.unmodifiableMap(axiomsProbs);
     }
 
-    private BigDecimal getProbability(ManchesterOWLSyntax keyword) {
-        return keywordProbabilities.get(keyword);
+    private BigDecimal computeAxiomProbability(OWLLogicalAxiom axiom) {
+        BigDecimal result = getAxiomScore(axiom);
+        result = BigDecimal.ONE.subtract(result);
+        // no keyword is known
+        if (result.compareTo(BigDecimal.ZERO) == 0)
+            result = new BigDecimal("0.000000000000000000000000000000000000000000001");
+        return result;
     }
-
+/*
     private int getNumOccurrences(ManchesterOWLSyntax keyword, OWLLogicalAxiom axiom) {
         OWLAxiomKeywordCounter visitor = new OWLAxiomKeywordCounter();
         axiom.accept(visitor);
-
-        return visitor.get(keyword);
+        int occurrence = visitor.get(keyword);
+        return occurrence;
     }
-
+*/
     /**
      * Extracts all logical axioms from an ontology and assigns a formula weight to them.
      *
