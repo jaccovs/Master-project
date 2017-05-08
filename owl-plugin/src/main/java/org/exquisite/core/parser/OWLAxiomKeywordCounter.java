@@ -5,80 +5,99 @@ import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * A visitor that parses instances of type OWLAxiom and counts the occurrences of keywords from Manchester Syntax (MS).
- * Since the instances of OWLAxiom are expressed in a Functional-Style Syntax (FSS) this class is responsible to find
- * the appropriate FSS style objects and increments the appropriate MS keyword by one.
  * <p>
- * A mapping between Functional-Style owl-api and Manchester Syntax keywords is implemented in this visitor pattern according to
- * the <a href="https://www.w3.org/TR/2012/NOTE-owl2-manchester-syntax-20121211/">OWL 2 Web Ontology Language Manchester Syntax (Second Edition) Specification</a>
+ *     A visitor that parses an instance of type OWLAxiom (by calling OWLAxiom.accept(OWLAxiomKeywordCounter)) and counts
+ *     the occurrences of keywords from the Manchester Syntax (MS).
  * </p>
- * <p>The OWLAxiom traversal implementation is a copy of {{@link uk.ac.manchester.cs.owl.owlapi.AbstractEntityRegistrationManager}}</p>
+ * <p>
+ *     Since the instances of OWLAxiom are expressed in a Functional-Style Syntax (FSS) this class is responsible to find
+ *     the appropriate FSS style objects and count the occurrence(s) of the appropriate MS keywords.
+ * </p>
+ * <p>
+ *     A mapping between Functional-Style owl-api and Manchester Syntax keywords is implemented in this visitor pattern
+ *     according to the
+ *     <a href="https://www.w3.org/TR/2012/NOTE-owl2-manchester-syntax-20121211/">OWL 2 Web Ontology Language Manchester Syntax (Second Edition) Specification</a>
+ * </p>
+ * <p>
+ *     The OWLAxiom traversal implementation is a copy of {{@link uk.ac.manchester.cs.owl.owlapi.AbstractEntityRegistrationManager}}
+ * </p>
  * <p>
  *     The keywords are only counted when they do occur in the keywords list of class {@link OWLAxiomKeywordCostsEstimator}
  * </p>
  * <p>
- * An overview of the mapping from Manchester Syntax keywords to Functional-Style OWL-API axiom classes.
- * <table summary="Mapping between Manchester Syntax and Funtional-Style OWL-Api Classes" border="1">
- *     <tr><th>Manchester-Syntax</th><th>Functional-Style Syntax</th></tr>
- *     <tr><td>ManchesterOWLSyntax.TYPE</td><td>OWLClassAssertionAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SAME_AS</td><td>OWLSameIndividualAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SAME_INDIVIDUAL</td><td>OWLSameIndividualAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DIFFERENT_FROM</td><td>OWLDifferentIndividualsAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS</td><td>OWLDifferentIndividualsAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SUBCLASS_OF</td><td>OWLSubClassOfAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DISJOINT_WITH</td><td>OWLDisjointClassesAxiom, OWLDisjointObjectPropertiesAxiom, OWLDisjointDataPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DISJOINT_CLASSES</td><td>OWLDisjointClassesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DISJOINT_PROPERTIES</td><td>OWLDisjointObjectPropertiesAxiom, OWLDisjointDataPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DISJOINT_UNION_OF</td><td>OWLDisjointUnionAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.EQUIVALENT_TO</td><td>OWLEquivalentClassesAxiom, OWLEquivalentObjectPropertiesAxiom, OWLEquivalentDataPropertiesAxiom, OWLDatatypeDefinitionAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.EQUIVALENT_CLASSES</td><td>OWLEquivalentClassesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.EQUIVALENT_PROPERTIES</td><td>OWLEquivalentObjectPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.AND</td><td>OWLObjectIntersectionOf, OWLDataIntersectionOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.OR</td><td>OWLObjectUnionOf, OWLDataUnionOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.NOT</td><td>OWLObjectComplementOf, OWLDataComplementOf, OWLNegativeObjectPropertyAssertionAxiom, OWLNegativeDataPropertyAssertionAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SOME</td><td>OWLObjectSomeValuesFrom, OWLDataSomeValuesFrom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.ONLY</td><td>OWLObjectAllValuesFrom, OWLDataAllValuesFrom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.MIN</td><td>OWLObjectMinCardinality, OWLDataMinCardinality</td></tr>
- *     <tr><td>ManchesterOWLSyntax.MAX</td><td>OWLObjectMaxCardinality, OWLDataMaxCardinality</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SELF</td><td>OWLObjectHasSelf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.EXACTLY</td><td>OWLObjectExactCardinality, OWLDataExactCardinality</td></tr>
- *     <tr><td>ManchesterOWLSyntax.VALUE</td><td>OWLObjectHasValue, OWLDataHasValue</td></tr>
- *     <tr><td>ManchesterOWLSyntax.INVERSE</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.INVERSE_OF</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.ONE_OF_DELIMETER</td><td>OWLObjectOneOf, OWLDataOneOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.THAT</td><td>OWLObjectIntersectionOf</td></tr>
- *     <tr><td>ManchesterOWLSyntax.HAS_KEY</td><td>OWLHasKeyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.DOMAIN</td><td>OWLObjectPropertyDomainAxiom, OWLDataPropertyDomainAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.RANGE</td><td>OWLObjectPropertyRangeAxiom, OWLDataPropertyRangeAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.FUNCTIONAL</td><td>OWLFunctionalObjectPropertyAxiom, OWLFunctionalDataPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.INVERSE_FUNCTIONAL</td><td>OWLInverseFunctionalObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.REFLEXIVE</td><td>OWLReflexiveObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.IRREFLEXIVE</td><td>OWLIrreflexiveObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SYMMETRIC</td><td>OWLSymmetricObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.ASYMMETRIC</td><td>OWLAsymmetricObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.TRANSITIVE</td><td>OWLTransitiveObjectPropertyAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_OF</td><td>OWLSubObjectPropertyOfAxiom, OWLSubDataPropertyOfAxiom</td></tr>
- *     <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</td><td>OWLSubPropertyChainOfAxiom</td></tr>
- * </table>
+ *     An overview of the mapping from Manchester Syntax keywords to Functional-Style OWL-API axiom classes.
+ *     <table summary="Mapping between Manchester Syntax and Funtional-Style OWL-Api Classes" border="1">
+ *         <tr><th>Manchester-Syntax</th><th>Functional-Style Syntax</th></tr>
+ *         <tr><td>ManchesterOWLSyntax.TYPE</td><td>OWLClassAssertionAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SAME_AS</td><td>OWLSameIndividualAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SAME_INDIVIDUAL</td><td>OWLSameIndividualAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DIFFERENT_FROM</td><td>OWLDifferentIndividualsAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS</td><td>OWLDifferentIndividualsAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SUBCLASS_OF</td><td>OWLSubClassOfAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DISJOINT_WITH</td><td>OWLDisjointClassesAxiom, OWLDisjointObjectPropertiesAxiom, OWLDisjointDataPropertiesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DISJOINT_CLASSES</td><td>OWLDisjointClassesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DISJOINT_PROPERTIES</td><td>OWLDisjointObjectPropertiesAxiom, OWLDisjointDataPropertiesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DISJOINT_UNION_OF</td><td>OWLDisjointUnionAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.EQUIVALENT_TO</td><td>OWLEquivalentClassesAxiom, OWLEquivalentObjectPropertiesAxiom, OWLEquivalentDataPropertiesAxiom, OWLDatatypeDefinitionAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.EQUIVALENT_CLASSES</td><td>OWLEquivalentClassesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.EQUIVALENT_PROPERTIES</td><td>OWLEquivalentObjectPropertiesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.AND</td><td>OWLObjectIntersectionOf, OWLDataIntersectionOf</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.OR</td><td>OWLObjectUnionOf, OWLDataUnionOf</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.NOT</td><td>OWLObjectComplementOf, OWLDataComplementOf, OWLNegativeObjectPropertyAssertionAxiom, OWLNegativeDataPropertyAssertionAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SOME</td><td>OWLObjectSomeValuesFrom, OWLDataSomeValuesFrom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.ONLY</td><td>OWLObjectAllValuesFrom, OWLDataAllValuesFrom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.MIN</td><td>OWLObjectMinCardinality, OWLDataMinCardinality</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.MAX</td><td>OWLObjectMaxCardinality, OWLDataMaxCardinality</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SELF</td><td>OWLObjectHasSelf</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.EXACTLY</td><td>OWLObjectExactCardinality, OWLDataExactCardinality</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.VALUE</td><td>OWLObjectHasValue, OWLDataHasValue</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.INVERSE</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.INVERSE_OF</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.ONE_OF_DELIMETER</td><td>OWLObjectOneOf, OWLDataOneOf</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.THAT</td><td>OWLObjectIntersectionOf</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.HAS_KEY</td><td>OWLHasKeyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.DOMAIN</td><td>OWLObjectPropertyDomainAxiom, OWLDataPropertyDomainAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.RANGE</td><td>OWLObjectPropertyRangeAxiom, OWLDataPropertyRangeAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.FUNCTIONAL</td><td>OWLFunctionalObjectPropertyAxiom, OWLFunctionalDataPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.INVERSE_FUNCTIONAL</td><td>OWLInverseFunctionalObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.REFLEXIVE</td><td>OWLReflexiveObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.IRREFLEXIVE</td><td>OWLIrreflexiveObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SYMMETRIC</td><td>OWLSymmetricObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.ASYMMETRIC</td><td>OWLAsymmetricObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.TRANSITIVE</td><td>OWLTransitiveObjectPropertyAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_OF</td><td>OWLSubObjectPropertyOfAxiom, OWLSubDataPropertyOfAxiom</td></tr>
+ *         <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</td><td>OWLSubPropertyChainOfAxiom</td></tr>
+ *     </table>
  * </p>
  * @author wolfi
  * @see OWLAxiomKeywordCounter
  */
-public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor*/
+public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<ManchesterOWLSyntax> {/*OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor*/
 
+    /**
+     * Mapping between axiom and Manchester Syntax keyword occurrences.
+     */
     private Map<ManchesterOWLSyntax,Integer> map = new HashMap<>();
 
-    public Integer get(ManchesterOWLSyntax keyword) {
+    public Integer getOccurrences(ManchesterOWLSyntax keyword) {
         Integer count = map.get(keyword);
         if (count == null) return 0;
         return count;
     }
+
+    @Override
+    public Iterator<ManchesterOWLSyntax> iterator() {
+        return getKeywords();
+    }
+
+
+    public Iterator<ManchesterOWLSyntax> getKeywords() {
+        return map.keySet().iterator();
+    }
+
 
     /**
      * Increments the occurrence of a (Manchester Syntax) keyword by one (if keyword is registered).
@@ -187,7 +206,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
         increment(ManchesterOWLSyntax.DIFFERENT_FROM);
-        increment(ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS);
+        increment(ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS); // TODO CHECK THIS CASE
         for (OWLIndividual ind : axiom.getIndividuals()) {
             ind.accept(this);
         }
@@ -196,7 +215,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.DISJOINT_WITH);
-        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES);
+        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES); // TODO CHECK THIS CASE
         for (OWLDataPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -205,7 +224,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.DISJOINT_WITH);
-        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES);
+        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES); // TODO CHECK THIS CASE
         for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -269,7 +288,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
         increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES);
+        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES); // TODO CHECK THIS CASE
         for (OWLDataPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -285,7 +304,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
         increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_CLASSES);
+        increment(ManchesterOWLSyntax.EQUIVALENT_CLASSES); // TODO CHECK THIS CASE
         for (OWLClassExpression desc : axiom.getClassExpressions()) {
             desc.accept(this);
         }
@@ -326,7 +345,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
     @Override
     public void visit(@Nonnull OWLSameIndividualAxiom axiom) {
         increment(ManchesterOWLSyntax.SAME_AS);
-        increment(ManchesterOWLSyntax.SAME_INDIVIDUAL);
+        increment(ManchesterOWLSyntax.SAME_INDIVIDUAL); // TODO CHECK THIS CASE
         for (OWLIndividual ind : axiom.getIndividuals()) {
             ind.accept(this);
         }
@@ -490,8 +509,8 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor {/*OWLAxiomVisit
 
     @Override
     public void visit(@Nonnull OWLObjectOneOf ce) {
+        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER); // todo check
         for (OWLIndividual ind : ce.getIndividuals()) {
-            increment(ManchesterOWLSyntax.ONE_OF_DELIMETER);
             ind.accept(this);
         }
     }

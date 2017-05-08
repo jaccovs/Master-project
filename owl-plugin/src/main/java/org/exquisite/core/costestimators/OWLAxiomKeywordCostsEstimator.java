@@ -22,31 +22,48 @@ import java.util.*;
 public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
         implements ICostsEstimator<OWLLogicalAxiom> {
 
-    public final static ManchesterOWLSyntax[] keywords = {ManchesterOWLSyntax.SOME,
-            ManchesterOWLSyntax.ONLY,
-            ManchesterOWLSyntax.MIN,
-            ManchesterOWLSyntax.MAX,
-            ManchesterOWLSyntax.EXACTLY,
+    public final static ManchesterOWLSyntax[] keywords = {
+            ManchesterOWLSyntax.TYPE,
+            ManchesterOWLSyntax.SAME_AS,
+            ManchesterOWLSyntax.SAME_INDIVIDUAL,// new
+            ManchesterOWLSyntax.DIFFERENT_FROM,
+            ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS,// new
+            ManchesterOWLSyntax.SUBCLASS_OF,
+            ManchesterOWLSyntax.DISJOINT_WITH,
+            ManchesterOWLSyntax.DISJOINT_CLASSES,
+            ManchesterOWLSyntax.DISJOINT_PROPERTIES,//new
+            ManchesterOWLSyntax.DISJOINT_UNION_OF,//new
+            ManchesterOWLSyntax.EQUIVALENT_TO,
+            ManchesterOWLSyntax.EQUIVALENT_CLASSES,//new
+            ManchesterOWLSyntax.EQUIVALENT_PROPERTIES,//new
             ManchesterOWLSyntax.AND,
             ManchesterOWLSyntax.OR,
             ManchesterOWLSyntax.NOT,
+            ManchesterOWLSyntax.SOME,
+            ManchesterOWLSyntax.ONLY,
+            ManchesterOWLSyntax.MIN,
+            ManchesterOWLSyntax.MAX,
+            ManchesterOWLSyntax.SELF,//new
+            ManchesterOWLSyntax.EXACTLY,
             ManchesterOWLSyntax.VALUE,
             ManchesterOWLSyntax.INVERSE,
-            ManchesterOWLSyntax.SUBCLASS_OF,
-            ManchesterOWLSyntax.EQUIVALENT_TO,
-            ManchesterOWLSyntax.DISJOINT_CLASSES,
-            ManchesterOWLSyntax.DISJOINT_WITH,
-            ManchesterOWLSyntax.FUNCTIONAL,
             ManchesterOWLSyntax.INVERSE_OF,
-            ManchesterOWLSyntax.SUB_PROPERTY_OF,
-            ManchesterOWLSyntax.SAME_AS,
-            ManchesterOWLSyntax.DIFFERENT_FROM,
-            ManchesterOWLSyntax.RANGE,
+            ManchesterOWLSyntax.ONE_OF_DELIMETER,//new
+            ManchesterOWLSyntax.THAT,//new
+            ManchesterOWLSyntax.HAS_KEY,//new
             ManchesterOWLSyntax.DOMAIN,
-            ManchesterOWLSyntax.TYPE,
+            ManchesterOWLSyntax.RANGE,
+            ManchesterOWLSyntax.FUNCTIONAL,
+            ManchesterOWLSyntax.INVERSE_FUNCTIONAL,//new
+            ManchesterOWLSyntax.REFLEXIVE,//new
+            ManchesterOWLSyntax.IRREFLEXIVE,//new
+            ManchesterOWLSyntax.SYMMETRIC,
+            ManchesterOWLSyntax.ASYMMETRIC,//new
             ManchesterOWLSyntax.TRANSITIVE,
-            ManchesterOWLSyntax.SYMMETRIC
+            ManchesterOWLSyntax.SUB_PROPERTY_OF,
+            ManchesterOWLSyntax.SUB_PROPERTY_CHAIN//new
     };
+
     private Map<OWLLogicalAxiom, BigDecimal> axiomsProbabilities = null;
     private Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities;
 
@@ -112,8 +129,8 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
         BigDecimal result = BigDecimal.ONE;
         OWLAxiomKeywordCounter visitor = new OWLAxiomKeywordCounter();
         axiom.accept(visitor);
-        for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
-            final int occurrence = visitor.get(keyword);
+        for (ManchesterOWLSyntax keyword : visitor) {
+            final int occurrence = visitor.getOccurrences(keyword);
             if (occurrence > 0) {
                 final BigDecimal probability = keywordProbabilities.get(keyword);
                 BigDecimal temp = BigDecimal.ONE.subtract(probability);
@@ -121,6 +138,17 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
                 result = result.multiply(temp);
             }
         }
+        /*
+        for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
+            final int occurrence = visitor.getOccurrences(keyword);
+            if (occurrence > 0) {
+                final BigDecimal probability = keywordProbabilities.get(keyword);
+                BigDecimal temp = BigDecimal.ONE.subtract(probability);
+                temp = temp.pow(occurrence, MathContext.DECIMAL128);
+                result = result.multiply(temp);
+            }
+        }
+        */
         return result;
     }
 
