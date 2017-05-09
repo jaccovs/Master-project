@@ -75,15 +75,34 @@ import java.util.*;
  * @author wolfi
  * @see OWLAxiomKeywordCounter
  */
-public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<ManchesterOWLSyntax> {/*OWLAxiomVisitor, OWLClassExpressionVisitor, OWLPropertyExpressionVisitor, OWLDataRangeVisitor*/
+public class OWLAxiomKeywordCounter implements Iterable<ManchesterOWLSyntax>, OWLObjectVisitor {
 
     /**
      * Mapping between axiom and Manchester Syntax keyword occurrences.
      */
-    private Map<ManchesterOWLSyntax,Integer> map = new HashMap<>();
+    private Map<ManchesterOWLSyntax,Integer> _map;
 
+    /**
+     * A copied list of OWLAxiomKeywordCostsEstimator.keywords to check the relevance of a keyword occurrence.
+     */
+    private List<ManchesterOWLSyntax> _keywords;
+
+    /**
+     * Constructor.
+     */
+    public OWLAxiomKeywordCounter() {
+        _map = new HashMap<>();
+        _keywords = Arrays.asList(OWLAxiomKeywordCostsEstimator.keywords);
+    }
+
+    /**
+     * Returns the number of occurrences of the Manchester Syntax keyword within the parsed axiom
+     * (to be parsed with OWLAxiom.accept(OWLAxiomKeywordCounter).
+     * @param keyword The Manchester Syntax keyword.
+     * @return the number of occurrences of the keyword within an OWLAxiom.
+     */
     public Integer getOccurrences(ManchesterOWLSyntax keyword) {
-        Integer count = map.get(keyword);
+        Integer count = _map.get(keyword);
         if (count == null) return 0;
         return count;
     }
@@ -99,15 +118,25 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
      * @return The list of matched keywords found in the parsed axiom.
      */
     public Iterator<ManchesterOWLSyntax> getKeywords() {
-        return map.keySet().iterator();
+        return _map.keySet().iterator();
     }
 
     private void increment(final OWLObject axiom, Collection<? extends OWLObject> owlObjects, final ManchesterOWLSyntax... keywordCandidates) {
         increment(axiom, owlObjects, 1, keywordCandidates);
     }
 
-    private void increment(final OWLObject axiom, Collection<? extends OWLObject> owlObjects, final int inc, final ManchesterOWLSyntax... keywordCandidates) {
-        String axiomAsString = axiom.toString().replaceAll("(\r|\n|\r\n)+", "");
+    /**
+     * Increments the occurrence of one of the (Manchester Syntax) keyword candidates by inc (if keyword is registered).
+     *
+     * @param object An owl object to be parsed.
+     * @param owlObjects The objects the keyword candidates is connecting.
+     * @param inc The increment.
+     * @param keywordCandidates A list of keyword candidates for the current owl object.
+     */
+    private void increment(final OWLObject object, Collection<? extends OWLObject> owlObjects, final int inc, final ManchesterOWLSyntax... keywordCandidates) {
+        if (inc < 1) throw new IllegalArgumentException("Parameter inc must be a positive number");
+
+        String axiomAsString = object.toString().replaceAll("(\r|\n|\r\n)+", "");
         for (OWLObject owlObject : owlObjects) {
             final String owlObjectString = owlObject.toString().replaceAll("(\r|\n|\r\n)+", "");
 
@@ -164,11 +193,13 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
      * @param keyword The Manchester Syntax keyword.
      */
     private void increment(final ManchesterOWLSyntax keyword, final int inc) {
-        // assert that the keyword is in the list of the keywords
-        if (Arrays.asList(OWLAxiomKeywordCostsEstimator.keywords).contains(keyword)) {
-            Integer i = map.get(keyword);
-            if (i == null) map.put(keyword, inc);
-            else map.put(keyword, i + inc);
+        if (inc < 1) throw new IllegalArgumentException("Parameter inc must be a positive number");
+
+        // assert that the keyword is in the list of the keywords in OWLAxiomKeywordCostsEstimator
+        if (_keywords.contains(keyword)) {
+            Integer i = _map.get(keyword);
+            if (i == null) _map.put(keyword, inc);
+            else _map.put(keyword, i + inc);
         }
     }
 
@@ -483,7 +514,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
     @Override
     public void visit(@Nonnull OWLObjectIntersectionOf ce) {
         final int size = ce.getOperands().size() >= 2 ? ce.getOperands().size() - 1 : 1;
-        increment(ce, ce.getOperands(), size, ManchesterOWLSyntax.AND, ManchesterOWLSyntax.THAT); // TODO CHECK THIS CASE
+        increment(ce, ce.getOperands(), size, ManchesterOWLSyntax.AND, ManchesterOWLSyntax.THAT);
         for (OWLClassExpression operand : ce.getOperands()) {
             operand.accept(this);
         }
@@ -554,7 +585,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLObjectOneOf ce) {
-        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER); // todo check
+        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER);
         for (OWLIndividual ind : ce.getIndividuals()) {
             ind.accept(this);
         }

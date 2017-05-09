@@ -13,11 +13,10 @@ import java.math.MathContext;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pfleiss
- * Date: 08.11.11
- * Time: 14:14
- * To change this template use File | Settings | File Templates.
+ * A cost estimator used to calculate the formula costs depending on the difficulty of occurring Manchester Syntax keywords.
+ *
+ * @author wolfi
+ * @author pfleiss
  */
 public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
         implements ICostsEstimator<OWLLogicalAxiom> {
@@ -25,17 +24,17 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     public final static ManchesterOWLSyntax[] keywords = {
             ManchesterOWLSyntax.TYPE,
             ManchesterOWLSyntax.SAME_AS,
-            ManchesterOWLSyntax.SAME_INDIVIDUAL,// new
+            ManchesterOWLSyntax.SAME_INDIVIDUAL,
             ManchesterOWLSyntax.DIFFERENT_FROM,
-            ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS,// new
+            ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS,
             ManchesterOWLSyntax.SUBCLASS_OF,
             ManchesterOWLSyntax.DISJOINT_WITH,
             ManchesterOWLSyntax.DISJOINT_CLASSES,
-            ManchesterOWLSyntax.DISJOINT_PROPERTIES,//new
-            ManchesterOWLSyntax.DISJOINT_UNION_OF,//new
+            ManchesterOWLSyntax.DISJOINT_PROPERTIES,
+            ManchesterOWLSyntax.DISJOINT_UNION_OF,
             ManchesterOWLSyntax.EQUIVALENT_TO,
-            ManchesterOWLSyntax.EQUIVALENT_CLASSES,//new
-            ManchesterOWLSyntax.EQUIVALENT_PROPERTIES,//new
+            ManchesterOWLSyntax.EQUIVALENT_CLASSES,
+            ManchesterOWLSyntax.EQUIVALENT_PROPERTIES,
             ManchesterOWLSyntax.AND,
             ManchesterOWLSyntax.OR,
             ManchesterOWLSyntax.NOT,
@@ -43,25 +42,25 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             ManchesterOWLSyntax.ONLY,
             ManchesterOWLSyntax.MIN,
             ManchesterOWLSyntax.MAX,
-            ManchesterOWLSyntax.SELF,//new
+            ManchesterOWLSyntax.SELF,
             ManchesterOWLSyntax.EXACTLY,
             ManchesterOWLSyntax.VALUE,
             ManchesterOWLSyntax.INVERSE,
             ManchesterOWLSyntax.INVERSE_OF,
-            ManchesterOWLSyntax.ONE_OF_DELIMETER,//new
-            ManchesterOWLSyntax.THAT,//new
-            ManchesterOWLSyntax.HAS_KEY,//new
+            ManchesterOWLSyntax.ONE_OF_DELIMETER,
+            ManchesterOWLSyntax.THAT,
+            ManchesterOWLSyntax.HAS_KEY,
             ManchesterOWLSyntax.DOMAIN,
             ManchesterOWLSyntax.RANGE,
             ManchesterOWLSyntax.FUNCTIONAL,
-            ManchesterOWLSyntax.INVERSE_FUNCTIONAL,//new
-            ManchesterOWLSyntax.REFLEXIVE,//new
-            ManchesterOWLSyntax.IRREFLEXIVE,//new
+            ManchesterOWLSyntax.INVERSE_FUNCTIONAL,
+            ManchesterOWLSyntax.REFLEXIVE,
+            ManchesterOWLSyntax.IRREFLEXIVE,
             ManchesterOWLSyntax.SYMMETRIC,
-            ManchesterOWLSyntax.ASYMMETRIC,//new
+            ManchesterOWLSyntax.ASYMMETRIC,
             ManchesterOWLSyntax.TRANSITIVE,
             ManchesterOWLSyntax.SUB_PROPERTY_OF,
-            ManchesterOWLSyntax.SUB_PROPERTY_CHAIN//new
+            ManchesterOWLSyntax.SUB_PROPERTY_CHAIN
     };
 
     private Map<OWLLogicalAxiom, BigDecimal> axiomsProbabilities = null;
@@ -85,12 +84,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
 
         return max;
     }
-/*
-    public void updateKeywordProb(Map<ManchesterOWLSyntax, BigDecimal> keywordProbabilities) {
-        this.keywordProbabilities = keywordProbabilities;
-        updateAxiomProbabilities();
-    }
-*/
+
     private Map<ManchesterOWLSyntax, BigDecimal> createKeywordProbs() {
 
         Map<ManchesterOWLSyntax, BigDecimal> map = new HashMap<>();
@@ -138,17 +132,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
                 result = result.multiply(temp);
             }
         }
-        /*
-        for (ManchesterOWLSyntax keyword : this.keywordProbabilities.keySet()) {
-            final int occurrence = visitor.getOccurrences(keyword);
-            if (occurrence > 0) {
-                final BigDecimal probability = keywordProbabilities.get(keyword);
-                BigDecimal temp = BigDecimal.ONE.subtract(probability);
-                temp = temp.pow(occurrence, MathContext.DECIMAL128);
-                result = result.multiply(temp);
-            }
-        }
-        */
+
         return result;
     }
 
@@ -215,14 +199,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             result = new BigDecimal("0.000000000000000000000000000000000000000000001");
         return result;
     }
-/*
-    private int getNumOccurrences(ManchesterOWLSyntax keyword, OWLLogicalAxiom axiom) {
-        OWLAxiomKeywordCounter visitor = new OWLAxiomKeywordCounter();
-        axiom.accept(visitor);
-        int occurrence = visitor.get(keyword);
-        return occurrence;
-    }
-*/
+
     /**
      * Extracts all logical axioms from an ontology and assigns a formula weight to them.
      *
