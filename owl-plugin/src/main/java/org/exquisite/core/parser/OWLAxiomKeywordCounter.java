@@ -93,11 +93,61 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
         return getKeywords();
     }
 
-
+    /**
+     * Returns the list of matched keywords found in the parsed axiom.
+     *
+     * @return The list of matched keywords found in the parsed axiom.
+     */
     public Iterator<ManchesterOWLSyntax> getKeywords() {
         return map.keySet().iterator();
     }
 
+    private void increment(final OWLObject axiom, Collection<? extends OWLObject> owlObjects, final ManchesterOWLSyntax... keywordCandidates) {
+        increment(axiom, owlObjects, 1, keywordCandidates);
+    }
+
+    private void increment(final OWLObject axiom, Collection<? extends OWLObject> owlObjects, final int inc, final ManchesterOWLSyntax... keywordCandidates) {
+        String axiomAsString = axiom.toString().replaceAll("(\r|\n|\r\n)+", "");
+        for (OWLObject owlObject : owlObjects) {
+            final String owlObjectString = owlObject.toString().replaceAll("(\r|\n|\r\n)+", "");
+
+            int idx = axiomAsString.indexOf(owlObjectString);
+            if (idx != -1) // replaces the first occurrence of a matching owlObjectString with ""
+                axiomAsString = axiomAsString.substring(0, idx) + axiomAsString.substring(idx+owlObjectString.length());
+        }
+
+        axiomAsString = axiomAsString.trim();
+
+        boolean found = false;
+        //for (ManchesterOWLSyntax keyword : keywordCandidates) {
+        // first check for equality
+        for (int i = 0; i < keywordCandidates.length && !found; i++) {
+            ManchesterOWLSyntax keyword = keywordCandidates[i];
+            final StringTokenizer st = new StringTokenizer(axiomAsString);
+            final String keywordString = keyword.toString();
+            while (st.hasMoreTokens() && !found) {
+                if (found = st.nextToken().equals(keywordString)) {
+                    increment(keyword, inc);
+                }
+            }
+        }
+        if (!found) { // if yet no matching keyword is found, search for starting matches
+
+            // sort the list by descending length to guarantee to increment the longest matching keyword (e.g. inverseOf before inverse)
+            Arrays.sort(keywordCandidates, (o1, o2) -> o2.keyword().length() - o1.keyword().length());
+
+            for (int i = 0; i < keywordCandidates.length && !found; i++) {
+                ManchesterOWLSyntax keyword = keywordCandidates[i];
+                final StringTokenizer st = new StringTokenizer(axiomAsString);
+                final String keywordString = keyword.toString();
+                while (st.hasMoreTokens() && !found) {
+                    if (found = st.nextToken().startsWith(keywordString)) {
+                        increment(keyword, inc);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Increments the occurrence of a (Manchester Syntax) keyword by one (if keyword is registered).
@@ -131,7 +181,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
-        increment(ManchesterOWLSyntax.EQUIVALENT_TO); // todo check this
+        increment(ManchesterOWLSyntax.EQUIVALENT_TO);
         axiom.getDatatype().accept(this);
         axiom.getDataRange().accept(this);
     }
@@ -153,20 +203,19 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
-        increment(ManchesterOWLSyntax.ASYMMETRIC);// TODO check this case
+        increment(ManchesterOWLSyntax.ASYMMETRIC);
         axiom.getProperty().accept(this);
     }
 
     @Override
     public void visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
-        increment(ManchesterOWLSyntax.REFLEXIVE); // TODO CHECK THIS CASE
+        increment(ManchesterOWLSyntax.REFLEXIVE);
         axiom.getProperty().accept(this);
     }
 
     @Override
     public void visit(@Nonnull OWLDisjointClassesAxiom axiom) {
-        increment(ManchesterOWLSyntax.DISJOINT_CLASSES); //TODO CHECK THIS CASE
-        increment(ManchesterOWLSyntax.DISJOINT_WITH);
+        increment(axiom, axiom.getClassExpressions(), ManchesterOWLSyntax.DISJOINT_CLASSES, ManchesterOWLSyntax.DISJOINT_WITH);
         for (OWLClassExpression desc : axiom.getClassExpressions()) {
             desc.accept(this);
         }
@@ -188,8 +237,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
-        increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getProperties(), ManchesterOWLSyntax.EQUIVALENT_TO, ManchesterOWLSyntax.EQUIVALENT_PROPERTIES);
         for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -205,8 +253,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
-        increment(ManchesterOWLSyntax.DIFFERENT_FROM);
-        increment(ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getIndividuals(), ManchesterOWLSyntax.DIFFERENT_FROM, ManchesterOWLSyntax.DIFFERENT_INDIVIDUALS);
         for (OWLIndividual ind : axiom.getIndividuals()) {
             ind.accept(this);
         }
@@ -214,8 +261,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
-        increment(ManchesterOWLSyntax.DISJOINT_WITH);
-        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getProperties(), ManchesterOWLSyntax.DISJOINT_WITH, ManchesterOWLSyntax.DISJOINT_PROPERTIES);
         for (OWLDataPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -223,8 +269,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
-        increment(ManchesterOWLSyntax.DISJOINT_WITH);
-        increment(ManchesterOWLSyntax.DISJOINT_PROPERTIES); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getProperties(), ManchesterOWLSyntax.DISJOINT_WITH, ManchesterOWLSyntax.DISJOINT_PROPERTIES);
         for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -287,8 +332,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
-        increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_PROPERTIES); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getProperties(), ManchesterOWLSyntax.EQUIVALENT_TO, ManchesterOWLSyntax.EQUIVALENT_PROPERTIES);
         for (OWLDataPropertyExpression prop : axiom.getProperties()) {
             prop.accept(this);
         }
@@ -303,8 +347,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
-        increment(ManchesterOWLSyntax.EQUIVALENT_TO);
-        increment(ManchesterOWLSyntax.EQUIVALENT_CLASSES); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getClassExpressions(), ManchesterOWLSyntax.EQUIVALENT_TO, ManchesterOWLSyntax.EQUIVALENT_CLASSES);
         for (OWLClassExpression desc : axiom.getClassExpressions()) {
             desc.accept(this);
         }
@@ -325,7 +368,7 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
-        increment(ManchesterOWLSyntax.IRREFLEXIVE); // TODO CHECK THIS CASE
+        increment(ManchesterOWLSyntax.IRREFLEXIVE);
         axiom.getProperty().accept(this);
     }
 
@@ -338,14 +381,13 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
-        increment(ManchesterOWLSyntax.INVERSE_FUNCTIONAL); // TODO CHECK THIS CASE
+        increment(ManchesterOWLSyntax.INVERSE_FUNCTIONAL);
         axiom.getProperty().accept(this);
     }
 
     @Override
     public void visit(@Nonnull OWLSameIndividualAxiom axiom) {
-        increment(ManchesterOWLSyntax.SAME_AS);
-        increment(ManchesterOWLSyntax.SAME_INDIVIDUAL); // TODO CHECK THIS CASE
+        increment(axiom, axiom.getIndividuals(), ManchesterOWLSyntax.SAME_AS, ManchesterOWLSyntax.SAME_INDIVIDUAL);
         for (OWLIndividual ind : axiom.getIndividuals()) {
             ind.accept(this);
         }
@@ -362,8 +404,12 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
-        increment(ManchesterOWLSyntax.INVERSE); // todo check this case
-        increment(ManchesterOWLSyntax.INVERSE_OF);
+        final Set<OWLObjectPropertyExpression> owlObjects = new HashSet<>();
+        owlObjects.add(axiom.getFirstProperty());
+        owlObjects.add(axiom.getSecondProperty());
+
+        increment(axiom, owlObjects, ManchesterOWLSyntax.INVERSE, ManchesterOWLSyntax.INVERSE_OF);
+
         axiom.getFirstProperty().accept(this);
         axiom.getSecondProperty().accept(this);
     }
@@ -436,9 +482,8 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLObjectIntersectionOf ce) {
-        assert ce.getOperands().size() >= 2;
-        increment(ManchesterOWLSyntax.AND, ce.getOperands().size() - 1);
-        increment(ManchesterOWLSyntax.THAT); // TODO CHECK THIS CASE
+        final int size = ce.getOperands().size() >= 2 ? ce.getOperands().size() - 1 : 1;
+        increment(ce, ce.getOperands(), size, ManchesterOWLSyntax.AND, ManchesterOWLSyntax.THAT); // TODO CHECK THIS CASE
         for (OWLClassExpression operand : ce.getOperands()) {
             operand.accept(this);
         }
@@ -446,8 +491,8 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLObjectUnionOf ce) {
-        assert ce.getOperands().size() >= 2;
-        increment(ManchesterOWLSyntax.OR, ce.getOperands().size() - 1);
+        final int size = ce.getOperands().size() >= 2 ? ce.getOperands().size() - 1 : 1;
+        increment(ManchesterOWLSyntax.OR, size);
         for (OWLClassExpression operand : ce.getOperands()) {
             operand.accept(this);
         }
@@ -561,27 +606,27 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLClass owlClass) {
-
+        // terminal node
     }
 
     @Override
     public void visit(@Nonnull OWLObjectProperty owlObjectProperty) {
-
+        // terminal node
     }
 
     @Override
     public void visit(@Nonnull OWLDataProperty owlDataProperty) {
-
+        // terminal node
     }
 
     @Override
     public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
-
+        // terminal node
     }
 
     @Override
     public void visit(@Nonnull OWLAnnotationProperty owlAnnotationProperty) {
-
+        // terminal node
     }
 
     @Override
@@ -599,13 +644,13 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDatatype node) {
-
+        // terminal node
     }
 
     @Override
     public void visit(@Nonnull OWLDataOneOf node) {
-        assert node.getValues().size() >= 2;
-        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER, node.getValues().size() - 1);
+        final int size = node.getValues().size() >= 2 ? node.getValues().size() - 1 : 1;
+        increment(ManchesterOWLSyntax.ONE_OF_DELIMETER, size);
         for (OWLLiteral val : node.getValues()) {
             val.accept(this);
         }
@@ -619,8 +664,8 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDataIntersectionOf node) {
-        assert node.getOperands().size() >= 2;
-        increment(ManchesterOWLSyntax.AND, node.getOperands().size() - 1);
+        final int size = node.getOperands().size() >= 2 ? node.getOperands().size() - 1 : 1;
+        increment(ManchesterOWLSyntax.AND, size);
         for (OWLDataRange dr : node.getOperands()) {
             dr.accept(this);
         }
@@ -628,8 +673,8 @@ public class OWLAxiomKeywordCounter implements OWLObjectVisitor, Iterable<Manche
 
     @Override
     public void visit(@Nonnull OWLDataUnionOf node) {
-        assert node.getOperands().size() >= 2;
-        increment(ManchesterOWLSyntax.OR, node.getOperands().size() - 1);
+        final int size = node.getOperands().size() >= 2 ? node.getOperands().size() - 1: 1;
+        increment(ManchesterOWLSyntax.OR, size);
         for (OWLDataRange dr : node.getOperands()) {
             dr.accept(this);
         }
