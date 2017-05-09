@@ -73,7 +73,6 @@ import java.util.*;
  *     </table>
  * </p>
  * @author wolfi
- * @see OWLAxiomKeywordCounter
  */
 public class OWLAxiomKeywordCounter implements Iterable<ManchesterOWLSyntax>, OWLObjectVisitor {
 

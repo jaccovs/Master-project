@@ -17,6 +17,7 @@ import java.util.*;
  *
  * @author wolfi
  * @author pfleiss
+ * @see OWLAxiomKeywordCounter
  */
 public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
         implements ICostsEstimator<OWLLogicalAxiom> {
