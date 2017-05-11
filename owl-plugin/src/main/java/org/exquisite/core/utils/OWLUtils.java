@@ -2,7 +2,9 @@ package org.exquisite.core.utils;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.query.Query;
+import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.stream.Collectors;
 
@@ -24,4 +26,9 @@ public class OWLUtils {
     static public String getString(Query<OWLLogicalAxiom> query) {
         return query.formulas.stream().map(OWLUtils::getString).collect(Collectors.joining(", ")) + ", Score:" + query.score;
     }
+
+    static public String getManchesterSyntaxString(OWLObject owlObject) {
+        return new ManchesterOWLSyntaxOWLObjectRendererImpl().render(owlObject).replaceAll("(\r|\n|\r\n)+", "");
+    }
+
 }
