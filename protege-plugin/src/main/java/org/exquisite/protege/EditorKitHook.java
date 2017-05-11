@@ -1,5 +1,6 @@
 package org.exquisite.protege;
 
+import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.model.KeyValueMap;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
@@ -105,9 +106,12 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
             Iterator<Debugger> it = ontologyDebuggerMap.values().iterator();
             while (it.hasNext() && debugger == null) {
                 final Debugger ontologyDebugger = it.next();
-                final ExquisiteOWLReasoner reasoner = (ExquisiteOWLReasoner) ontologyDebugger.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver();
-                if (activeOntology.equals(reasoner.getDebuggingOntology()))
-                    debugger = ontologyDebugger;
+                final IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = ontologyDebugger.getDiagnosisEngineFactory().getDiagnosisEngine();
+                if (diagnosisEngine != null) { // check to avoid a NullPointerExceptions when loading an anonymous ontology (see issue #85)
+                    final ExquisiteOWLReasoner reasoner = (ExquisiteOWLReasoner) diagnosisEngine.getSolver();
+                    if (activeOntology.equals(reasoner.getDebuggingOntology()))
+                        debugger = ontologyDebugger;
+                }
             }
             return debugger != null;
         }
