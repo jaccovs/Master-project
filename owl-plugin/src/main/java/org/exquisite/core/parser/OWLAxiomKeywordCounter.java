@@ -1,6 +1,7 @@
 package org.exquisite.core.parser;
 
 import org.exquisite.core.costestimators.OWLAxiomKeywordCostsEstimator;
+import org.exquisite.core.utils.OWLUtils;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 
@@ -56,7 +57,7 @@ import java.util.*;
  *         <tr><td>ManchesterOWLSyntax.VALUE</td><td>OWLObjectHasValue, OWLDataHasValue</td></tr>
  *         <tr><td>ManchesterOWLSyntax.INVERSE</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
  *         <tr><td>ManchesterOWLSyntax.INVERSE_OF</td><td>OWLInverseObjectPropertiesAxiom</td></tr>
- *         <tr><td>ManchesterOWLSyntax.ONE_OF_DELIMETER</td><td>OWLObjectOneOf, OWLDataOneOf</td></tr>
+ *         <tr style="text-decoration: line-through"><td>ManchesterOWLSyntax.ONE_OF_DELIMETER</td><td>OWLObjectOneOf, OWLDataOneOf</td></tr>
  *         <tr><td>ManchesterOWLSyntax.THAT</td><td>OWLObjectIntersectionOf</td></tr>
  *         <tr><td>ManchesterOWLSyntax.HAS_KEY</td><td>OWLHasKeyAxiom</td></tr>
  *         <tr><td>ManchesterOWLSyntax.DOMAIN</td><td>OWLObjectPropertyDomainAxiom, OWLDataPropertyDomainAxiom</td></tr>
@@ -69,7 +70,7 @@ import java.util.*;
  *         <tr><td>ManchesterOWLSyntax.ASYMMETRIC</td><td>OWLAsymmetricObjectPropertyAxiom</td></tr>
  *         <tr><td>ManchesterOWLSyntax.TRANSITIVE</td><td>OWLTransitiveObjectPropertyAxiom</td></tr>
  *         <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_OF</td><td>OWLSubObjectPropertyOfAxiom, OWLSubDataPropertyOfAxiom</td></tr>
- *         <tr><td>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</td><td>OWLSubPropertyChainOfAxiom</td></tr>
+ *         <tr style="text-decoration: line-through"><td>ManchesterOWLSyntax.SUB_PROPERTY_CHAIN</td><td>OWLSubPropertyChainOfAxiom</td></tr>
  *     </table>
  * </p>
  * @author wolfi
@@ -135,23 +136,25 @@ public class OWLAxiomKeywordCounter implements Iterable<ManchesterOWLSyntax>, OW
     private void increment(final OWLObject object, Collection<? extends OWLObject> owlObjects, final int inc, final ManchesterOWLSyntax... keywordCandidates) {
         if (inc < 1) throw new IllegalArgumentException("Parameter inc must be a positive number");
 
-        String axiomAsString = object.toString().replaceAll("(\r|\n|\r\n)+", "");
-        for (OWLObject owlObject : owlObjects) {
-            final String owlObjectString = owlObject.toString().replaceAll("(\r|\n|\r\n)+", "");
+        // We MUST NOT use object.toString() since this method might generate different syntaxes as the expected
+        // Manchester Syntax (e.g. a Functional Style syntax)+
+        // In the second half of this method we heavily depend on a Manchester Syntax string representation of the OWLObject.
+        String axiomAsManchesterSyntaxString = OWLUtils.getManchesterSyntaxString(object);
 
-            int idx = axiomAsString.indexOf(owlObjectString);
+        for (OWLObject owlObject : owlObjects) {
+            final String owlObjectString = OWLUtils.getManchesterSyntaxString(owlObject);
+            int idx = axiomAsManchesterSyntaxString.indexOf(owlObjectString);
             if (idx != -1) // replaces the first occurrence of a matching owlObjectString with ""
-                axiomAsString = axiomAsString.substring(0, idx) + axiomAsString.substring(idx+owlObjectString.length());
+                axiomAsManchesterSyntaxString = axiomAsManchesterSyntaxString.substring(0, idx) + axiomAsManchesterSyntaxString.substring(idx+owlObjectString.length());
         }
 
-        axiomAsString = axiomAsString.trim();
+        axiomAsManchesterSyntaxString = axiomAsManchesterSyntaxString.trim();
 
         boolean found = false;
-        //for (ManchesterOWLSyntax keyword : keywordCandidates) {
         // first check for equality
         for (int i = 0; i < keywordCandidates.length && !found; i++) {
             ManchesterOWLSyntax keyword = keywordCandidates[i];
-            final StringTokenizer st = new StringTokenizer(axiomAsString);
+            final StringTokenizer st = new StringTokenizer(axiomAsManchesterSyntaxString);
             final String keywordString = keyword.toString();
             while (st.hasMoreTokens() && !found) {
                 if (found = st.nextToken().equals(keywordString)) {
@@ -159,14 +162,14 @@ public class OWLAxiomKeywordCounter implements Iterable<ManchesterOWLSyntax>, OW
                 }
             }
         }
-        if (!found) { // if yet no matching keyword is found, search for starting matches
+        if (!found) { // if yet no matching keyword is found, search for starting string matches
 
             // sort the list by descending length to guarantee to increment the longest matching keyword (e.g. inverseOf before inverse)
             Arrays.sort(keywordCandidates, (o1, o2) -> o2.keyword().length() - o1.keyword().length());
 
             for (int i = 0; i < keywordCandidates.length && !found; i++) {
                 ManchesterOWLSyntax keyword = keywordCandidates[i];
-                final StringTokenizer st = new StringTokenizer(axiomAsString);
+                final StringTokenizer st = new StringTokenizer(axiomAsManchesterSyntaxString);
                 final String keywordString = keyword.toString();
                 while (st.hasMoreTokens() && !found) {
                     if (found = st.nextToken().startsWith(keywordString)) {

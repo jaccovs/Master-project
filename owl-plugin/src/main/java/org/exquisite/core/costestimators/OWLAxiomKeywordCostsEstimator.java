@@ -48,7 +48,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             ManchesterOWLSyntax.VALUE,
             ManchesterOWLSyntax.INVERSE,
             ManchesterOWLSyntax.INVERSE_OF,
-            ManchesterOWLSyntax.ONE_OF_DELIMETER,
+            // ManchesterOWLSyntax.ONE_OF_DELIMETER, DEACTIVATED AS THERE IS NO KEYWORD FOR OWLObjectOneOf and OWLDataOneOf in Manchester Syntax
             ManchesterOWLSyntax.THAT,
             ManchesterOWLSyntax.HAS_KEY,
             ManchesterOWLSyntax.DOMAIN,
@@ -61,7 +61,7 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             ManchesterOWLSyntax.ASYMMETRIC,
             ManchesterOWLSyntax.TRANSITIVE,
             ManchesterOWLSyntax.SUB_PROPERTY_OF,
-            ManchesterOWLSyntax.SUB_PROPERTY_CHAIN
+            // ManchesterOWLSyntax.SUB_PROPERTY_CHAIN, DEACTIVATED. IF ACTIVATED THE TEST HAS TO BE ADAPTED
     };
 
     private Map<OWLLogicalAxiom, BigDecimal> axiomsProbabilities = null;

@@ -11,10 +11,11 @@ import org.semanticweb.owlapi.util.mansyntax.ManchesterOWLSyntaxParser;
 
 import java.io.File;
 
+import static junit.framework.Assert.assertNotNull;
+
 /**
  * Created by kostya on 21-Mar-16.
  */
-
 public class AbstractTest {
 
     protected ManchesterOWLSyntaxParser parser;
@@ -31,7 +32,21 @@ public class AbstractTest {
     }
 
     protected ExquisiteOWLReasoner createReasoner(File file, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
+        return createReasoner(file, null, extractModule, reduceIncoherencyToInconsistency);
+    }
+
+    protected ExquisiteOWLReasoner createReasoner(File file, OWLOntologyIRIMapper[] ontologyIRIMappers, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
         OWLOntologyManager man = OWLManager.createOWLOntologyManager();
+
+        // This is a fix for for locally imported ontologies (see imported families.owl in primer.owl ontology)
+        // A test unit will not find the location of the imported ontology otherwise. The caller has to supply an IRIMapper
+        // to give the ontology manager a hint where the imported ontology is physically.
+        if (ontologyIRIMappers != null) {
+            for (OWLOntologyIRIMapper ontologyIRIMapper : ontologyIRIMappers) {
+                man.getIRIMappers().add(ontologyIRIMapper);
+            }
+        }
+
         OWLOntology ontology = man.loadOntologyFromOntologyDocument(file);
 
         parser = new ManchesterOWLSyntaxParserImpl(new OWLAPIConfigProvider(), man.getOWLDataFactory());
@@ -66,5 +81,26 @@ public class AbstractTest {
         return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
     }
 
+    protected ExquisiteOWLReasoner loadOntology(String ontologyName) throws OWLOntologyCreationException, DiagnosisException {
+        return loadOntology(ontologyName, false, false);
+    }
+
+    protected ExquisiteOWLReasoner loadOntology(String ontologyName, OWLOntologyIRIMapper... ontologyIRIMappers) throws OWLOntologyCreationException, DiagnosisException {
+        return loadOntology(ontologyName, ontologyIRIMappers, false, false);
+    }
+
+    protected ExquisiteOWLReasoner loadOntology(String ontologyName, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
+        File ontology = new File(ClassLoader.getSystemResource(ontologyName).getFile());
+        ExquisiteOWLReasoner reasoner = createReasoner(ontology, extractModule, reduceIncoherencyToInconsistency);
+        assertNotNull(reasoner);
+        return reasoner;
+    }
+
+    protected ExquisiteOWLReasoner loadOntology(String ontologyName, OWLOntologyIRIMapper[] ontologyIRIMappers, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
+        File ontology = new File(ClassLoader.getSystemResource(ontologyName).getFile());
+        ExquisiteOWLReasoner reasoner = createReasoner(ontology, ontologyIRIMappers, extractModule, reduceIncoherencyToInconsistency);
+        assertNotNull(reasoner);
+        return reasoner;
+    }
 
 }

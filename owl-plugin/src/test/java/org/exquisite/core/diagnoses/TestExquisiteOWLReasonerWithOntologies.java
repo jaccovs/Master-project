@@ -31,17 +31,6 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
 
     private static final Logger logger = LoggerFactory.getLogger(TestExquisiteOWLReasonerWithOntologies.class);
 
-    private ExquisiteOWLReasoner loadOntology(String ontologyName) throws OWLOntologyCreationException, DiagnosisException {
-        return loadOntology(ontologyName, false, false);
-    }
-
-    private ExquisiteOWLReasoner loadOntology(String ontologyName, boolean extractModule, boolean reduceIncoherencyToInconsistency) throws OWLOntologyCreationException, DiagnosisException {
-        File ontology = new File(ClassLoader.getSystemResource(ontologyName).getFile());
-        ExquisiteOWLReasoner reasoner = createReasoner(ontology, extractModule, reduceIncoherencyToInconsistency);
-        assertNotNull(reasoner);
-        return reasoner;
-    }
-
     private void testConsistency(ExquisiteOWLReasoner reasoner, boolean isConsistent) {
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = reasoner.getDiagnosisModel();
         boolean b = reasoner.isConsistent(diagnosisModel.getPossiblyFaultyFormulas());
