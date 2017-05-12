@@ -275,7 +275,7 @@ public class Debugger {
                 doStopDebugging(SessionStopReason.ERROR_OCCURRED);
             } catch (RuntimeException e) {
                 logger.error(e.getMessage(), e);
-                DebuggingDialog.showErrorDialog("Unexptected exception occurred", e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Unexpected exception occurred", e.getMessage(), e);
                 doStopDebugging(SessionStopReason.ERROR_OCCURRED);
             }
         }

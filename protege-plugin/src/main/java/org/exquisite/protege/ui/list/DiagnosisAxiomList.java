@@ -3,12 +3,10 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
-import org.exquisite.protege.ui.list.renderer.AxiomListItemRenderer;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
