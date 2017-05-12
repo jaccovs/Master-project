@@ -23,16 +23,17 @@ public class AxiomListItemRenderer extends BasicAxiomListItemRenderer {
         if (value instanceof ConflictListHeader) {
             ConflictListHeader listHeader = ((ConflictListHeader) value);
             result = getRenderer().getListCellRendererComponent(list, listHeader, index, isSelected, cellHasFocus);
-
+            getRenderer().setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            getRenderer().setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
             ((JComponent)result).setBorder(BorderFactory.createLineBorder(headerColor,2));
             result.setBackground(headerColor.brighter());
         } else if (value instanceof DiagnosisListHeader) {
             DiagnosisListHeader listHeader = ((DiagnosisListHeader) value);
             result = getRenderer().getListCellRendererComponent(list, listHeader, index, isSelected, cellHasFocus);
-
+            getRenderer().setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            getRenderer().setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
             ((JComponent)result).setBorder(BorderFactory.createLineBorder(headerColor,2));
             result.setBackground(headerColor.brighter());
-
         }
         return result;
 

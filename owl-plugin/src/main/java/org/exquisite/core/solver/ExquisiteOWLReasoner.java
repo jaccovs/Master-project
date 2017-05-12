@@ -355,7 +355,9 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             changes.add(new AddAxiom(ontology, ax));
         }
 
-        manager.applyChanges(changes);
+        if (!changes.isEmpty())
+            manager.applyChanges(changes);
+
         this.reasoner.flush();
     }
 

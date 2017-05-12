@@ -13,9 +13,13 @@ public class BasicAxiomListItemRenderer implements ListCellRenderer  {
 
     public BasicAxiomListItemRenderer(OWLEditorKit editorKit) {
         renderer = new OWLCellRenderer(editorKit);
+        renderer.setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+        renderer.setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
     }
 
     public OWLCellRenderer getRenderer() {
+        renderer.setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+        renderer.setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
         return renderer;
     }
 
@@ -26,10 +30,16 @@ public class BasicAxiomListItemRenderer implements ListCellRenderer  {
             getRenderer().setOntology(item.getOntology());
             getRenderer().setHighlightKeywords(true);
             getRenderer().setWrap(false);
-            return getRenderer().getListCellRendererComponent(list, item.getAxiom(), index, isSelected, cellHasFocus);
+            Component result =  getRenderer().getListCellRendererComponent(list, item.getAxiom(), index, isSelected, cellHasFocus);
+            getRenderer().setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            getRenderer().setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            return result;
         }
         else {
-            return getRenderer().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            Component result = getRenderer().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            getRenderer().setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            getRenderer().setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
+            return result;
         }
     }
 }
