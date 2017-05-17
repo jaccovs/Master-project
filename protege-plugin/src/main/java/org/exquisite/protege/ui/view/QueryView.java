@@ -53,12 +53,7 @@ public class QueryView extends AbstractListViewComponent {
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         add(createNewQueryToolBar(), BorderLayout.NORTH);
-        updateView();
-    }
-
-    private void updateView() {
-        final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
-        ((QueryAxiomList)getList()).updateList(debugger, debugger.getDiagnosisEngineFactory().getOntology());
+        updateView(getEditorKitHook().getActiveOntologyDebugger());
     }
 
     @Override
@@ -68,12 +63,14 @@ public class QueryView extends AbstractListViewComponent {
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        updateView((Debugger) e.getSource());
+    }
 
-        final Debugger debugger = (Debugger) e.getSource();
+    private void updateView(final Debugger debugger) {
         switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
                 OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                ((QueryAxiomList)getList()).updateList(debugger,ontology);
+                ((QueryAxiomList)getList()).updateList(debugger, ontology);
                 break;
             case IDLE:
                 ((QueryAxiomList)getList()).clearList();
