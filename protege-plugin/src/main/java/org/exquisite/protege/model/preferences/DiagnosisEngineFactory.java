@@ -7,7 +7,6 @@ import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
-import org.exquisite.core.solver.ISolver;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -91,7 +90,7 @@ public class DiagnosisEngineFactory {
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), ontology.getOWLOntologyManager(), reasonerFactory);
+            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), reasonerFactory);
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
 

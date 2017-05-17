@@ -2,6 +2,7 @@ package org.exquisite.core.solver;
 
 import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.model.DiagnosisModel;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.*;
@@ -35,18 +36,23 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private OWLOntology debuggingOntology;
 
     /**
+     * The debugging ontology's manager to be used in constructor and in dispose() for a proper cleanup.
+     */
+    private OWLOntologyManager debuggingOntologyManager;
+
+    /**
      * Default constructor of the reasoner
      *
      * @param dm              a diagnosis model
-     * @param manager         ontology manager
      * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
      * @throws OWLOntologyCreationException An exception which describes an error during the creation of an ontology.
      */
     public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm,
-                                OWLOntologyManager manager, OWLReasonerFactory reasonerFactory)
+                                OWLReasonerFactory reasonerFactory)
             throws OWLOntologyCreationException {
         super(dm);
-        this.debuggingOntology = manager.createOntology(); // use of anonymous ontology as debugging ontology
+        this.debuggingOntologyManager = OWLManager.createOWLOntologyManager();
+        this.debuggingOntology = this.debuggingOntologyManager.createOntology(); // use of anonymous ontology as debugging ontology
         this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
         checkDiagnosisModel();
     }
@@ -378,8 +384,8 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         final OWLOntology ontology = this.reasoner.getRootOntology();
         if (!ontology.equals(this.debuggingOntology))
             throw new UnsupportedOperationException("reasoners root ontology does not equal the debugging ontology");
-        OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
-        ontologyManager.removeOntology(ontology);
+        this.debuggingOntologyManager.removeOntology(this.debuggingOntology);
+        this.debuggingOntologyManager = null;
         this.axiomGenerators.clear();
         try {
             this.reasoner.dispose();

@@ -78,7 +78,7 @@ public class AbstractTest {
         }
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
-        return new ExquisiteOWLReasoner(diagnosisModel, ontology.getOWLOntologyManager(), reasonerFactory);
+        return new ExquisiteOWLReasoner(diagnosisModel, reasonerFactory);
     }
 
     protected ExquisiteOWLReasoner loadOntology(String ontologyName) throws OWLOntologyCreationException, DiagnosisException {
