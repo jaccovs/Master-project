@@ -90,7 +90,7 @@ public class DiagnosisEngineFactory {
 
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), reasonerFactory);
+            ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), reasonerFactory, this.debugger.getReasonerProgressMonitor());
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
 

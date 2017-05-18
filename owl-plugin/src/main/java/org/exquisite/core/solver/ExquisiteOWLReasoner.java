@@ -50,10 +50,22 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm,
                                 OWLReasonerFactory reasonerFactory)
             throws OWLOntologyCreationException {
+        this(dm, reasonerFactory, null);
+    }
+
+    public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm,
+                                OWLReasonerFactory reasonerFactory,
+                                ReasonerProgressMonitor monitor)
+            throws OWLOntologyCreationException {
         super(dm);
         this.debuggingOntologyManager = OWLManager.createOWLOntologyManager();
         this.debuggingOntology = this.debuggingOntologyManager.createOntology(); // use of anonymous ontology as debugging ontology
-        this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
+        if (monitor != null) {
+            OWLReasonerConfiguration configuration = new SimpleConfiguration(monitor);
+            this.reasoner = reasonerFactory.createReasoner(debuggingOntology, configuration);
+        } else {
+            this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
+        }
         checkDiagnosisModel();
     }
 
