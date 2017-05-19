@@ -181,15 +181,13 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     }
 
     private void updateAxiomProbabilities() {
-        Map<OWLLogicalAxiom, BigDecimal> axiomsProbs = new HashMap<>();
+        this.axiomsProbabilities = new HashMap<>();
         Collection<OWLLogicalAxiom> activeFormulas = getPossiblyFaultyFormulas();
         for (OWLLogicalAxiom axiom : activeFormulas) {
 
             BigDecimal result = computeAxiomProbability(axiom);
-            axiomsProbs.put(axiom, result);
+            this.axiomsProbabilities.put(axiom, result);
         }
-
-        this.axiomsProbabilities = Collections.unmodifiableMap(axiomsProbs);
     }
 
     private BigDecimal computeAxiomProbability(OWLLogicalAxiom axiom) {
