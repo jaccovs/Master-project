@@ -406,8 +406,10 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         final OWLOntology ontology = this.reasoner.getRootOntology();
         if (!ontology.equals(this.debuggingOntology))
             throw new UnsupportedOperationException("reasoners root ontology does not equal the debugging ontology");
-        this.debuggingOntologyManager.removeOntology(this.debuggingOntology);
+        if (this.debuggingOntologyManager != null)
+            this.debuggingOntologyManager.removeOntology(this.debuggingOntology);
         this.debuggingOntologyManager = null;
+        this.debuggingOntology = null;
         this.axiomGenerators.clear();
         try {
             this.reasoner.dispose();
