@@ -41,7 +41,7 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     private OWLOntologyManager debuggingOntologyManager;
 
     /**
-     * Default constructor of the reasoner
+     * Default constructor of the reasoner.
      *
      * @param dm              a diagnosis model
      * @param reasonerFactory of a reasoner expressive enough to reason about consistency of the ontology
@@ -53,13 +53,23 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
         this(dm, reasonerFactory, null);
     }
 
+    /**
+     * Default constructor of the reasoner with a ReasonerProgressMonitor.
+     *
+     * @param dm                a diagnosis model.
+     * @param reasonerFactory   of a reasoner expressive enough to reason about consistency of the ontology.
+     * @param monitor           a monitor for the progress of long lasting reasoner activities such as loading,
+     * preprocessing, consistency checking, classification and realisation.
+     * @throws OWLOntologyCreationException An exception which describes an error during the creation of an ontology.
+     */
     public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm,
                                 OWLReasonerFactory reasonerFactory,
                                 ReasonerProgressMonitor monitor)
             throws OWLOntologyCreationException {
         super(dm);
         this.debuggingOntologyManager = OWLManager.createOWLOntologyManager();
-        this.debuggingOntology = this.debuggingOntologyManager.createOntology(); // use of anonymous ontology as debugging ontology
+        // use of an anonymous ontology as the debugging ontology
+        this.debuggingOntology = this.debuggingOntologyManager.createOntology();
         if (monitor != null) {
             OWLReasonerConfiguration configuration = new SimpleConfiguration(monitor);
             this.reasoner = reasonerFactory.createReasoner(debuggingOntology, configuration);
