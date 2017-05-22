@@ -8,6 +8,10 @@ import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * Preferences panel used for defining preferences for the fault localization (a.k.a. diagnosis search).
@@ -23,8 +27,9 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also repair incoherency", DefaultPreferences.getDefaultReduceIncoherency());
 
-    // TODO: at the moment the extract modules option causes a major bug (see Issue #1) therefore the preferences does not show the option to change it.
-    // private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules of unsatisfiable classes it the ontology is consistent, but its terminology is incoherent", DefaultConfiguration.getDefaultExtractModules());
+    private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules", DefaultPreferences.getDefaultExtractModules());
+
+    private OptionBox extractModules;
 
     private JComboBox<DebuggerConfiguration.DiagnosisEngineType> engineTypeCombobox = new JComboBox<>();
 
@@ -126,13 +131,25 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
         JPanel lastPanel = new JPanel(new BorderLayout(150, 0));
         lastPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox), BorderLayout.WEST);
+        extractModules = new OptionBox("extractModules", extractModulesCheckbox);
+        extractModules.setEnabled(reduceIncoherencyCheckbox.isSelected());
+        extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
+        lastPanel.add(extractModules, BorderLayout.CENTER);
+        reduceIncoherencyCheckbox.addItemListener(
+                new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        extractModules.setEnabled(reduceIncoherencyCheckbox.isEnabled());
+                        extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
+                    }
+                }
+        );
         JButton defaultButton = new JButton("Reset to default preferences...");
         lastPanel.add(defaultButton, BorderLayout.EAST);
         defaultButton.addActionListener(e -> resetValues());
         panel.addGroupComponent(lastPanel);
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Repair Calculation");
-        //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
 
         holderCalculation.add(panel);
         return holderCalculation;
@@ -153,7 +170,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         reduceIncoherencyCheckbox.setSelected(getConfiguration().reduceIncoherency);
-        //extractModulesCheckbox.setSelected(getConfiguration().extractModules); // TODO deactivated because of issue #1
+        extractModulesCheckbox.setSelected(getConfiguration().extractModules);
     }
 
     @Override
@@ -170,7 +187,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         getNewConfiguration().reduceIncoherency = reduceIncoherencyCheckbox.isSelected();
-        //getNewConfiguration().extractModules = extractModulesCheckbox.isSelected(); // TODO deactivated because of issue #1
+        getNewConfiguration().extractModules = extractModulesCheckbox.isSelected();
     }
 
 
@@ -192,6 +209,6 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         reduceIncoherencyCheckbox.setSelected(DefaultPreferences.getDefaultReduceIncoherency());
-        //extractModulesCheckbox.setSelected(DefaultPreferences.getDefaultExtractModules()); // TODO deactivated because of issue #1
+        extractModulesCheckbox.setSelected(DefaultPreferences.getDefaultExtractModules());
     }
 }
