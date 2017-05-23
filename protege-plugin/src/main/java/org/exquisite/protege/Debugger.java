@@ -34,6 +34,7 @@ import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
+import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
@@ -259,7 +260,7 @@ public class Debugger {
             }
 
             try {
-                logger.info("------------------------ Starting new Debugging Session ------------------------");
+                logger.info(LogBanner.start("Starting new Debugging Session"));
                 debuggingSession.startSession();                // sets the start session flag
                 diagnosisEngineFactory.reset();                 // create new engine
                 this.diagnosisModel = diagnosisEngineFactory.consistencyCheck(this.getDiagnosisModel());
@@ -296,7 +297,7 @@ public class Debugger {
      */
     public void doStopDebugging(SessionStopReason reason) {
         if (isSessionRunning()) {
-            logger.info("-------------------------- Stopping Debugging Session --------------------------");
+            logger.info(LogBanner.start("Stopping Debugging Session"));
 
             try {
                 diagnosisEngineFactory.dispose();
@@ -348,6 +349,12 @@ public class Debugger {
                 case DEBUGGER_RESET:      // no message necessary
                 case CONSISTENT_ONTOLOGY: // no message necessary
                 case SESSION_RESTARTED:   // no message necessary
+                    final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
+                    if (configuration.reduceIncoherency && configuration.extractModules) {
+                        // During the debugging session the diagnosis model also has been reduced to set of axioms from
+                        // the extracted module and needs to be recreated.
+                        syncDiagnosisModel();
+                    }
                     break;
                 default:
                     reasonMsg = reason.toString();
@@ -588,7 +595,7 @@ public class Debugger {
         final int n = diagnosisEngineFactory.getSearchConfiguration().numOfLeadingDiags;
         diagnosisEngine.setMaxNumberOfDiagnoses(n);
         try {
-            logger.debug("Calculating {} diagnoses ...", n);
+            logger.debug("Calculating at most {} diagnoses ...", n);
             diagnoses.addAll(diagnosisEngine.calculateDiagnoses());
             conflicts.addAll(diagnosisEngine.getConflicts());
             logger.debug("Found {} diagnoses.", diagnoses.size());
