@@ -1,17 +1,12 @@
 package org.exquisite.protege.ui.panel.preferences;
 
-import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.InputValidator;
 import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * Preferences panel used for defining preferences for the fault localization (a.k.a. diagnosis search).
@@ -27,7 +22,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also repair incoherency", DefaultPreferences.getDefaultReduceIncoherency());
 
-    private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules", DefaultPreferences.getDefaultExtractModules());
+    private JCheckBox extractModulesCheckbox = new JCheckBox("enable module extraction", DefaultPreferences.getDefaultExtractModules());
 
     private OptionBox extractModules;
 
@@ -126,27 +121,31 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                         )
                 ));
         panel.addHelpText("<html><body>" +
-                "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired." +
+                "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired.<br>" +
+                "Module extraction reduces the search problem for the repair calculation to a subset of the axioms in the ontology." +
                 "</body></html>");
 
-        JPanel lastPanel = new JPanel(new BorderLayout(150, 0));
-        lastPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox), BorderLayout.WEST);
+
+        JPanel checkBoxesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        checkBoxesPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
         extractModules = new OptionBox("extractModules", extractModulesCheckbox);
         extractModules.setEnabled(reduceIncoherencyCheckbox.isSelected());
         extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
-        lastPanel.add(extractModules, BorderLayout.CENTER);
+        checkBoxesPanel.add(extractModules);
         reduceIncoherencyCheckbox.addItemListener(
-                new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent e) {
-                        extractModules.setEnabled(reduceIncoherencyCheckbox.isEnabled());
-                        extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
-                    }
+                e -> {
+                    extractModules.setEnabled(reduceIncoherencyCheckbox.isEnabled());
+                    extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
                 }
         );
+
         JButton defaultButton = new JButton("Reset to default preferences...");
-        lastPanel.add(defaultButton, BorderLayout.EAST);
         defaultButton.addActionListener(e -> resetValues());
+
+        JPanel lastPanel = new JPanel (new BorderLayout(80,0));
+        lastPanel.add(checkBoxesPanel, BorderLayout.WEST);
+        lastPanel.add(defaultButton, BorderLayout.EAST);
+
         panel.addGroupComponent(lastPanel);
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Repair Calculation");
