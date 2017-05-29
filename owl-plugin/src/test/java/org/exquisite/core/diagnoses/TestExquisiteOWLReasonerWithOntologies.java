@@ -47,12 +47,13 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
             logger.debug("based on " + diagnosisEngine.getSolver().getDiagnosisModel());
         }
 
+        final long start = System.currentTimeMillis();
         final Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
         assertNotNull(diagnoses);
         if (logger.isDebugEnabled()) {
-            logger.debug("got " + diagnoses.size() + " diagnoses: ");
-            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses)
-                logger.debug('\t' + OWLUtils.getString(diagnosis));
+            logger.debug("got " + diagnoses.size() + " diagnoses in " + (System.currentTimeMillis() - start) + "ms : ");
+//            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses)  // omitted to reduce output
+//                logger.debug('\t' + OWLUtils.getString(diagnosis)); // omitted to reduce output
         }
         assertEquals(expectedNumberOfDiagnoses, diagnoses.size());
         if (logger.isDebugEnabled()) logger.debug("done");
@@ -68,6 +69,10 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
 
         // make sure that ontology is incoherent by converting to inconsistent ontology
         reasoner = loadOntology(ontologyName, false, true);
+        testInConsistentOntology(ontologyName, reasoner, expectedNrOfDiags, nrOfDiags);
+
+        // last test: enable extractModule
+        reasoner = loadOntology(ontologyName, true, true);
         testInConsistentOntology(ontologyName, reasoner, expectedNrOfDiags, nrOfDiags);
 
     }

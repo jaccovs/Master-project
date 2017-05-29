@@ -23,7 +23,7 @@ public class DefaultPreferences {
 
     public static boolean getDefaultReduceIncoherency() { return true; }
 
-    public static boolean getDefaultExtractModules() { return false; }
+    public static boolean getDefaultExtractModules() { return true; }
 
     public static boolean getDefaultEnrichQuery() { return true; }
 

@@ -1,12 +1,11 @@
 package org.exquisite.protege.ui.panel.preferences;
 
-import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.exquisite.protege.model.preferences.DefaultPreferences;
 import org.exquisite.protege.model.preferences.InputValidator;
 import org.protege.editor.core.ui.preferences.PreferencesLayoutPanel;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -23,8 +22,9 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
 
     private JCheckBox reduceIncoherencyCheckbox = new JCheckBox("also repair incoherency", DefaultPreferences.getDefaultReduceIncoherency());
 
-    // TODO: at the moment the extract modules option causes a major bug (see Issue #1) therefore the preferences does not show the option to change it.
-    // private JCheckBox extractModulesCheckbox = new JCheckBox("extract *star* modules of unsatisfiable classes it the ontology is consistent, but its terminology is incoherent", DefaultConfiguration.getDefaultExtractModules());
+    private JCheckBox extractModulesCheckbox = new JCheckBox("enable module extraction", DefaultPreferences.getDefaultExtractModules());
+
+    private OptionBox extractModules;
 
     private JComboBox<DebuggerConfiguration.DiagnosisEngineType> engineTypeCombobox = new JComboBox<>();
 
@@ -57,8 +57,8 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
         setLayout(new BorderLayout());
 
         add(getHelpLabel("<html><body>" +
-                "Fault Localization is the search for <u>ontology repairs</u> (also called <u>diagnoses</u>). Each axiom in one ontology repair must be appropriately<br>" +
-                "modified or deleted in order to repair the inconsistency/incoherency of the faulty ontology. Queries serve to discriminate between multiple possible ontology repairs.<br>" +
+                "Fault Localization is the search for <u>ontology repairs</u> (also called <u>diagnoses</u>). Each axiom in one ontology repair must be appropriately modified or deleted<br>" +
+                "in order to repair the inconsistency/incoherency of the faulty ontology. Queries serve to discriminate between multiple possible ontology repairs.<br>" +
                 "Sequential answering of queries provides information enabling the debugger to gradually reduce the set of possible ontology repairs." +
                 "</body></html>"), BorderLayout.NORTH);
 
@@ -77,8 +77,8 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
     private OptionGroupBox createEngineTypePanel() {
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
-                "Conflict sets are minimal fault-preserving subsets of ontology axioms.<br>" +
-                "At least one axiom out of each conflict set must be deleted or modified in order to repair the ontology (default: QuickXPlain)." +
+                "Conflict sets are minimal fault-preserving subsets of ontology axioms. " +
+                "At least one axiom out of each conflict set must be repaired (default: QuickXPlain)." +
                 "</body></html>");
         panel.addLabelledGroupComponent("Conflict Searcher: ", new OptionBox("conflictsearcher", conflictSearcherJComboBox));
         panel.addHelpText("<html><body>" +
@@ -106,7 +106,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
         final PreferencesLayoutPanel panel = new PreferencesLayoutPanel();
         panel.addHelpText("<html><body>" +
                 "The repair calculation stops when the specified max. number of repairs is found or when no further repairs exist.<br>" +
-                "At least 2 repairs are required for Query Computation. Higher number of repairs tends to generate better queries at the expense of higher computation time (default: 9)." +
+                "At least 2 repairs are required for Query Computation. Higher # of repairs tends to generate better queries at the expense of higher computation time (default: 9)." +
                 "</body></html>");
         panel.addLabelledGroupComponent("Max. Number of Computed Ontology Repairs per Iteration: ", new OptionBox("numofleadingdiags", numOfLeadingDiagsSpinner));
         numOfLeadingDiagsSpinner.addChangeListener(e ->
@@ -121,18 +121,35 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                         )
                 ));
         panel.addHelpText("<html><body>" +
-                "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired." +
+                "Per default the debugger repairs both inconsistency and incoherency of the ontology. Uncheck if only inconsistency should be repaired.<br>" +
+                "Module extraction can considerably reduce the search space for repair and query search to a small subset of the ontology's axioms." +
                 "</body></html>");
 
-        JPanel lastPanel = new JPanel(new BorderLayout(150, 0));
-        lastPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox), BorderLayout.WEST);
+
+        //JPanel checkBoxesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        //checkBoxesPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox));
+        extractModules = new OptionBox("extractModules", extractModulesCheckbox);
+        extractModules.setEnabled(reduceIncoherencyCheckbox.isSelected());
+        extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
+        //checkBoxesPanel.add(extractModules);
+        reduceIncoherencyCheckbox.addItemListener(
+                e -> {
+                    extractModules.setEnabled(reduceIncoherencyCheckbox.isEnabled());
+                    extractModules.setEnabledLabel(reduceIncoherencyCheckbox.isSelected());
+                }
+        );
+
         JButton defaultButton = new JButton("Reset to default preferences...");
-        lastPanel.add(defaultButton, BorderLayout.EAST);
         defaultButton.addActionListener(e -> resetValues());
+
+        JPanel lastPanel = new JPanel (new BorderLayout(80,0));
+        lastPanel.add(new OptionBox("testincoherencyinconsistency", reduceIncoherencyCheckbox), BorderLayout.WEST);
+        lastPanel.add(extractModules, BorderLayout.CENTER);
+        lastPanel.add(defaultButton, BorderLayout.EAST);
+
         panel.addGroupComponent(lastPanel);
 
         OptionGroupBox holderCalculation = new OptionGroupBox("Repair Calculation");
-        //holderCalculation.addOptionBox(new OptionBox("extractModules",  extractModulesCheckbox));
 
         holderCalculation.add(panel);
         return holderCalculation;
@@ -153,7 +170,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         reduceIncoherencyCheckbox.setSelected(getConfiguration().reduceIncoherency);
-        //extractModulesCheckbox.setSelected(getConfiguration().extractModules); // TODO deactivated because of issue #1
+        extractModulesCheckbox.setSelected(getConfiguration().extractModules);
     }
 
     @Override
@@ -170,7 +187,7 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         getNewConfiguration().reduceIncoherency = reduceIncoherencyCheckbox.isSelected();
-        //getNewConfiguration().extractModules = extractModulesCheckbox.isSelected(); // TODO deactivated because of issue #1
+        getNewConfiguration().extractModules = extractModulesCheckbox.isSelected();
     }
 
 
@@ -192,6 +209,6 @@ class FaultLocalizationPreferencesPanel extends AbstractDebuggerPreferencesPanel
                 )
         );
         reduceIncoherencyCheckbox.setSelected(DefaultPreferences.getDefaultReduceIncoherency());
-        //extractModulesCheckbox.setSelected(DefaultPreferences.getDefaultExtractModules()); // TODO deactivated because of issue #1
+        extractModulesCheckbox.setSelected(DefaultPreferences.getDefaultExtractModules());
     }
 }

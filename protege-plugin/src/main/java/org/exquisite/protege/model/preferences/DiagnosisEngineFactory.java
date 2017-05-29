@@ -9,6 +9,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -110,22 +111,24 @@ public class DiagnosisEngineFactory {
             }
 
             diagnosisEngine.setMaxNumberOfDiagnoses(config.numOfLeadingDiags);
+            final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.debugger.getDiagnosisModel();
 
-            logger.info("------------------------------- Debugger Settings ------------------------------");
+            logger.info(LogBanner.start("Debugger Settings"));
             logger.info("Diagnosis Engine: {}", diagnosisEngine);
             logger.info("Reasoner: {}", reasoner);
             logger.info("Leading Diagnoses: " + config.numOfLeadingDiags);
             logger.info("Enrich Query: " + config.enrichQuery);
             logger.info("Thresholds: {}, {}, {}", config.entropyThreshold, config.cardinalityThreshold, config.cautiousParameter);
+            logger.info("Configuration [reduceIncoherency]: {}", config.reduceIncoherency);
+            logger.info("Configuration [extractModules]: {}", config.extractModules);
             logger.info("Diagnosis Model:");
-            final DiagnosisModel<OWLLogicalAxiom> dm = this.debugger.getDiagnosisModel();
-            logger.info("   {} Correct Formulas: {}", dm.getCorrectFormulas().size(), dm.getCorrectFormulas());
-            logger.info("   {} Possibly Faulty Formulas: {}", dm.getPossiblyFaultyFormulas().size(), dm.getPossiblyFaultyFormulas());
-            logger.info("   {} Entailed Examples: {}", dm.getEntailedExamples().size(), dm.getEntailedExamples());
-            logger.info("   {} Not-Entailed Examples: {}", dm.getNotEntailedExamples().size(), dm.getNotEntailedExamples());
+            logger.info("   {} Possibly Faulty Formulas", diagnosisModel.getPossiblyFaultyFormulas().size());
+            logger.info("   {} Correct Formulas", diagnosisModel.getCorrectFormulas().size());
+            logger.info("   {} Entailed Examples", diagnosisModel.getEntailedExamples().size());
+            logger.info("   {} Not-Entailed Examples", diagnosisModel.getNotEntailedExamples().size());
+            logger.info(LogBanner.end());
 
             return diagnosisEngine;
-
         } catch (OWLOntologyCreationException e) {
             logger.error(e.getMessage(), e);
             throw new DiagnosisRuntimeException("An error occurred during creation of a diagnosis engine", e);
@@ -134,9 +137,18 @@ public class DiagnosisEngineFactory {
 
     public DiagnosisModel<OWLLogicalAxiom> createDiagnosisModel() throws DiagnosisModelCreationException {
         try {
-            final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+            final long start = System.currentTimeMillis();
 
-            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology/*, reasonerFactory, config.extractModules, config.reduceIncoherency*/);
+            DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology);
+
+            logger.info(LogBanner.start("Generated Diagnosis Model"));
+            logger.info("Ontology: {}", ontology.getOntologyID());
+            logger.info("Generated in {} ms", (System.currentTimeMillis() - start));
+            logger.info("{} Possibly Faulty Formulas", diagnosisModel.getPossiblyFaultyFormulas().size());
+            logger.info("{} Correct Formulas", diagnosisModel.getCorrectFormulas().size());
+            logger.info("{} Entailed Examples", diagnosisModel.getEntailedExamples().size());
+            logger.info("{} Not-Entailed Examples", diagnosisModel.getNotEntailedExamples().size());
+            logger.info(LogBanner.end());
 
             for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
                 diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
@@ -157,7 +169,26 @@ public class DiagnosisEngineFactory {
     public DiagnosisModel<OWLLogicalAxiom> consistencyCheck(DiagnosisModel<OWLLogicalAxiom> dm) throws DiagnosisModelCreationException  {
         try {
             final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
-            return ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency, this.debugger.getReasonerProgressMonitor(), this.debugger.getExquisiteProgressMonitor());
+            final long start = System.currentTimeMillis();
+
+            logger.info(LogBanner.start("Settings for Consistency Check"));
+            logger.info("Ontology: {}", ontology.getOntologyID());
+            logger.info("OWLReasonerFactory: {}", reasonerFactory);
+            logger.info("Configuration [extractModules]: {}", config.extractModules);
+            logger.info("Configuration [reduceIncoherency]: {}", config.reduceIncoherency);
+            logger.info(LogBanner.end());
+
+            final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.consistencyCheck(dm, ontology, reasonerFactory, config.extractModules, config.reduceIncoherency, this.debugger.getReasonerProgressMonitor(), this.debugger.getExquisiteProgressMonitor());
+
+            logger.info(LogBanner.start("Diagnosis Model"));
+            logger.info("Checked in {} ms", (System.currentTimeMillis() - start));
+            logger.info("{} Possibly Faulty Formulas", dm.getPossiblyFaultyFormulas().size());
+            logger.info("{} Correct Formulas", dm.getCorrectFormulas().size());
+            logger.info("{} Entailed Examples", dm.getEntailedExamples().size());
+            logger.info("{} Not-Entailed Examples", dm.getNotEntailedExamples().size());
+            logger.info(LogBanner.end());
+
+            return diagnosisModel;
         } catch (RuntimeException e) {
             throw new DiagnosisModelCreationException(e);
         }
