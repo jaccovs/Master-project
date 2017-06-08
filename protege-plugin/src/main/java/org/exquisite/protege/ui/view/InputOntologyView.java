@@ -3,6 +3,8 @@ package org.exquisite.protege.ui.view;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.ui.list.BasicAxiomList;
+import org.exquisite.protege.ui.list.handler.CorrectAxiomsTransferHandler;
+import org.exquisite.protege.ui.list.handler.PossiblyFaultyAxiomsTransferHandler;
 import org.exquisite.protege.ui.panel.axioms.CorrectAxiomsPanel;
 import org.exquisite.protege.ui.panel.axioms.PossiblyFaultyAxiomsPanel;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -32,8 +34,9 @@ public class InputOntologyView extends AbstractViewComponent {
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
         setLayout(new BorderLayout(10, 10));
-        BasicAxiomList correctAxiomsList = new BasicAxiomList(getOWLEditorKit(), this, true);
-        BasicAxiomList possiblyFaultyAxiomsList = new BasicAxiomList(getOWLEditorKit(), this, false);
+
+        BasicAxiomList correctAxiomsList = new BasicAxiomList(getOWLEditorKit(), this, true,  new CorrectAxiomsTransferHandler(this.getEditorKitHook().getActiveOntologyDebugger()));
+        BasicAxiomList possiblyFaultyAxiomsList = new BasicAxiomList(getOWLEditorKit(), this, false, new PossiblyFaultyAxiomsTransferHandler(this.getEditorKitHook().getActiveOntologyDebugger()));
 
         Box box = Box.createVerticalBox();
 
@@ -70,10 +73,6 @@ public class InputOntologyView extends AbstractViewComponent {
                 correctAxiomsPanel.updateDisplayedAxioms();
                 break;
         }
-    }
-
-    public PossiblyFaultyAxiomsPanel getPossiblyFaultyAxiomsPanel() {
-        return possiblyFaultyAxiomsPanel;
     }
 
     private void setAxiomsToDisplay() {

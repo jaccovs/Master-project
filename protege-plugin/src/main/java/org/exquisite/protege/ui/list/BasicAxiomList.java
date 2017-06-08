@@ -9,20 +9,26 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BasicAxiomList extends AbstractAxiomList {
 
     private boolean isBackground;
+
     private InputOntologyView view;
 
-    public BasicAxiomList(OWLEditorKit editorKit, InputOntologyView view, boolean isBackground) {
+    public BasicAxiomList(OWLEditorKit editorKit, InputOntologyView view, boolean isBackground, TransferHandler transferHandler) {
         super(editorKit);
         this.isBackground = isBackground;
         this.view = view;
+
+        setDragEnabled(true);
+        setDropMode(DropMode.INSERT);
+        setTransferHandler(transferHandler);
     }
 
     @Override
@@ -41,16 +47,11 @@ public class BasicAxiomList extends AbstractAxiomList {
         return buttons;
     }
 
-    public void updateList(Set<OWLLogicalAxiom> axioms, OWLOntology ontology) {
+    public void updateList(Collection<OWLLogicalAxiom> axioms, OWLOntology ontology) {
         List<Object> items = axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList());
-
-        setListData(items.toArray());
-    }
-
-    public void updateList(List<OWLLogicalAxiom> axioms, OWLOntology ontology) {
-        List<Object> items = axioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList());
-
-        setListData(items.toArray());
+        if (items != null) setListData(items.toArray());
+        if (view.getEditorKitHook()!=null && view.getEditorKitHook().getActiveOntologyDebugger() != null)
+            setDragEnabled(! view.getEditorKitHook().getActiveOntologyDebugger().isSessionRunning());
     }
 
 }
