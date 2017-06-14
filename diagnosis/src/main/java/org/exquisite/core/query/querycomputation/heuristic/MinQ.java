@@ -1,10 +1,11 @@
 package org.exquisite.core.query.querycomputation.heuristic;
 
-import org.exquisite.core.engines.AbstractDiagnosisEngine;
+import org.exquisite.core.IExquisiteProgressMonitor;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.QPartition;
+import org.exquisite.core.query.querycomputation.UserInterruptionException;
 
 import java.util.*;
 
@@ -21,9 +22,17 @@ public class MinQ<F>  {
 
     protected Split split = Split.Half;
 
+    protected IExquisiteProgressMonitor monitor;
+
+    public MinQ(IExquisiteProgressMonitor monitor) {
+        this.monitor = monitor;
+    }
+
     // Mapping from the technical report Algorithm 8 Query Optimization
     //                             QB         X          Q
-    public List<F> minQ(List<F> b, List<F> d, List<F> c, QPartition qpartition, IDiagnosisEngine<F> dpi) {
+    public List<F> minQ(List<F> b, List<F> d, List<F> c, QPartition qpartition, IDiagnosisEngine<F> dpi) throws UserInterruptionException {
+        checkUserInterruption();
+
         if (!d.isEmpty() && isQPartConst(b, qpartition, dpi))
             return new ArrayList<>(0);
         if (c.size() == 1)
@@ -74,7 +83,7 @@ public class MinQ<F>  {
 
     public enum Split {Half, One}
 
-    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, IDiagnosisEngine<F> dpi) {
+    private boolean isQPartConst(List<F> q, QPartition<F> qpartition, IDiagnosisEngine<F> dpi) throws UserInterruptionException {
         start(TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
         incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
         try {
@@ -88,6 +97,7 @@ public class MinQ<F>  {
 
                 kr1.addAll(q);
 
+                checkUserInterruption();
                 if (dpi.getSolver().isConsistent(kr1)) {
                     return false;
                 }
@@ -98,6 +108,8 @@ public class MinQ<F>  {
                 kr2.removeAll(dr.getFormulas());
                 kr2.addAll(diagnosisModel.getCorrectFormulas());
                 kr2.addAll(diagnosisModel.getEntailedExamples());
+
+                checkUserInterruption();
                 if (dpi.getSolver().isEntailed(kr2, q))
                     return false;
             }
@@ -105,6 +117,16 @@ public class MinQ<F>  {
         } finally {
             stop(TIMER_QUERYCOMPUTATION_HEURISTIC_ISQPARTCONST);
         }
+    }
+
+    /**
+     * Checks if the user pressed the cancel button.
+     *
+     * @throws UserInterruptionException thrown when user pressed the cancel button.
+     */
+    private void checkUserInterruption() throws UserInterruptionException {
+        if (monitor != null && monitor.isCancelled())
+            throw new UserInterruptionException();
     }
 
 }

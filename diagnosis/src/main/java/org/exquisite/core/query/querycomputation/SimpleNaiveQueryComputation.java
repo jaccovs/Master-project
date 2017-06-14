@@ -79,7 +79,7 @@ public class SimpleNaiveQueryComputation<F> implements IQueryComputation<F> {
     @Override
     public Query<F> next() {
         Query query = queriesIterator.next();
-        query.formulas = new HashSet<>(new MinQ<F>().minQ(
+        query.formulas = new HashSet<>(new MinQ<F>(null).minQ(
                 new ArrayList<>(query.formulas.size()),
                 new ArrayList<>(query.formulas.size()),
                 new ArrayList<>(query.formulas),

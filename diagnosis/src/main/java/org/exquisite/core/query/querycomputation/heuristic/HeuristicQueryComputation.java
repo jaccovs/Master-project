@@ -10,6 +10,7 @@ import org.exquisite.core.query.querycomputation.IQueryComputation;
 import org.exquisite.core.query.QPartition;
 import org.exquisite.core.query.QPartitionOperations;
 import org.exquisite.core.query.Query;
+import org.exquisite.core.query.querycomputation.UserInterruptionException;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.IQPartitionRequirementsMeasure;
 
 import java.util.*;
@@ -52,23 +53,35 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         if (config.enrichQueries) {
             if (monitor !=null) {
                 monitor.taskBusy("enriching query...");
-                monitor.setCancel(false); // TODO enable the cancel button as soon as we have at least the canonical queries. this will probably be implemented together with implementation of timeout implementation see issue #58 See documentation of OWLReasoner.interrupt
+                monitor.setCancel(true); // we already have the canonical query therefore the user can cancel the
             }
 
-            // (3) in order to come up with a query that is as simple and easy to answer as possible for the
-            // respective user U, the query can optionally enriched by additional logical formulas by invoking
-            // a reasoner for entailments calculation.
-            Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
+            if (monitor!=null && !monitor.isCancelled()) {
+                try {
+                    // (3) in order to come up with a query that is as simple and easy to answer as possible for the
+                    // respective user U, the query can optionally enriched by additional logical formulas by invoking
+                    // a reasoner for entailments calculation.
+                    Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
 
-            // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
-            // which constructs a set-minimal query where most complex sentences in terms of the logical construct
-            // and term fault estimates are eliminated from Q and the most simple ones retained
-            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
-            if (monitor !=null) monitor.taskBusy("optimizing query...");
+                    // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
+                    // which constructs a set-minimal query where most complex sentences in terms of the logical construct
+                    // and term fault estimates are eliminated from Q and the most simple ones retained
+                    incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
+                    if (monitor != null) monitor.taskBusy("optimizing query...");
 
-            Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
-            incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
-            query = optimizedQuery;
+                    Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
+                    incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
+                    query = optimizedQuery;
+                } catch (UserInterruptionException uiex) {
+                    // expected exception thrown when user interrupts the extended query computation.
+                    if (monitor != null) monitor.taskBusy("cancelling query enrichment...");
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
         if (monitor !=null) monitor.taskStopped();
@@ -100,6 +113,7 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
     private void calcQuery(Set<Diagnosis<F>> leadingDiagnoses) {
 
         if (config.getMonitor() != null) {
+            config.getMonitor().setCancel(false);
             config.getMonitor().taskStarted(IExquisiteProgressMonitor.QUERY_COMPUTATION + " using " + config.getRm() + ")");
             config.getMonitor().taskBusy("computing basic query based on " + leadingDiagnoses.size() + " repairs...");
         }
@@ -194,8 +208,9 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
      * @param qPartition The q-partition this query belongs to, see findQPartition (1).
      * @param diagnosisModel A diagnosis model representing the DPI (K,B,P,N)R.
      * @return An new query enriched by addition logical formulas by invoking a reasoner for entailments calculation.
+     * @throws UserInterruptionException Thrown when user pressed the cancel button
      */
-    private Set<F> enrichQuery(final Set<F> query, final QPartition<F> qPartition, final DiagnosisModel<F> diagnosisModel) {
+    private Set<F> enrichQuery(final Set<F> query, final QPartition<F> qPartition, final DiagnosisModel<F> diagnosisModel) throws UserInterruptionException {
         start(TIMER_QUERYCOMPUTATION_HEURISTIC_ENRICHQUERY);
         try {
             Set<F> unionOfLeadingDiagnoses = setUnion(qPartition.dx, qPartition.dnx, qPartition.dz);
@@ -226,12 +241,16 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
 
     /**
      * Calls a reasoner to calculate entailments given a set of formulas. Expensive!
-     * @param set
+     * @param set a Set
      * @return Entailed formulas
+     * @throws UserInterruptionException Thrown when user presses the cancel button
      */
-    private Set<F> getEntailments(Set<F> set) {
-        if (config.getMonitor() != null)
+    private Set<F> getEntailments(Set<F> set) throws UserInterruptionException {
+        if (config.getMonitor() != null) {
             config.getMonitor().taskBusy("calculating entailments of " + set.size() + " axioms...");
+            if (config.getMonitor().isCancelled()) // checks if the user pressed the cancel button
+                throw new UserInterruptionException();
+        }
         Set<F> entailments = config.getDiagnosisEngine().getSolver().calculateEntailments(set);
         return entailments;
     }
@@ -254,9 +273,9 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
         start(TIMER_QUERYCOMPUTATION_HEURISTIC_OPTIMIZEQUERY);
         try {
             List<F> sortedFormulas = sort(enrichedQuery, originalQuery, diagnosisEngine.getSolver().getDiagnosisModel().getFormulaWeights());
-            Set<F> optimizedQuery = new HashSet<F>(new MinQ<F>().minQ(
-                                                   new ArrayList<F>(sortedFormulas.size()),
-                                                   new ArrayList<F>(sortedFormulas.size()),
+            Set<F> optimizedQuery = new HashSet<>(new MinQ<F>(getConfig().getMonitor()).minQ(
+                                                   new ArrayList<>(sortedFormulas.size()),
+                                                   new ArrayList<>(sortedFormulas.size()),
                                                    sortedFormulas,
                                                    qPartition,
                                                    diagnosisEngine));
