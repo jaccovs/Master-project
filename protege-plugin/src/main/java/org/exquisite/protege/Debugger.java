@@ -389,6 +389,13 @@ public class Debugger {
         doStopDebugging(SessionStopReason.ONTOLOGY_RELOADED);
     }
 
+    public void doStartRepair() {
+        if (isSessionRunning() && getDiagnoses().size() == 1) {
+            // so start the repair session
+            logger.debug("Starting repair session");
+        }
+    }
+
     private void resetQuery() {
         this.previousAnswer = this.answer;
         this.answer = new Answer<>();
