@@ -21,8 +21,11 @@ public class DiagnosisAxiomList extends AbstractAxiomList {
     public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses, OWLOntology ontology) {
         List<Object> items = new ArrayList<>();
         int cnt = 0;
+
+        final int foundDiagnoses = diagnoses.size();
+
         for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-            items.add(new DiagnosisListHeader(diagnosis,createHeaderName(++cnt, diagnosis)));
+            items.add(new DiagnosisListHeader(diagnosis,createHeaderName(++cnt, foundDiagnoses, diagnosis)));
             items.addAll(diagnosis.getFormulas().stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList()));
             items.add(" ");
         }
@@ -32,9 +35,15 @@ public class DiagnosisAxiomList extends AbstractAxiomList {
         setListData(items.toArray());
     }
 
-    private String createHeaderName(final int position, final Diagnosis<OWLLogicalAxiom> diagnosis) {
-        final String roundedMeas = diagnosis.getMeasure().round(new java.math.MathContext(6)).toEngineeringString();
-        return "Repair #" + (position) + " (Axioms: " + diagnosis.getFormulas().size() + ", Preference Value: " + roundedMeas + ')';
+    private String createHeaderName(final int position, final int foundDiagnoses, final Diagnosis<OWLLogicalAxiom> diagnosis) {
+        if (foundDiagnoses == 1) {
+            return "According to your given answers these " + diagnosis.getFormulas().size() + " axioms are faulty." +
+                   "<br>" +
+                   "You can correct them by pressing the repair button.";
+        } else {
+            final String roundedMeas = diagnosis.getMeasure().round(new java.math.MathContext(6)).toEngineeringString();
+            return "Repair #" + (position) + " (Axioms: " + diagnosis.getFormulas().size() + ", Preference Value: " + roundedMeas + ')';
+        }
     }
 
 }

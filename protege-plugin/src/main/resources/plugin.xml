@@ -105,6 +105,14 @@
         <help value="https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/acquired-test-cases"/>
     </extension>
 
+    <extension id="RepairView" point="org.protege.editor.core.application.ViewComponent">
+        <label value="Ontology Repair"/>
+        <class value="org.exquisite.protege.ui.view.RepairView"/>
+        <headerColor value="7A9438"/>
+        <category value="Debugger"/>
+        <help value="https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/repair"/>
+    </extension>
+
     <!-- Preferences Panel -->
 
     <extension id="querydebugger.prefs" point="org.protege.editor.core.application.preferencespanel">

@@ -6,7 +6,6 @@ import org.exquisite.protege.ui.buttons.StopDebuggingButton;
 import org.exquisite.protege.ui.buttons.SubmitButton;
 import org.exquisite.protege.ui.list.QueryAxiomList;
 import org.protege.editor.core.ui.list.MList;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -71,11 +70,11 @@ public class QueryView extends AbstractListViewComponent {
     private void updateView(final Debugger debugger) {
         switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
-                OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                ((QueryAxiomList)getList()).updateList(debugger, ontology);
+                ((QueryAxiomList)getList()).updateList(debugger, getOWLEditorKit().getModelManager().getActiveOntology());
                 break;
             case IDLE:
                 ((QueryAxiomList)getList()).clearList();
+                ((QueryAxiomList)getList()).updateList(debugger, getOWLEditorKit().getModelManager().getActiveOntology());
                 break;
         }
 

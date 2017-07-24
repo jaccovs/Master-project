@@ -6,6 +6,8 @@ import org.exquisite.protege.Debugger;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
 import org.exquisite.protege.ui.buttons.NotSureButton;
+import org.exquisite.protege.ui.list.header.InitialQueryListHeader;
+import org.exquisite.protege.ui.list.header.InitialQueryListHeaderExplanation;
 import org.exquisite.protege.ui.list.header.QueryListHeader;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
 import org.exquisite.protege.ui.list.item.QueryAxiomListItem;
@@ -118,11 +120,15 @@ public class QueryAxiomList extends AssertedOrInferredAxiomList {
     public void updateList(Debugger debugger, OWLOntology ontology) {
         List<Object> items = new ArrayList<>();
         Query<OWLLogicalAxiom> query = debugger.getActualQuery();
-        if (query!=null && !query.formulas.isEmpty()) {
+        if (query==null && debugger.isSessionStopped()) {
+            boolean checkCoherency = debugger.getDiagnosisEngineFactory().getSearchConfiguration().reduceIncoherency;
+            items.add(new InitialQueryListHeader(checkCoherency));
+            items.add(new InitialQueryListHeaderExplanation(checkCoherency));
+        } else if (query!=null && !query.formulas.isEmpty()) {
             items.add(new QueryListHeader()); // section header for query view
             items.addAll(query.formulas.stream().map(axiom -> new QueryAxiomListItem(axiom, ontology, debugger)).collect(Collectors.toList()));
-            setListData(items.toArray());
         }
+        setListData(items.toArray());
     }
 
 }

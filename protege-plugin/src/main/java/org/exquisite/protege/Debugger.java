@@ -33,6 +33,7 @@ import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
+import org.exquisite.protege.ui.panel.repair.RepairPanel;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
@@ -47,6 +48,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -212,7 +215,7 @@ public class Debugger {
     }
 
     public boolean isSessionRunning() {
-        return debuggingSession.getState() == DebuggingSession.State.STARTED;
+        return debuggingSession.getState() == DebuggingSession.State.RUNNING;
     }
 
     public boolean isSessionStopped() {
@@ -391,9 +394,14 @@ public class Debugger {
 
     public void doStartRepair() {
         if (isSessionRunning() && getDiagnoses().size() == 1) {
-            // so start the repair session
-            logger.debug("Starting repair session");
+            this.debuggingSession.startRepairing();
+            RepairPanel repairPanel = new RepairPanel(this);
+            repairPanel.display();
         }
+    }
+
+    public void doStopRepair() {
+        this.debuggingSession.stopRepairing();
     }
 
     private void resetQuery() {
