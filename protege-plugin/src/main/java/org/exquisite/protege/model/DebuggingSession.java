@@ -13,8 +13,7 @@ public class DebuggingSession {
 
     public enum State {
         STOPPED,
-        RUNNING,
-        REPARING
+        RUNNING
     }
 
     public void startSession() {
@@ -24,10 +23,6 @@ public class DebuggingSession {
     public void stopSession() {
         this.state = State.STOPPED;
     }
-
-    public void startRepairing() { this.state = State.REPARING; }
-
-    public void stopRepairing() { this.state = State.RUNNING; }
 
     public State getState() {
         return state;

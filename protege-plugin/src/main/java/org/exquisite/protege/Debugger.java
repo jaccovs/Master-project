@@ -30,17 +30,24 @@ import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
-import org.exquisite.protege.ui.panel.repair.RepairPanel;
+import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
+import org.protege.editor.owl.model.util.OWLAxiomInstance;
+import org.protege.editor.owl.ui.UIHelper;
+import org.protege.editor.owl.ui.axiom.AxiomAnnotationPanel;
+import org.protege.editor.owl.ui.frame.OWLFrameSectionRow;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.slf4j.Logger;
@@ -122,6 +129,8 @@ public class Debugger {
     private DebuggerProgressUI progressUI;
 
     private org.protege.editor.owl.ui.inference.ReasonerProgressUI reasonerProgressUI;
+
+    private RepairManager repairManager;
 
     public Debugger(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
@@ -394,14 +403,14 @@ public class Debugger {
 
     public void doStartRepair() {
         if (isSessionRunning() && getDiagnoses().size() == 1) {
-            this.debuggingSession.startRepairing();
-            RepairPanel repairPanel = new RepairPanel(this);
-            repairPanel.display();
-        }
-    }
+            //this.repairManager = new RepairManager(this);
+            // this.debuggingSession.startRepairing();
+            //this.repairManager.doStartRepair();
+            RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
+            int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
+            repairDiagnosisPanel.dispose();
 
-    public void doStopRepair() {
-        this.debuggingSession.stopRepairing();
+        }
     }
 
     private void resetQuery() {
