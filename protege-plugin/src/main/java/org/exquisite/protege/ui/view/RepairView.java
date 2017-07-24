@@ -105,11 +105,11 @@ public class RepairView extends AbstractListViewComponent {
 
     @Override
     protected void disposeOWLView() {
-        super.disposeOWLView();
         final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
         debugger.doStopRepair();
         if (parent!=null) {
             parent.dispose();
         }
+        super.disposeOWLView();
     }
 }
