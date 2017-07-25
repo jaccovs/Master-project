@@ -2,6 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
@@ -10,6 +11,7 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,9 +24,14 @@ public class RepairAxiomList extends AbstractAxiomList {
 
     protected EditorKitHook editorKitHook;
 
-    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+    protected RepairManager repairManager;
+
+    protected Component parent;
+
+    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, RepairManager repairManager, Component parent) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
+        this.repairManager = repairManager;
     }
 
     @Override
@@ -42,11 +49,10 @@ public class RepairAxiomList extends AbstractAxiomList {
     public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses, OWLOntology ontology) {
         if (diagnoses.size() == 1) {
             List<Object> items = new ArrayList<>();
-            int cnt = 0;
 
             for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
                 items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
-                items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(axiom, ontology)).collect(Collectors.toList()));
+                items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(axiom, ontology, getEditorKit(), repairManager, parent)).collect(Collectors.toList()));
                 items.add(" ");
             }
 

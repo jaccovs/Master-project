@@ -2,6 +2,7 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.list.ConflictAxiomList;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.exquisite.protege.ui.list.RepairTestCasesAxiomList;
@@ -27,6 +28,8 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private Debugger debugger;
 
+    private RepairManager repairManager;
+
     private RepairAxiomList repairComponent;
 
     private RepairTestCasesAxiomList testcaseComponent;
@@ -34,11 +37,11 @@ public class RepairDiagnosisPanel extends JComponent {
     private ConflictAxiomList conflictComponent;
 
 
-
     public RepairDiagnosisPanel(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
+        this.repairManager = new RepairManager(this.debugger);
 
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
@@ -50,7 +53,7 @@ public class RepairDiagnosisPanel extends JComponent {
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairComponent = new RepairAxiomList(editorKit, editorKitHook);
+        repairComponent = new RepairAxiomList(editorKit, editorKitHook, repairManager, this);
         repairComponent.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairComponent, "Repair", pane);
 
