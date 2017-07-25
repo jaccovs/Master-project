@@ -21,15 +21,15 @@ import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFo
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
 import org.exquisite.protege.model.DebuggingSession;
-import org.exquisite.protege.model.listener.OntologyChangeListener;
 import org.exquisite.protege.model.TestcasesModel;
-import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
-import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.exquisite.protege.model.listener.OntologyChangeListener;
+import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
 import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
@@ -41,13 +41,8 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
-import org.protege.editor.owl.model.util.OWLAxiomInstance;
 import org.protege.editor.owl.ui.UIHelper;
-import org.protege.editor.owl.ui.axiom.AxiomAnnotationPanel;
-import org.protege.editor.owl.ui.frame.OWLFrameSectionRow;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.slf4j.Logger;
@@ -55,21 +50,17 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.exquisite.protege.Debugger.ErrorStatus.NO_ERROR;
-import static org.exquisite.protege.Debugger.ErrorStatus.RUNTIME_EXCEPTION;
-import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
+import static org.exquisite.protege.Debugger.ErrorStatus.*;
 
 public class Debugger {
 
     private Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
 
-    public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
+    public enum TestcaseType {ENTAILED_TC, NON_ENTAILED_TC, ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION}

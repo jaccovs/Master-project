@@ -2,9 +2,9 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.ui.list.AcquiredTestcaseAxiomList;
 import org.exquisite.protege.ui.list.ConflictAxiomList;
 import org.exquisite.protege.ui.list.RepairAxiomList;
+import org.exquisite.protege.ui.list.RepairTestCasesAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 
@@ -29,7 +29,7 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairAxiomList repairComponent;
 
-    private AcquiredTestcaseAxiomList testcaseComponent;
+    private RepairTestCasesAxiomList testcaseComponent;
 
     private ConflictAxiomList conflictComponent;
 
@@ -54,7 +54,7 @@ public class RepairDiagnosisPanel extends JComponent {
         repairComponent.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairComponent, "Repair", pane);
 
-        testcaseComponent = new AcquiredTestcaseAxiomList(editorKit, editorKitHook);
+        testcaseComponent = new RepairTestCasesAxiomList(editorKit, editorKitHook);
         addToPane(0,1,1,1,0.5,0.5,testcaseComponent,"Testcases", pane);
 
         conflictComponent = new ConflictAxiomList(editorKit, editorKitHook);
@@ -84,5 +84,7 @@ public class RepairDiagnosisPanel extends JComponent {
 
     public void dispose() {
         repairComponent.dispose();
+        testcaseComponent.dispose();
+        conflictComponent.dispose();
     }
 }

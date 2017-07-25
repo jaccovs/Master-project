@@ -62,4 +62,7 @@ abstract class AbstractAxiomList extends MList implements LinkedObjectComponent 
     public OWLEditorKit getEditorKit() {
         return editorKit;
     }
+
+    public void dispose() {
+    }
 }

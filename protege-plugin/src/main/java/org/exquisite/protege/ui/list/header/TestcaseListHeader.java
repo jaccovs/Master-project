@@ -24,9 +24,11 @@ public class TestcaseListHeader implements MListSectionHeader {
         switch (type) {
             case ACQUIRED_ENTAILED_TC:
             case ORIGINAL_ENTAILED_TC:
+            case ENTAILED_TC:
                 return "Entailed Testcases";
             case ACQUIRED_NON_ENTAILED_TC:
             case ORIGINAL_NON_ENTAILED_TC:
+            case NON_ENTAILED_TC:
                 return "Non Entailed Testcases";
             default:
                 throw new IllegalStateException("Unknown Header Type");
@@ -37,9 +39,11 @@ public class TestcaseListHeader implements MListSectionHeader {
         switch (type) {
             case ACQUIRED_ENTAILED_TC:
             case ORIGINAL_ENTAILED_TC:
+            case ENTAILED_TC:
                 return "Entailed Testcase";
             case ACQUIRED_NON_ENTAILED_TC:
             case ORIGINAL_NON_ENTAILED_TC:
+            case NON_ENTAILED_TC:
                 return "Non Entailed Testcase";
             default:
                 throw new IllegalStateException("Unknown Header Type");

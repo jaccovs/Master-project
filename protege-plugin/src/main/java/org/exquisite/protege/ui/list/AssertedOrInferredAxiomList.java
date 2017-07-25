@@ -37,4 +37,5 @@ public class AssertedOrInferredAxiomList extends AbstractAxiomList {
     public EditorKitHook getEditorKitHook() {
         return editorKitHook;
     }
+
 }
