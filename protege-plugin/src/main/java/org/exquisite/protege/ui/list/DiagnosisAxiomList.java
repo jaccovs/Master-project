@@ -37,9 +37,13 @@ public class DiagnosisAxiomList extends AbstractAxiomList {
 
     private String createHeaderName(final int position, final int foundDiagnoses, final Diagnosis<OWLLogicalAxiom> diagnosis) {
         if (foundDiagnoses == 1) {
-            return "According to your given answers these " + diagnosis.getFormulas().size() + " axioms are faulty." +
-                   "<br>" +
-                   "You can correct them by pressing the repair button.";
+            final int nrOfAxioms = diagnosis.getFormulas().size();
+            if (nrOfAxioms > 1) {
+                return "According to your given answers these " + nrOfAxioms + " axioms are faulty. Press Repair to fix them.";
+            } else {
+                return "According to your given answers this axiom is faulty. Press Repair to fix them.";
+            }
+
         } else {
             final String roundedMeas = diagnosis.getMeasure().round(new java.math.MathContext(6)).toEngineeringString();
             return "Repair #" + (position) + " (Axioms: " + diagnosis.getFormulas().size() + ", Preference Value: " + roundedMeas + ')';

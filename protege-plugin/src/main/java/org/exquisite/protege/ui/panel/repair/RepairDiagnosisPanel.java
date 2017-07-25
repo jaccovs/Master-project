@@ -5,9 +5,11 @@ import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.list.AcquiredTestcaseAxiomList;
 import org.exquisite.protege.ui.list.ConflictAxiomList;
 import org.exquisite.protege.ui.list.RepairAxiomList;
+import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
@@ -15,28 +17,29 @@ import java.awt.*;
  */
 public class RepairDiagnosisPanel extends JComponent {
 
-    private static final int PREF_WIDTH = 500;
+    private static final int PREF_WIDTH = 800;
 
-    private static final int PREF_HEIGHT = 300;
+    private static final int PREF_HEIGHT = 600;
 
-    private final OWLEditorKit editorKit;
+    private OWLEditorKit editorKit;
 
     private EditorKitHook editorKitHook;
 
     private Debugger debugger;
 
-    RepairAxiomList repairComponent;
+    private RepairAxiomList repairComponent;
 
-    AcquiredTestcaseAxiomList testcaseComponent;
+    private AcquiredTestcaseAxiomList testcaseComponent;
 
-    ConflictAxiomList conflictComponent;
+    private ConflictAxiomList conflictComponent;
+
+
 
     public RepairDiagnosisPanel(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
 
-        //setLayout(new BorderLayout(6, 6));
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
         addComponentToPane(this);
@@ -46,40 +49,37 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
 
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        c.gridheight = 1;
-        c.weightx = 1.0;
-        c.weighty = 0.5;
         repairComponent = new RepairAxiomList(editorKit, editorKitHook);
         repairComponent.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
-        pane.add(repairComponent, c);
+        addToPane(0,0,2,1,1.0,0.5, repairComponent, "Repair", pane);
 
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 1;
-        c.gridheight = 1;
-        c.weightx = 0.5;
-        c.weighty = 0.5;
         testcaseComponent = new AcquiredTestcaseAxiomList(editorKit, editorKitHook);
-        pane.add(testcaseComponent, c);
+        addToPane(0,1,1,1,0.5,0.5,testcaseComponent,"Testcases", pane);
 
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 1;
-        c.gridwidth = 1;
-        c.gridheight = 1;
-        c.weightx = 0.5;
-        c.weighty = 0.5;
-        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
         conflictComponent = new ConflictAxiomList(editorKit, editorKitHook);
-        pane.add(conflictComponent, c);
+        addToPane(1,1,1,1, 0.5, 0.5, conflictComponent, "Conflicts", pane);
+    }
 
+    private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane) {
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        // sets the GridBagConstraints
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = x;
+        c.gridy = y;
+        c.gridwidth = w;
+        c.gridheight = h;
+        c.weightx = weightx;
+        c.weighty = weighty;
+
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(new TitledBorder(title));
+
+        panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
+
+        pane.add(panel, c);
     }
 
     public void dispose() {

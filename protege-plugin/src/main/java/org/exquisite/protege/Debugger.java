@@ -403,13 +403,9 @@ public class Debugger {
 
     public void doStartRepair() {
         if (isSessionRunning() && getDiagnoses().size() == 1) {
-            //this.repairManager = new RepairManager(this);
-            // this.debuggingSession.startRepairing();
-            //this.repairManager.doStartRepair();
             RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
             int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
             repairDiagnosisPanel.dispose();
-
         }
     }
 
