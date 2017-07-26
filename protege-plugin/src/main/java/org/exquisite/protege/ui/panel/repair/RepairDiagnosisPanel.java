@@ -10,7 +10,6 @@ import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
@@ -78,7 +77,11 @@ public class RepairDiagnosisPanel extends JComponent {
         c.weighty = weighty;
 
         final JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(new TitledBorder(title));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createEmptyBorder(),
+                        title),
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
         panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
 

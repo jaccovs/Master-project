@@ -24,4 +24,20 @@ public class RepairManager {
         this.originalDiagnoses = Collections.unmodifiableSet(debugger.getDiagnoses());
     }
 
+    public void handleEdit() {
+
+    }
+
+    public void handleDelete() {
+
+    }
+
+    public void handleReset() {
+
+    }
+
+    public void handleResetAll() {
+
+    }
+
 }
