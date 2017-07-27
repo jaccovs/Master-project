@@ -1,6 +1,7 @@
 package org.exquisite.protege.ui.list.renderer;
 
 import org.exquisite.protege.ui.list.item.AxiomListItem;
+import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.renderer.OWLCellRenderer;
 
@@ -28,7 +29,12 @@ public class BasicAxiomListItemRenderer implements ListCellRenderer  {
         if (value instanceof AxiomListItem) {
             AxiomListItem item = ((AxiomListItem) value);
             getRenderer().setOntology(item.getOntology());
-            getRenderer().setHighlightKeywords(true);
+            if (item instanceof RepairListItem && ((RepairListItem)item).isDeleted()) {
+              getRenderer().setHighlightKeywords(false);
+              getRenderer().setCommentedOut(true);
+            } else {
+                getRenderer().setHighlightKeywords(true);
+            }
             getRenderer().setWrap(false);
             Component result =  getRenderer().getListCellRendererComponent(list, item.getAxiom(), index, isSelected, cellHasFocus);
             getRenderer().setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
