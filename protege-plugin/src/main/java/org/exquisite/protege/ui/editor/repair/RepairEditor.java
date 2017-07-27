@@ -6,10 +6,10 @@ import org.protege.editor.core.prefs.PreferencesManager;
 import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
 import org.protege.editor.core.ui.util.VerifiedInputEditor;
 import org.protege.editor.core.ui.util.VerifyingOptionPane;
-import org.protege.editor.core.ui.wizard.Wizard;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.editor.OWLGeneralAxiomEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
+import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
 import org.protege.editor.owl.ui.preferences.GeneralPreferencesPanel;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -30,12 +30,15 @@ public class RepairEditor {
 
     private OWLLogicalAxiom axiom;
 
+    private OWLObjectEditorHandler handler;
+
     private static final int EDITOR_SCREEN_MARGIN = 100;
 
-    public RepairEditor(OWLEditorKit editorKit, Component parent, OWLLogicalAxiom axiom) {
+    public RepairEditor(OWLEditorKit editorKit, Component parent, OWLLogicalAxiom axiom, OWLObjectEditorHandler handler) {
         this.editorKit = editorKit;
         this.parent = parent;
         this.axiom = axiom;
+        this.handler = handler;
     }
 
     /**
@@ -51,6 +54,7 @@ public class RepairEditor {
         if (editor == null) {
             return;
         }
+        /*
         if (editor instanceof JWindow) {
             ((JWindow) editor).setVisible(true);
             return;
@@ -62,6 +66,9 @@ public class RepairEditor {
             }
             return;
         }
+        */
+
+        editor.setHandler(this.handler);
         // Create the editing component dialog - we use an option pane
         // so that the buttons and keyboard actions are what are expected
         // by the user.
