@@ -2,7 +2,6 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
@@ -12,9 +11,8 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,14 +25,16 @@ public class RepairAxiomList extends AbstractAxiomList {
 
     protected EditorKitHook editorKitHook;
 
-    protected RepairManager repairManager;
-
     protected Component parent;
 
-    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, RepairManager repairManager, Component parent) {
+    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, Component parent) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
-        this.repairManager = repairManager;
+    }
+
+    @Override
+    public void addListSelectionListener(ListSelectionListener listener) {
+        super.addListSelectionListener(listener);
     }
 
     @Override
@@ -45,12 +45,7 @@ public class RepairAxiomList extends AbstractAxiomList {
             buttons.addAll(super.getButtons(value));
 
             if (listItem.hasChanged()) {
-                buttons.add(0, new ResetAxiomButton(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        listItem.handleReset();
-                    }
-                }));
+                buttons.add(0, new ResetAxiomButton(e -> listItem.handleReset()));
             }
             return buttons;
         } else {
@@ -64,7 +59,7 @@ public class RepairAxiomList extends AbstractAxiomList {
 
             for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
                 items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
-                items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(this, axiom, ontology, getEditorKit(), repairManager, parent)).collect(Collectors.toList()));
+                items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(this, axiom, ontology, getEditorKit(), parent)).collect(Collectors.toList()));
                 items.add(" ");
             }
 
@@ -101,4 +96,26 @@ public class RepairAxiomList extends AbstractAxiomList {
 
     }
 
+    public void reset() {
+        final ListModel listModel = getModel();
+
+        for (int i = 1; i < listModel.getSize(); i++) {
+            final RepairListItem listModelElementAt = (RepairListItem) listModel.getElementAt(i);
+            listModelElementAt.handleReset();
+
+        }
+    }
+
+    public boolean hasChanged() {
+        boolean hasChanged = false;
+
+        final ListModel listModel = getModel();
+
+        for (int i = 1; !hasChanged && i < listModel.getSize(); i++) {
+            final RepairListItem listModelElementAt = (RepairListItem) listModel.getElementAt(i);
+            hasChanged |= listModelElementAt.hasChanged();
+
+        }
+        return hasChanged;
+    }
 }

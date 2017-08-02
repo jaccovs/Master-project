@@ -1,6 +1,5 @@
 package org.exquisite.protege.ui.list.item;
 
-import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.owl.OWLEditorKit;
@@ -24,22 +23,19 @@ public class RepairListItem extends AxiomListItem implements OWLObjectEditorHand
 
     private boolean hasEditor;
 
-    private RepairManager repairManager;
-
     private RepairAxiomList list;
 
     private boolean isDeleted;
 
     private boolean isModified;
 
-    public RepairListItem(RepairAxiomList list, OWLLogicalAxiom axiom, OWLOntology ontology, OWLEditorKit editorKit, RepairManager repairManager, Component parent) {
+    public RepairListItem(RepairAxiomList list, OWLLogicalAxiom axiom, OWLOntology ontology, OWLEditorKit editorKit, Component parent) {
         super(axiom, ontology);
         this.originalAxiom = axiom;
         this.list = list;
         this.editorKit = editorKit;
         this.parent = parent;
         this.hasEditor = RepairEditor.hasEditor(axiom);
-        this.repairManager = repairManager;
         this.isDeleted = false;
         this.isModified = false;
     }

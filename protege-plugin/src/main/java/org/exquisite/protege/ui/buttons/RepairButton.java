@@ -32,7 +32,7 @@ public class RepairButton extends AbstractGuiButton {
     }
 
     public void updateView(Debugger debugger) {
-        final boolean isEnabled = debugger.isSessionRunning() && debugger.getDiagnoses().size() == 1;
+        final boolean isEnabled = (debugger.isSessionRunning() || debugger.isRepairing()) && debugger.getDiagnoses().size() == 1;
         setEnabled(isEnabled);
         if (isEnabled)
             setToolTipText(TOOLTIP_ENABLED);

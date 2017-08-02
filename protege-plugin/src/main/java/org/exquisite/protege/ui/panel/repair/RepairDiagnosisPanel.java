@@ -2,14 +2,13 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.repair.RepairManager;
-import org.exquisite.protege.ui.list.ConflictAxiomList;
 import org.exquisite.protege.ui.list.RepairAxiomList;
-import org.exquisite.protege.ui.list.RepairTestCasesAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 /**
@@ -27,20 +26,17 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private Debugger debugger;
 
-    private RepairManager repairManager;
+    private RepairAxiomList repairAxiomList;
 
-    private RepairAxiomList repairComponent;
+    // private RepairTestCasesAxiomList testcaseComponent;
 
-    private RepairTestCasesAxiomList testcaseComponent;
-
-    private ConflictAxiomList conflictComponent;
+    // private ConflictAxiomList conflictComponent;
 
 
     public RepairDiagnosisPanel(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
-        this.repairManager = new RepairManager(this.debugger);
 
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
 
@@ -52,15 +48,23 @@ public class RepairDiagnosisPanel extends JComponent {
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairComponent = new RepairAxiomList(editorKit, editorKitHook, repairManager, this);
-        repairComponent.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
-        addToPane(0,0,2,1,1.0,0.5, repairComponent, "Repair", pane);
+        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook, this);
+        repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
+        addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
+        repairAxiomList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                System.out.println(e);
+            }
+        });
+/*
         testcaseComponent = new RepairTestCasesAxiomList(editorKit, editorKitHook);
         addToPane(0,1,1,1,0.5,0.5,testcaseComponent,"Testcases", pane);
 
         conflictComponent = new ConflictAxiomList(editorKit, editorKitHook);
         addToPane(1,1,1,1, 0.5, 0.5, conflictComponent, "Conflicts", pane);
+*/
     }
 
     private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane) {
@@ -89,8 +93,16 @@ public class RepairDiagnosisPanel extends JComponent {
     }
 
     public void dispose() {
-        repairComponent.dispose();
-        testcaseComponent.dispose();
-        conflictComponent.dispose();
+        repairAxiomList.dispose();
+        //testcaseComponent.dispose();
+        //conflictComponent.dispose();
+    }
+
+    public void reset() {
+        repairAxiomList.reset();
+    }
+
+    public boolean hasChanged() {
+        return repairAxiomList.hasChanged();
     }
 }

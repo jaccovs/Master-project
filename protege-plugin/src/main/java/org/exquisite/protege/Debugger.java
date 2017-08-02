@@ -30,7 +30,6 @@ import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.exquisite.protege.model.listener.OntologyChangeListener;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
-import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
@@ -72,7 +71,7 @@ public class Debugger {
      */
     public enum SessionStopReason { PREFERENCES_CHANGED, INVOKED_BY_USER, CONSISTENT_ONTOLOGY,
         ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED, ONTOLOGY_CHANGED, SESSION_RESTARTED,
-        DEBUGGING_ONTOLOGY_SELECTED
+        DEBUGGING_ONTOLOGY_SELECTED, REPAIR_FINISHED
     }
 
     private DebuggingSession debuggingSession;
@@ -120,8 +119,6 @@ public class Debugger {
     private DebuggerProgressUI progressUI;
 
     private org.protege.editor.owl.ui.inference.ReasonerProgressUI reasonerProgressUI;
-
-    private RepairManager repairManager;
 
     public Debugger(OWLEditorKit editorKit) {
         this.editorKit = editorKit;
@@ -216,6 +213,10 @@ public class Debugger {
 
     public boolean isSessionRunning() {
         return debuggingSession.getState() == DebuggingSession.State.RUNNING;
+    }
+
+    public boolean isRepairing() {
+        return debuggingSession.getState() == DebuggingSession.State.REPARING;
     }
 
     public boolean isSessionStopped() {
@@ -352,6 +353,7 @@ public class Debugger {
                 case DEBUGGER_RESET:      // no message necessary
                 case CONSISTENT_ONTOLOGY: // no message necessary
                 case SESSION_RESTARTED:   // no message necessary
+                case REPAIR_FINISHED:     // no message necessary
                     final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
                     if (configuration.reduceIncoherency && configuration.extractModules) {
                         // During the debugging session the diagnosis model also has been reduced to set of axioms from
@@ -394,9 +396,27 @@ public class Debugger {
 
     public void doStartRepair() {
         if (isSessionRunning() && getDiagnoses().size() == 1) {
+            this.debuggingSession.startRepair();
             RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
             int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
-            repairDiagnosisPanel.dispose();
+
+            switch (ret) {
+                case JOptionPane.CLOSED_OPTION:
+                case JOptionPane.CANCEL_OPTION:
+                    repairDiagnosisPanel.reset();
+                    repairDiagnosisPanel.dispose();
+                    this.debuggingSession.stopRepair();
+                    break;
+                case JOptionPane.OK_OPTION:
+                    repairDiagnosisPanel.dispose();
+                    this.debuggingSession.stopRepair();
+                    if (repairDiagnosisPanel.hasChanged()) {
+                        doStopDebugging(SessionStopReason.REPAIR_FINISHED);
+                    }
+                    break;
+            }
+
+
         }
     }
 
