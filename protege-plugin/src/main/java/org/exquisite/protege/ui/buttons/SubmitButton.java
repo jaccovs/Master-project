@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 public class SubmitButton extends AbstractGuiButton {
 
     public SubmitButton(final QueryView queryView) {
-        super("Submit","Submit your answers. At least one statement must be answered with yes or no.", "Next2.png", KeyEvent.VK_C ,
+        super("Submit","Submit your answers. At least one statement must be answered with \"true\" or \"not true\".", "Next2.png", KeyEvent.VK_C ,
                 new AbstractAction(){
                     @Override
                     public void actionPerformed(ActionEvent e) {
