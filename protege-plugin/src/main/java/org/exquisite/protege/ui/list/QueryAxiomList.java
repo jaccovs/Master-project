@@ -1,11 +1,10 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.query.Query;
-import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.Debugger;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.buttons.AxiomIsEntailedButton;
 import org.exquisite.protege.ui.buttons.AxiomIsNotEntailedButton;
-import org.exquisite.protege.ui.buttons.NotSureButton;
 import org.exquisite.protege.ui.list.header.InitialQueryListHeader;
 import org.exquisite.protege.ui.list.header.InitialQueryListHeaderExplanation;
 import org.exquisite.protege.ui.list.header.QueryListHeader;
@@ -44,7 +43,7 @@ public class QueryAxiomList extends AssertedOrInferredAxiomList {
             Debugger debugger = editorKitHook.getActiveOntologyDebugger();
             OWLLogicalAxiom axiom = ((QueryAxiomListItem) value).getAxiom();
             buttons.addAll(super.getButtons(value));
-            buttons.add(new NotSureButton("I am not sure about this statement", this, !(debugger.isMarkedEntailed(axiom) || debugger.isMarkedNonEntailed(axiom))));
+            //buttons.add(new NotSureButton("I am not sure about this statement", this, !(debugger.isMarkedEntailed(axiom) || debugger.isMarkedNonEntailed(axiom))));
             buttons.add(new AxiomIsNotEntailedButton("No, this statement is not true", this, debugger.isMarkedNonEntailed(axiom)));
             buttons.add(new AxiomIsEntailedButton("Yes, this statement is true", this, debugger.isMarkedEntailed(axiom)));
             return buttons;
