@@ -44,7 +44,7 @@ public class RepairDiagnosisPanel extends JComponent {
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook, this);
+        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook);
         repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 

@@ -16,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * @author wolfi
  */
-public class RepairAxiomList extends AbstractAxiomList {
+public class RepairAxiomList extends AbstractAxiomList implements ListSelectionListener {
 
     protected EditorKitHook editorKitHook;
 
@@ -37,12 +38,15 @@ public class RepairAxiomList extends AbstractAxiomList {
 
     private List<MListButton> explanationButton;
 
-    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, Component parent) {
+    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
 
         explanationButton = new ArrayList<>();
         explanationButton.add(new ExplainButton(e -> invokeExplanationHandler()));
+
+        addListSelectionListener(this);
+        this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     @Override
@@ -193,5 +197,33 @@ public class RepairAxiomList extends AbstractAxiomList {
     private String getExplanationDialogTitle(OWLAxiom entailment) {
         String rendering = editorKit.getOWLModelManager().getRendering(entailment).replaceAll("\\s", " ");
         return "Explanation for " + rendering;
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+
+        RepairAxiomList lsm = (RepairAxiomList)e.getSource();
+
+        int firstIndex = e.getFirstIndex();
+        int lastIndex = e.getLastIndex();
+        boolean isAdjusting = e.getValueIsAdjusting();
+        System.out.print("Event for indexes "
+                + firstIndex + " - " + lastIndex
+                + "; isAdjusting is " + isAdjusting
+                + "; selected indexes:");
+
+        if (lsm.isSelectionEmpty()) {
+            System.out.println(" <none>");
+        } else {
+            // Find out which indexes are selected.
+            int minIndex = lsm.getMinSelectionIndex();
+            int maxIndex = lsm.getMaxSelectionIndex();
+            for (int i = minIndex; i <= maxIndex; i++) {
+                if (lsm.isSelectedIndex(i)) {
+                    System.out.println(" " + i);
+                }
+            }
+        }
+
     }
 }
