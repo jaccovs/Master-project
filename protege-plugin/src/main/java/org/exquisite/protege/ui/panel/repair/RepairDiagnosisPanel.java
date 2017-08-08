@@ -28,12 +28,8 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairAxiomList repairAxiomList;
 
-    // private RepairTestCasesAxiomList testcaseComponent;
-
-    // private ConflictAxiomList conflictComponent;
-
-
     public RepairDiagnosisPanel(OWLEditorKit editorKit) {
+
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
@@ -58,13 +54,7 @@ public class RepairDiagnosisPanel extends JComponent {
                 System.out.println(e);
             }
         });
-/*
-        testcaseComponent = new RepairTestCasesAxiomList(editorKit, editorKitHook);
-        addToPane(0,1,1,1,0.5,0.5,testcaseComponent,"Testcases", pane);
 
-        conflictComponent = new ConflictAxiomList(editorKit, editorKitHook);
-        addToPane(1,1,1,1, 0.5, 0.5, conflictComponent, "Conflicts", pane);
-*/
     }
 
     private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane) {
@@ -94,8 +84,6 @@ public class RepairDiagnosisPanel extends JComponent {
 
     public void dispose() {
         repairAxiomList.dispose();
-        //testcaseComponent.dispose();
-        //conflictComponent.dispose();
     }
 
     public void reset() {
