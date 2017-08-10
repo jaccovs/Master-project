@@ -2,27 +2,24 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.ui.explanation.ExplanationDialog;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
+import org.protege.editor.owl.ui.explanation.io.InconsistentOntologyManager;
 import org.protege.editor.owl.ui.framelist.ExplainButton;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +35,9 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     private List<MListButton> explanationButton;
 
-    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook) {
+    private RepairManager repairManager;
+
+    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, RepairManager repairManager) {
         super(editorKit);
         this.editorKitHook = editorKitHook;
 
@@ -47,6 +46,8 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
         addListSelectionListener(this);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        this.repairManager = repairManager;
     }
 
     @Override
@@ -149,20 +150,50 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     }
 
     protected void invokeExplanationHandler() {
-        Object obj = getSelectedValue();
-        if (!(obj instanceof RepairListItem)) {
-            return;
-        }
-        RepairListItem row = (RepairListItem) obj;
-        OWLAxiom ax = row.getAxiom();
-        if (getExplanationManager().hasExplanation(ax)) {
+        OWLAxiom ax = getAxiom();
+
+        if (ax != null && getExplanationManager().hasExplanation(ax)) {
             JFrame frame = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
             handleExplain(frame, ax);
+
+
         }
 
     }
 
+    private OWLAxiom getAxiom() {
+        // Variante 1: das selektierte Axiom
+        /*
+        Object obj = getSelectedValue();
+        if (!(obj instanceof RepairListItem)) {
+            return null;
+        }
+        RepairListItem row = (RepairListItem) obj;
+        OWLAxiom ax = row.getAxiom();
+        return ax;
+        */
+
+        // TODO Variante 2: inconsistenz
+        OWLModelManager owlModelManager = editorKit.getOWLModelManager();
+        OWLDataFactory df = owlModelManager.getOWLDataFactory();
+        OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
+        return ax;
+
+    }
+
     public void handleExplain(Frame owner, OWLAxiom axiom) {
+
+        OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
+
+        // change active ontology to the the repair debugging ontology
+        // TODO 1
+        editorKit.getModelManager().setActiveOntology(repairManager.getDebuggingOntology());
+
+        // TODO Variante 2 teste den InconsistentOntologyManager von der workbench
+        InconsistentOntologyManager.get(editorKit.getOWLModelManager()).explain();
+
+        // TODO Variante 1:
+        /*
         final ExplanationDialog explanation = new ExplanationDialog(getExplanationManager(), axiom);
         openedExplanations.add(explanation);
         JOptionPane op = new JOptionPane(explanation, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
@@ -184,6 +215,10 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         dlg.setResizable(true);
         dlg.pack();
         dlg.setVisible(true);
+        */
+
+        // TODO 2
+        editorKit.getModelManager().setActiveOntology(activeOntology);
     }
 
     private final Collection<ExplanationDialog> openedExplanations = new HashSet<>();
@@ -207,20 +242,33 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         int firstIndex = e.getFirstIndex();
         int lastIndex = e.getLastIndex();
         boolean isAdjusting = e.getValueIsAdjusting();
-        System.out.print("Event for indexes "
-                + firstIndex + " - " + lastIndex
-                + "; isAdjusting is " + isAdjusting
-                + "; selected indexes:");
+        if (!isAdjusting) {
+            System.out.print("Event for indexes "
+                    + firstIndex + " - " + lastIndex
+                    + "; isAdjusting is " + isAdjusting
+                    + "; selected indexes:");
 
-        if (lsm.isSelectionEmpty()) {
-            System.out.println(" <none>");
-        } else {
-            // Find out which indexes are selected.
-            int minIndex = lsm.getMinSelectionIndex();
-            int maxIndex = lsm.getMaxSelectionIndex();
-            for (int i = minIndex; i <= maxIndex; i++) {
-                if (lsm.isSelectedIndex(i)) {
-                    System.out.println(" " + i);
+            if (lsm.isSelectionEmpty()) {
+                System.out.println(" <none>");
+            } else {
+                // Find out which indexes are selected.
+                int idx = -1;
+                int minIndex = lsm.getMinSelectionIndex();
+                int maxIndex = lsm.getMaxSelectionIndex();
+                for (int i = minIndex; i <= maxIndex; i++) {
+                    if (lsm.isSelectedIndex(i)) {
+                        System.out.println(" " + i);
+                        idx = i;
+                    }
+                }
+
+                if (idx != -1) {
+                    final Object o = lsm.getModel().getElementAt(idx);
+                    if (o instanceof RepairListItem) {
+                        final RepairListItem item = (RepairListItem) o;
+                        System.out.println("Is " + item.getAxiom() + " consistent?");
+                        System.out.println(this.repairManager.isConsistent(item.getAxiom()));
+                    }
                 }
             }
         }

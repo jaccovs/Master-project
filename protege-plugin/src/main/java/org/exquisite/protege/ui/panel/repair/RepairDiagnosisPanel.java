@@ -2,9 +2,11 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -28,23 +30,24 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairAxiomList repairAxiomList;
 
-    public RepairDiagnosisPanel(OWLEditorKit editorKit) {
+    private RepairManager repairManager;
+
+    public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
 
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
-
+        this.repairManager = new RepairManager(this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager(), this.debugger.getDiagnosisModel(), this.debugger.getDiagnosisEngineFactory().getReasonerFactory(), this.debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+        System.out.println("# of ontologies: " + this.editorKit.getOWLModelManager().getOntologies().size());
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
-
         addComponentToPane(this);
-
         setVisible(true);
     }
 
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook);
+        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook, repairManager);
         repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
@@ -84,6 +87,7 @@ public class RepairDiagnosisPanel extends JComponent {
 
     public void dispose() {
         repairAxiomList.dispose();
+        this.repairManager.dispose();
     }
 
     public void reset() {

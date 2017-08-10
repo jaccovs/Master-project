@@ -42,6 +42,7 @@ import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.UIHelper;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.slf4j.Logger;
@@ -397,23 +398,29 @@ public class Debugger {
     public void doStartRepair() {
         if (isSessionRunning() && getDiagnoses().size() == 1) {
             this.debuggingSession.startRepair();
-            RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
-            int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
 
-            switch (ret) {
-                case JOptionPane.CLOSED_OPTION:
-                case JOptionPane.CANCEL_OPTION:
-                    repairDiagnosisPanel.reset();
-                    repairDiagnosisPanel.dispose();
-                    this.debuggingSession.stopRepair();
-                    break;
-                case JOptionPane.OK_OPTION:
-                    repairDiagnosisPanel.dispose();
-                    this.debuggingSession.stopRepair();
-                    if (repairDiagnosisPanel.hasChanged()) {
-                        doStopDebugging(SessionStopReason.REPAIR_FINISHED);
-                    }
-                    break;
+            try {
+                RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
+                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
+
+                switch (ret) {
+                    case JOptionPane.CLOSED_OPTION:
+                    case JOptionPane.CANCEL_OPTION:
+                        repairDiagnosisPanel.reset();
+                        repairDiagnosisPanel.dispose();
+                        this.debuggingSession.stopRepair();
+                        break;
+                    case JOptionPane.OK_OPTION:
+                        repairDiagnosisPanel.dispose();
+                        this.debuggingSession.stopRepair();
+                        if (repairDiagnosisPanel.hasChanged()) {
+                            doStopDebugging(SessionStopReason.REPAIR_FINISHED);
+                        }
+                        break;
+                }
+            } catch (OWLOntologyCreationException e) {
+                logger.error(e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Unexpected exception occurred", e.getMessage(), e);
             }
 
 

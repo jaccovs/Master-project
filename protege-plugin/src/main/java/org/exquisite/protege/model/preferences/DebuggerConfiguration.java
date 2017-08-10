@@ -176,7 +176,7 @@ public class DebuggerConfiguration<F> {
      *
      * @return The preferred entailment types.
      */
-    InferenceType[] getEntailmentTypes() {
+    public InferenceType[] getEntailmentTypes() {
         List<InferenceType> entailmentTypes = new ArrayList<>();
         entailmentTypes.add(InferenceType.CLASS_HIERARCHY);
         entailmentTypes.add(InferenceType.DISJOINT_CLASSES);

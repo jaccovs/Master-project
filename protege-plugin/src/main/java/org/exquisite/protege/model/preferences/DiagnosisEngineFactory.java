@@ -81,6 +81,14 @@ public class DiagnosisEngineFactory {
         this.diagnosisEngine = createDiagnosisEngine();
     }
 
+    public DebuggerConfiguration getDebuggerConfiguration() {
+        return config;
+    }
+
+    public OWLReasonerFactory getReasonerFactory() {
+        return this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+    }
+
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
         return diagnosisEngine;
     }
@@ -90,7 +98,7 @@ public class DiagnosisEngineFactory {
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = null;
 
         try {
-            final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+            final OWLReasonerFactory reasonerFactory = getReasonerFactory();
             ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), reasonerFactory, this.debugger.getReasonerProgressMonitor());
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
