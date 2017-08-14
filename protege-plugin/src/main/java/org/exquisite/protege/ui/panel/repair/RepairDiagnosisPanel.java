@@ -6,6 +6,7 @@ import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import javax.swing.*;
@@ -32,6 +33,10 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairManager repairManager;
 
+    private JPanel explanationContainer;
+
+    private ExplanationResult explanation;
+
     public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
 
         this.editorKit = editorKit;
@@ -47,7 +52,7 @@ public class RepairDiagnosisPanel extends JComponent {
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairAxiomList = new RepairAxiomList(editorKit, editorKitHook, repairManager);
+        repairAxiomList = new RepairAxiomList(this, editorKit, editorKitHook, repairManager);
         repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
@@ -57,6 +62,10 @@ public class RepairDiagnosisPanel extends JComponent {
                 System.out.println(e);
             }
         });
+
+        explanationContainer = new JPanel();
+        explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
+        addToPane(0,1,2,1,1.0,0.5,explanationContainer,"Explanations", pane);
 
     }
 
@@ -88,6 +97,19 @@ public class RepairDiagnosisPanel extends JComponent {
     public void dispose() {
         repairAxiomList.dispose();
         this.repairManager.dispose();
+        if (explanation != null) {
+            explanation.dispose();
+        }
+    }
+
+    public void setExplanation(ExplanationResult explanation) {
+        explanationContainer.removeAll();
+        if (explanation != null) {
+            explanation.dispose();
+        }
+        explanationContainer.add(explanation);
+        this.explanation = explanation;
+        revalidate();
     }
 
     public void reset() {

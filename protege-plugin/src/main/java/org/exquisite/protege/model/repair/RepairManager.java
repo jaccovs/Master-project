@@ -1,7 +1,7 @@
 package org.exquisite.protege.model.repair;
 
+import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.core.solver.ExquisiteOWLReasoner;
 import org.exquisite.core.solver.RepairOWLReasoner;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -12,8 +12,9 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author wolfi
@@ -22,7 +23,7 @@ public class RepairManager {
 
     private Logger logger = LoggerFactory.getLogger(RepairManager.class.getCanonicalName());
 
-    private ExquisiteOWLReasoner reasoner;
+    private RepairOWLReasoner reasoner;
 
     private DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel;
 
@@ -53,20 +54,40 @@ public class RepairManager {
     }
 
     public boolean isConsistent(OWLLogicalAxiom axiom) {
-/* var 1
         final List<OWLLogicalAxiom> axioms = Collections.singletonList(axiom);
-
-        diagnosisModel.getPossiblyFaultyFormulas().addAll(axioms);
-
-        boolean isConsistent = this.reasoner.isConsistent(Collections.emptySet());
-
-        diagnosisModel.getPossiblyFaultyFormulas().removeAll(axioms);
+        boolean isConsistent;
+        try {
+            diagnosisModel.getCorrectFormulas().addAll(axioms);
+            isConsistent = this.reasoner.isConsistent(Collections.emptySet());
+        } catch (DiagnosisRuntimeException e) {
+            isConsistent = false;
+        } finally {
+            diagnosisModel.getCorrectFormulas().removeAll(axioms);
+        }
 
         return isConsistent;
-*/
+    }
+
+    public List<OWLLogicalAxiom> getEntailedTestCases(OWLLogicalAxiom axiom) {
+
+        final List<OWLLogicalAxiom> axioms = Collections.singletonList(axiom);
+        final List<OWLLogicalAxiom> entailedTestCases = new ArrayList<>();
+
+        try {
+            diagnosisModel.getCorrectFormulas().addAll(axioms);
+
+            for (OWLLogicalAxiom testcase : this.originalDiagnosisModel.getNotEntailedExamples()) {
+                if (this.reasoner.isEntailed(testcase)) {
+                    entailedTestCases.add(testcase);
+                }
+            }
+
+        } finally {
+            diagnosisModel.getCorrectFormulas().removeAll(axioms);
+        }
 
 
-        Collection<OWLLogicalAxiom> formulas = Collections.singletonList(axiom);
-        return this.reasoner.isConsistent(formulas);
+
+        return entailedTestCases;
     }
 }

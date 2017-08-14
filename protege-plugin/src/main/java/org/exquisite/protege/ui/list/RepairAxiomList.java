@@ -6,12 +6,15 @@ import org.exquisite.protege.model.repair.RepairManager;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
+import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.core.ui.list.MListButton;
+import org.protege.editor.core.ui.workspace.WorkspaceFrame;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.ui.explanation.ExplanationDialog;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
+import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.protege.editor.owl.ui.explanation.io.InconsistentOntologyManager;
 import org.protege.editor.owl.ui.framelist.ExplainButton;
 import org.semanticweb.owlapi.model.*;
@@ -37,8 +40,11 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     private RepairManager repairManager;
 
-    public RepairAxiomList(OWLEditorKit editorKit, EditorKitHook editorKitHook, RepairManager repairManager) {
+    private RepairDiagnosisPanel repairDiagnosisPanel;
+
+    public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, EditorKitHook editorKitHook, RepairManager repairManager) {
         super(editorKit);
+        this.repairDiagnosisPanel = repairDiagnosisPanel;
         this.editorKitHook = editorKitHook;
 
         explanationButton = new ArrayList<>();
@@ -221,6 +227,67 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         editorKit.getModelManager().setActiveOntology(activeOntology);
     }
 
+    public void explainInconsistency() {
+        /*
+        final OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
+        editorKit.getModelManager().setActiveOntology(repairManager.getDebuggingOntology());
+
+        // TODO Variante 2 teste den InconsistentOntologyManager von der workbench
+        //InconsistentOntologyManager.get(editorKit.getOWLModelManager()).explain();
+        InconsistentOntologyPluginLoader loader= new InconsistentOntologyPluginLoader(this.editorKit);
+        Set<InconsistentOntologyPlugin> plugins = loader.getPlugins();
+        InconsistentOntologyPlugin lastSelectedPlugin = null;
+        for (final InconsistentOntologyPlugin plugin : plugins) {
+            lastSelectedPlugin = plugin;
+        }
+        InconsistentOntologyPluginInstance i = lastSelectedPlugin.newInstance();
+        i.initialise();
+        i.setup(this.editorKit);
+        i.explain(this.editorKit.getOWLModelManager().getActiveOntology());
+        explanations.add(i);
+
+        editorKit.getModelManager().setActiveOntology(activeOntology);
+        */
+        this.explainEntailment(getAxiom());
+    }
+
+    public void explainEntailment(OWLAxiom entailment) {
+        final WorkspaceFrame owner = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
+        OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
+        // change active ontology to the the repair debugging ontology
+        // TODO 1
+        editorKit.getModelManager().setActiveOntology(repairManager.getDebuggingOntology());
+        Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
+        if (teachers.size() == 1) {
+            this.repairDiagnosisPanel.setExplanation(teachers.iterator().next().explain(entailment));
+        }
+        /*
+        final ExplanationDialog explanation = new ExplanationDialog(getExplanationManager(), entailment);
+        openedExplanations.add(explanation);
+        JOptionPane op = new JOptionPane(explanation, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
+        JDialog dlg = op.createDialog(owner, getExplanationDialogTitle(entailment));
+        dlg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dlg.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dispose(explanation);
+            }
+        });
+        dlg.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                dispose(explanation);
+            }
+        });
+        dlg.setModal(true);
+        dlg.setResizable(true);
+        dlg.pack();
+        dlg.setVisible(true);
+        */
+
+        editorKit.getModelManager().setActiveOntology(activeOntology);
+    }
+
     private final Collection<ExplanationDialog> openedExplanations = new HashSet<>();
 
     private void dispose(ExplanationDialog explanation) {
@@ -239,25 +306,16 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
         RepairAxiomList lsm = (RepairAxiomList)e.getSource();
 
-        int firstIndex = e.getFirstIndex();
-        int lastIndex = e.getLastIndex();
         boolean isAdjusting = e.getValueIsAdjusting();
         if (!isAdjusting) {
-            System.out.print("Event for indexes "
-                    + firstIndex + " - " + lastIndex
-                    + "; isAdjusting is " + isAdjusting
-                    + "; selected indexes:");
 
-            if (lsm.isSelectionEmpty()) {
-                System.out.println(" <none>");
-            } else {
+            if (!lsm.isSelectionEmpty()) {
                 // Find out which indexes are selected.
                 int idx = -1;
                 int minIndex = lsm.getMinSelectionIndex();
                 int maxIndex = lsm.getMaxSelectionIndex();
                 for (int i = minIndex; i <= maxIndex; i++) {
                     if (lsm.isSelectedIndex(i)) {
-                        System.out.println(" " + i);
                         idx = i;
                     }
                 }
@@ -266,8 +324,18 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                     final Object o = lsm.getModel().getElementAt(idx);
                     if (o instanceof RepairListItem) {
                         final RepairListItem item = (RepairListItem) o;
-                        System.out.println("Is " + item.getAxiom() + " consistent?");
-                        System.out.println(this.repairManager.isConsistent(item.getAxiom()));
+                        System.out.print("Is " + item.getAxiom() + " consistent? -> ");
+                        final boolean isConsistent = this.repairManager.isConsistent(item.getAxiom());
+                        System.out.println(isConsistent);
+                        if (!isConsistent) {
+                            System.out.println("Explaining inconsistency");
+                            explainInconsistency();
+                        } else {
+                            for (OWLLogicalAxiom entailment : this.repairManager.getEntailedTestCases(item.getAxiom())) {
+                                System.out.println("Explaining entailment " + entailment);
+                                explainEntailment(entailment);
+                            }
+                        }
                     }
                 }
             }

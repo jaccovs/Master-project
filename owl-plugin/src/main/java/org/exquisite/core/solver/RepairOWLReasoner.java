@@ -6,6 +6,8 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import java.util.Collections;
+
 /**
  * @author wolfi
  */
@@ -18,5 +20,10 @@ public class RepairOWLReasoner extends ExquisiteOWLReasoner {
         this.debuggingOntology = this.debuggingOntologyManager.createOntology();
         this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
 
+    }
+
+
+    public boolean isEntailed(OWLLogicalAxiom entailment) {
+        return this.reasoner.isEntailed(Collections.singleton(entailment));
     }
 }
