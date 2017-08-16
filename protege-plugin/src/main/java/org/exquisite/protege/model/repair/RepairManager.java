@@ -40,7 +40,6 @@ public class RepairManager {
 
         this.reasoner = new RepairOWLReasoner(this.diagnosisModel, reasonerFactory, owlOntologyManager);
         this.reasoner.setEntailmentTypes(config.getEntailmentTypes());
-
     }
 
 

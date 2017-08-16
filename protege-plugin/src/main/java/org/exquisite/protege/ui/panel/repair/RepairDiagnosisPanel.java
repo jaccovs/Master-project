@@ -38,7 +38,6 @@ public class RepairDiagnosisPanel extends JComponent {
     private ExplanationResult explanation;
 
     public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
-
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
@@ -52,7 +51,7 @@ public class RepairDiagnosisPanel extends JComponent {
     private void addComponentToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
 
-        repairAxiomList = new RepairAxiomList(this, editorKit, editorKitHook, repairManager);
+        repairAxiomList = new RepairAxiomList(this, editorKit, repairManager, this);
         repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
@@ -100,6 +99,7 @@ public class RepairDiagnosisPanel extends JComponent {
         if (explanation != null) {
             explanation.dispose();
         }
+
     }
 
     public void setExplanation(ExplanationResult explanation) {
