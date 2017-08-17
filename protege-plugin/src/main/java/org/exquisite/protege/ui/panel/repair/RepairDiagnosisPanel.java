@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.repair.RepairManager;
+import org.exquisite.protege.model.repair.ExplanationManager;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
@@ -31,7 +31,7 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairAxiomList repairAxiomList;
 
-    private RepairManager repairManager;
+    private ExplanationManager repairManager;
 
     private JPanel explanationContainer;
 
@@ -41,8 +41,7 @@ public class RepairDiagnosisPanel extends JComponent {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
-        this.repairManager = new RepairManager(this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager(), this.debugger.getDiagnosisModel(), this.debugger.getDiagnosisEngineFactory().getReasonerFactory(), this.debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
-        System.out.println("# of ontologies: " + this.editorKit.getOWLModelManager().getOntologies().size());
+        this.repairManager = new ExplanationManager(this.editorKit, this.debugger);
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
         addComponentToPane(this);
         setVisible(true);
