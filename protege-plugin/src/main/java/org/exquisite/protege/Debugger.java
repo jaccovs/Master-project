@@ -400,20 +400,17 @@ public class Debugger {
             this.debuggingSession.startRepair();
 
             try {
-                RepairDiagnosisPanel repairDiagnosisPanel = new RepairDiagnosisPanel(getEditorKit());
-                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairDiagnosisPanel, JOptionPane.OK_CANCEL_OPTION);
+                RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit());
+                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairPanel, JOptionPane.OK_CANCEL_OPTION);
 
                 switch (ret) {
                     case JOptionPane.CLOSED_OPTION:
                     case JOptionPane.CANCEL_OPTION:
-                        repairDiagnosisPanel.reset();
-                        repairDiagnosisPanel.dispose();
-                        this.debuggingSession.stopRepair();
-                        break;
+                        repairPanel.reset();
                     case JOptionPane.OK_OPTION:
-                        repairDiagnosisPanel.dispose();
+                        repairPanel.dispose();
                         this.debuggingSession.stopRepair();
-                        if (repairDiagnosisPanel.hasChanged()) {
+                        if (repairPanel.hasChanged()) {
                             doStopDebugging(SessionStopReason.REPAIR_FINISHED);
                         }
                         break;
