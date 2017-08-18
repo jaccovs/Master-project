@@ -1,4 +1,4 @@
-package org.exquisite.protege.model.repair;
+package org.exquisite.protege.model.explanation;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class ExplanationManager {
 
-    private Map<Integer, DiagnosisAxiomExplanationModel> map;
+    private Map<Integer, Explanation> map;
 
     public ExplanationManager(OWLEditorKit editorKit, Debugger debugger) throws OWLOntologyCreationException {
         if (debugger.getDiagnoses().size() != 1)
@@ -26,7 +26,7 @@ public class ExplanationManager {
             this.map = new HashMap<>();
             int idx = 1;
             for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                DiagnosisAxiomExplanationModel model = new DiagnosisAxiomExplanationModel(axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+                Explanation model = new Explanation(axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
                 map.put(idx, model);
                 idx++;
             }
@@ -34,8 +34,8 @@ public class ExplanationManager {
     }
 
     public void dispose()  {
-        for (DiagnosisAxiomExplanationModel model : map.values()){
-            model.dispose();
+        for (Explanation explanation : map.values()){
+            explanation.dispose();
         }
     }
 

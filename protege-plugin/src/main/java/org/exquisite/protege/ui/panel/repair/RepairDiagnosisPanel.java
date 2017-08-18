@@ -2,7 +2,7 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.repair.ExplanationManager;
+import org.exquisite.protege.model.explanation.ExplanationManager;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;

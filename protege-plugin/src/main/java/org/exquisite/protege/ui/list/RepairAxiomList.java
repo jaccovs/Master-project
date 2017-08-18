@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.protege.model.repair.ExplanationManager;
+import org.exquisite.protege.model.explanation.ExplanationManager;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;

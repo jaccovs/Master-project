@@ -1,4 +1,4 @@
-package org.exquisite.protege.model.repair;
+package org.exquisite.protege.model.explanation;
 
 import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.DiagnosisModel;
@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * @author wolfi
  */
-public class DiagnosisAxiomExplanationModel {
+public class Explanation {
 
-    private Logger logger = LoggerFactory.getLogger(DiagnosisAxiomExplanationModel.class.getCanonicalName());
+    private Logger logger = LoggerFactory.getLogger(Explanation.class.getCanonicalName());
 
     private RepairOWLReasoner reasoner;
 
@@ -33,12 +33,12 @@ public class DiagnosisAxiomExplanationModel {
 
     private List<OWLLogicalAxiom> notEntailedExamples;
 
-    private OWLLogicalAxiom axiom;
+    private OWLLogicalAxiom originalAxiom;
 
     private OWLEditorKit editorKit;
 
-    public DiagnosisAxiomExplanationModel(OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> dm, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
-        this.axiom = axiom;
+    public Explanation(OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> dm, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
+        this.originalAxiom = axiom;
         this.editorKit = editorKit;
 
         this.notEntailedExamples = dm.getNotEntailedExamples();
@@ -60,12 +60,12 @@ public class DiagnosisAxiomExplanationModel {
 
     public void explain(OWLLogicalAxiom axiom, RepairDiagnosisPanel panel) {
 
-        // we must check if the axiom has changed meanwhile
-        if (!axiom.equals(this.axiom)) {
-            // if the axiom has changed then we must change the diagnosis model too
-            diagnosisModel.getCorrectFormulas().remove(this.axiom);
+        // we must check if the originalAxiom has changed meanwhile
+        if (!axiom.equals(this.originalAxiom)) {
+            // if the originalAxiom has changed then we must change the diagnosis model too
+            diagnosisModel.getCorrectFormulas().remove(this.originalAxiom);
             diagnosisModel.getCorrectFormulas().add(axiom);
-            this.axiom = axiom;
+            this.originalAxiom = axiom;
         }
 
         final boolean isConsistent = isConsistent();
