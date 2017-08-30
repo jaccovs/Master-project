@@ -51,7 +51,7 @@ public class RepairDiagnosisPanel extends JComponent {
         pane.setLayout(new GridBagLayout());
 
         repairAxiomList = new RepairAxiomList(this, editorKit, explanationManager, this);
-        repairAxiomList.updateList(this.debugger.getDiagnoses(), this.debugger.getDiagnosisEngineFactory().getOntology());
+        repairAxiomList.updateList(this.debugger.getDiagnoses());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
         repairAxiomList.addListSelectionListener(new ListSelectionListener() {
@@ -93,12 +93,14 @@ public class RepairDiagnosisPanel extends JComponent {
     }
 
     public void dispose() {
+        // before disposing all repair states and explanation, we must set the active ontology back to the original one
+        editorKit.getModelManager().setActiveOntology(this.debugger.getDiagnosisEngineFactory().getOntology());
+
         repairAxiomList.dispose();
         this.explanationManager.dispose();
         if (explanation != null) {
             explanation.dispose();
         }
-
     }
 
     public void setExplanation(ExplanationResult explanation) {

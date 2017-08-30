@@ -4,6 +4,7 @@ import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.RepairOWLReasoner;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -55,6 +56,7 @@ public class Explanation {
     public void dispose()  {
         final OWLOntology debuggingOntology = reasoner.getDebuggingOntology();
         final boolean removedOntology = editorKit.getOWLModelManager().removeOntology(debuggingOntology);
+        if (!removedOntology) logger.warn("Ontology " + debuggingOntology + " could not be removed!");
         reasoner.dispose();
     }
 
@@ -75,13 +77,18 @@ public class Explanation {
             logger.debug("Explaining inconsistency");
             explainInconsistency(panel);
         } else {
-            for (OWLLogicalAxiom entailment : getEntailedTestCases()) {
-                logger.debug("Explaining entailment " + entailment);
-                explainEntailment(entailment, panel);
+            final List<OWLLogicalAxiom> entailedTestCases = getEntailedTestCases();
+            if (entailedTestCases.size() > 0 ) {
+                for (OWLLogicalAxiom entailment : entailedTestCases) {
+                    logger.debug("Explaining entailment " + entailment);
+                    explainEntailment(entailment, panel);
+                }
+            } else {
+                // show no explanation (todo)
+                panel.setExplanation(new NoExplanationResult());
             }
         }
     }
-
 
     private ExplanationManager getExplanationManager() {
         return editorKit.getModelManager().getExplanationManager();
@@ -95,12 +102,12 @@ public class Explanation {
     }
 
     private void explainEntailment(OWLAxiom entailment, RepairDiagnosisPanel panel) {
-        final OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
+        //final OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
         final OWLModelManager modelManager = editorKit.getModelManager();
 
         try {
             // change active ontology to the the repair debugging ontology
-            final OWLOntology debuggingOntology = getDebuggingOntology();
+            final OWLOntology debuggingOntology = getOntology();
             modelManager.setActiveOntology(debuggingOntology);
             Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
             if (teachers.size() >= 1) {
@@ -110,7 +117,7 @@ public class Explanation {
             }
         } finally {
             // change active ontology to the the original ontology
-            modelManager.setActiveOntology(activeOntology);
+            //modelManager.setActiveOntology(activeOntology);
         }
     }
 
@@ -134,7 +141,7 @@ public class Explanation {
         return entailedTestCases;
     }
 
-    private OWLOntology getDebuggingOntology() {
+    public OWLOntology getOntology() {
         return reasoner.getDebuggingOntology();
     }
 

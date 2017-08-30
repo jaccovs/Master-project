@@ -5,6 +5,7 @@ import org.exquisite.protege.Debugger;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.util.HashMap;
@@ -41,6 +42,11 @@ public class ExplanationManager {
 
     public void explain(int idx, OWLLogicalAxiom axiom, RepairDiagnosisPanel panel) {
         map.get(idx).explain(axiom, panel);
+    }
+
+    public OWLOntology getOntology(int idx) {
+        final Explanation explanation = map.get(idx);
+        return explanation.getOntology();
     }
 
 }
