@@ -8,18 +8,20 @@ import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
+import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.protege.editor.owl.model.inference.ReasonerPreferences;
+import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wolfi
@@ -30,26 +32,24 @@ public class Explanation {
 
     private RepairOWLReasoner reasoner;
 
-    private DiagnosisModel<OWLLogicalAxiom> diagnosisModel;
-
     private List<OWLLogicalAxiom> notEntailedExamples;
-
-    private OWLLogicalAxiom originalAxiom;
 
     private OWLEditorKit editorKit;
 
-    public Explanation(OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> dm, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
-        this.originalAxiom = axiom;
+    private RepairDiagnosisPanel panel;
+
+    public Explanation(RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
+        this.panel = panel;
 
-        this.notEntailedExamples = dm.getNotEntailedExamples();
+        this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
-        this.diagnosisModel = new DiagnosisModel<>();
-        this.diagnosisModel.setCorrectFormulas(dm.getCorrectFormulas());
-        this.diagnosisModel.getCorrectFormulas().add(axiom);
-        this.diagnosisModel.setEntailedExamples(dm.getEntailedExamples());
+        DiagnosisModel<OWLLogicalAxiom> diagnosisModel = new DiagnosisModel<>();
+        diagnosisModel.setCorrectFormulas(originalDiagnosisModel.getCorrectFormulas());
+        diagnosisModel.getCorrectFormulas().add(axiom);
+        diagnosisModel.setEntailedExamples(originalDiagnosisModel.getEntailedExamples());
 
-        this.reasoner = new RepairOWLReasoner(this.diagnosisModel, reasonerFactory, this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager());
+        this.reasoner = new RepairOWLReasoner(diagnosisModel, reasonerFactory, this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager());
         this.reasoner.setEntailmentTypes(config.getEntailmentTypes());
     }
 
@@ -60,28 +60,22 @@ public class Explanation {
         reasoner.dispose();
     }
 
-    public void explain(OWLLogicalAxiom axiom, RepairDiagnosisPanel panel) {
+    public void explain() {
 
-        // we must check if the originalAxiom has changed meanwhile
-        if (!axiom.equals(this.originalAxiom)) {
-            // if the originalAxiom has changed then we must change the diagnosis model too
-            diagnosisModel.getCorrectFormulas().remove(this.originalAxiom);
-            diagnosisModel.getCorrectFormulas().add(axiom);
-            this.originalAxiom = axiom;
-        }
+        checkActiveOntology();
 
         final boolean isConsistent = isConsistent();
-        logger.debug("Is ontology with " + axiom + " consistent? -> " + isConsistent);
+        logger.debug("Is ontology consistent? -> " + isConsistent);
 
         if (!isConsistent) {
             logger.debug("Explaining inconsistency");
-            explainInconsistency(panel);
+            explainInconsistency();
         } else {
             final List<OWLLogicalAxiom> entailedTestCases = getEntailedTestCases();
             if (entailedTestCases.size() > 0 ) {
                 for (OWLLogicalAxiom entailment : entailedTestCases) {
                     logger.debug("Explaining entailment " + entailment);
-                    explainEntailment(entailment, panel);
+                    explainEntailment(entailment);
                 }
             } else {
                 // show no explanation (todo)
@@ -94,30 +88,37 @@ public class Explanation {
         return editorKit.getModelManager().getExplanationManager();
     }
 
-    private void explainInconsistency(RepairDiagnosisPanel panel) {
+    private void explainInconsistency() {
         OWLModelManager owlModelManager = editorKit.getOWLModelManager();
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
         OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
-        this.explainEntailment(ax, panel);
+
+        this.explainEntailment(ax);
     }
 
-    private void explainEntailment(OWLAxiom entailment, RepairDiagnosisPanel panel) {
-        //final OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
-        final OWLModelManager modelManager = editorKit.getModelManager();
+    private void synchronizeReasoner() {
+        final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
+        final OWLReasoner currentReasoner = reasonerManager.getCurrentReasoner();
+        ReasonerPreferences preferences = reasonerManager.getReasonerPreferences();
+        Set<InferenceType> precompute = preferences.getPrecomputedInferences();
+        final ReasonerStatus reasonerStatus = reasonerManager.getReasonerStatus();
+        final boolean b = reasonerManager.classifyAsynchronously(precompute);
+    }
 
-        try {
-            // change active ontology to the the repair debugging ontology
-            final OWLOntology debuggingOntology = getOntology();
-            modelManager.setActiveOntology(debuggingOntology);
-            Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
-            if (teachers.size() >= 1) {
-                final ExplanationService explanationService = teachers.iterator().next();
-                final ExplanationResult explanation = explanationService.explain(entailment);
-                panel.setExplanation(explanation);
-            }
-        } finally {
-            // change active ontology to the the original ontology
-            //modelManager.setActiveOntology(activeOntology);
+    private void explainEntailment(OWLAxiom entailment) {
+        synchronizeReasoner();
+        Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
+        if (teachers.size() >= 1) {
+            final ExplanationService explanationService = teachers.iterator().next();
+            final ExplanationResult explanation = explanationService.explain(entailment);
+            panel.setExplanation(explanation);
+        }
+    }
+
+    private void checkActiveOntology() {
+        final OWLModelManager modelManager = editorKit.getModelManager();
+        if (!modelManager.getActiveOntology().equals(getOntology())) {
+            modelManager.setActiveOntology(getOntology());
         }
     }
 
@@ -143,6 +144,10 @@ public class Explanation {
 
     public OWLOntology getOntology() {
         return reasoner.getDebuggingOntology();
+    }
+
+    public DiagnosisModel getDiagnosisModel() {
+        return reasoner.getDiagnosisModel();
     }
 
 }

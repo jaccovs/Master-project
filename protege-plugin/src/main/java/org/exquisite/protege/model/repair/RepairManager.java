@@ -1,27 +1,24 @@
 package org.exquisite.protege.model.repair;
 
+import org.exquisite.core.DiagnosisRuntimeException;
+import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
-import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
  * @author wolfi
  */
-public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
+public class RepairManager implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
     private OWLLogicalAxiom originalAxiom;
 
-    private OWLOntology ontology;
-
     private OWLEditorKit editorKit;
-
-    private RepairAxiomList list;
 
     private RepairListItem listItem;
 
@@ -31,12 +28,12 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
     private boolean isModified;
 
-    public RepairState(OWLLogicalAxiom axiom, OWLOntology ontology, OWLEditorKit editorKit, RepairAxiomList list, RepairListItem listItem) {
-        //this.axiom = axiom;
+    private Explanation explanation;
+
+    public RepairManager(OWLLogicalAxiom axiom, Explanation explanation, OWLEditorKit editorKit, RepairListItem listItem) {
         this.originalAxiom = axiom;
-        this.ontology = ontology;
+        this.explanation = explanation;
         this.editorKit = editorKit;
-        this.list = list;
         this.listItem = listItem;
         this.listItem.setAxiom(axiom);
         this.hasEditor = RepairEditor.hasEditor(axiom);
@@ -97,22 +94,21 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
     }
 
     private void deleteAxiom(OWLLogicalAxiom axiom) {
-        java.util.List<OWLOntologyChange> changes = new ArrayList<>();
-        OWLOntology ontology = getOntology();
-        changes.add(new RemoveAxiom(ontology, axiom));
-        editorKit.getOWLModelManager().applyChanges(changes);
+        explanation.getDiagnosisModel().getCorrectFormulas().remove(axiom);
         this.isDeleted = true;
-        list.updateListItem(this.listItem);
+        explanation.explain();
+
     }
 
     private void restoreAxiom(OWLLogicalAxiom axiom) {
-        java.util.List<OWLOntologyChange> changes = new ArrayList<>();
-        OWLOntology ontology = getOntology();
-        changes.add(new AddAxiom(ontology, axiom));
-        editorKit.getOWLModelManager().applyChanges(changes);
+        try {
+            explanation.getDiagnosisModel().getCorrectFormulas().add(axiom);
+        } catch (DiagnosisRuntimeException e) {
+            // the diagnosis model can become inconsistent!
+        }
         this.isDeleted = false;
         this.isModified = false;
-        list.updateListItem(this.listItem);
+        explanation.explain();
     }
 
     private void modifyAxiom(OWLLogicalAxiom newAxiom, OWLLogicalAxiom oldAxiom) {
@@ -123,29 +119,24 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         isModified = !newAxiom.equals(oldAxiom);
 
         if (isModified) {
-            java.util.List<OWLOntologyChange> changes = new ArrayList<>();
-            OWLOntology ontology = getOntology();
-            if (ontology != null) {
-                changes.add(new RemoveAxiom(ontology, oldAxiom));
-                changes.add(new AddAxiom(ontology, newAxiom));
-            } else {
-                OWLOntology activeOntology = editorKit.getOWLModelManager().getActiveOntology();
-                changes.add(new AddAxiom(activeOntology, newAxiom));
+            explanation.getDiagnosisModel().getCorrectFormulas().remove(oldAxiom);
+            try {
+                explanation.getDiagnosisModel().getCorrectFormulas().add(newAxiom);
+            } catch (DiagnosisRuntimeException e) {
+                // the diagnosis model can become inconsistent!
             }
-            editorKit.getOWLModelManager().applyChanges(changes);
             listItem.setAxiom(newAxiom);
-
             this.isDeleted = false;
-            list.updateListItem(this.listItem);
+            this.explanation.explain();
         }
-    }
-
-    private OWLOntology getOntology() {
-        return this.ontology;
     }
 
     private OWLLogicalAxiom getAxiom() {
         return listItem.getAxiom();
+    }
+
+    public void dispose() {
+
     }
 
 }

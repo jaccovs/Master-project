@@ -1,14 +1,18 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
-import org.exquisite.protege.model.explanation.ExplanationManager;
+import org.exquisite.protege.Debugger;
+import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -25,18 +29,18 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     private Component parent;
 
-    private ExplanationManager explanationManager;
+    private Debugger debugger;
 
     private RepairDiagnosisPanel repairDiagnosisPanel;
 
-    public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, ExplanationManager explanationManager, Component parent) {
+    public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, Debugger debugger, Component parent) {
         super(editorKit);
         this.repairDiagnosisPanel = repairDiagnosisPanel;
+        this.debugger = debugger;
 
         addListSelectionListener(this);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        this.explanationManager = explanationManager;
         this.parent = parent;
     }
 
@@ -62,7 +66,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         }
     }
 
-    public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) {
+    public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) throws OWLOntologyCreationException {
         if (diagnoses.size() == 1) {
             List<Object> items = new ArrayList<>();
 
@@ -70,7 +74,9 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                 items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
                 int idx = 1;
                 for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                    items.add(new RepairListItem(this, axiom, this.explanationManager.getOntology(idx++), getEditorKit(), parent));
+                    Explanation explanation = new Explanation(this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+                    items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
+                    idx++;
                 }
                 // items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(this, axiom, this.explanationManager.getOntology(axiom), getEditorKit(), parent)).collect(Collectors.toList()));
                 items.add(" ");
@@ -86,16 +92,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     }
 
-    public void updateListItem(RepairListItem item) {
-        final ListModel listModel = getModel();
-        for (int i = 1; i < listModel.getSize(); i++) {
-            final RepairListItem listModelElementAt = (RepairListItem) listModel.getElementAt(i);
-            if (listModelElementAt.equals(item)) {
-                System.out.println("found");
-            }
-        }
-    }
-
     private String createHeaderName(final Diagnosis<OWLLogicalAxiom> diagnosis) {
         final int size = diagnosis.getFormulas().size();
         final String s = (size == 1) ? "this axiom" : "these " + size + " axioms";
@@ -103,7 +99,10 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     }
 
     public void dispose() {
-        explanationManager.dispose();
+        final ListModel listModel = getModel();
+        for (int i = 1; i < listModel.getSize(); i++) {
+            ((RepairListItem) listModel.getElementAt(i)).dispose();
+        }
     }
 
     public void reset() {
@@ -147,10 +146,21 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                     final Object o = lsm.getModel().getElementAt(idx);
                     if (o instanceof RepairListItem) {
                         final RepairListItem item = (RepairListItem) o;
-                        explanationManager.explain(idx, item.getAxiom(), this.repairDiagnosisPanel);
+
+                        // change to the active ontology to the selected item's ontology
+                        changeActiveOntology(item.getOntology());
+
+                        // check if there exist some explanations for this axioms
+                        item.explain();
                     }
                 }
             }
         }
+    }
+
+    private void changeActiveOntology(OWLOntology ontology) {
+        // change active ontology to the the repair debugging ontology
+        final OWLModelManager modelManager = editorKit.getModelManager();
+        modelManager.setActiveOntology(ontology);
     }
 }

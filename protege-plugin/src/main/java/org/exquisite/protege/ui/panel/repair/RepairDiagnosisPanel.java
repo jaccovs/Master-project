@@ -2,7 +2,6 @@ package org.exquisite.protege.ui.panel.repair;
 
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.model.explanation.ExplanationManager;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
@@ -19,7 +18,7 @@ import java.awt.*;
  */
 public class RepairDiagnosisPanel extends JComponent {
 
-    private static final int PREF_WIDTH = 800;
+    private static final int PREF_WIDTH = 1024;
 
     private static final int PREF_HEIGHT = 600;
 
@@ -31,8 +30,6 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private RepairAxiomList repairAxiomList;
 
-    private ExplanationManager explanationManager;
-
     private JPanel explanationContainer;
 
     private ExplanationResult explanation;
@@ -41,16 +38,16 @@ public class RepairDiagnosisPanel extends JComponent {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
-        this.explanationManager = new ExplanationManager(this.editorKit, this.debugger);
+        //this.explanationManager = new ExplanationManager(this.editorKit, this.debugger);
         setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
         addComponentToPane(this);
         setVisible(true);
     }
 
-    private void addComponentToPane(Container pane) {
+    private void addComponentToPane(Container pane) throws OWLOntologyCreationException {
         pane.setLayout(new GridBagLayout());
 
-        repairAxiomList = new RepairAxiomList(this, editorKit, explanationManager, this);
+        repairAxiomList = new RepairAxiomList(this, editorKit, this.debugger, this);
         repairAxiomList.updateList(this.debugger.getDiagnoses());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
@@ -97,7 +94,6 @@ public class RepairDiagnosisPanel extends JComponent {
         editorKit.getModelManager().setActiveOntology(this.debugger.getDiagnosisEngineFactory().getOntology());
 
         repairAxiomList.dispose();
-        this.explanationManager.dispose();
         if (explanation != null) {
             explanation.dispose();
         }
