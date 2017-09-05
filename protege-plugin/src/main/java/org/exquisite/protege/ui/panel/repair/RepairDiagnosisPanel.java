@@ -6,11 +6,11 @@ import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 /**
@@ -34,6 +34,8 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private ExplanationResult explanation;
 
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
+
     public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
@@ -51,12 +53,14 @@ public class RepairDiagnosisPanel extends JComponent {
         repairAxiomList.updateList(this.debugger.getDiagnoses());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
+        /* // TODO deactivated 05.09.2017
         repairAxiomList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 System.out.println(e);
             }
         });
+        */
 
         explanationContainer = new JPanel();
         explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
@@ -91,21 +95,23 @@ public class RepairDiagnosisPanel extends JComponent {
 
     public void dispose() {
         // before disposing all repair states and explanation, we must set the active ontology back to the original one
-        editorKit.getModelManager().setActiveOntology(this.debugger.getDiagnosisEngineFactory().getOntology());
+        final OWLOntology ontology = this.debugger.getDiagnosisEngineFactory().getOntology();
+        editorKit.getModelManager().setActiveOntology(ontology);
+        logger.debug("Set active ontology to " + ontology.getOntologyID());
 
         repairAxiomList.dispose();
-        if (explanation != null) {
-            explanation.dispose();
+        if (this.explanation != null) {
+            this.explanation.dispose();
         }
     }
 
-    public void setExplanation(ExplanationResult explanation) {
+    public void setExplanation(ExplanationResult expl) {
         explanationContainer.removeAll();
-        if (explanation != null) {
-            explanation.dispose();
+        if (this.explanation != null) {
+            this.explanation.dispose();
         }
-        explanationContainer.add(explanation);
-        this.explanation = explanation;
+        this.explanation = expl;
+        explanationContainer.add(this.explanation);
         revalidate();
     }
 

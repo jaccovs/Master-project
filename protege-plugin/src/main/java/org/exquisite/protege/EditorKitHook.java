@@ -148,8 +148,10 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
     public void stateChanged(ChangeEvent e) {
         Debugger activeDebugger = ontologyDebuggerMap.get(getEditorKit().getModelManager().getActiveOntology());
         if (activeDebugger != null && e != null /*&& activeDebugger.equals(e.getSource())*/ ) { // TODO check
-            // something in the active ontology searcher has changed
-            notifyActiveDebuggerListeners((OntologyDebuggerChangeEvent) e);
+            if (activeDebugger.equals(e.getSource())) {
+                // something in the active ontology searcher has changed
+                notifyActiveDebuggerListeners((OntologyDebuggerChangeEvent) e);
+            }
         } else {
             logger.warn("Unexpected NULL value for either the active debugger (value:" +
                     activeDebugger + ") or changeEvent (value: " + e + ")");

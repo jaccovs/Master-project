@@ -13,6 +13,7 @@ import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -32,6 +33,8 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     private Debugger debugger;
 
     private RepairDiagnosisPanel repairDiagnosisPanel;
+
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairAxiomList.class.getName());
 
     public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, Debugger debugger, Component parent) {
         super(editorKit);
@@ -150,6 +153,8 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         // change to the active ontology to the selected item's ontology
                         changeActiveOntology(item.getOntology());
 
+                        logger.debug("Set active ontology to " + item.getOntology().getOntologyID());
+
                         // check if there exist some explanations for this axioms
                         item.explain();
                     }
@@ -162,5 +167,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         // change active ontology to the the repair debugging ontology
         final OWLModelManager modelManager = editorKit.getModelManager();
         modelManager.setActiveOntology(ontology);
+
     }
 }
