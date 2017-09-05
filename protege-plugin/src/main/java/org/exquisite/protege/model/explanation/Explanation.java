@@ -10,18 +10,19 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerPreferences;
-import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.explanation.ExplanationManager;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.InferenceType;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author wolfi
@@ -37,6 +38,8 @@ public class Explanation {
     private OWLEditorKit editorKit;
 
     private RepairDiagnosisPanel panel;
+
+    private ExplanationResult explanation = null;
 
     public Explanation(RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
@@ -54,6 +57,8 @@ public class Explanation {
     }
 
     public void dispose()  {
+        if (this.explanation != null) this.explanation.dispose();
+
         final OWLOntology debuggingOntology = reasoner.getDebuggingOntology();
         final boolean removedOntology = editorKit.getOWLModelManager().removeOntology(debuggingOntology);
         if (!removedOntology) logger.warn("Ontology " + debuggingOntology + " could not be removed!");
@@ -78,10 +83,18 @@ public class Explanation {
                     explainEntailment(entailment);
                 }
             } else {
-                // show no explanation (todo)
-                panel.setExplanation(new NoExplanationResult());
+                noExplanation();
             }
         }
+    }
+
+    private void noExplanation() {
+        // show no explanation (todo)
+        if (this.explanation != null)
+            this.explanation.dispose();
+
+        this.explanation = new NoExplanationResult();
+        panel.setExplanation(this.explanation);
     }
 
     private ExplanationManager getExplanationManager() {
@@ -98,20 +111,37 @@ public class Explanation {
 
     private void synchronizeReasoner() {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
-        final OWLReasoner currentReasoner = reasonerManager.getCurrentReasoner();
         ReasonerPreferences preferences = reasonerManager.getReasonerPreferences();
         Set<InferenceType> precompute = preferences.getPrecomputedInferences();
-        final ReasonerStatus reasonerStatus = reasonerManager.getReasonerStatus();
+        System.out.println("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
         final boolean b = reasonerManager.classifyAsynchronously(precompute);
     }
 
     private void explainEntailment(OWLAxiom entailment) {
         synchronizeReasoner();
+        /*
         Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
         if (teachers.size() >= 1) {
+            if (this.explanation!=null) this.explanation.dispose();
+
             final ExplanationService explanationService = teachers.iterator().next();
-            final ExplanationResult explanation = explanationService.explain(entailment);
-            panel.setExplanation(explanation);
+            System.out.println("\n\n\n\n" + editorKit.getOWLModelManager().getOWLReasonerManager().getReasonerStatus() + "\n\n\n\n");
+            this.explanation = explanationService.explain(entailment);
+            panel.setExplanation(this.explanation);
+            System.out.println("\n\n\n\n" + editorKit.getOWLModelManager().getOWLReasonerManager().getReasonerStatus() + "\n\n\n\n");
+        }
+        */
+        if (!getExplanationManager().getExplainers().isEmpty()) {
+            final ExplanationService explanationService = getExplanationManager().getExplainers().iterator().next();
+            if (explanationService.hasExplanation(entailment)) {
+                if (this.explanation!=null) this.explanation.dispose();
+                this.explanation = explanationService.explain(entailment);
+                panel.setExplanation(this.explanation);
+            } else {
+                noExplanation();
+            }
+        } else {
+            noExplanation();
         }
     }
 

@@ -147,7 +147,7 @@ public class EditorKitHook extends OWLEditorKitHook implements OWLModelManagerLi
     @Override
     public void stateChanged(ChangeEvent e) {
         Debugger activeDebugger = ontologyDebuggerMap.get(getEditorKit().getModelManager().getActiveOntology());
-        if (activeDebugger != null && e != null && activeDebugger.equals(e.getSource())) { // TODO check
+        if (activeDebugger != null && e != null /*&& activeDebugger.equals(e.getSource())*/ ) { // TODO check
             // something in the active ontology searcher has changed
             notifyActiveDebuggerListeners((OntologyDebuggerChangeEvent) e);
         } else {
