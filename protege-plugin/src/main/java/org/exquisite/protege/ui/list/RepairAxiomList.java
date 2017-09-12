@@ -75,13 +75,10 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
             for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
                 items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
-                int idx = 1;
                 for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
                     Explanation explanation = new Explanation(this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
                     items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
-                    idx++;
                 }
-                // items.addAll(diagnosis.getFormulas().stream().map(axiom -> new RepairListItem(this, axiom, this.explanationManager.getOntology(axiom), getEditorKit(), parent)).collect(Collectors.toList()));
                 items.add(" ");
             }
 

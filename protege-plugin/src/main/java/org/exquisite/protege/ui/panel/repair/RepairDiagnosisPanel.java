@@ -53,15 +53,6 @@ public class RepairDiagnosisPanel extends JComponent {
         repairAxiomList.updateList(this.debugger.getDiagnoses());
         addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
 
-        /* // TODO deactivated 05.09.2017
-        repairAxiomList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                System.out.println(e);
-            }
-        });
-        */
-
         explanationContainer = new JPanel();
         explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
         addToPane(0,1,2,1,1.0,0.5,explanationContainer,"Explanations", pane);

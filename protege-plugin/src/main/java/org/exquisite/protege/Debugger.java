@@ -258,7 +258,7 @@ public class Debugger {
      * @param errorHandler An error handler.
      */
     private void doStartDebugging(QueryErrorHandler errorHandler) {
-        if (!isSessionRunning()) {
+        if (!isSessionRunning() && !isRepairing()) {
             if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
                 DebuggingDialog.showNoReasonerSelectedMessage();
                 return;
@@ -301,82 +301,84 @@ public class Debugger {
      * Stop diagnosis session -> reset engine, diagnoses, conflicts, queries and history.
      */
     public void doStopDebugging(SessionStopReason reason) {
-        if (isSessionRunning()) {
-            logger.info(LogBanner.start("Stopping Debugging Session"));
+        if (!isRepairing()) {
+            if (isSessionRunning()) {
+                logger.info(LogBanner.start("Stopping Debugging Session"));
 
-            try {
-                diagnosisEngineFactory.dispose();
-            } catch (RuntimeException rex) {
-                logger.error("A runtime exception occurred while disposing diagnosis engine", rex);
-            }
+                try {
+                    diagnosisEngineFactory.dispose();
+                } catch (RuntimeException rex) {
+                    logger.error("A runtime exception occurred while disposing diagnosis engine", rex);
+                }
 
-            this.diagnoses.clear();                                     // reset diagnoses, conflicts
-            this.conflicts.clear();
+                this.diagnoses.clear();                                     // reset diagnoses, conflicts
+                this.conflicts.clear();
 
-            this.previousDiagnoses.clear();
+                this.previousDiagnoses.clear();
 
-            resetQuery();                                               // reset queries
-            resetQueryHistory();                                        // reset history
-            testcases.reset();
-            debuggingSession.stopSession();                             // stop session
+                resetQuery();                                               // reset queries
+                resetQueryHistory();                                        // reset history
+                testcases.reset();
+                debuggingSession.stopSession();                             // stop session
 
-            this.cautiousParameter = null;
-            this.previousCautiousParameter = null;
+                this.cautiousParameter = null;
+                this.previousCautiousParameter = null;
 
-            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
+                notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
-            // notify the user why session has stopped
-            String reasonMsg = null;
-            switch (reason) {
-                case ERROR_OCCURRED:
-                    reasonMsg = "an unexpected error occured!";
-                    break;
-                case ONTOLOGY_RELOADED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
-                    break;
-                case ONTOLOGY_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
-                    break;
-                case PREFERENCES_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the preferences have been modified!";
-                    break;
-                case REASONER_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the reasoner has been changed!";
-                    break;
-                case DEBUGGING_ONTOLOGY_SELECTED:
-                    reasonMsg = "an anonymous debugging ontology has been selected!";
-                    break;
-                case INVOKED_BY_USER:     // no message necessary
-                case DEBUGGER_RESET:      // no message necessary
-                case CONSISTENT_ONTOLOGY: // no message necessary
-                case SESSION_RESTARTED:   // no message necessary
-                case REPAIR_FINISHED:     // no message necessary
-                    final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
-                    if (configuration.reduceIncoherency && configuration.extractModules) {
-                        // During the debugging session the diagnosis model also has been reduced to set of axioms from
-                        // the extracted module and needs to be recreated.
+                // notify the user why session has stopped
+                String reasonMsg = null;
+                switch (reason) {
+                    case ERROR_OCCURRED:
+                        reasonMsg = "an unexpected error occured!";
+                        break;
+                    case ONTOLOGY_RELOADED:
                         syncDiagnosisModel();
-                    }
-                    break;
-                default:
-                    reasonMsg = reason.toString();
-                    logger.warn("unknown reason: " + reason);
-            }
+                        reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
+                        break;
+                    case ONTOLOGY_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
+                        break;
+                    case PREFERENCES_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the preferences have been modified!";
+                        break;
+                    case REASONER_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the reasoner has been changed!";
+                        break;
+                    case DEBUGGING_ONTOLOGY_SELECTED:
+                        reasonMsg = "an anonymous debugging ontology has been selected!";
+                        break;
+                    case INVOKED_BY_USER:     // no message necessary
+                    case DEBUGGER_RESET:      // no message necessary
+                    case CONSISTENT_ONTOLOGY: // no message necessary
+                    case SESSION_RESTARTED:   // no message necessary
+                    case REPAIR_FINISHED:     // no message necessary
+                        final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
+                        if (configuration.reduceIncoherency && configuration.extractModules) {
+                            // During the debugging session the diagnosis model also has been reduced to set of axioms from
+                            // the extracted module and needs to be recreated.
+                            syncDiagnosisModel();
+                        }
+                        break;
+                    default:
+                        reasonMsg = reason.toString();
+                        logger.warn("unknown reason: " + reason);
+                }
 
-            if (reasonMsg != null)
-                DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
-        } else {
-            switch (reason) {
-                case REASONER_CHANGED:
-                case PREFERENCES_CHANGED:
-                case ONTOLOGY_CHANGED:
-                case ONTOLOGY_RELOADED:
-                    syncDiagnosisModel();
-                    break;
+                if (reasonMsg != null)
+                    DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
+            } else {
+                switch (reason) {
+                    case REASONER_CHANGED:
+                    case PREFERENCES_CHANGED:
+                    case ONTOLOGY_CHANGED:
+                    case ONTOLOGY_RELOADED:
+                        syncDiagnosisModel();
+                        break;
+                }
             }
         }
     }
@@ -396,7 +398,7 @@ public class Debugger {
     }
 
     public void doStartRepair() {
-        if (isSessionRunning() && getDiagnoses().size() == 1) {
+        if (!isRepairing() && isSessionRunning() && getDiagnoses().size() == 1) {
             this.debuggingSession.startRepair();
 
             try {
