@@ -18,10 +18,6 @@ import java.awt.*;
  */
 public class RepairDiagnosisPanel extends JComponent {
 
-    private static final int PREF_WIDTH = 1024;
-
-    private static final int PREF_HEIGHT = 600;
-
     private OWLEditorKit editorKit;
 
     private EditorKitHook editorKitHook;
@@ -40,8 +36,7 @@ public class RepairDiagnosisPanel extends JComponent {
         this.editorKit = editorKit;
         this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
-        //this.explanationManager = new ExplanationManager(this.editorKit, this.debugger);
-        setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
+        setPreferredSize(getPreferredSize());
         addComponentToPane(this);
         setVisible(true);
     }
@@ -113,4 +108,12 @@ public class RepairDiagnosisPanel extends JComponent {
     public boolean hasChanged() {
         return repairAxiomList.hasChanged();
     }
+
+    public Dimension getPreferredSize() {
+        Dimension workspaceSize = editorKit.getWorkspace().getSize();
+        int width = (int) (workspaceSize.getWidth() * 0.85);
+        int height = (int) (workspaceSize.getHeight() * 0.6);
+        return new Dimension(width, height);
+    }
+
 }
