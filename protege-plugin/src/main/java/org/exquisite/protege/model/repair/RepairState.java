@@ -4,21 +4,20 @@ import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
 import org.exquisite.protege.ui.list.item.RepairListItem;
-import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author wolfi
  */
-public class RepairManager implements OWLObjectEditorHandler<OWLLogicalAxiom> {
+public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
     private OWLLogicalAxiom originalAxiom;
-
-    private OWLEditorKit editorKit;
 
     private RepairListItem listItem;
 
@@ -30,10 +29,9 @@ public class RepairManager implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
     private Explanation explanation;
 
-    public RepairManager(OWLLogicalAxiom axiom, Explanation explanation, OWLEditorKit editorKit, RepairListItem listItem) {
+    public RepairState(OWLLogicalAxiom axiom, Explanation explanation, RepairListItem listItem) {
         this.originalAxiom = axiom;
         this.explanation = explanation;
-        this.editorKit = editorKit;
         this.listItem = listItem;
         this.listItem.setAxiom(axiom);
         this.hasEditor = RepairEditor.hasEditor(axiom);
@@ -139,4 +137,16 @@ public class RepairManager implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
     }
 
+    public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
+        if (hasChanged()) {
+            List<OWLAxiomChange> changes = new ArrayList<>();
+            changes.add(new RemoveAxiom(ontology, this.originalAxiom));
+            if (isModified) {
+                changes.add(new AddAxiom(ontology, listItem.getAxiom()));
+            }
+            return changes;
+        } else {
+            return Collections.emptyList();
+        }
+    }
 }

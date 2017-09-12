@@ -1,12 +1,15 @@
 package org.exquisite.protege.ui.list.item;
 
 import org.exquisite.protege.model.explanation.Explanation;
-import org.exquisite.protege.model.repair.RepairManager;
+import org.exquisite.protege.model.repair.RepairState;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
 import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,17 +21,16 @@ public class RepairListItem extends AxiomListItem {
 
     private Component parent;
 
-    private RepairManager repairState;
+    private RepairState repairState;
 
     private Explanation explanation;
-
 
     public RepairListItem(OWLLogicalAxiom axiom, Explanation explanation, OWLEditorKit editorKit, Component parent) {
         super(axiom, explanation.getOntology());
         this.editorKit = editorKit;
         this.parent = parent;
         this.explanation = explanation;
-        this.repairState = new RepairManager(axiom, explanation, editorKit, this);
+        this.repairState = new RepairState(axiom, explanation, this);
     }
 
     public void setAxiom(OWLLogicalAxiom axiom) {
@@ -80,4 +82,7 @@ public class RepairListItem extends AxiomListItem {
         explanation.explain();
     }
 
+    public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
+        return repairState.getChanges(ontology);
+    }
 }

@@ -408,10 +408,10 @@ public class Debugger {
                 switch (ret) {
                     case JOptionPane.CLOSED_OPTION:
                     case JOptionPane.CANCEL_OPTION:
-                        repairPanel.reset();
+                        repairPanel.doCancelAction();
                     case JOptionPane.OK_OPTION:
-                        repairPanel.dispose();
                         this.debuggingSession.stopRepair();
+                        repairPanel.doOkAction();
                         if (repairPanel.hasChanged()) {
                             doStopDebugging(SessionStopReason.REPAIR_FINISHED);
                         }

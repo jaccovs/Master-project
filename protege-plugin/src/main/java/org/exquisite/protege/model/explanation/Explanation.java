@@ -119,18 +119,7 @@ public class Explanation {
 
     private void explainEntailment(OWLAxiom entailment) {
         synchronizeReasoner();
-        /*
-        Collection<ExplanationService> teachers = getExplanationManager().getTeachers(entailment);
-        if (teachers.size() >= 1) {
-            if (this.explanation!=null) this.explanation.dispose();
 
-            final ExplanationService explanationService = teachers.iterator().next();
-            System.out.println("\n\n\n\n" + editorKit.getOWLModelManager().getOWLReasonerManager().getReasonerStatus() + "\n\n\n\n");
-            this.explanation = explanationService.explain(entailment);
-            panel.setExplanation(this.explanation);
-            System.out.println("\n\n\n\n" + editorKit.getOWLModelManager().getOWLReasonerManager().getReasonerStatus() + "\n\n\n\n");
-        }
-        */
         if (!getExplanationManager().getExplainers().isEmpty()) {
             final ExplanationService explanationService = getExplanationManager().getExplainers().iterator().next();
             if (explanationService.hasExplanation(entailment)) {

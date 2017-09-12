@@ -20,8 +20,6 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private OWLEditorKit editorKit;
 
-    private EditorKitHook editorKitHook;
-
     private Debugger debugger;
 
     private RepairAxiomList repairAxiomList;
@@ -34,7 +32,7 @@ public class RepairDiagnosisPanel extends JComponent {
 
     public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
-        this.editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
+        EditorKitHook editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
         setPreferredSize(getPreferredSize());
         addComponentToPane(this);
@@ -51,7 +49,6 @@ public class RepairDiagnosisPanel extends JComponent {
         explanationContainer = new JPanel();
         explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
         addToPane(0,1,2,1,1.0,0.5,explanationContainer,"Explanations", pane);
-
     }
 
     private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane) {
@@ -101,8 +98,13 @@ public class RepairDiagnosisPanel extends JComponent {
         revalidate();
     }
 
-    public void reset() {
-        repairAxiomList.reset();
+    public void doCancelAction() {
+        dispose();
+    }
+
+    public void doOkAction() {
+        repairAxiomList.applyChangesOnOntology(this.debugger.getDiagnosisEngineFactory().getOntology());
+        dispose();
     }
 
     public boolean hasChanged() {

@@ -10,9 +10,7 @@ import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.*;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -105,15 +103,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         }
     }
 
-    public void reset() {
-        final ListModel listModel = getModel();
-
-        for (int i = 1; i < listModel.getSize(); i++) {
-            final RepairListItem listModelElementAt = (RepairListItem) listModel.getElementAt(i);
-            listModelElementAt.handleReset();
-        }
-    }
-
     public boolean hasChanged() {
         boolean hasChanged = false;
         final ListModel listModel = getModel();
@@ -165,5 +154,22 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         final OWLModelManager modelManager = editorKit.getModelManager();
         modelManager.setActiveOntology(ontology);
 
+    }
+
+    public void applyChangesOnOntology(final OWLOntology ontology) {
+        if (hasChanged()) {
+            List<OWLAxiomChange> changes = new ArrayList<>();
+            final ListModel listModel = getModel();
+            for (int i=1; i < listModel.getSize(); i++) {
+                final RepairListItem listModelElementAt = (RepairListItem) listModel.getElementAt(i);
+                if (listModelElementAt.hasChanged()) {
+                    changes.addAll(listModelElementAt.getChanges(ontology));
+                }
+            }
+            if (!changes.isEmpty()) {
+                OWLOntologyManager manager = ontology.getOWLOntologyManager();
+                manager.applyChanges(changes);
+            }
+        }
     }
 }
