@@ -115,8 +115,8 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-
-        RepairAxiomList lsm = (RepairAxiomList)e.getSource();
+        final RepairAxiomList lsm = (RepairAxiomList)e.getSource();
+        final Point mousePoint = getMouseCellLocation();
 
         boolean isAdjusting = e.getValueIsAdjusting();
         if (!isAdjusting) {
@@ -141,12 +141,29 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
                         logger.debug("Set active ontology to " + item.getOntology().getOntologyID());
 
-                        // check if there exist some explanations for this axioms
-                        item.explain();
+                        if (! isButtonPressed(mousePoint, lsm.getListItemButtons(item))) {
+                            // check if there exist some explanations for this axiom (only if user did not select a button)
+                            item.showExplanation();
+                        } else {
+                            // if user clicked on a button, show the no-explanation panel
+                            item.showNoExplanation();
+                        }
                     }
                 }
             }
         }
+    }
+
+    private boolean isButtonPressed(final Point mousePressedPoint, final List<MListButton> listItemButtons) {
+        if (mousePressedPoint == null)
+            return false;
+
+        for (MListButton btn : listItemButtons) {
+            final Rectangle btnBounds = btn.getBounds();
+            if (btnBounds.x <= mousePressedPoint.x && btnBounds.x + btnBounds.width >= mousePressedPoint.x)
+                return true;
+        }
+        return false;
     }
 
     private void changeActiveOntology(OWLOntology ontology) {

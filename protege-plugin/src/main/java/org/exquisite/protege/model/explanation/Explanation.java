@@ -65,31 +65,32 @@ public class Explanation {
         reasoner.dispose();
     }
 
-    public void explain() {
-
-        checkActiveOntology();
-
+    public void showExplanation() {
+        verifyActiveOntology();
         final boolean isConsistent = isConsistent();
+
         logger.debug("Is ontology consistent? -> " + isConsistent);
 
         if (!isConsistent) {
             logger.debug("Explaining inconsistency");
-            explainInconsistency();
+            showExplanationForInconsistency();
         } else {
             final List<OWLLogicalAxiom> entailedTestCases = getEntailedTestCases();
             if (entailedTestCases.size() > 0 ) {
                 for (OWLLogicalAxiom entailment : entailedTestCases) {
                     logger.debug("Explaining entailment " + entailment);
-                    explainEntailment(entailment);
+                    showExplanationForEntailment(entailment);
                 }
             } else {
-                noExplanation();
+                showNoExplanation();
             }
         }
     }
 
-    private void noExplanation() {
-        // show no explanation (todo)
+    public void showNoExplanation() {
+        verifyActiveOntology();
+
+        // clean up dangling resources
         if (this.explanation != null)
             this.explanation.dispose();
 
@@ -101,12 +102,12 @@ public class Explanation {
         return editorKit.getModelManager().getExplanationManager();
     }
 
-    private void explainInconsistency() {
+    private void showExplanationForInconsistency() {
         OWLModelManager owlModelManager = editorKit.getOWLModelManager();
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
         OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
 
-        this.explainEntailment(ax);
+        this.showExplanationForEntailment(ax);
     }
 
     private void synchronizeReasoner() {
@@ -117,7 +118,7 @@ public class Explanation {
         final boolean b = reasonerManager.classifyAsynchronously(precompute);
     }
 
-    private void explainEntailment(OWLAxiom entailment) {
+    private void showExplanationForEntailment(OWLAxiom entailment) {
         synchronizeReasoner();
 
         if (!getExplanationManager().getExplainers().isEmpty()) {
@@ -127,14 +128,14 @@ public class Explanation {
                 this.explanation = explanationService.explain(entailment);
                 panel.setExplanation(this.explanation);
             } else {
-                noExplanation();
+                showNoExplanation();
             }
         } else {
-            noExplanation();
+            showNoExplanation();
         }
     }
 
-    private void checkActiveOntology() {
+    private void verifyActiveOntology() {
         final OWLModelManager modelManager = editorKit.getModelManager();
         if (!modelManager.getActiveOntology().equals(getOntology())) {
             modelManager.setActiveOntology(getOntology());
