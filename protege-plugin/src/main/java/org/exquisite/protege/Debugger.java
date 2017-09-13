@@ -408,12 +408,15 @@ public class Debugger {
                 switch (ret) {
                     case JOptionPane.CLOSED_OPTION:
                     case JOptionPane.CANCEL_OPTION:
+                        this.debuggingSession.stopRepair();
                         repairPanel.doCancelAction();
+                        break;
                     case JOptionPane.OK_OPTION:
                         this.debuggingSession.stopRepair();
                         repairPanel.doOkAction();
                         if (repairPanel.hasChanged()) {
                             doStopDebugging(SessionStopReason.REPAIR_FINISHED);
+                            doStartDebugging(new QueryErrorHandler());
                         }
                         break;
                 }
@@ -421,8 +424,6 @@ public class Debugger {
                 logger.error(e.getMessage(), e);
                 DebuggingDialog.showErrorDialog("Unexpected exception occurred", e.getMessage(), e);
             }
-
-
         }
     }
 
