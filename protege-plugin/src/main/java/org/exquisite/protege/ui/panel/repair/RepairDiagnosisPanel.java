@@ -28,6 +28,8 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private ExplanationResult explanation;
 
+    private JLabel label;
+
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
 
     public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
@@ -44,14 +46,14 @@ public class RepairDiagnosisPanel extends JComponent {
 
         repairAxiomList = new RepairAxiomList(this, editorKit, this.debugger, this);
         repairAxiomList.updateList(this.debugger.getDiagnoses());
-        addToPane(0,0,2,1,1.0,0.5, repairAxiomList, "Repair", pane);
+        addToPane(0,0,2,1,1.0,0.4, repairAxiomList, "Repair", pane, false);
 
         explanationContainer = new JPanel();
         explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
-        addToPane(0,1,2,1,1.0,0.5,explanationContainer,"Explanations", pane);
+        addToPane(0,1,2,1,1.0,0.6,explanationContainer,"Explanations", pane, true);
     }
 
-    private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane) {
+    private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane, boolean withLabel) {
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -73,6 +75,11 @@ public class RepairDiagnosisPanel extends JComponent {
 
         panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
 
+        if (withLabel) {
+            label = new JLabel("Select an axiom to show explanation ");
+            panel.add(label, BorderLayout.NORTH);
+        }
+
         pane.add(panel, c);
     }
 
@@ -88,13 +95,19 @@ public class RepairDiagnosisPanel extends JComponent {
         }
     }
 
-    public void setExplanation(ExplanationResult expl) {
+    public void setExplanation(final ExplanationResult expl) {
+        setExplanation(expl, null);
+    }
+
+    public void setExplanation(final ExplanationResult expl, final String label) {
         explanationContainer.removeAll();
         if (this.explanation != null) {
             this.explanation.dispose();
         }
         this.explanation = expl;
         explanationContainer.add(this.explanation);
+        if (label != null) this.label.setText(label);
+        else this.label.setText("");
         revalidate();
     }
 

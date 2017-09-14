@@ -41,9 +41,13 @@ public class Explanation {
 
     private ExplanationResult explanation = null;
 
+    private OWLLogicalAxiom axiom;
+
+
     public Explanation(RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
         this.panel = panel;
+        this.axiom = axiom;
 
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
@@ -59,19 +63,34 @@ public class Explanation {
     public void dispose()  {
         if (this.explanation != null) this.explanation.dispose();
 
-        final OWLOntology debuggingOntology = reasoner.getDebuggingOntology();
-        final boolean removedOntology = editorKit.getOWLModelManager().removeOntology(debuggingOntology);
-        if (!removedOntology) logger.warn("Ontology " + debuggingOntology + " could not be removed!");
+        final OWLOntology testOntology = reasoner.getDebuggingOntology();
+        final boolean removedOntology = editorKit.getOWLModelManager().removeOntology(testOntology);
+        if (!removedOntology) {
+            logger.warn("Test-Ontology " + testOntology + " could not be removed!");
+        } else {
+            logger.debug("Test-Ontology " + testOntology + " successfully removed!");
+        }
         reasoner.dispose();
     }
 
+    /**
+     * Shows an explanation for the currently selected axiom of a diagnosis.
+     *
+     * <ul>
+     *     <li>If the ontology is inconsistent, this shows the explanation, why the selected axiom is responsible for the
+     *     inconsistency</li>
+     *     <li>If test ontology containing the selected axiom <strong>entails</strong> one of the negative test cases,
+     *     it shows the explanation for this negative test case.</li>
+     *     <li>No explanation in all other cases.</li>
+     * </ul>
+     */
     public void showExplanation() {
         verifyActiveOntology();
-        final boolean isConsistent = isConsistent();
+        final boolean isOntologyConsistent = isOntologyConsistent();
 
-        logger.debug("Is ontology consistent? -> " + isConsistent);
+        logger.debug("Is ontology consistent? -> " + isOntologyConsistent);
 
-        if (!isConsistent) {
+        if (!isOntologyConsistent) {
             logger.debug("Explaining inconsistency");
             showExplanationForInconsistency();
         } else {
@@ -79,7 +98,7 @@ public class Explanation {
             if (entailedTestCases.size() > 0 ) {
                 for (OWLLogicalAxiom entailment : entailedTestCases) {
                     logger.debug("Explaining entailment " + entailment);
-                    showExplanationForEntailment(entailment);
+                    showExplanationForEntailment(entailment, axiom + " is responsible for the entailment of " + entailment );
                 }
             } else {
                 showNoExplanation();
@@ -105,9 +124,9 @@ public class Explanation {
     private void showExplanationForInconsistency() {
         OWLModelManager owlModelManager = editorKit.getOWLModelManager();
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
-        OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
+        OWLSubClassOfAxiom entailment = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
 
-        this.showExplanationForEntailment(ax);
+        this.showExplanationForEntailment(entailment, axiom + " is responsible for the inconsistency");
     }
 
     private void synchronizeReasoner() {
@@ -118,15 +137,15 @@ public class Explanation {
         final boolean b = reasonerManager.classifyAsynchronously(precompute);
     }
 
-    private void showExplanationForEntailment(OWLAxiom entailment) {
+    private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {
         synchronizeReasoner();
 
         if (!getExplanationManager().getExplainers().isEmpty()) {
             final ExplanationService explanationService = getExplanationManager().getExplainers().iterator().next();
             if (explanationService.hasExplanation(entailment)) {
-                if (this.explanation!=null) this.explanation.dispose();
+                if (this.explanation!=null) this.explanation.dispose(); // dispose the previous explanation
                 this.explanation = explanationService.explain(entailment);
-                panel.setExplanation(this.explanation);
+                panel.setExplanation(this.explanation, label);
             } else {
                 showNoExplanation();
             }
@@ -142,7 +161,12 @@ public class Explanation {
         }
     }
 
-    private boolean isConsistent() {
+    /**
+     * Checks whether the debugging ontology of the reasoner is consistent or not.
+     *
+     * @return <code>true</code> if ontology is consistent, otherwise <code>false</code>.
+     */
+    private boolean isOntologyConsistent() {
         boolean isConsistent;
         try {
             isConsistent = this.reasoner.isConsistent(Collections.emptySet());

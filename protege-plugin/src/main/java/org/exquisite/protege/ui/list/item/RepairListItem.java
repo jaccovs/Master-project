@@ -85,6 +85,7 @@ public class RepairListItem extends AxiomListItem {
     public void showNoExplanation() {
         explanation.showNoExplanation();
     }
+
     public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
         return repairState.getChanges(ontology);
     }

@@ -403,7 +403,7 @@ public class Debugger {
 
             try {
                 RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit());
-                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairPanel, JOptionPane.OK_CANCEL_OPTION);
+                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairPanel);
 
                 switch (ret) {
                     case JOptionPane.CLOSED_OPTION:
