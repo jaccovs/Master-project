@@ -93,7 +93,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     private String createHeaderName(final Diagnosis<OWLLogicalAxiom> diagnosis) {
         final int size = diagnosis.getFormulas().size();
         final String s = (size == 1) ? "this axiom" : "these " + size + " axioms";
-        return "Repair " + s + " either by deletion or by modification.";
+        return "Repair " + s + " by deletion or by modification. Select an axiom to show it's explanation.";
     }
 
     public void dispose() {

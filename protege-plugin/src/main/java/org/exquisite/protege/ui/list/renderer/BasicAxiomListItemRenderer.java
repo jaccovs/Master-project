@@ -18,7 +18,7 @@ public class BasicAxiomListItemRenderer implements ListCellRenderer  {
         renderer.setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
     }
 
-    public OWLCellRenderer getRenderer() {
+    OWLCellRenderer getRenderer() {
         renderer.setHighlightUnsatisfiableClasses(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
         renderer.setHighlightUnsatisfiableProperties(false); // a fix for Issue #87 to prevent race conditions with DebuggerProgressUI.showWindow()
         return renderer;
@@ -30,8 +30,9 @@ public class BasicAxiomListItemRenderer implements ListCellRenderer  {
             AxiomListItem item = ((AxiomListItem) value);
             getRenderer().setOntology(item.getOntology());
             if (item instanceof RepairListItem && ((RepairListItem)item).isDeleted()) {
-              getRenderer().setHighlightKeywords(false);
-              getRenderer().setCommentedOut(true);
+                getRenderer().setHighlightKeywords(false);
+                getRenderer().setCommentedOut(true);
+                //getRenderer().setStrikeThrough(true); // setStrikeThrough and setCommentedOut are mutually exclusive
             } else {
                 getRenderer().setHighlightKeywords(true);
             }

@@ -98,7 +98,7 @@ public class Explanation {
             if (entailedTestCases.size() > 0 ) {
                 for (OWLLogicalAxiom entailment : entailedTestCases) {
                     logger.debug("Explaining entailment " + entailment);
-                    showExplanationForEntailment(entailment, "<html><font color=\"red\">" + axiom + "</font> is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
+                    showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
                 }
             } else {
                 showNoExplanation();
@@ -126,7 +126,7 @@ public class Explanation {
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
         OWLSubClassOfAxiom entailment = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
 
-        this.showExplanationForEntailment(entailment, "<html><font color=\"red\">" + axiom + "</font> is responsible for an <b>inconsistency</b></html>");
+        this.showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for an <b>inconsistency</b></html>");
     }
 
     private void synchronizeReasoner() {

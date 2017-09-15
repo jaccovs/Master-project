@@ -11,6 +11,9 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -73,12 +76,15 @@ public class RepairDiagnosisPanel extends JComponent {
                         title),
                 BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
-        panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
-
         if (withLabel) {
-            label = new JLabel("Select an axiom to show explanation ");
+            label = new JLabel("<html>Select an axiom to explain why it has to be repaired</html>");
+            final Border border = label.getBorder();
+            Border margin = new EmptyBorder(0,10,10,0);
+            label.setBorder(new CompoundBorder(border, margin));
             panel.add(label, BorderLayout.NORTH);
         }
+
+        panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
 
         pane.add(panel, c);
     }
