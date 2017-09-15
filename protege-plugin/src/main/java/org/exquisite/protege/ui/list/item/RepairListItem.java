@@ -89,4 +89,15 @@ public class RepairListItem extends AxiomListItem {
     public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
         return repairState.getChanges(ontology);
     }
+
+    @Override
+    public String getTooltip() {
+        if (isDeleted()) {
+            return "Deleted";
+        } else if (hasChanged()) {
+            return "Modified";
+        } else {
+            return super.getTooltip();
+        }
+    }
 }
