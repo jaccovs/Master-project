@@ -1,6 +1,7 @@
 package org.exquisite.protege.ui.buttons;
 
 import org.exquisite.protege.Debugger;
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.view.AbstractViewComponent;
 
 import javax.swing.*;
@@ -23,7 +24,13 @@ public class RepairButton extends AbstractGuiButton {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         final Debugger debugger = toolboxView.getEditorKitHook().getActiveOntologyDebugger();
-                        debugger.doStartRepair();
+                        if (debugger.getDiagnoses().size() == 1) {
+                            debugger.doStartRepair(debugger.getDiagnoses().iterator().next());
+                        } else {
+                            DebuggingDialog.showMessageDialog( "Unexpected error!",
+                                    "The repair button should be enabled only when there exists one diagnosis. " +
+                                            "However there exist " + (debugger.getDiagnoses().size()) + " diagnoses.");
+                        }
                     }
                 }
         );

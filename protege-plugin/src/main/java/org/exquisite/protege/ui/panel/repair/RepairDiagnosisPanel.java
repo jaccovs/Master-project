@@ -1,11 +1,13 @@
 package org.exquisite.protege.ui.panel.repair;
 
+import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private OWLEditorKit editorKit;
 
+    private Diagnosis<OWLLogicalAxiom> diagnosis;
+
     private Debugger debugger;
 
     private RepairAxiomList repairAxiomList;
@@ -35,8 +39,9 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
 
-    public RepairDiagnosisPanel(OWLEditorKit editorKit) throws OWLOntologyCreationException {
+    public RepairDiagnosisPanel(final OWLEditorKit editorKit, final Diagnosis<OWLLogicalAxiom> diagnosis) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
+        this.diagnosis = diagnosis;
         EditorKitHook editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
         setPreferredSize(getPreferredSize());
@@ -48,7 +53,7 @@ public class RepairDiagnosisPanel extends JComponent {
         pane.setLayout(new GridBagLayout());
 
         repairAxiomList = new RepairAxiomList(this, editorKit, this.debugger, this);
-        repairAxiomList.updateList(this.debugger.getDiagnoses());
+        repairAxiomList.updateList(this.diagnosis);
         addToPane(0,0,2,1,1.0,0.4, repairAxiomList, "Repair", pane, false);
 
         explanationContainer = new JPanel();

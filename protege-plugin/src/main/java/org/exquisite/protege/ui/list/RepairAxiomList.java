@@ -19,7 +19,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author wolfi
@@ -67,26 +66,20 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         }
     }
 
-    public void updateList(Set<Diagnosis<OWLLogicalAxiom>> diagnoses) throws OWLOntologyCreationException {
-        if (diagnoses.size() == 1) {
-            List<Object> items = new ArrayList<>();
-
-            for (Diagnosis<OWLLogicalAxiom> diagnosis : diagnoses) {
-                items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
-                for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-                    Explanation explanation = new Explanation(this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
-                    items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
-                }
-                items.add(" ");
-            }
-
-            if (items.size() > 0)
-                items.remove(items.size() - 1);
-
-            setListData(items.toArray());
-        } else {
-            setListData(new ArrayList<>().toArray());
+    public void updateList(final Diagnosis<OWLLogicalAxiom> diagnosis) throws OWLOntologyCreationException {
+        List<Object> items = new ArrayList<>();
+        items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
+        for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
+            Explanation explanation = new Explanation(this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+            items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
         }
+        items.add(" ");
+
+
+        if (items.size() > 0)
+            items.remove(items.size() - 1);
+
+        setListData(items.toArray());
 
     }
 

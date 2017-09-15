@@ -397,12 +397,12 @@ public class Debugger {
         doStopDebugging(SessionStopReason.ONTOLOGY_RELOADED);
     }
 
-    public void doStartRepair() {
-        if (!isRepairing() && isSessionRunning() && getDiagnoses().size() == 1) {
+    public void doStartRepair(final Diagnosis<OWLLogicalAxiom> diagnosis) {
+        if (diagnosis != null && !isRepairing() && isSessionRunning()) {
             this.debuggingSession.startRepair();
 
             try {
-                RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit());
+                RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit(), diagnosis);
                 int ret = new UIHelper(editorKit).showDialog("Repair of Faulty Axioms", repairPanel);
 
                 switch (ret) {

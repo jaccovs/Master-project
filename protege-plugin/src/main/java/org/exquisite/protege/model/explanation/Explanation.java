@@ -51,6 +51,9 @@ public class Explanation {
 
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
+        // TODO: also add the axioms from the possibly faulty formulas that are not member of the diagnosis to the set of correct axioms
+        // TODO: move the selected axiom to the set of possibly faulty formulas (as its only element)
+        // TODO: debug and find the reasyon why the views shows another diagnosis model as it is created here (the axioms (ontology) are correct, but represented in wrong formula sets)
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = new DiagnosisModel<>();
         diagnosisModel.setCorrectFormulas(originalDiagnosisModel.getCorrectFormulas());
         diagnosisModel.getCorrectFormulas().add(axiom);

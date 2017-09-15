@@ -1,8 +1,12 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
+import org.exquisite.protege.Debugger;
+import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.ui.buttons.RepairDiagnosisButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
+import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -50,4 +54,20 @@ public class DiagnosisAxiomList extends AbstractAxiomList {
         }
     }
 
+    @Override
+    protected List<MListButton> getButtons(Object value) {
+        if (value instanceof DiagnosisListHeader) {
+            final DiagnosisListHeader diagnosisHeader = (DiagnosisListHeader)value;
+            List<MListButton> buttons = new ArrayList<>();
+            buttons.addAll(super.getButtons(value));
+            buttons.add(0, new RepairDiagnosisButton(e -> {
+                final EditorKitHook editorKitHook = (EditorKitHook) getEditorKit().get("org.exquisite.protege.EditorKitHook");
+                final Debugger debugger = editorKitHook.getActiveOntologyDebugger();
+                debugger.doStartRepair(diagnosisHeader.getDiagnosis());
+            }));
+            return buttons;
+        } else {
+            return super.getButtons(value);
+        }
+    }
 }
