@@ -403,7 +403,7 @@ public class Debugger {
 
             try {
                 RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit());
-                int ret = new UIHelper(editorKit).showDialog("Repair for " + getDiagnoses().toString(), repairPanel);
+                int ret = new UIHelper(editorKit).showDialog("Repair of Faulty Axioms", repairPanel);
 
                 switch (ret) {
                     case JOptionPane.CLOSED_OPTION:
