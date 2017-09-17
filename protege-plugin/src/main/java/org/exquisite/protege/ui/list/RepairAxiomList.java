@@ -70,7 +70,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         List<Object> items = new ArrayList<>();
         items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
         for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-            Explanation explanation = new Explanation(this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+            Explanation explanation = new Explanation(diagnosis, this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
             items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
         }
         items.add(" ");

@@ -1,6 +1,7 @@
 package org.exquisite.protege.model.explanation;
 
 import org.exquisite.core.DiagnosisRuntimeException;
+import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.RepairOWLReasoner;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
@@ -41,26 +42,37 @@ public class Explanation {
 
     private ExplanationResult explanation = null;
 
-    private OWLLogicalAxiom axiom;
-
-
-    public Explanation(RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
+    public Explanation(final Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
         this.panel = panel;
-        this.axiom = axiom;
-
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
         // TODO: also add the axioms from the possibly faulty formulas that are not member of the diagnosis to the set of correct axioms
         // TODO: move the selected axiom to the set of possibly faulty formulas (as its only element)
         // TODO: debug and find the reasyon why the views shows another diagnosis model as it is created here (the axioms (ontology) are correct, but represented in wrong formula sets)
+        List<OWLLogicalAxiom> possiblyFaultyAxiomsMinusDiagnosis = new ArrayList<>();
+        possiblyFaultyAxiomsMinusDiagnosis.addAll(originalDiagnosisModel.getPossiblyFaultyFormulas());
+        possiblyFaultyAxiomsMinusDiagnosis.removeAll(diagnosis.getFormulas());
+
+        List<OWLLogicalAxiom> correctFormulas = new ArrayList<>();
+        correctFormulas.addAll(originalDiagnosisModel.getCorrectFormulas());
+        correctFormulas.addAll(possiblyFaultyAxiomsMinusDiagnosis);
+
+        List<OWLLogicalAxiom> possiblyFaultyFormulas = new ArrayList<>();
+        possiblyFaultyFormulas.add(axiom);
+
+        List<OWLLogicalAxiom> entailedExamples = new ArrayList<>();
+        entailedExamples.addAll(originalDiagnosisModel.getEntailedExamples());
+
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = new DiagnosisModel<>();
-        diagnosisModel.setCorrectFormulas(originalDiagnosisModel.getCorrectFormulas());
-        diagnosisModel.getCorrectFormulas().add(axiom);
-        diagnosisModel.setEntailedExamples(originalDiagnosisModel.getEntailedExamples());
+        diagnosisModel.setCorrectFormulas(correctFormulas);
+        diagnosisModel.setPossiblyFaultyFormulas(possiblyFaultyFormulas);
+        diagnosisModel.setEntailedExamples(entailedExamples);
 
         this.reasoner = new RepairOWLReasoner(diagnosisModel, reasonerFactory, this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager());
         this.reasoner.setEntailmentTypes(config.getEntailmentTypes());
+
+        reasoner.sync(possiblyFaultyFormulas);
     }
 
     public void dispose()  {
