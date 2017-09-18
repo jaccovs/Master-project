@@ -3,15 +3,12 @@ package org.exquisite.protege.ui.view;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
-import org.exquisite.protege.ui.buttons.RepairButton;
 import org.exquisite.protege.ui.list.DiagnosisAxiomList;
 import org.protege.editor.core.ui.list.MList;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import java.awt.*;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.Set;
@@ -32,12 +29,11 @@ import static org.exquisite.protege.model.event.EventType.*;
  */
 public class DiagnosesView extends AbstractListViewComponent {
 
-    private RepairButton repairButton;
+    //private RepairButton repairButton;
 
     @Override
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
-        add(createRepairToolBar(),BorderLayout.NORTH);
         updateView();
     }
 
@@ -52,19 +48,6 @@ public class DiagnosesView extends AbstractListViewComponent {
             updateView();
     }
 
-    private JComponent createRepairToolBar() {
-        JToolBar toolBar = new JToolBar();
-        toolBar.setOpaque(false);
-        toolBar.setFloatable(false);
-        toolBar.setBorderPainted(false);
-        toolBar.setBorder(null);
-
-        repairButton = new RepairButton(this);
-        toolBar.add(repairButton);
-        toolBar.setMaximumSize(toolBar.getPreferredSize());
-        return toolBar;
-    }
-
     private void updateView() {
         final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
 
@@ -75,8 +58,6 @@ public class DiagnosesView extends AbstractListViewComponent {
         // updating the list
         OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
         ((DiagnosisAxiomList)getList()).updateList(diagnoses,ontology);
-
-        repairButton.updateView(debugger);
     }
 
 
