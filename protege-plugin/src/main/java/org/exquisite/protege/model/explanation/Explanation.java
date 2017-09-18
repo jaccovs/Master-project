@@ -47,9 +47,6 @@ public class Explanation {
         this.panel = panel;
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
-        // TODO: also add the axioms from the possibly faulty formulas that are not member of the diagnosis to the set of correct axioms
-        // TODO: move the selected axiom to the set of possibly faulty formulas (as its only element)
-        // TODO: debug and find the reasyon why the views shows another diagnosis model as it is created here (the axioms (ontology) are correct, but represented in wrong formula sets)
         List<OWLLogicalAxiom> possiblyFaultyAxiomsMinusDiagnosis = new ArrayList<>();
         possiblyFaultyAxiomsMinusDiagnosis.addAll(originalDiagnosisModel.getPossiblyFaultyFormulas());
         possiblyFaultyAxiomsMinusDiagnosis.removeAll(diagnosis.getFormulas());
@@ -116,12 +113,12 @@ public class Explanation {
                     showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
                 }
             } else {
-                showNoExplanation();
+                showNoExplanation(null);
             }
         }
     }
 
-    public void showNoExplanation() {
+    public void showNoExplanation(final String label) {
         verifyActiveOntology();
 
         // clean up dangling resources
@@ -129,7 +126,7 @@ public class Explanation {
             this.explanation.dispose();
 
         this.explanation = new NoExplanationResult();
-        panel.setExplanation(this.explanation);
+        panel.setExplanation(this.explanation, label);
     }
 
     private ExplanationManager getExplanationManager() {
@@ -162,10 +159,10 @@ public class Explanation {
                 this.explanation = explanationService.explain(entailment);
                 panel.setExplanation(this.explanation, label);
             } else {
-                showNoExplanation();
+                showNoExplanation(null);
             }
         } else {
-            showNoExplanation();
+            showNoExplanation(label);
         }
     }
 
