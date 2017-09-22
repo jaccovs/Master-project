@@ -29,8 +29,6 @@ import static org.exquisite.protege.model.event.EventType.*;
  */
 public class DiagnosesView extends AbstractListViewComponent {
 
-    //private RepairButton repairButton;
-
     @Override
     protected void initialiseOWLView() throws Exception {
         super.initialiseOWLView();
