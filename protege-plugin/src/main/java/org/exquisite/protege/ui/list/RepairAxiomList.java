@@ -132,14 +132,16 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         // change to the active ontology to the selected item's ontology
                         changeActiveOntology(item.getOntology());
 
+                        clearExplanationCache(item.getOntology(),item.getAxiom());
+
                         logger.debug("Set active ontology to " + item.getOntology().getOntologyID());
 
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(item))) {
-                            // check if there exist some explanations for this axiom (only if user did not select a button)
-                            item.showExplanation();
-                        } else {
-                            // if user clicked on a button, show the no-explanation panel
-                            item.showNoExplanation();
+                            if (item.isDeleted()) {
+                                item.showNoExplanation();
+                            } else {
+                                item.showExplanation();
+                            }
                         }
                     }
                 }
@@ -182,4 +184,13 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
             }
         }
     }
+
+    private void clearExplanationCache(final OWLOntology ontology, final OWLLogicalAxiom axiom) {
+        List<OWLAxiomChange> changes = new ArrayList<>();
+        changes.add(new RemoveAxiom(ontology, axiom));
+        changes.add(new AddAxiom(ontology, axiom));
+        OWLOntologyManager manager = ontology.getOWLOntologyManager();
+        manager.applyChanges(changes);
+    }
+
 }

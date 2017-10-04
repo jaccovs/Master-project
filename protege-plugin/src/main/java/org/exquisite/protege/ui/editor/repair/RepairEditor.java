@@ -11,6 +11,8 @@ import org.protege.editor.owl.ui.editor.OWLGeneralAxiomEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
 import org.protege.editor.owl.ui.preferences.GeneralPreferencesPanel;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
@@ -54,19 +56,6 @@ public class RepairEditor {
         if (editor == null) {
             return;
         }
-        /*
-        if (editor instanceof JWindow) {
-            ((JWindow) editor).setVisible(true);
-            return;
-        }
-        if (editor instanceof Wizard) {
-            int ret = ((Wizard) editor).showModalDialog();
-            if (ret == Wizard.FINISH_RETURN_CODE) {
-                handler.handleEditFinished(editor);
-            }
-            return;
-        }
-        */
 
         editor.setHandler(this.handler);
         // Create the editing component dialog - we use an option pane
@@ -136,9 +125,14 @@ public class RepairEditor {
 
         OWLObjectEditor editor = null;
         Object editedObject = null;
+
         if (axiom instanceof OWLClassAxiom) {
             editor = new OWLGeneralAxiomEditor(editorKit);
             editedObject = axiom;
+        } else if (axiom instanceof OWLClassAssertionAxiom) { // A class assertions state that the individual a is an instance of the class expression CE
+            OWLClassAssertionAxiom ax = (OWLClassAssertionAxiom) axiom;
+            editor = editorKit.getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(ax.getClassExpression(), AxiomType.CLASS_ASSERTION);
+            editedObject = ax.getClassExpression();
         } else {
             throw new UnsupportedOperationException("No editor for axiom type " + axiom.getAxiomType() + " available!");
         }
@@ -149,7 +143,10 @@ public class RepairEditor {
     }
 
     public static boolean hasEditor(OWLLogicalAxiom axiom) {
-        return axiom instanceof OWLClassAxiom;
+        return
+                axiom instanceof OWLClassAxiom
+                ||
+                axiom instanceof OWLClassAssertionAxiom;
     }
 
     private Component getDialogParent() {

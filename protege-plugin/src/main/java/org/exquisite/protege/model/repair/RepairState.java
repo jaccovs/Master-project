@@ -94,8 +94,7 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
     private void deleteAxiom(OWLLogicalAxiom axiom) {
         explanation.getDiagnosisModel().getCorrectFormulas().remove(axiom);
         this.isDeleted = true;
-        explanation.showExplanation();
-
+        explanation.showNoExplanation(null);
     }
 
     private void restoreAxiom(OWLLogicalAxiom axiom) {
