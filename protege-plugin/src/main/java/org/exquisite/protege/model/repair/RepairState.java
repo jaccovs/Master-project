@@ -1,6 +1,5 @@
 package org.exquisite.protege.model.repair;
 
-import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
 import org.exquisite.protege.ui.list.item.RepairListItem;
@@ -13,20 +12,40 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * The repair state keeps track of the state of repair for an axiom from a diagnosis.
+ *
  * @author wolfi
  */
 public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
+    /**
+     * The original axiom from a diagnosis, which can be repaired.
+     */
     private OWLLogicalAxiom originalAxiom;
 
+    /**
+     * A reference to the list item in order to update the view if the axiom gets manipulated.
+     */
     private RepairListItem listItem;
 
+    /**
+     * Does there exist an editor for this type of axiom.
+     */
     private boolean hasEditor;
 
+    /**
+     * Did the user delete this axiom.
+     */
     private boolean isDeleted;
 
+    /**
+     * Did the user modify the axiom either by editing or deleting it.
+     */
     private boolean isModified;
 
+    /**
+     * A reference to the explanation in order to call back on updates.
+     */
     private Explanation explanation;
 
     public RepairState(OWLLogicalAxiom axiom, Explanation explanation, RepairListItem listItem) {
@@ -55,8 +74,6 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         return !isDeleted;
     }
 
-    public boolean isModified() { return isModified; }
-
     public boolean hasEditor() { return hasEditor; }
 
     public boolean handleDelete() {
@@ -67,10 +84,8 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
     public void handleReset() {
         if (isModified) {
             modifyAxiom(originalAxiom, listItem.getAxiom());
-            isModified = false;
-            isDeleted = false;
         } else if (isDeleted) {
-            restoreAxiom(originalAxiom);
+            restoreAxiom();
         }
     }
 
@@ -80,32 +95,48 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
             return;
         }
 
-        OWLLogicalAxiom newAxiom = editedObjects.iterator().next();
-        // the editor should protect from this, but just in case
-        if (newAxiom == null) {
+        OWLLogicalAxiom axiomAfterEditing = editedObjects.iterator().next();
+        // the editor should protect us from this, but just in case
+        if (axiomAfterEditing == null) {
             return;
         }
 
-        OWLLogicalAxiom oldAxiom = getAxiom();
-
-        modifyAxiom(newAxiom, oldAxiom);
+        final OWLLogicalAxiom axiomBeforeEditing = getAxiom();
+        modifyAxiom(axiomAfterEditing, axiomBeforeEditing);
     }
+
+    public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
+        if (hasChanged()) {
+            List<OWLAxiomChange> changes = new ArrayList<>();
+            changes.add(new RemoveAxiom(ontology, this.originalAxiom)); // either the axiom is deleted ..
+            if (isModified) {
+                changes.add(new AddAxiom(ontology, listItem.getAxiom())); // .. or modified
+            }
+            return changes;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public void dispose() {}
 
     private void deleteAxiom(OWLLogicalAxiom axiom) {
-        explanation.getDiagnosisModel().getCorrectFormulas().remove(axiom);
-        this.isDeleted = true;
-        explanation.showNoExplanation(null);
+        final boolean hasBeenDeleted = explanation.deleteAxiom(axiom);
+        if (hasBeenDeleted) {
+            // deleting a modified axiom means that resetting to the original axiom becomes possible
+            if (!axiom.equals(this.originalAxiom))
+                listItem.setAxiom(this.originalAxiom);
+            this.isModified = false;
+            this.isDeleted = true;
+        }
     }
 
-    private void restoreAxiom(OWLLogicalAxiom axiom) {
-        try {
-            explanation.getDiagnosisModel().getCorrectFormulas().add(axiom);
-        } catch (DiagnosisRuntimeException e) {
-            // the diagnosis model can become inconsistent!
+    private void restoreAxiom() {
+        final boolean hasBeenRestored = explanation.restoreAxiom(this.originalAxiom);
+        if (hasBeenRestored) {
+            this.isDeleted = false;
+            this.isModified = false;
         }
-        this.isDeleted = false;
-        this.isModified = false;
-        explanation.showExplanation();
     }
 
     private void modifyAxiom(OWLLogicalAxiom newAxiom, OWLLogicalAxiom oldAxiom) {
@@ -113,18 +144,18 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         if (!axiomAnnotations.isEmpty()) {
             newAxiom = (OWLLogicalAxiom) newAxiom.getAnnotatedAxiom(axiomAnnotations);
         }
-        isModified = !newAxiom.equals(oldAxiom);
 
-        if (isModified) {
-            explanation.getDiagnosisModel().getCorrectFormulas().remove(oldAxiom);
-            try {
-                explanation.getDiagnosisModel().getCorrectFormulas().add(newAxiom);
-            } catch (DiagnosisRuntimeException e) {
-                // the diagnosis model can become inconsistent!
+        if (!newAxiom.equals(oldAxiom)) {
+
+            isModified = explanation.modifyAxiom(newAxiom, oldAxiom);
+
+            if (isModified) {
+                listItem.setAxiom(newAxiom);
+                isDeleted = false;
+                // The modification itself might restore the original axiom
+                if (newAxiom.equals(originalAxiom))
+                    isModified = false;
             }
-            listItem.setAxiom(newAxiom);
-            this.isDeleted = false;
-            this.explanation.showExplanation();
         }
     }
 
@@ -132,20 +163,4 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         return listItem.getAxiom();
     }
 
-    public void dispose() {
-
-    }
-
-    public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
-        if (hasChanged()) {
-            List<OWLAxiomChange> changes = new ArrayList<>();
-            changes.add(new RemoveAxiom(ontology, this.originalAxiom));
-            if (isModified) {
-                changes.add(new AddAxiom(ontology, listItem.getAxiom()));
-            }
-            return changes;
-        } else {
-            return Collections.emptyList();
-        }
-    }
 }

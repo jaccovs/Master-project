@@ -22,6 +22,9 @@ public enum EventType {
     QUERY_CALCULATED,
 
     /** A diagnosis has been found. */
-    DIAGNOSIS_FOUND
+    DIAGNOSIS_FOUND,
+
+    /** The diagnosis model has changed externally. */
+    DIAGNOSIS_MODEL_CHANGED
 
 }

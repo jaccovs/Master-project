@@ -2,6 +2,7 @@ package org.exquisite.protege.ui.list;
 
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
@@ -11,6 +12,7 @@ import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -70,7 +72,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         List<Object> items = new ArrayList<>();
         items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
         for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-            Explanation explanation = new Explanation(diagnosis, this.repairDiagnosisPanel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+            final Explanation explanation = new Explanation(diagnosis, this.repairDiagnosisPanel, axiom, editorKit, debugger);
             items.add(new RepairListItem(axiom, explanation, getEditorKit(), parent));
         }
         items.add(" ");
@@ -130,11 +132,12 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         final RepairListItem item = (RepairListItem) o;
 
                         // change to the active ontology to the selected item's ontology
-                        changeActiveOntology(item.getOntology());
+                        final OWLOntology newActiveOntology = item.getOntology();
+                        changeActiveOntology(newActiveOntology);
+                        logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
-                        clearExplanationCache(item.getOntology(),item.getAxiom());
-
-                        logger.debug("Set active ontology to " + item.getOntology().getOntologyID());
+                        // clears the explanation cache in order to force the recalculation
+                        clearExplanationCache(item.getOntology());
 
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(item))) {
                             if (item.isDeleted()) {
@@ -143,12 +146,28 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                                 item.showExplanation();
                             }
                         }
+
+                        // The actions applied before cause the synchronization of the diagnosis model from the ontology.
+                        // The separation of the axioms into correct, possibly faulty, entailed and non-entailed is lost
+                        // with that synchronization. We therefore must restore the diagnosis model of the active debugger.
+                        getDebugger().setDiagnosisModel(item.getDiagnosisModel());
                     }
                 }
             }
         }
     }
 
+    private Debugger getDebugger() {
+        return ((EditorKitHook) editorKit.get("org.exquisite.protege.EditorKitHook")).getActiveOntologyDebugger();
+    }
+
+    /**
+     * Checks if on of the buttons have been pressed.
+     *
+     * @param mousePressedPoint
+     * @param listItemButtons
+     * @return
+     */
     private boolean isButtonPressed(final Point mousePressedPoint, final List<MListButton> listItemButtons) {
         if (mousePressedPoint == null)
             return false;
@@ -165,9 +184,13 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         // change active ontology to the the repair debugging ontology
         final OWLModelManager modelManager = editorKit.getModelManager();
         modelManager.setActiveOntology(ontology);
-
     }
 
+    /**
+     * Applies the modifications (either deletion or editing) of the axiom on the original ontology.
+     *
+     * @param ontology The ontology the changes are going to be applied to.
+     */
     public void applyChangesOnOntology(final OWLOntology ontology) {
         if (hasChanged()) {
             List<OWLAxiomChange> changes = new ArrayList<>();
@@ -185,12 +208,29 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         }
     }
 
-    private void clearExplanationCache(final OWLOntology ontology, final OWLLogicalAxiom axiom) {
-        List<OWLAxiomChange> changes = new ArrayList<>();
+    /**
+     * Clears the explanation cache in order to force the explanation workbench to recalculate the explanation.
+     *
+     * @param ontology The test ontology.
+     */
+    private void clearExplanationCache(final OWLOntology ontology) {
+        final List<OWLAxiomChange> changes = new ArrayList<>();
+
+        // pick a random axiom that does exist in the ontology ..
+        final OWLLogicalAxiom axiom = ontology.getLogicalAxioms().iterator().next();
+
+        // .. remove it ..
         changes.add(new RemoveAxiom(ontology, axiom));
+
+        // .. and immediately add it again to the ontology
         changes.add(new AddAxiom(ontology, axiom));
+
+        // this change will cause an OntologyChangeEvent and clears the explanation cache of the explanation workbench
         OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        manager.applyChanges(changes);
+        final ChangeApplied changeApplied = manager.applyChanges(changes);
+
+        // assert that the change has been effectively executed (executed only when using the VM option -ea)
+        assert changeApplied.equals(ChangeApplied.SUCCESSFULLY);
     }
 
 }

@@ -72,6 +72,11 @@ public class InputOntologyView extends AbstractViewComponent {
                 possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
                 correctAxiomsPanel.updateDisplayedAxioms();
                 break;
+            case DIAGNOSIS_MODEL_CHANGED:
+                setAxiomsToDisplay();
+                possiblyFaultyAxiomsPanel.updateDisplayedAxioms();
+                correctAxiomsPanel.updateDisplayedAxioms();
+                break;
         }
     }
 

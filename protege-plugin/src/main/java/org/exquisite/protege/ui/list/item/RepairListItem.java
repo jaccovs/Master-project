@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.list.item;
 
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.model.repair.RepairState;
 import org.exquisite.protege.ui.editor.repair.RepairEditor;
@@ -13,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * List item for the repair list showing an axiom from the diagnosis. The item is editable, deletable and deleted items
+ * can be restored/reset.
+ *
  * @author wolfi
  */
 public class RepairListItem extends AxiomListItem {
@@ -88,6 +92,10 @@ public class RepairListItem extends AxiomListItem {
 
     public List<OWLAxiomChange> getChanges(final OWLOntology ontology) {
         return repairState.getChanges(ontology);
+    }
+
+    public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
+        return explanation.getDiagnosisModel();
     }
 
     @Override

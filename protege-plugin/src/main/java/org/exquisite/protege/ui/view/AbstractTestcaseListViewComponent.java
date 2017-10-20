@@ -19,7 +19,7 @@ abstract public class AbstractTestcaseListViewComponent extends AbstractListView
     @Override
     public void stateChanged(ChangeEvent e) {
         final EventType type = ((OntologyDebuggerChangeEvent) e).getType();
-        if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, QUERY_CALCULATED, DIAGNOSIS_FOUND).contains(type))
+        if (EnumSet.of(ACTIVE_ONTOLOGY_CHANGED, SESSION_STATE_CHANGED, QUERY_CALCULATED, DIAGNOSIS_FOUND, DIAGNOSIS_MODEL_CHANGED).contains(type))
             ((AbstractTestcaseAxiomList)getList()).updateView();
     }
 

@@ -168,6 +168,16 @@ public class Debugger {
         return pagingState;
     }
 
+    public void setDiagnosisModel(DiagnosisModel<OWLLogicalAxiom> dm) {
+        this.diagnosisModel = dm;
+        getTestcases().reset();
+        notifyDiagnosisModelChanged();
+    }
+
+    public void notifyDiagnosisModelChanged() {
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_MODEL_CHANGED));
+    }
+
     public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
         return diagnosisModel;
     }
@@ -217,7 +227,7 @@ public class Debugger {
     }
 
     public boolean isRepairing() {
-        return debuggingSession.getState() == DebuggingSession.State.REPARING;
+        return debuggingSession.getState() == DebuggingSession.State.REPAIRING;
     }
 
     public boolean isSessionStopped() {

@@ -4,6 +4,8 @@ import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.RepairOWLReasoner;
+import org.exquisite.protege.Debugger;
+import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
@@ -26,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * The explanation for an axiom. Each repair list item holds a reference to one instance of this class.
+ *
  * @author wolfi
  */
 public class Explanation {
@@ -42,7 +46,11 @@ public class Explanation {
 
     private ExplanationResult explanation = null;
 
-    public Explanation(final Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
+    public Explanation(Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, OWLEditorKit editorKit, Debugger debugger) throws OWLOntologyCreationException {
+        this(diagnosis, panel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+    }
+
+    private Explanation(final Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
         this.panel = panel;
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
@@ -66,10 +74,7 @@ public class Explanation {
         diagnosisModel.setPossiblyFaultyFormulas(possiblyFaultyFormulas);
         diagnosisModel.setEntailedExamples(entailedExamples);
 
-        this.reasoner = new RepairOWLReasoner(diagnosisModel, reasonerFactory, this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager());
-        this.reasoner.setEntailmentTypes(config.getEntailmentTypes());
-
-        reasoner.sync(possiblyFaultyFormulas);
+        this.reasoner = new RepairOWLReasoner(diagnosisModel, reasonerFactory, this.editorKit.getOWLModelManager().getActiveOntology().getOWLOntologyManager(), config.getEntailmentTypes());
     }
 
     public void dispose()  {
@@ -97,6 +102,8 @@ public class Explanation {
      * </ul>
      */
     public void showExplanation() {
+        showNoExplanation(null);// TODO deactivate this and activate the next statement
+        /*
         verifyActiveOntology();
         final boolean isOntologyConsistent = isOntologyConsistent();
 
@@ -116,6 +123,7 @@ public class Explanation {
                 showNoExplanation(null);
             }
         }
+        */
     }
 
     public void showNoExplanation(final String label) {
@@ -127,6 +135,73 @@ public class Explanation {
 
         this.explanation = new NoExplanationResult();
         panel.setExplanation(this.explanation, label);
+    }
+
+    public OWLOntology getOntology() {
+        return reasoner.getDebuggingOntology();
+    }
+
+    public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
+        return reasoner.getDiagnosisModel();
+    }
+
+    public boolean modifyAxiom(OWLLogicalAxiom newAxiom, OWLLogicalAxiom oldAxiom) {
+        assert getDiagnosisModel().getPossiblyFaultyFormulas().contains(oldAxiom);
+
+        final boolean hasBeenModified = reasoner.modifyAxiom(newAxiom, oldAxiom);
+        if (hasBeenModified) {
+            try {
+                getDiagnosisModel().getPossiblyFaultyFormulas().remove(oldAxiom);
+            } catch (DiagnosisRuntimeException e) {
+                // the diagnosis model may become inconsistent!
+            }
+
+            try {
+                getDiagnosisModel().getPossiblyFaultyFormulas().add(newAxiom);
+            } catch (DiagnosisRuntimeException e) {
+                // the diagnosis model may become inconsistent!
+            }
+
+            getDebugger().setDiagnosisModel(getDiagnosisModel());
+            showExplanation();
+        }
+        return hasBeenModified;
+    }
+
+    public boolean deleteAxiom(OWLLogicalAxiom axiom) {
+        assert getDiagnosisModel().getPossiblyFaultyFormulas().contains(axiom);
+
+        final boolean isDeleted = reasoner.deleteAxiom(axiom);
+        if (isDeleted) {
+            try {
+                getDiagnosisModel().getPossiblyFaultyFormulas().remove(axiom);
+            } catch (DiagnosisRuntimeException e) {
+                // the diagnosis model can become inconsistent!
+            }
+            getDebugger().setDiagnosisModel(getDiagnosisModel());
+            showNoExplanation(null);
+        }
+        return isDeleted;
+    }
+
+    public boolean restoreAxiom(OWLLogicalAxiom axiom) {
+        final boolean hasBeenRestored = reasoner.restoreAxiom(axiom);
+
+        if (hasBeenRestored) {
+            try {
+                getDiagnosisModel().getPossiblyFaultyFormulas().add(axiom);
+            } catch (DiagnosisRuntimeException e) {
+                // the diagnosis model can become inconsistent!
+            }
+
+            getDebugger().setDiagnosisModel(getDiagnosisModel());
+            showExplanation();
+        }
+        return hasBeenRestored;
+    }
+
+    private Debugger getDebugger() {
+        return ((EditorKitHook) editorKit.get("org.exquisite.protege.EditorKitHook")).getActiveOntologyDebugger();
     }
 
     private ExplanationManager getExplanationManager() {
@@ -145,7 +220,7 @@ public class Explanation {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
         ReasonerPreferences preferences = reasonerManager.getReasonerPreferences();
         Set<InferenceType> precompute = preferences.getPrecomputedInferences();
-        System.out.println("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
+        logger.debug("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
         final boolean b = reasonerManager.classifyAsynchronously(precompute);
     }
 
@@ -196,14 +271,6 @@ public class Explanation {
             }
         }
         return entailedTestCases;
-    }
-
-    public OWLOntology getOntology() {
-        return reasoner.getDebuggingOntology();
-    }
-
-    public DiagnosisModel getDiagnosisModel() {
-        return reasoner.getDiagnosisModel();
     }
 
 }
