@@ -3,8 +3,6 @@ package org.exquisite.protege.ui.list.item;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.model.repair.RepairState;
-import org.exquisite.protege.ui.editor.repair.RepairEditor;
-import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -21,17 +19,14 @@ import java.util.Set;
  */
 public class RepairListItem extends AxiomListItem {
 
-    private OWLEditorKit editorKit;
-
     private Component parent;
 
     private RepairState repairState;
 
     private Explanation explanation;
 
-    public RepairListItem(OWLLogicalAxiom axiom, Explanation explanation, OWLEditorKit editorKit, Component parent) {
+    public RepairListItem(OWLLogicalAxiom axiom, Explanation explanation, Component parent) {
         super(axiom, explanation.getOntology());
-        this.editorKit = editorKit;
         this.parent = parent;
         this.explanation = explanation;
         this.repairState = new RepairState(axiom, explanation, this);
@@ -62,7 +57,7 @@ public class RepairListItem extends AxiomListItem {
     @Override
     public void handleEdit() {
         if (repairState.hasEditor()) {
-            new RepairEditor(editorKit, parent, axiom, repairState).showEditorDialog(editor -> {
+            repairState.getRepairEditor().showEditorDialog(editor -> {
                 final Set editedObjects = editor.getEditedObjects();
                 editor.getHandler().handleEditingFinished(editedObjects);
             });
@@ -96,6 +91,10 @@ public class RepairListItem extends AxiomListItem {
 
     public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
         return explanation.getDiagnosisModel();
+    }
+
+    public Component getParent() {
+        return parent;
     }
 
     @Override

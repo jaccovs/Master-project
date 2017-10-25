@@ -200,6 +200,10 @@ public class Explanation {
         return hasBeenRestored;
     }
 
+    public OWLEditorKit getOWLEditorKit() {
+        return editorKit;
+    }
+
     private Debugger getDebugger() {
         return ((EditorKitHook) editorKit.get("org.exquisite.protege.EditorKitHook")).getActiveOntologyDebugger();
     }

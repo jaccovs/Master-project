@@ -1,7 +1,8 @@
 package org.exquisite.protege.model.repair;
 
 import org.exquisite.protege.model.explanation.Explanation;
-import org.exquisite.protege.ui.editor.repair.RepairEditor;
+import org.exquisite.protege.ui.editor.repair.AbstractOWLObjectRepairEditor;
+import org.exquisite.protege.ui.editor.repair.OWLObjectRepairEditorFactory;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
 import org.semanticweb.owlapi.model.*;
@@ -29,9 +30,9 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
     private RepairListItem listItem;
 
     /**
-     * Does there exist an editor for this type of axiom.
+     * An instance of the appropriate editor.
      */
-    private boolean hasEditor;
+    private AbstractOWLObjectRepairEditor repairEditor;
 
     /**
      * Did the user delete this axiom.
@@ -53,7 +54,7 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         this.explanation = explanation;
         this.listItem = listItem;
         this.listItem.setAxiom(axiom);
-        this.hasEditor = RepairEditor.hasEditor(axiom);
+        this.repairEditor = OWLObjectRepairEditorFactory.createRepairEditor(explanation.getOWLEditorKit(), listItem.getParent(), explanation.getOntology(), axiom, this);
         this.isDeleted = false;
         this.isModified = false;
     }
@@ -67,14 +68,14 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
     }
 
     public boolean isEditable() {
-        return this.hasEditor && !isDeleted;
+        return this.repairEditor.hasEditor() && !isDeleted;
     }
 
     public boolean isDeleteable() {
         return !isDeleted;
     }
 
-    public boolean hasEditor() { return hasEditor; }
+    public boolean hasEditor() { return this.repairEditor.hasEditor(); }
 
     public boolean handleDelete() {
         deleteAxiom(listItem.getAxiom());
@@ -95,7 +96,7 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
             return;
         }
 
-        OWLLogicalAxiom axiomAfterEditing = editedObjects.iterator().next();
+        OWLAxiom axiomAfterEditing = this.repairEditor.createAxiom(editedObjects.iterator().next());
         // the editor should protect us from this, but just in case
         if (axiomAfterEditing == null) {
             return;
@@ -124,8 +125,10 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         final boolean hasBeenDeleted = explanation.deleteAxiom(axiom);
         if (hasBeenDeleted) {
             // deleting a modified axiom means that resetting to the original axiom becomes possible
-            if (!axiom.equals(this.originalAxiom))
+            if (!axiom.equals(this.originalAxiom)) {
                 listItem.setAxiom(this.originalAxiom);
+                repairEditor.setAxiom(this.originalAxiom);
+            }
             this.isModified = false;
             this.isDeleted = true;
         }
@@ -139,7 +142,7 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         }
     }
 
-    private void modifyAxiom(OWLLogicalAxiom newAxiom, OWLLogicalAxiom oldAxiom) {
+    private void modifyAxiom(OWLAxiom newAxiom, OWLAxiom oldAxiom) {
         Set<OWLAnnotation> axiomAnnotations = oldAxiom.getAnnotations();
         if (!axiomAnnotations.isEmpty()) {
             newAxiom = (OWLLogicalAxiom) newAxiom.getAnnotatedAxiom(axiomAnnotations);
@@ -147,10 +150,11 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
 
         if (!newAxiom.equals(oldAxiom)) {
 
-            isModified = explanation.modifyAxiom(newAxiom, oldAxiom);
+            isModified = explanation.modifyAxiom((OWLLogicalAxiom)newAxiom, (OWLLogicalAxiom)oldAxiom);
 
             if (isModified) {
-                listItem.setAxiom(newAxiom);
+                listItem.setAxiom((OWLLogicalAxiom)newAxiom);
+                repairEditor.setAxiom(newAxiom);
                 isDeleted = false;
                 // The modification itself might restore the original axiom
                 if (newAxiom.equals(originalAxiom))
@@ -163,4 +167,7 @@ public class RepairState implements OWLObjectEditorHandler<OWLLogicalAxiom> {
         return listItem.getAxiom();
     }
 
+    public AbstractOWLObjectRepairEditor getRepairEditor() {
+        return repairEditor;
+    }
 }

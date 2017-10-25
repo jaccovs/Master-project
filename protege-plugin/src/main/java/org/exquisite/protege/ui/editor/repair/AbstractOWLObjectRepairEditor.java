@@ -7,14 +7,14 @@ import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
 import org.protege.editor.core.ui.util.VerifiedInputEditor;
 import org.protege.editor.core.ui.util.VerifyingOptionPane;
 import org.protege.editor.owl.OWLEditorKit;
-import org.protege.editor.owl.ui.editor.OWLGeneralAxiomEditor;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
 import org.protege.editor.owl.ui.preferences.GeneralPreferencesPanel;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,36 +22,41 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 /**
+ * Abstract editor class for repairing a diagnosed axiom.
+ *
  * @author wolfi
  */
-public class RepairEditor {
+public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
 
-    private OWLEditorKit editorKit;
+    private OWLEditorKit owlEditorKit;
 
     private Component parent;
 
-    private OWLLogicalAxiom axiom;
+    private A axiom;
 
     private OWLObjectEditorHandler handler;
 
+    private OWLOntology ontology;
+
     private static final int EDITOR_SCREEN_MARGIN = 100;
 
-    public RepairEditor(OWLEditorKit editorKit, Component parent, OWLLogicalAxiom axiom, OWLObjectEditorHandler handler) {
-        this.editorKit = editorKit;
+    public AbstractOWLObjectRepairEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, A axiom, OWLObjectEditorHandler handler) {
+        this.owlEditorKit = editorKit;
         this.parent = parent;
+        this.ontology = ontology;
         this.axiom = axiom;
         this.handler = handler;
     }
 
     /**
-     * Slightly adapted code from OWLFrameList implementation.
+     * Slightly adapted code from org.protege.editor.owl.ui.framelist.OWLFrameList implementation.
      *
      * @param handler
      */
     public void showEditorDialog(final EditHandler handler) {
         // If we don't have any editing component then just return
 
-        final OWLObjectEditor editor = getEditor(axiom); // todo create the correct type of editor depending on the axiom
+        final OWLObjectEditor editor = getOWLObjectEditor();
 
         if (editor == null) {
             return;
@@ -104,7 +109,7 @@ public class RepairEditor {
         Object rootObject = axiom;
 
         if (rootObject instanceof OWLLogicalAxiom) {
-            dlg.setTitle(editorKit.getModelManager().getRendering((OWLLogicalAxiom) rootObject));
+            dlg.setTitle(this.owlEditorKit.getModelManager().getRendering((OWLLogicalAxiom) rootObject));
         } else if (rootObject != null) {
             dlg.setTitle(rootObject.toString());
         }
@@ -121,37 +126,56 @@ public class RepairEditor {
 
     }
 
-    private OWLObjectEditor getEditor(OWLLogicalAxiom axiom) {
-
-        OWLObjectEditor editor = null;
-        Object editedObject = null;
-
-        if (axiom instanceof OWLClassAxiom) {
-            editor = new OWLGeneralAxiomEditor(editorKit);
-            editedObject = axiom;
-        } else if (axiom instanceof OWLClassAssertionAxiom) { // A class assertions state that the individual a is an instance of the class expression CE
-            OWLClassAssertionAxiom ax = (OWLClassAssertionAxiom) axiom;
-            editor = editorKit.getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(ax.getClassExpression(), AxiomType.CLASS_ASSERTION);
-            editedObject = ax.getClassExpression();
-        } else {
-            throw new UnsupportedOperationException("No editor for axiom type " + axiom.getAxiomType() + " available!");
+    final public OWLObjectEditor getEditor() {
+        OWLObjectEditor<E> editor = getOWLObjectEditor();
+        if (editor != null) {
+            editor.setHandler(this.handler);
         }
-        editor.setEditedObject(editedObject);
         return editor;
-
-
     }
 
-    public static boolean hasEditor(OWLLogicalAxiom axiom) {
-        return
-                axiom instanceof OWLClassAxiom
-                ||
-                axiom instanceof OWLClassAssertionAxiom;
+    /**
+     * Gets the object that the row holds.
+     */
+    public A getAxiom() {
+        return axiom;
+    }
+
+    public void setAxiom(A axiom) {
+        this.axiom = axiom;
+    }
+
+    /**
+     * This row represents an assertion in a particular ontology.
+     * This gets the ontology that the assertion belongs to.
+     */
+    public OWLOntology getOntology() {
+        return ontology;
+    }
+
+    public OWLEditorKit getOWLEditorKit() {
+        return owlEditorKit;
+    }
+
+    public OWLModelManager getOWLModelManager() {
+        return owlEditorKit.getModelManager();
+    }
+
+    public OWLDataFactory getOWLDataFactory() {
+        return getOWLModelManager().getOWLDataFactory();
     }
 
     private Component getDialogParent() {
-        // @@TODO move prefs somewhere more central
         Preferences prefs = PreferencesManager.getInstance().getApplicationPreferences(ProtegeApplication.ID);
         return prefs.getBoolean(GeneralPreferencesPanel.DIALOGS_ALWAYS_CENTRED, false) ? SwingUtilities.getAncestorOfClass(Frame.class, parent) : parent;
     }
+
+    public boolean hasEditor() {
+        return true;
+    }
+
+    public abstract OWLObjectEditor getOWLObjectEditor();
+
+    public abstract A createAxiom(E editedObject);
+
 }
