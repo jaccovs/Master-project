@@ -51,12 +51,12 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
     /**
      * Slightly adapted code from org.protege.editor.owl.ui.framelist.OWLFrameList implementation.
      *
-     * @param handler
+     * @param handler A handler.
      */
     public void showEditorDialog(final EditHandler handler) {
         // If we don't have any editing component then just return
 
-        final OWLObjectEditor editor = getOWLObjectEditor();
+        final OWLObjectEditor<E> editor = getOWLObjectEditor();
 
         if (editor == null) {
             return;
@@ -75,7 +75,7 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
                 // doesn't get the focus.
             }
         };
-        final InputVerificationStatusChangedListener verificationListener = verified -> optionPane.setOKEnabled(verified);
+        final InputVerificationStatusChangedListener verificationListener = verified -> optionPane.setOKEnabled(verified && this.checkEditorResults(editor));
         // if the editor is verifying, will need to prevent the OK button from
         // being available
         if (editor instanceof VerifiedInputEditor) {
@@ -174,8 +174,12 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
         return true;
     }
 
-    public abstract OWLObjectEditor getOWLObjectEditor();
+    public abstract OWLObjectEditor<E> getOWLObjectEditor();
 
     public abstract A createAxiom(E editedObject);
+
+    public boolean checkEditorResults(OWLObjectEditor<E> editor) {
+        return true;
+    }
 
 }

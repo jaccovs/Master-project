@@ -1,5 +1,6 @@
-package org.exquisite.protege.ui.editor.repair;
+package org.exquisite.protege.ui.editor.repair.objectproperty;
 
+import org.exquisite.protege.ui.editor.repair.AbstractOWLObjectRepairEditor;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
@@ -8,24 +9,26 @@ import org.semanticweb.owlapi.model.*;
 import java.awt.*;
 
 /**
- * Object property domain editor for repair.
+ * Repair editor for Object Property Domains.
  *
+ * @see <a href="https://www.w3.org/TR/owl2-syntax/#Object_Property_Domain">9.2.5 Object Property Domain</a>
+ * @see org.protege.editor.owl.ui.frame.objectproperty.OWLObjectPropertyDomainFrameSectionRow
  * @author wolfi
  */
-public class OWLObjectPropertyDomainEditor extends AbstractOWLObjectRepairEditor<OWLObjectPropertyDomainAxiom, OWLClassExpression> {
+public class OWLObjectPropertyDomainAxiomEditor extends AbstractOWLObjectRepairEditor<OWLObjectPropertyDomainAxiom, OWLClassExpression> {
 
     private OWLObjectPropertyExpression rootObject = null;
 
     private OWLClassExpression domain = null;
 
-    OWLObjectPropertyDomainEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLObjectPropertyDomainAxiom axiom, OWLObjectEditorHandler handler) {
+    public OWLObjectPropertyDomainAxiomEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLObjectPropertyDomainAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
         rootObject = axiom.getProperty();
         domain = axiom.getDomain();
     }
 
     @Override
-    public OWLObjectEditor getOWLObjectEditor() {
+    public OWLObjectEditor<OWLClassExpression> getOWLObjectEditor() {
         return getOWLEditorKit().getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(domain, AxiomType.OBJECT_PROPERTY_DOMAIN);
     }
 
