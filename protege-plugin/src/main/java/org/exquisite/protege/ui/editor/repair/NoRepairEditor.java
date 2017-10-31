@@ -13,14 +13,14 @@ import java.awt.*;
  *
  * @author wolfi
  */
-public class NoRepairEditor extends AbstractOWLObjectRepairEditor<OWLAxiom, OWLAxiom> {
+public class NoRepairEditor extends AbstractOWLObjectRepairEditor<OWLAxiom, OWLAxiom, OWLAxiom> {
 
     NoRepairEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
     }
 
     @Override
-    public OWLObjectEditor getOWLObjectEditor() {
+    public OWLObjectEditor<OWLAxiom> getOWLObjectEditor() {
         throw new UnsupportedOperationException("There is no editor for axiom type " + getAxiom().getAxiomType());
     }
 

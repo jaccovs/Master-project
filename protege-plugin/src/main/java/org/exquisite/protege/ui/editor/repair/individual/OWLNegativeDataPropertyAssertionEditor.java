@@ -15,13 +15,14 @@ import java.awt.*;
 /**
  * Repair editor for Negative Data Property Assertions.
  *
+ * <p>A negative data property assertion NegativeDataPropertyAssertion( DPE a lt ) states that the individual a is not
+ * connected by the data property expression DPE to the literal lt.</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Negative_Data_Property_Assertions">9.6.7 Negative Data Property Assertions</a>
  * @see org.protege.editor.owl.ui.frame.individual.OWLNegativeDataPropertyAssertionFrameSectionRow
  * @author wolfi
  */
-public class OWLNegativeDataPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLNegativeDataPropertyAssertionAxiom, OWLDataPropertyConstantPair> {
-
-    private OWLIndividual rootObject = null;
+public class OWLNegativeDataPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIndividual, OWLNegativeDataPropertyAssertionAxiom, OWLDataPropertyConstantPair> {
 
     public OWLNegativeDataPropertyAssertionEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLNegativeDataPropertyAssertionAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
@@ -36,7 +37,7 @@ public class OWLNegativeDataPropertyAssertionEditor extends AbstractOWLObjectRep
 
     @Override
     public OWLNegativeDataPropertyAssertionAxiom createAxiom(OWLDataPropertyConstantPair editedObject) {
-        return getOWLDataFactory().getOWLNegativeDataPropertyAssertionAxiom(editedObject.getProperty(), rootObject, editedObject.getConstant());
+        return getOWLDataFactory().getOWLNegativeDataPropertyAssertionAxiom(editedObject.getProperty(), getRootObject(), editedObject.getConstant());
     }
 
     @Override

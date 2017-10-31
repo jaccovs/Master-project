@@ -11,17 +11,16 @@ import java.awt.*;
 /**
  * Repair editor for Class Assertions.
  *
+ * <p>A class assertion ClassAssertion( CE a ) states that the individual a is an instance of the class expression CE.</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Class_Assertions">9.6.3 Class Assertions</a>
  * @see org.protege.editor.owl.ui.frame.individual.OWLClassAssertionAxiomTypeFrameSectionRow
  * @author wolfi
  */
-public class OWLClassAssertionEditor extends AbstractOWLObjectRepairEditor<OWLClassAssertionAxiom, OWLClassExpression> {
-
-    private OWLIndividual rootObject = null;
+public class OWLClassAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIndividual, OWLClassAssertionAxiom, OWLClassExpression> {
 
     public OWLClassAssertionEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLClassAssertionAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
-        rootObject = axiom.getIndividual();
     }
 
     @Override
@@ -31,7 +30,7 @@ public class OWLClassAssertionEditor extends AbstractOWLObjectRepairEditor<OWLCl
 
     @Override
     public OWLClassAssertionAxiom createAxiom(OWLClassExpression editedObject) {
-        return getOWLDataFactory().getOWLClassAssertionAxiom(editedObject, rootObject);
+        return getOWLDataFactory().getOWLClassAssertionAxiom(editedObject, getRootObject());
     }
 
     @Override

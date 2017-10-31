@@ -15,17 +15,17 @@ import java.awt.*;
 /**
  * Repair editor for Positive Object Property Assertions.
  *
+ * <p>A positive object property assertion ObjectPropertyAssertion( OPE a1 a2 ) states that the individual a1 is
+ * connected by the object property expression OPE to the individual a2.</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Positive_Object_Property_Assertions">9.6.4 Positive Object Property Assertions</a>
  * @see org.protege.editor.owl.ui.frame.individual.OWLObjectPropertyAssertionAxiomFrameSectionRow
  * @author wolfi
  */
-public class OWLObjectPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLObjectPropertyAssertionAxiom, OWLObjectPropertyIndividualPair> {
-
-    private OWLIndividual rootObject = null;
+public class OWLObjectPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIndividual, OWLObjectPropertyAssertionAxiom, OWLObjectPropertyIndividualPair> {
 
     public OWLObjectPropertyAssertionEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLObjectPropertyAssertionAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
-        rootObject = axiom.getSubject();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class OWLObjectPropertyAssertionEditor extends AbstractOWLObjectRepairEdi
 
     @Override
     public OWLObjectPropertyAssertionAxiom createAxiom(OWLObjectPropertyIndividualPair editedObject) {
-        return getOWLDataFactory().getOWLObjectPropertyAssertionAxiom(editedObject.getProperty(), rootObject, editedObject.getIndividual());
+        return getOWLDataFactory().getOWLObjectPropertyAssertionAxiom(editedObject.getProperty(), getRootObject(), editedObject.getIndividual());
     }
 
     @Override

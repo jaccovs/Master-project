@@ -15,13 +15,14 @@ import java.awt.*;
 /**
  * Repair editor for Negative Object Property Assertions.
  *
+ * <p>A negative object property assertion NegativeObjectPropertyAssertion( OPE a1 a2 ) states that the individual a1 is
+ * not connected by the object property expression OPE to the individual a2.</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Negative_Object_Property_Assertions">9.6.5 Negative Object Property Assertions</a>
  * @see org.protege.editor.owl.ui.frame.individual.OWLNegativeObjectPropertyAssertionFrameSectionRow
  * @author wolfi
  */
-public class OWLNegativeObjectPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLNegativeObjectPropertyAssertionAxiom, OWLObjectPropertyIndividualPair>  {
-
-    private OWLIndividual rootObject = null;
+public class OWLNegativeObjectPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIndividual, OWLNegativeObjectPropertyAssertionAxiom, OWLObjectPropertyIndividualPair>  {
 
     public OWLNegativeObjectPropertyAssertionEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLNegativeObjectPropertyAssertionAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
@@ -36,7 +37,7 @@ public class OWLNegativeObjectPropertyAssertionEditor extends AbstractOWLObjectR
 
     @Override
     public OWLNegativeObjectPropertyAssertionAxiom createAxiom(OWLObjectPropertyIndividualPair editedObject) {
-        return getOWLDataFactory().getOWLNegativeObjectPropertyAssertionAxiom(editedObject.getProperty(), rootObject, editedObject.getIndividual());
+        return getOWLDataFactory().getOWLNegativeObjectPropertyAssertionAxiom(editedObject.getProperty(), getRootObject(), editedObject.getIndividual());
     }
 
     @Override

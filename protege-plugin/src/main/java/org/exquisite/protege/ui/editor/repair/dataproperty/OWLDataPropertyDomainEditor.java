@@ -11,36 +11,34 @@ import java.awt.*;
 /**
  * Repair editor for Data Property Domains.
  *
+ * <p>A data property domain axiom DataPropertyDomain( DPE CE ) states that the domain of the data property expression
+ * DPE is the class expression CE — that is, if an individual x is connected by DPE with some literal, then x is an
+ * instance of CE. Each such axiom can be seen as a syntactic shortcut for the following axiom:
+ * SubClassOf( DataSomeValuesFrom( DPE rdfs:Literal) CE )</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Data_Property_Domain">9.3.4 Data Property Domain</a>
  * @see org.protege.editor.owl.ui.frame.dataproperty.OWLDataPropertyDomainFrameSectionRow
  * @author wolfi
  */
-public class OWLDataPropertyDomainAxiomEditor extends AbstractOWLObjectRepairEditor<OWLDataPropertyDomainAxiom, OWLClassExpression> {
+public class OWLDataPropertyDomainEditor extends AbstractOWLObjectRepairEditor<OWLDataPropertyExpression, OWLDataPropertyDomainAxiom, OWLClassExpression> {
 
-    private OWLDataPropertyExpression rootObject = null;
-
-    private OWLClassExpression domain = null;
-
-    public OWLDataPropertyDomainAxiomEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLDataPropertyDomainAxiom axiom, OWLObjectEditorHandler handler) {
+    public OWLDataPropertyDomainEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLDataPropertyDomainAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
-        rootObject = axiom.getProperty();
-        domain = axiom.getDomain();
     }
 
     @Override
     public OWLObjectEditor<OWLClassExpression> getOWLObjectEditor() {
-        return getOWLEditorKit().getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(domain, AxiomType.DATA_PROPERTY_DOMAIN);
+        return getOWLEditorKit().getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(getAxiom().getDomain(), AxiomType.DATA_PROPERTY_DOMAIN);
     }
 
     @Override
     public OWLDataPropertyDomainAxiom createAxiom(OWLClassExpression editedObject) {
-        return getOWLDataFactory().getOWLDataPropertyDomainAxiom(rootObject, editedObject);
+        return getOWLDataFactory().getOWLDataPropertyDomainAxiom(getRootObject(), editedObject);
     }
 
     @Override
     public void setAxiom(OWLDataPropertyDomainAxiom axiom) {
         super.setAxiom(axiom);
         rootObject = axiom.getProperty();
-        domain = axiom.getDomain();
     }
 }

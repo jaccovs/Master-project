@@ -13,17 +13,16 @@ import java.awt.*;
 /**
  * Repair editor for Positive Data Property Assertions.
  *
+ * <p>A positive data property assertion DataPropertyAssertion( DPE a lt ) states that the individual a is connected by the data property expression DPE to the literal lt.</p>
+ *
  * @see <a href="https://www.w3.org/TR/owl2-syntax/#Positive_Data_Property_Assertions">9.6.6 Positive Data Property Assertions</a>
  * @see org.protege.editor.owl.ui.frame.individual.OWLDataPropertyAssertionAxiomFrameSectionRow
  * @author wolfi
  */
-public class OWLDataPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLDataPropertyAssertionAxiom, OWLDataPropertyConstantPair> {
-
-    private OWLIndividual rootObject = null;
+public class OWLDataPropertyAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIndividual, OWLDataPropertyAssertionAxiom, OWLDataPropertyConstantPair> {
 
     public OWLDataPropertyAssertionEditor(OWLEditorKit editorKit, Component parent, OWLOntology ontology, OWLDataPropertyAssertionAxiom axiom, OWLObjectEditorHandler handler) {
         super(editorKit, parent, ontology, axiom, handler);
-        rootObject = axiom.getSubject();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class OWLDataPropertyAssertionEditor extends AbstractOWLObjectRepairEdito
 
     @Override
     public OWLDataPropertyAssertionAxiom createAxiom(OWLDataPropertyConstantPair editedObject) {
-        return getOWLDataFactory().getOWLDataPropertyAssertionAxiom(editedObject.getProperty(), rootObject, editedObject.getConstant());
+        return getOWLDataFactory().getOWLDataPropertyAssertionAxiom(editedObject.getProperty(), getRootObject(), editedObject.getConstant());
     }
 
     @Override

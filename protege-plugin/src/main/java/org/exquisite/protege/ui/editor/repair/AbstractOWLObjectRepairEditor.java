@@ -1,5 +1,6 @@
 package org.exquisite.protege.ui.editor.repair;
 
+import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.protege.editor.core.ProtegeApplication;
 import org.protege.editor.core.prefs.Preferences;
 import org.protege.editor.core.prefs.PreferencesManager;
@@ -11,10 +12,7 @@ import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
 import org.protege.editor.owl.ui.preferences.GeneralPreferencesPanel;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,13 +24,15 @@ import java.awt.event.ComponentEvent;
  *
  * @author wolfi
  */
-public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
+public abstract class AbstractOWLObjectRepairEditor<R extends OWLObject, A extends OWLAxiom, E> {
 
     private OWLEditorKit owlEditorKit;
 
     private Component parent;
 
     private A axiom;
+
+    protected R rootObject;
 
     private OWLObjectEditorHandler handler;
 
@@ -44,8 +44,8 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
         this.owlEditorKit = editorKit;
         this.parent = parent;
         this.ontology = ontology;
-        this.axiom = axiom;
         this.handler = handler;
+        setAxiom(axiom); // use the setAxiom() method instead of direct assignment because subclasses may override the method
     }
 
     /**
@@ -96,7 +96,11 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
                 Object retVal = optionPane.getValue();
                 editorComponent.setPreferredSize(editorComponent.getSize());
                 if (retVal != null && retVal.equals(JOptionPane.OK_OPTION)) {
-                    handler.handleEditFinished(editor);
+                    try {
+                        handler.handleEditFinished(editor);
+                    } catch (Exception ex) {
+                        DebuggingDialog.showErrorDialog("Error occcurred!", ex.getMessage(), ex); // TODO rollback before!
+                    }
                 }
                 //setSelectedValue(frameObject, true); todo
                 if (editor instanceof VerifiedInputEditor) {
@@ -106,7 +110,11 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
             }
         });
 
-        Object rootObject = axiom;
+        Object rootObject = getRootObject();
+
+        if (rootObject == null) {
+            rootObject = getAxiom();
+        }
 
         if (rootObject instanceof OWLLogicalAxiom) {
             dlg.setTitle(this.owlEditorKit.getModelManager().getRendering((OWLLogicalAxiom) rootObject));
@@ -180,6 +188,10 @@ public abstract class AbstractOWLObjectRepairEditor<A extends OWLAxiom, E> {
 
     public boolean checkEditorResults(OWLObjectEditor<E> editor) {
         return true;
+    }
+
+    public R getRootObject() {
+        return rootObject;
     }
 
 }
