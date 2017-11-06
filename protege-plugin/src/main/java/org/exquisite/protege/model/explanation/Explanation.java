@@ -102,28 +102,29 @@ public class Explanation {
      * </ul>
      */
     public void showExplanation() {
-        showNoExplanation(null);// TODO deactivate this and activate the next statement
-        /*
-        verifyActiveOntology();
-        final boolean isOntologyConsistent = isOntologyConsistent();
-
-        logger.debug("Is ontology consistent? -> " + isOntologyConsistent);
-
-        if (!isOntologyConsistent) {
-            logger.debug("Explaining inconsistency");
-            showExplanationForInconsistency();
+        if (!panel.isExplanationEnabled()) {
+            showNoExplanation(null);// TODO deactivate this and activate the next statement
         } else {
-            final List<OWLLogicalAxiom> entailedTestCases = getEntailedTestCases();
-            if (entailedTestCases.size() > 0 ) {
-                for (OWLLogicalAxiom entailment : entailedTestCases) {
-                    logger.debug("Explaining entailment " + entailment);
-                    showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
-                }
+            verifyActiveOntology();
+            final boolean isOntologyConsistent = isOntologyConsistent();
+
+            logger.debug("Is ontology consistent? -> " + isOntologyConsistent);
+
+            if (!isOntologyConsistent) {
+                logger.debug("Explaining inconsistency");
+                showExplanationForInconsistency();
             } else {
-                showNoExplanation(null);
+                final List<OWLLogicalAxiom> entailedTestCases = getEntailedTestCases();
+                if (entailedTestCases.size() > 0) {
+                    for (OWLLogicalAxiom entailment : entailedTestCases) {
+                        logger.debug("Explaining entailment " + entailment);
+                        showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
+                    }
+                } else {
+                    showConsistencyExplanation();
+                }
             }
         }
-        */
     }
 
     public void showNoExplanation(final String label) {
@@ -135,6 +136,17 @@ public class Explanation {
 
         this.explanation = new NoExplanationResult();
         panel.setExplanation(this.explanation, label);
+    }
+
+    public void showConsistencyExplanation() {
+        verifyActiveOntology();
+
+        // clean up dangling resources
+        if (this.explanation != null)
+            this.explanation.dispose();
+
+        this.explanation = new NoExplanationResult();
+        panel.setExplanation(this.explanation, "The selected axiom is consistent!");
     }
 
     public OWLOntology getOntology() {

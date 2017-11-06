@@ -17,6 +17,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author wolfi
@@ -35,7 +37,9 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private ExplanationResult explanation;
 
-    private JLabel label;
+    private JCheckBox label;
+
+    private boolean explanationEnabled = false;
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
 
@@ -82,7 +86,17 @@ public class RepairDiagnosisPanel extends JComponent {
                 BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
         if (withLabel) {
-            label = new JLabel("<html>Select an axiom to explain why it has to be repaired</html>");
+            label = new JCheckBox("<html>Select an axiom to explain why it has to be repaired</html>");
+            label.setSelected(isExplanationEnabled());
+            label.addItemListener(
+                    new ItemListener() {
+                        @Override
+                        public void itemStateChanged(ItemEvent e) {
+                            explanationEnabled = !explanationEnabled;
+                        }
+                    }
+            );
+
             final Border border = label.getBorder();
             Border margin = new EmptyBorder(0,10,10,0);
             label.setBorder(new CompoundBorder(border, margin));
@@ -140,6 +154,10 @@ public class RepairDiagnosisPanel extends JComponent {
         int width = (int) (workspaceSize.getWidth() * 0.85);
         int height = (int) (workspaceSize.getHeight() * 0.6);
         return new Dimension(width, height);
+    }
+
+    public boolean isExplanationEnabled() {
+        return explanationEnabled;
     }
 
 }

@@ -33,6 +33,8 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     private RepairDiagnosisPanel repairDiagnosisPanel;
 
+    private RepairListItem selectedItem;
+
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairAxiomList.class.getName());
 
     public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, Debugger debugger, Component parent) {
@@ -129,31 +131,35 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                 if (idx != -1) {
                     final Object o = lsm.getModel().getElementAt(idx);
                     if (o instanceof RepairListItem) {
-                        final RepairListItem item = (RepairListItem) o;
+                        selectedItem = (RepairListItem) o;
 
                         // change to the active ontology to the selected item's ontology
-                        final OWLOntology newActiveOntology = item.getOntology();
+                        final OWLOntology newActiveOntology = selectedItem.getOntology();
                         changeActiveOntology(newActiveOntology);
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
                         // clears the explanation cache in order to force the recalculation
-                        clearExplanationCache(item.getOntology());
+                        clearExplanationCache(selectedItem.getOntology());
 
-                        if (! isButtonPressed(mousePoint, lsm.getListItemButtons(item))) {
-                            if (item.isDeleted()) {
-                                item.showNoExplanation();
-                            } else {
-                                item.showExplanation();
-                            }
+                        if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
+                            showExplanation();
                         }
 
                         // The actions applied before cause the synchronization of the diagnosis model from the ontology.
                         // The separation of the axioms into correct, possibly faulty, entailed and non-entailed is lost
                         // with that synchronization. We therefore must restore the diagnosis model of the active debugger.
-                        getDebugger().setDiagnosisModel(item.getDiagnosisModel());
+                        getDebugger().setDiagnosisModel(selectedItem.getDiagnosisModel());
                     }
                 }
             }
+        }
+    }
+
+    public void showExplanation() {
+        if (selectedItem.isDeleted()) {
+            selectedItem.showNoExplanation();
+        } else {
+            selectedItem.showExplanation();
         }
     }
 
