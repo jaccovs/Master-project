@@ -16,11 +16,13 @@
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-owl</artifactId>
             <version>${protege.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-core</artifactId>
             <version>${protege.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.exquisite</groupId>
@@ -32,9 +34,14 @@
             <artifactId>owl-plugin</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlexplanation</artifactId>
+            <version>2.0.0</version>
+        </dependency>
     </dependencies>
 
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <build>
         <finalName>org.exquisite.protege-${project.version}</finalName>
@@ -102,14 +109,17 @@
                         <Bundle-Name>Ontology Debugger</Bundle-Name>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Bundle-Activator>org.exquisite.protege.Activator</Bundle-Activator>
+                        <Embed-Dependency>*;scope=!provided;scope=compile|runtime;inline=false</Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-Directory>target/dependency</Embed-Directory>
                         <Import-Package>
                             !org.exquisite.core.*,
                             *
                         </Import-Package>
                         <Bundle-ClassPath>
                             .;
-                            org.exquisite.diagnosis.jar;
-                            org.exquisite.owl.jar;
+                            target/dependency/org.exquisite.diagnosis.jar;
+                            target/dependency/org.exquisite.owl.jar;
                         </Bundle-ClassPath>
 
                         <Require-Bundle>
@@ -138,5 +148,66 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- with this profile put META-INF/MANIFEST.MF, plugin.xml, and embed
+                dependencies so that Eclipse/PDE can find them; to use in Eclipse right click
+                on the project > Configure > Convert to Plug-in Projects... -->
+            <id>eclipse</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.0.2</version>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/resources</directory>
+                                            <includes>
+                                                <include>plugin.xml</include>
+                                            </includes>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <manifestLocation>META-INF</manifestLocation>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <excludeScope>provided</excludeScope>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

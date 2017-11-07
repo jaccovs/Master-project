@@ -6,6 +6,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.RepairOWLReasoner;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.explanation.JustificationBasedExplanationServiceImpl;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
@@ -243,18 +244,15 @@ public class Explanation {
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {
         synchronizeReasoner();
 
-        if (!getExplanationManager().getExplainers().isEmpty()) {
-            final ExplanationService explanationService = getExplanationManager().getExplainers().iterator().next();
-            if (explanationService.hasExplanation(entailment)) {
-                if (this.explanation!=null) this.explanation.dispose(); // dispose the previous explanation
-                this.explanation = explanationService.explain(entailment);
-                panel.setExplanation(this.explanation, label);
-            } else {
-                showNoExplanation(null);
-            }
+        final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit());
+        if (explanationService.hasExplanation(entailment)) {
+            if (this.explanation!=null) this.explanation.dispose(); // dispose the previous explanation
+            this.explanation = explanationService.explain(entailment);
+            panel.setExplanation(this.explanation, label);
         } else {
-            showNoExplanation(label);
+            showNoExplanation(null);
         }
+
     }
 
     private void verifyActiveOntology() {
