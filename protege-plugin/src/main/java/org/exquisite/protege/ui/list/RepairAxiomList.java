@@ -139,7 +139,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
                         // clears the explanation cache in order to force the recalculation
-                        clearExplanationCache(selectedItem.getOntology());
+                        //clearExplanationCache(selectedItem.getOntology());
 
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
                             showExplanation();

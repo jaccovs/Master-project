@@ -103,7 +103,11 @@ public class RepairDiagnosisPanel extends JComponent {
             panel.add(label, BorderLayout.NORTH);
         }
 
-        panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
+        if (withLabel) {
+            panel.add(component, BorderLayout.CENTER);
+        } else {
+            panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
+        }
 
         pane.add(panel, c);
     }

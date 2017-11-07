@@ -158,6 +158,7 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
 
     @Override
     protected List<MListButton> getButtons(Object value) {
+        /*
         if (value instanceof JustificationFrameSectionRow) {
             List<MListButton> buttons = Arrays.<MListButton>asList(new ExplainButton(new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
@@ -170,6 +171,8 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         else {
             return Collections.emptyList();
         }
+        */
+        return Collections.emptyList();
     }
 
     @Override
@@ -187,6 +190,7 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
                 if(axiomSelectionModel.getSelectedAxioms().contains(axiom)) {
                     return Color.YELLOW;
                 }
+                /*
                 else {
                     boolean inAll = true;
                     for(Explanation<?> expl : workbenchManager.getJustifications(getRootObject().getEntailment())) {
@@ -200,6 +204,7 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
                     }
 
                 }
+                */
             }
         }
         return super.getItemBackgroundColor(item);

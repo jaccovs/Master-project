@@ -90,6 +90,10 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         modelManager.addOntologyChangeListener(ontologyChangeListener);
     }
 
+    public void clear() {
+        justificationCacheManager.clear();
+    }
+
 
     public OWLReasonerProvider getReasonerProvider() {
         return this;
