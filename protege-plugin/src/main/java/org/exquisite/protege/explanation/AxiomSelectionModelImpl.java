@@ -30,6 +30,10 @@ import java.util.*;
 /**
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 09-Oct-2008
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, added annotations by @author wolfi
  */
 public class AxiomSelectionModelImpl implements AxiomSelectionModel {
 
@@ -38,12 +42,12 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
     private List<AxiomSelectionListener> listeners;
 
 
-    public AxiomSelectionModelImpl() {
+    AxiomSelectionModelImpl() {
         selectedAxioms = new HashSet<>();
         listeners = new ArrayList<>();
     }
 
-
+    @Override
     public void setAxiomSelected(OWLAxiom axiom, boolean b) {
         if(b) {
             if(!selectedAxioms.contains(axiom)) {
@@ -59,7 +63,7 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
         }
     }
 
-    protected void fireEvent(OWLAxiom axiom, boolean added) {
+    private void fireEvent(OWLAxiom axiom, boolean added) {
         for(AxiomSelectionListener lsnr : new ArrayList<>(listeners)) {
             if(added) {
                 lsnr.axiomAdded(this, axiom);
@@ -70,16 +74,17 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
         }
     }
 
+    @Override
     public Set<OWLAxiom> getSelectedAxioms() {
         return Collections.unmodifiableSet(selectedAxioms);
     }
 
-
+    @Override
     public void addAxiomSelectionListener(AxiomSelectionListener lsnr) {
         listeners.add(lsnr);
     }
 
-
+    @Override
     public void removeAxiomSelectionListener(AxiomSelectionListener lsnr) {
         listeners.remove(lsnr);
     }

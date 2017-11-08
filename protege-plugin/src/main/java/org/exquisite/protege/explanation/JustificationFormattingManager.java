@@ -35,8 +35,12 @@ import java.util.*;
 /**
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 23-Oct-2008
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: modified put method by @author wolfi, reformatting by @author wolfi
  */
-public class JustificationFormattingManager {
+class JustificationFormattingManager {
 
     static private JustificationFormattingManager manager;
 
@@ -49,8 +53,8 @@ public class JustificationFormattingManager {
         orderingMap = new HashMap<>();
     }
 
-    public static synchronized JustificationFormattingManager getManager() {
-        if(manager == null) {
+    static synchronized JustificationFormattingManager getManager() {
+        if (manager == null) {
             manager = new JustificationFormattingManager();
         }
         return manager;
@@ -72,58 +76,57 @@ public class JustificationFormattingManager {
             ordering.add(tree.getUserObject());
             indentMap.put(tree.getUserObject(), tree.getPathToRoot().size() - 2);
         }
-        for(Tree<OWLAxiom> child : tree.getChildren()) {
+        for (Tree<OWLAxiom> child : tree.getChildren()) {
             fill(child, ordering, indentMap);
         }
     }
 
     private void initIfNecessary(Explanation<?> explanation) {
-        if(!indentMap.containsKey(explanation)) {
+        if (!indentMap.containsKey(explanation)) {
             init(explanation);
         }
     }
 
-    public int getIndentation(Explanation<?> explanation, OWLAxiom axiom) {
-        if(!explanation.getAxioms().contains(axiom) && !explanation.getEntailment().equals(axiom)) {
+    int getIndentation(Explanation<?> explanation, OWLAxiom axiom) {
+        if (!explanation.getAxioms().contains(axiom) && !explanation.getEntailment().equals(axiom)) {
             throw new IllegalArgumentException("The explanation does not contain the specified axiom: " + axiom + "  " + explanation);
         }
         initIfNecessary(explanation);
         Integer i = indentMap.get(explanation).get(axiom);
-        if(i != null) {
+        if (i != null) {
             return i;
-        }
-        else {
+        } else {
             return 0;
         }
     }
 
-    public void setIndentation(Explanation<?> explanation, OWLAxiom axiom, int indentation) {
+    private void setIndentation(Explanation<?> explanation, OWLAxiom axiom, int indentation) {
         initIfNecessary(explanation);
         indentMap.get(explanation).put(axiom, indentation);
     }
 
-    public void increaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
+    void increaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         Integer indent = getIndentation(explanation, axiom);
         setIndentation(explanation, axiom, indent + 1);
     }
 
-    public void decreaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
+    void decreaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         Integer indent = getIndentation(explanation, axiom);
         indent = indent - 1;
-        if(indent < 0) {
+        if (indent < 0) {
             indent = 0;
         }
         setIndentation(explanation, axiom, indent);
     }
 
-    public int moveAxiomUp(Explanation<?> explanation, OWLAxiom axiom) {
+    int moveAxiomUp(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         List<OWLAxiom> ordering = orderingMap.get(explanation);
         // Lowest index is 1 - the entailment is held in position 0
         int index = ordering.indexOf(axiom);
-        if(index > 0) {
+        if (index > 0) {
             index--;
         }
         ordering.remove(axiom);
@@ -131,12 +134,12 @@ public class JustificationFormattingManager {
         return index;
     }
 
-    public int moveAxiomDown(Explanation<?> explanation, OWLAxiom axiom) {
+    int moveAxiomDown(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         List<OWLAxiom> ordering = orderingMap.get(explanation);
         // Lowest index is 1 - the entailment is held in position 0
         int index = ordering.indexOf(axiom);
-        if(index < ordering.size() - 1) {
+        if (index < ordering.size() - 1) {
             index++;
         }
         ordering.remove(axiom);
@@ -144,13 +147,9 @@ public class JustificationFormattingManager {
         return index;
     }
 
-    public List<OWLAxiom> getOrdering(Explanation<?> explanation) {
+    List<OWLAxiom> getOrdering(Explanation<?> explanation) {
         initIfNecessary(explanation);
         return Collections.unmodifiableList(orderingMap.get(explanation));
     }
 
-    public void clearFormatting(Explanation<?> explanation) {
-        indentMap.remove(explanation);
-        orderingMap.remove(explanation);
-    }
 }

@@ -1,12 +1,13 @@
 package org.exquisite.protege.explanation;
 
-import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.inference.ProtegeOWLReasonerInfo;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.IllegalConfigurationException;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+
+import javax.annotation.Nonnull;
 /*
  * Copyright (C) 2010, University of Manchester
  *
@@ -35,39 +36,41 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
  * The University of Manchester
  * Information Management Group
  * Date: 06-Apr-2010
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, annotation changes by @author wolfi
  */
 public class ProtegeOWLReasonerFactoryWrapper implements OWLReasonerFactory {
 
-    private ProtegeOWLReasonerInfo info;
-
     private OWLReasonerFactory reasonerFactory;
 
-    public ProtegeOWLReasonerFactoryWrapper(ProtegeOWLReasonerInfo info) {
-        this.info = info;
+    ProtegeOWLReasonerFactoryWrapper(ProtegeOWLReasonerInfo info) {
         this.reasonerFactory = info.getReasonerFactory();
     }
 
-    public ProtegeOWLReasonerFactoryWrapper(OWLEditorKit editorKit) {
-        this(editorKit.getOWLModelManager().getOWLReasonerManager().getCurrentReasonerFactory());
-    }
-
+    @Nonnull
     public String getReasonerName() {
         return reasonerFactory.getReasonerName();
     }
 
-    public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
+    @Nonnull
+    public OWLReasoner createNonBufferingReasoner(@Nonnull OWLOntology ontology) {
         return reasonerFactory.createReasoner(ontology);
     }
 
-    public OWLReasoner createReasoner(OWLOntology ontology) {
+    @Nonnull
+    public OWLReasoner createReasoner(@Nonnull OWLOntology ontology) {
         return reasonerFactory.createReasoner(ontology);
     }
 
-    public OWLReasoner createNonBufferingReasoner(OWLOntology ontology, OWLReasonerConfiguration owlReasonerConfiguration) throws IllegalConfigurationException {
+    @Nonnull
+    public OWLReasoner createNonBufferingReasoner(@Nonnull OWLOntology ontology, @Nonnull OWLReasonerConfiguration owlReasonerConfiguration) throws IllegalConfigurationException {
         return reasonerFactory.createReasoner(ontology);
     }
 
-    public OWLReasoner createReasoner(OWLOntology ontology, OWLReasonerConfiguration owlReasonerConfiguration) throws IllegalConfigurationException {
+    @Nonnull
+    public OWLReasoner createReasoner(@Nonnull OWLOntology ontology, @Nonnull OWLReasonerConfiguration owlReasonerConfiguration) throws IllegalConfigurationException {
         return reasonerFactory.createReasoner(ontology);
     }
 }

@@ -5,8 +5,6 @@ import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 /**
@@ -14,6 +12,10 @@ import java.awt.*;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 19/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
 public class JustificationFrameExplanationDisplay extends JPanel implements ExplanationDisplay, AxiomSelectionListener {
 
@@ -23,18 +25,13 @@ public class JustificationFrameExplanationDisplay extends JPanel implements Expl
 
     private final JustificationFrameList frameList;
 
-    private OWLEditorKit editorKit;
-
-    private Explanation<OWLAxiom> lacExp;
-
     private WorkbenchManager workbenchManager;
 
     private AxiomSelectionModel axiomSelectionModel;
     
     private boolean transmittingSelectionToModel = false;
 
-    public JustificationFrameExplanationDisplay(OWLEditorKit editorKit, AxiomSelectionModel selectionModel, WorkbenchManager workbenchManager, Explanation<OWLAxiom> explanation) {
-        this.editorKit = editorKit;
+    JustificationFrameExplanationDisplay(OWLEditorKit editorKit, AxiomSelectionModel selectionModel, WorkbenchManager workbenchManager, Explanation<OWLAxiom> explanation) {
         this.workbenchManager = workbenchManager;
         this.axiomSelectionModel = selectionModel;
         this.explanation = explanation;
@@ -45,11 +42,7 @@ public class JustificationFrameExplanationDisplay extends JPanel implements Expl
         frame.setRootObject(explanation);
         frameList.setBorder(BorderFactory.createEmptyBorder(7, 10, 7, 10));
 
-        frameList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                transmitSelectionToModel();
-            }
-        });
+        frameList.getSelectionModel().addListSelectionListener(e -> transmitSelectionToModel());
 
         axiomSelectionModel.addAxiomSelectionListener(new AxiomSelectionListener() {
             public void axiomAdded(AxiomSelectionModel source, OWLAxiom axiom) {
@@ -112,9 +105,6 @@ public class JustificationFrameExplanationDisplay extends JPanel implements Expl
     }
 
     private Explanation<OWLAxiom> getLaconicExplanation() {
-        if(lacExp != null) {
-            return lacExp;
-        }
         return workbenchManager.getJustificationManager().getLaconicJustification(explanation);
     }
 

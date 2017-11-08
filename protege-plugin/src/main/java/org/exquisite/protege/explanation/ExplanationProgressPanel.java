@@ -37,6 +37,10 @@ import java.util.Set;
  * The University of Manchester
  * Information Management Group
  * Date: 14-Oct-2009
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, reformatting by @author wolfi
  */
 public class ExplanationProgressPanel extends JPanel implements ExplanationProgressMonitor<OWLAxiom> {
 
@@ -53,7 +57,7 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
-    public ExplanationProgressPanel() {
+    ExplanationProgressPanel() {
         setLayout(new BorderLayout(12, 12));
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setPreferredSize(new Dimension(400, 100));
@@ -83,10 +87,9 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
 
     private void updateMessage() {
         Runnable runnable = () -> messageLabel.setText(MESSAGE + numberFound);
-        if(SwingUtilities.isEventDispatchThread()) {
+        if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
-        }
-        else {
+        } else {
             SwingUtilities.invokeLater(runnable);
         }
     }
@@ -95,7 +98,8 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
      * Called by explanation generators that support progress monitors.  This is
      * called when a new explanation is found for an entailment when searching for
      * multiple explanations.
-     * @param explanationGenerator            The explanation generator that found the explanation
+     *
+     * @param explanationGenerator The explanation generator that found the explanation
      * @param explanation          The explanation that was found
      *                             for the entailment or <code>false</code> if the explanation generator should stop finding explanations
      *                             at the next opportunity.
@@ -109,8 +113,9 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
     /**
      * The explanation generator will periodically check to see if it should continue finding explanations by calling
      * this method.
+     *
      * @return <code>true</code> if the explanation generator should cancel the explanation finding process or <code>false</code>
-     *         if the explanation generator should continue.
+     * if the explanation generator should continue.
      */
     public boolean isCancelled() {
         return cancelled;

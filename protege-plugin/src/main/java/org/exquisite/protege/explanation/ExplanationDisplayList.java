@@ -1,7 +1,6 @@
 package org.exquisite.protege.explanation;
 
 import org.protege.editor.core.Disposable;
-import org.protege.editor.owl.OWLEditorKit;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -34,10 +33,12 @@ import java.awt.event.ActionEvent;
 /**
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 19-Oct-2008
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, added annotations by @author wolfi
  */
 public class ExplanationDisplayList extends JPanel implements Disposable {
-
-    private OWLEditorKit editorKit;
 
     private ExplanationDisplay display;
 
@@ -45,17 +46,13 @@ public class ExplanationDisplayList extends JPanel implements Disposable {
 
     private int explanationNumber;
 
-    private int entailmentNumber;
-
     private WorkbenchManager workbenchManager;
 
-    public ExplanationDisplayList(OWLEditorKit editorKit, WorkbenchManager workbenchManager, ExplanationDisplay display, int explanationNumber) {
-        this.editorKit = editorKit;
+    ExplanationDisplayList(WorkbenchManager workbenchManager, ExplanationDisplay display, int explanationNumber) {
         this.workbenchManager = workbenchManager;
         this.display = display;
         this.explanationNumber = explanationNumber;
         createUI();
-
     }
 
 
@@ -90,7 +87,7 @@ public class ExplanationDisplayList extends JPanel implements Disposable {
         display.setDisplayLaconicExplanation(b);
     }
 
-
+    @Override
     public void dispose() {
         display.dispose();
     }

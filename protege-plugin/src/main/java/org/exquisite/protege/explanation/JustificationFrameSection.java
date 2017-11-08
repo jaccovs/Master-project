@@ -19,23 +19,26 @@ import java.util.List;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 19/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: modified put method by @author wolfi, reformatting by @author wolfi
  */
 public class JustificationFrameSection extends AbstractOWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> {
 
     private static String LABEL = "Explanation for: ";
 
     private boolean filled = false;
-    
-    public JustificationFrameSection(OWLEditorKit editorKit, OWLFrame<? extends Explanation<OWLAxiom>> owlFrame) {
+
+    JustificationFrameSection(OWLEditorKit editorKit, OWLFrame<? extends Explanation<OWLAxiom>> owlFrame) {
         super(editorKit, LABEL, owlFrame);
     }
-
 
 
     @Override
     public String getLabel() {
         Explanation<OWLAxiom> explanation = getRootObject();
-        if(explanation == null) {
+        if (explanation == null) {
             return "";
         }
         OWLModelManager modelManager = getOWLEditorKit().getOWLModelManager();
@@ -55,14 +58,14 @@ public class JustificationFrameSection extends AbstractOWLFrameSection<Explanati
 
     @Override
     protected void refill(OWLOntology ontology) {
-        if(filled) {
+        if (filled) {
             return;
         }
         filled = true;
         JustificationFormattingManager formattingManager = JustificationFormattingManager.getManager();
         Explanation<OWLAxiom> expl = getRootObject();
         List<OWLAxiom> formatting = formattingManager.getOrdering(expl);
-        for(OWLAxiom ax : formatting) {
+        for (OWLAxiom ax : formatting) {
             int depth = formattingManager.getIndentation(expl, ax);
             JustificationFrameSectionRow row = new JustificationFrameSectionRow(getOWLEditorKit(), this, expl, ax, depth);
             addRow(row);

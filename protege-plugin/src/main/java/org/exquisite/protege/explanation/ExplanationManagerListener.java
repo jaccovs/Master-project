@@ -28,6 +28,9 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 /**
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 04-Oct-2008
+ *
+ * @apiNote This is a copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
  */
 public interface ExplanationManagerListener {
 

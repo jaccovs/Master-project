@@ -5,8 +5,12 @@ package org.exquisite.protege.explanation;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 20/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
-public class WorkbenchSettings {
+class WorkbenchSettings {
 
     private JustificationType justificationType = JustificationType.REGULAR;
     
@@ -14,27 +18,27 @@ public class WorkbenchSettings {
 
     private boolean findAll = true;
 
-    public JustificationType getJustificationType() {
+    JustificationType getJustificationType() {
         return justificationType;
     }
 
-    public void setJustificationType(JustificationType justificationType) {
+    void setJustificationType(JustificationType justificationType) {
         this.justificationType = justificationType;
     }
 
-    public int getLimit() {
+    int getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    void setLimit(int limit) {
         this.limit = limit;
     }
 
-    public boolean isFindAllExplanations() {
+    boolean isFindAllExplanations() {
         return findAll;
     }
 
-    public void setFindAllExplanations(boolean findAllExplanations) {
+    void setFindAllExplanations(boolean findAllExplanations) {
         findAll = findAllExplanations;
     }
 }

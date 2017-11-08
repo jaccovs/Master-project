@@ -10,6 +10,10 @@ import java.util.Set;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 20/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: modified put method by @author wolfi, reformatting by @author wolfi
  */
 public class WorkbenchManager {
 
@@ -18,13 +22,13 @@ public class WorkbenchManager {
     private JustificationManager justificationManager;
 
     private OWLAxiom entailment;
-    
-    public WorkbenchManager(JustificationManager justificationManager, OWLAxiom entailment) {
+
+    WorkbenchManager(JustificationManager justificationManager, OWLAxiom entailment) {
         this.justificationManager = justificationManager;
         this.entailment = entailment;
     }
 
-    public WorkbenchSettings getWorkbenchSettings() {
+    WorkbenchSettings getWorkbenchSettings() {
         return workbenchSettings;
     }
 
@@ -32,30 +36,30 @@ public class WorkbenchManager {
         return entailment;
     }
 
-    public Set<Explanation<OWLAxiom>> getJustifications(OWLAxiom entailment) {
+    Set<Explanation<OWLAxiom>> getJustifications(OWLAxiom entailment) {
         JustificationType justificationType = workbenchSettings.getJustificationType();
         return justificationManager.getJustifications(entailment, justificationType);
     }
 
-    public int getJustificationCount(OWLAxiom entailment) {
+    int getJustificationCount(OWLAxiom entailment) {
         JustificationType justificationType = workbenchSettings.getJustificationType();
         return justificationManager.getComputedExplanationCount(entailment, justificationType);
     }
 
 
-    public JustificationManager getJustificationManager() {
+    JustificationManager getJustificationManager() {
         return justificationManager;
     }
-    
-    public int getPopularity(OWLAxiom axiom) {
+
+    int getPopularity(OWLAxiom axiom) {
         int count = 0;
         Set<Explanation<OWLAxiom>> justifications = justificationManager.getJustifications(entailment, workbenchSettings.getJustificationType());
-        for(Explanation<OWLAxiom> justification : justifications) {
-            if(justification.contains(axiom)) {
+        for (Explanation<OWLAxiom> justification : justifications) {
+            if (justification.contains(axiom)) {
                 count++;
             }
         }
         return count;
     }
-    
+
 }

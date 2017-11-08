@@ -1,11 +1,13 @@
 package org.exquisite.protege.explanation;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import uk.ac.manchester.cs.owl.explanation.ordering.EntailedAxiomTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrderer;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.Tree;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,7 +20,11 @@ import static java.util.stream.Collectors.toList;
  * heuristics.
  *
  * @author Matthew Horridge, The University Of Manchester, Bio-Health
- *         Informatics Group, Date: 11-Jan-2008
+ * Informatics Group, Date: 11-Jan-2008
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
 public class ProtegeExplanationOrderer implements ExplanationOrderer {
 
@@ -31,14 +37,11 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
     private final Map<OWLObject, Set<OWLAxiom>> mappedAxioms;
     private final Set<OWLAxiom> consumedAxioms;
     private final Set<AxiomType<?>> passTypes;
-    private OWLEntity currentSource;
-    private OWLEntity currentTarget;
 
     /**
-     * @param m
-     *        the manager to use
+     * @param m the manager to use
      */
-    public ProtegeExplanationOrderer(OWLOntologyManager m) {
+    ProtegeExplanationOrderer(OWLOntologyManager m) {
         currentExplanation = Collections.emptySet();
         lhs2AxiomMap = new HashMap<>();
         entitiesByAxiomRHS = new HashMap<>();
@@ -58,49 +61,42 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         consumedAxioms.clear();
     }
 
+    @Nonnull
     @Override
-    public ExplanationTree getOrderedExplanation(OWLAxiom entailment,
-                                                 Set<OWLAxiom> axioms) {
+    public ExplanationTree getOrderedExplanation(@Nonnull OWLAxiom entailment, @Nonnull Set<OWLAxiom> axioms) {
         currentExplanation = new HashSet<>(axioms);
         buildIndices();
         ExplanationTree root = new EntailedAxiomTree(entailment);
-        currentSource = seedExtractor.getSource(entailment);
+        OWLEntity currentSource = seedExtractor.getSource(entailment);
         insertChildren(currentSource, root);
-        currentTarget = seedExtractor.getTarget(entailment);
+        OWLEntity currentTarget = seedExtractor.getTarget(entailment);
         Set<OWLAxiom> axs = root.getUserObjectClosure();
         final Set<OWLAxiom> targetAxioms = new HashSet<>();
         if (currentTarget != null) {
             if (currentTarget.isOWLClass()) {
-                targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLClass()));
+                targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLClass(), Imports.EXCLUDED));
             }
             if (currentTarget.isOWLObjectProperty()) {
-                targetAxioms.addAll(ont.getAxioms(currentTarget
-                        .asOWLObjectProperty()));
+                targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLObjectProperty(), Imports.EXCLUDED));
             }
             if (currentTarget.isOWLDataProperty()) {
-                targetAxioms.addAll(ont.getAxioms(currentTarget
-                        .asOWLDataProperty()));
+                targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLDataProperty(), Imports.EXCLUDED));
             }
             if (currentTarget.isOWLNamedIndividual()) {
-                targetAxioms.addAll(ont.getAxioms(currentTarget
-                        .asOWLNamedIndividual()));
+                targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLNamedIndividual(), Imports.EXCLUDED));
             }
         }
         List<OWLAxiom> rootAxioms = axioms.stream()
                 .filter(ax -> !axs.contains(ax))
                 .collect(toList());
-        Collections.sort(rootAxioms, new Comparator<OWLAxiom>() {
-
-            @Override
-            public int compare(OWLAxiom o1, OWLAxiom o2) {
-                if (targetAxioms.contains(o1)) {
-                    return 1;
-                }
-                if (targetAxioms.contains(o2)) {
-                    return -1;
-                }
-                return 0;
+        rootAxioms.sort((o1, o2) -> {
+            if (targetAxioms.contains(o1)) {
+                return 1;
             }
+            if (targetAxioms.contains(o2)) {
+                return -1;
+            }
+            return 0;
         });
         for (OWLAxiom ax : rootAxioms) {
             root.addChild(new ExplanationTree(ax));
@@ -111,7 +107,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
     private List<OWLEntity> getRHSEntitiesSorted(OWLAxiom ax) {
         Collection<OWLEntity> entities = getRHSEntities(ax);
         List<OWLEntity> sortedEntities = new ArrayList<>(entities);
-        Collections.sort(sortedEntities, propertiesFirstComparator);
+        sortedEntities.sort(propertiesFirstComparator);
         return sortedEntities;
     }
 
@@ -121,19 +117,19 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         Set<? extends OWLAxiom> axioms = Collections.emptySet();
         if (entity != null) {
             if (entity.isOWLClass()) {
-                axioms = ont.getAxioms(entity.asOWLClass());
+                axioms = ont.getAxioms(entity.asOWLClass(), Imports.EXCLUDED);
             } else if (entity.isOWLObjectProperty()) {
-                axioms = ont.getAxioms(entity.asOWLObjectProperty());
+                axioms = ont.getAxioms(entity.asOWLObjectProperty(), Imports.EXCLUDED);
             } else if (entity.isOWLDataProperty()) {
-                axioms = ont.getAxioms(entity.asOWLDataProperty());
+                axioms = ont.getAxioms(entity.asOWLDataProperty(), Imports.EXCLUDED);
             } else if (entity.isOWLNamedIndividual()) {
-                axioms = ont.getAxioms(entity.asOWLNamedIndividual());
+                axioms = ont.getAxioms(entity.asOWLNamedIndividual(), Imports.EXCLUDED);
             }
             for (OWLAxiom ax : axioms) {
                 if (passTypes.contains(ax.getAxiomType())) {
                     continue;
                 }
-                Set<OWLAxiom> mapped = getIndexedSet(entity, mappedAxioms, true);
+                Set<OWLAxiom> mapped = getIndexedSet(entity, mappedAxioms);
                 if (consumedAxioms.contains(ax) || mapped.contains(ax)
                         || currentPath.contains(ax)) {
                     continue;
@@ -186,53 +182,39 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
      * A utility method that obtains a set of axioms that are indexed by some
      * object.
      *
-     * @param obj
-     *        The object that indexed the axioms
-     * @param map
-     *        The map that provides the index structure
-     * @param addIfEmpty
-     *        A flag that indicates whether an empty set of axiom should be
-     *        added to the index if there is not value present for the indexing
-     *        object.
+     * @param obj        The object that indexed the axioms
+     * @param map        The map that provides the index structure
      * @return A set of axioms (may be empty)
      */
-    private static <K, E> Set<E> getIndexedSet(K obj, Map<K, Set<E>> map,
-                                               boolean addIfEmpty) {
-        Set<E> values = map.get(obj);
-        if (values == null) {
-            values = new HashSet<>();
-            if (addIfEmpty) {
-                map.put(obj, values);
-            }
-        }
-        return values;
+    private static <K, E> Set<E> getIndexedSet(K obj, Map<K, Set<E>> map) {
+        return map.computeIfAbsent(obj, k -> new HashSet<>());
     }
 
     /**
      * Gets axioms that have a LHS corresponding to the specified entity.
      *
-     * @param lhs
-     *        The entity that occurs on the left hand side of the axiom.
+     * @param lhs The entity that occurs on the left hand side of the axiom.
      * @return A set of axioms that have the specified entity as their left hand
-     *         side.
+     * side.
      */
-    protected Set<OWLAxiom> getAxiomsForLHS(OWLEntity lhs) {
-        return getIndexedSet(lhs, lhs2AxiomMap, true);
+    private Set<OWLAxiom> getAxiomsForLHS(OWLEntity lhs) {
+        return getIndexedSet(lhs, lhs2AxiomMap);
     }
 
     private Collection<OWLEntity> getRHSEntities(OWLAxiom axiom) {
-        return getIndexedSet(axiom, entitiesByAxiomRHS, true);
+        return getIndexedSet(axiom, entitiesByAxiomRHS);
     }
 
-    protected void indexAxiomsByRHSEntities(OWLObject rhs, OWLAxiom axiom) {
-        getIndexedSet(axiom, entitiesByAxiomRHS, true).addAll(
+    private void indexAxiomsByRHSEntities(OWLObject rhs, OWLAxiom axiom) {
+        getIndexedSet(axiom, entitiesByAxiomRHS).addAll(
                 rhs.getSignature());
     }
 
     private static final class PropertiesFirstComparator implements
             Comparator<OWLObject> {
 
-        public PropertiesFirstComparator() {}
+        PropertiesFirstComparator() {
+        }
 
         @Override
         public int compare(OWLObject o1, OWLObject o2) {
@@ -251,13 +233,17 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
 
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** tree comparator. */
+
+    /**
+     * tree comparator.
+     */
     private static final class OWLAxiomTreeComparator implements
             Comparator<Tree<OWLAxiom>>, Serializable {
 
         private static final long serialVersionUID = 30406L;
 
-        public OWLAxiomTreeComparator() {}
+        OWLAxiomTreeComparator() {
+        }
 
         @Override
         public int compare(Tree<OWLAxiom> o1, Tree<OWLAxiom> o2) {
@@ -297,20 +283,21 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         private OWLEntity source;
         private OWLEntity target;
 
-        public SeedExtractor() {}
+        SeedExtractor() {
+        }
 
-        public OWLEntity getSource(OWLAxiom axiom) {
+        OWLEntity getSource(OWLAxiom axiom) {
             axiom.accept(this);
             return source;
         }
 
-        public OWLEntity getTarget(OWLAxiom axiom) {
+        OWLEntity getTarget(OWLAxiom axiom) {
             axiom.accept(this);
             return target;
         }
 
         @Override
-        public void visit(OWLSubClassOfAxiom axiom) {
+        public void visit(@Nonnull OWLSubClassOfAxiom axiom) {
             if (!axiom.getSubClass().isAnonymous()) {
                 source = axiom.getSubClass().asOWLClass();
             }
@@ -323,16 +310,19 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAsymmetricObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLReflexiveObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDisjointClassesAxiom axiom) {
+        public void visit(@Nonnull OWLDisjointClassesAxiom axiom) {
             for (OWLClassExpression ce : axiom.getClassExpressions()) {
                 if (!ce.isAnonymous()) {
                     if (source == null) {
@@ -347,39 +337,50 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDataPropertyDomainAxiom axiom) {}
+        public void visit(@Nonnull OWLDataPropertyDomainAxiom axiom) {
+        }
 
-        public void visit(OWLImportsDeclaration axiom) {}
-
-        @Override
-        public void visit(OWLObjectPropertyDomainAxiom axiom) {}
-
-        @Override
-        public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {}
+        public void visit(OWLImportsDeclaration axiom) {
+        }
 
         @Override
-        public void visit(OWLNegativeDataPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLObjectPropertyDomainAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDifferentIndividualsAxiom axiom) {}
+        public void visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDisjointDataPropertiesAxiom axiom) {}
+        public void visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDisjointObjectPropertiesAxiom axiom) {}
+        public void visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLObjectPropertyRangeAxiom axiom) {}
+        public void visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLObjectPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLFunctionalObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLObjectPropertyRangeAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSubObjectPropertyOfAxiom axiom) {
+        public void visit(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
+        }
+
+        @Override
+        public void visit(@Nonnull OWLFunctionalObjectPropertyAxiom axiom) {
+        }
+
+        @Override
+        public void visit(@Nonnull OWLSubObjectPropertyOfAxiom axiom) {
             if (!axiom.getSubProperty().isAnonymous()) {
                 source = axiom.getSubProperty().asOWLObjectProperty();
             }
@@ -389,28 +390,35 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDisjointUnionAxiom axiom) {}
+        public void visit(@Nonnull OWLDisjointUnionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDeclarationAxiom axiom) {}
+        public void visit(@Nonnull OWLDeclarationAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAnnotationAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSymmetricObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLSymmetricObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDataPropertyRangeAxiom axiom) {}
+        public void visit(@Nonnull OWLDataPropertyRangeAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLFunctionalDataPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLFunctionalDataPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLEquivalentDataPropertiesAxiom axiom) {}
+        public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLClassAssertionAxiom axiom) {
+        public void visit(@Nonnull OWLClassAssertionAxiom axiom) {
             if (!axiom.getClassExpression().isAnonymous()) {
                 source = axiom.getIndividual().asOWLNamedIndividual();
                 target = axiom.getClassExpression().asOWLClass();
@@ -418,7 +426,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLEquivalentClassesAxiom axiom) {
+        public void visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
             for (OWLClass cls : axiom.getNamedClasses()) {
                 if (source == null) {
                     source = cls;
@@ -431,58 +439,76 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDataPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLDataPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLTransitiveObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLTransitiveObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLIrreflexiveObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSubDataPropertyOfAxiom axiom) {}
+        public void visit(@Nonnull OWLSubDataPropertyOfAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {}
+        public void visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSameIndividualAxiom axiom) {}
+        public void visit(@Nonnull OWLSameIndividualAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSubPropertyChainOfAxiom axiom) {}
+        public void visit(@Nonnull OWLSubPropertyChainOfAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLInverseObjectPropertiesAxiom axiom) {}
+        public void visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
+        }
 
         @Override
-        public void visit(SWRLRule rule) {}
+        public void visit(@Nonnull SWRLRule rule) {
+        }
 
         @Override
-        public void visit(OWLHasKeyAxiom axiom) {}
+        public void visit(@Nonnull OWLHasKeyAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAnnotationPropertyDomainAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationPropertyDomainAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAnnotationPropertyRangeAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationPropertyRangeAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSubAnnotationPropertyOfAxiom axiom) {}
+        public void visit(@Nonnull OWLSubAnnotationPropertyOfAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDatatypeDefinitionAxiom axiom) {}
+        public void visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
+        }
     }
 
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** A visitor that indexes axioms by their left and right hand sides. */
+
+    /**
+     * A visitor that indexes axioms by their left and right hand sides.
+     */
     @SuppressWarnings("unused")
     private class AxiomMapBuilder implements OWLAxiomVisitor {
 
-        public AxiomMapBuilder() {}
+        AxiomMapBuilder() {
+        }
 
         @Override
-        public void visit(OWLSubClassOfAxiom axiom) {
+        public void visit(@Nonnull OWLSubClassOfAxiom axiom) {
             if (!axiom.getSubClass().isAnonymous()) {
                 getAxiomsForLHS(axiom.getSubClass().asOWLClass()).add(axiom);
                 indexAxiomsByRHSEntities(axiom.getSuperClass(), axiom);
@@ -490,10 +516,11 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAsymmetricObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -501,7 +528,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLReflexiveObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -509,7 +536,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDisjointClassesAxiom axiom) {
+        public void visit(@Nonnull OWLDisjointClassesAxiom axiom) {
             for (OWLClassExpression desc : axiom.getClassExpressions()) {
                 if (!desc.isAnonymous()) {
                     getAxiomsForLHS(desc.asOWLClass()).add(axiom);
@@ -519,15 +546,16 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDataPropertyDomainAxiom axiom) {
+        public void visit(@Nonnull OWLDataPropertyDomainAxiom axiom) {
             getAxiomsForLHS(axiom.getProperty().asOWLDataProperty()).add(axiom);
             indexAxiomsByRHSEntities(axiom.getDomain(), axiom);
         }
 
-        public void visit(OWLImportsDeclaration axiom) {}
+        public void visit(OWLImportsDeclaration axiom) {
+        }
 
         @Override
-        public void visit(OWLObjectPropertyDomainAxiom axiom) {
+        public void visit(@Nonnull OWLObjectPropertyDomainAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -536,7 +564,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
+        public void visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
             for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
                 if (!prop.isAnonymous()) {
                     getAxiomsForLHS(prop.asOWLObjectProperty()).add(axiom);
@@ -546,10 +574,11 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLNegativeDataPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDifferentIndividualsAxiom axiom) {
+        public void visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
             for (OWLIndividual ind : axiom.getIndividuals()) {
                 if (!ind.isAnonymous()) {
                     getAxiomsForLHS(ind.asOWLNamedIndividual()).add(axiom);
@@ -559,7 +588,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDisjointDataPropertiesAxiom axiom) {
+        public void visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
             for (OWLDataPropertyExpression prop : axiom.getProperties()) {
                 getAxiomsForLHS(prop.asOWLDataProperty()).add(axiom);
                 indexAxiomsByRHSEntities(prop, axiom);
@@ -567,7 +596,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
+        public void visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
             for (OWLObjectPropertyExpression prop : axiom.getProperties()) {
                 if (!prop.isAnonymous()) {
                     getAxiomsForLHS(prop.asOWLObjectProperty()).add(axiom);
@@ -577,7 +606,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLObjectPropertyRangeAxiom axiom) {
+        public void visit(@Nonnull OWLObjectPropertyRangeAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -586,10 +615,11 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLObjectPropertyAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLFunctionalObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLFunctionalObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -597,7 +627,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLSubObjectPropertyOfAxiom axiom) {
+        public void visit(@Nonnull OWLSubObjectPropertyOfAxiom axiom) {
             if (!axiom.getSubProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getSubProperty().asOWLObjectProperty())
                         .add(axiom);
@@ -606,18 +636,20 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDisjointUnionAxiom axiom) {
+        public void visit(@Nonnull OWLDisjointUnionAxiom axiom) {
             getAxiomsForLHS(axiom.getOWLClass()).add(axiom);
         }
 
         @Override
-        public void visit(OWLDeclarationAxiom axiom) {}
+        public void visit(@Nonnull OWLDeclarationAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAnnotationAssertionAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationAssertionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSymmetricObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLSymmetricObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -625,7 +657,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDataPropertyRangeAxiom axiom) {
+        public void visit(@Nonnull OWLDataPropertyRangeAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLDataProperty()).add(
                         axiom);
@@ -634,7 +666,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLFunctionalDataPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLFunctionalDataPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLDataProperty()).add(
                         axiom);
@@ -642,7 +674,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
+        public void visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
             for (OWLDataPropertyExpression prop : axiom.getProperties()) {
                 getAxiomsForLHS(prop.asOWLDataProperty()).add(axiom);
                 indexAxiomsByRHSEntities(prop, axiom);
@@ -650,7 +682,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLClassAssertionAxiom axiom) {
+        public void visit(@Nonnull OWLClassAssertionAxiom axiom) {
             if (!axiom.getIndividual().isAnonymous()) {
                 getAxiomsForLHS(axiom.getIndividual().asOWLNamedIndividual())
                         .add(axiom);
@@ -659,7 +691,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLEquivalentClassesAxiom axiom) {
+        public void visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
             for (OWLClassExpression desc : axiom.getClassExpressions()) {
                 if (!desc.isAnonymous()) {
                     getAxiomsForLHS(desc.asOWLClass()).add(axiom);
@@ -669,12 +701,12 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLDataPropertyAssertionAxiom axiom) {
+        public void visit(@Nonnull OWLDataPropertyAssertionAxiom axiom) {
             indexAxiomsByRHSEntities(axiom.getSubject(), axiom);
         }
 
         @Override
-        public void visit(OWLTransitiveObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLTransitiveObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -682,7 +714,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -690,14 +722,14 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLSubDataPropertyOfAxiom axiom) {
+        public void visit(@Nonnull OWLSubDataPropertyOfAxiom axiom) {
             getAxiomsForLHS(axiom.getSubProperty().asOWLDataProperty()).add(
                     axiom);
             indexAxiomsByRHSEntities(axiom.getSuperProperty(), axiom);
         }
 
         @Override
-        public void visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
+        public void visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
             if (!axiom.getProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getProperty().asOWLObjectProperty()).add(
                         axiom);
@@ -705,7 +737,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLSameIndividualAxiom axiom) {
+        public void visit(@Nonnull OWLSameIndividualAxiom axiom) {
             for (OWLIndividual ind : axiom.getIndividuals()) {
                 if (!ind.isAnonymous()) {
                     getAxiomsForLHS(ind.asOWLNamedIndividual()).add(axiom);
@@ -715,13 +747,15 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLSubPropertyChainOfAxiom axiom) {}
+        public void visit(@Nonnull OWLSubPropertyChainOfAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLDatatypeDefinitionAxiom axiom) {}
+        public void visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLInverseObjectPropertiesAxiom axiom) {
+        public void visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
             if (!axiom.getFirstProperty().isAnonymous()) {
                 getAxiomsForLHS(axiom.getFirstProperty().asOWLObjectProperty())
                         .add(axiom);
@@ -731,10 +765,11 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(SWRLRule rule) {}
+        public void visit(@Nonnull SWRLRule rule) {
+        }
 
         @Override
-        public void visit(OWLHasKeyAxiom axiom) {
+        public void visit(@Nonnull OWLHasKeyAxiom axiom) {
             if (!axiom.getClassExpression().isAnonymous()) {
                 indexAxiomsByRHSEntities(axiom.getClassExpression()
                         .asOWLClass(), axiom);
@@ -742,12 +777,15 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
         }
 
         @Override
-        public void visit(OWLAnnotationPropertyDomainAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationPropertyDomainAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLAnnotationPropertyRangeAxiom axiom) {}
+        public void visit(@Nonnull OWLAnnotationPropertyRangeAxiom axiom) {
+        }
 
         @Override
-        public void visit(OWLSubAnnotationPropertyOfAxiom axiom) {}
+        public void visit(@Nonnull OWLSubAnnotationPropertyOfAxiom axiom) {
+        }
     }
 }

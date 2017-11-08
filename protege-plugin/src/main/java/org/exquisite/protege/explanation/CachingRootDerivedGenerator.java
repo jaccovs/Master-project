@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -46,6 +47,10 @@ import java.util.Set;
 /**
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 03-Oct-2008
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, added annotations by @author wolfi
  */
 public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposable, OWLModelManagerListener, OWLOntologyChangeListener {
 
@@ -55,7 +60,7 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
 
     private boolean dirty = true;
 
-    public CachingRootDerivedGenerator(OWLModelManager modelManager) {
+    CachingRootDerivedGenerator(OWLModelManager modelManager) {
         this.modelManager = modelManager;
         rootUnsatClses = new HashSet<>();
         modelManager.addListener(this);
@@ -63,7 +68,7 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
         dirty = true;
     }
 
-
+    @Override
     public Set<OWLClass> getRootUnsatisfiableClasses() throws ExplanationException {
         if(dirty) {
             rootUnsatClses.clear();
@@ -77,19 +82,22 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
         return Collections.unmodifiableSet(rootUnsatClses);
     }
 
+    @Override
     public Set<OWLClass> getDependentChildClasses(OWLClass owlClass) {
         return Collections.emptySet();
     }
 
+    @Override
     public Set<OWLClass> getDependentDescendantClasses(OWLClass owlClass) {
         return Collections.emptySet();
     }
 
-    public void ontologiesChanged(List<? extends OWLOntologyChange> list) throws OWLException {
+    @Override
+    public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> list) throws OWLException {
         dirty = true;
     }
 
-
+    @Override
     public void handleChange(OWLModelManagerChangeEvent event) {
         if (event.isType(EventType.ACTIVE_ONTOLOGY_CHANGED) ||
                 event.isType(EventType.ONTOLOGY_CLASSIFIED)) {
@@ -97,7 +105,7 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
         }
     }
 
-
+    @Override
     public void dispose() {
         modelManager.removeListener(this);
         modelManager.removeOntologyChangeListener(this);

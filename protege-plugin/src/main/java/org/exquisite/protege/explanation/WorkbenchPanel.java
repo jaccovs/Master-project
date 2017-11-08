@@ -49,6 +49,10 @@ import java.util.stream.Collectors;
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 04-Oct-2008
  * Displays a set of explanations
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
 public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManagerListener, EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
 
@@ -68,11 +72,11 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private static final Logger logger = LoggerFactory.getLogger(WorkbenchPanel.class);
 
-    public WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment) {
+    WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment) {
         this.editorKit = ek;
         JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(ek.getWorkspace());
         JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager());
-        justificationManager.clear();
+        justificationManager.clearCache(); // clears the justification cache each time a new workbench panel is created
         this.workbenchManager = new WorkbenchManager(justificationManager, entailment);
         setLayout(new BorderLayout());
 
@@ -165,8 +169,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
         if (workbenchSettings.isFindAllExplanations()) {
             computeAllExplanationsRadioButton.setSelected(true);
-        }
-        else {
+        } else {
             computeMaxExplanationsRadioButton.setSelected(true);
         }
 
@@ -211,7 +214,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
     private class HolderPanel extends JPanel implements Scrollable {
 
 
-        public HolderPanel(LayoutManager layout) {
+        HolderPanel(LayoutManager layout) {
             super(layout);
             setOpaque(false);
         }
@@ -255,7 +258,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
     }
 
 
-    protected ExplanationDisplay createExplanationDisplay(Explanation<OWLAxiom> explanation, int num, int total, int limit) {
+    private ExplanationDisplay createExplanationDisplay(Explanation<OWLAxiom> explanation) {
         return new JustificationFrameExplanationDisplay(editorKit, this, workbenchManager, explanation);
     }
 
@@ -273,9 +276,9 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
             List<Explanation<OWLAxiom>> exps = getOrderedExplanations(justifications);
             int count = 1;
             for (Explanation<OWLAxiom> exp : exps) {
-                final ExplanationDisplay explanationDisplayPanel = createExplanationDisplay(exp, count, exps.size(), settings.getLimit());
+                final ExplanationDisplay explanationDisplayPanel = createExplanationDisplay(exp);
 
-                ExplanationDisplayList list = new ExplanationDisplayList(editorKit, workbenchManager, explanationDisplayPanel, count);
+                ExplanationDisplayList list = new ExplanationDisplayList(workbenchManager, explanationDisplayPanel, count);
                 list.setBorder(BorderFactory.createEmptyBorder(2, 0, 10, 0));
                 explanationDisplayHolder.add(list);
                 panels.add(explanationDisplayPanel);
@@ -286,27 +289,24 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
             }
             explanationDisplayHolder.add(Box.createVerticalStrut(10));
             scrollPane.validate();
-        }
-        catch (ExplanationException e) {
+        } catch (ExplanationException e) {
             logger.error("An error occurred whilst computing explanations: {}", e.getMessage(), e);
         }
     }
 
-    protected List<Explanation<OWLAxiom>> getOrderedExplanations(Set<Explanation<OWLAxiom>> explanations) {
+    private List<Explanation<OWLAxiom>> getOrderedExplanations(Set<Explanation<OWLAxiom>> explanations) {
         List<Explanation<OWLAxiom>> orderedExplanations = new ArrayList<>();
         orderedExplanations.addAll(explanations);
-        Collections.sort(orderedExplanations, new Comparator<Explanation<OWLAxiom>>() {
-            public int compare(Explanation<OWLAxiom> o1, Explanation<OWLAxiom> o2) {
-                int diff = getAxiomTypes(o1).size() - getAxiomTypes(o2).size();
-                if (diff != 0) {
-                    return diff;
-                }
-                diff = getClassExpressionTypes(o1).size() - getClassExpressionTypes(o2).size();
-                if (diff != 0) {
-                    return diff;
-                }
-                return o1.getSize() - o2.getSize();
+        orderedExplanations.sort((o1, o2) -> {
+            int diff = getAxiomTypes(o1).size() - getAxiomTypes(o2).size();
+            if (diff != 0) {
+                return diff;
             }
+            diff = getClassExpressionTypes(o1).size() - getClassExpressionTypes(o2).size();
+            if (diff != 0) {
+                return diff;
+            }
+            return o1.getSize() - o2.getSize();
         });
         return orderedExplanations;
     }

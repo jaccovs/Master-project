@@ -9,7 +9,6 @@ import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGeneratorF
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
@@ -53,14 +52,18 @@ import static org.exquisite.protege.explanation.ExplanationLogging.MARKER;
  * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
  * 03-Oct-2008
  * Manages aspects of explanation in Protege 4.
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
-public class JustificationManager implements Disposable, OWLReasonerProvider {
+public class JustificationManager implements Disposable {
 
     private ExecutorService executorService;
 
     private final OWLOntologyChangeListener ontologyChangeListener;
 
-    public static final String KEY = "org.exquisite.protege.explanation";
+    private static final String KEY = "org.exquisite.protege.explanation";
 
     private static final Logger logger = LoggerFactory.getLogger(JustificationManager.class);
 
@@ -69,8 +72,6 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     private CachingRootDerivedGenerator rootDerivedGenerator;
 
     private List<ExplanationManagerListener> listeners;
-
-    private int explanationLimit;
 
     private boolean findAllExplanations;
 
@@ -82,7 +83,6 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         this.modelManager = modelManager;
         rootDerivedGenerator = new CachingRootDerivedGenerator(modelManager);
         listeners = new ArrayList<>();
-        explanationLimit = 2;
         findAllExplanations = true;
         progressDialog = new JustificationGeneratorProgressDialog(parentWindow);
         executorService = Executors.newSingleThreadExecutor();
@@ -90,44 +90,16 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         modelManager.addOntologyChangeListener(ontologyChangeListener);
     }
 
-    public void clear() {
+    /**
+     * Clears the Justification Cache.
+     */
+    void clearCache() {
         justificationCacheManager.clear();
     }
 
-
-    public OWLReasonerProvider getReasonerProvider() {
-        return this;
-    }
-
-    public OWLReasonerFactory getReasonerFactory() {
+    private OWLReasonerFactory getReasonerFactory() {
         return new ProtegeOWLReasonerFactoryWrapper(modelManager.getOWLReasonerManager().getCurrentReasonerFactory());
     }
-
-    public int getExplanationLimit() {
-        return explanationLimit;
-    }
-
-    public void setExplanationLimit(int explanationLimit) {
-        this.explanationLimit = explanationLimit;
-        fireExplanationLimitChanged();
-    }
-
-
-    public boolean isFindAllExplanations() {
-        return findAllExplanations;
-    }
-
-
-    public void setFindAllExplanations(boolean findAllExplanations) {
-        this.findAllExplanations = findAllExplanations;
-        fireExplanationLimitChanged();
-    }
-
-
-    public OWLReasoner getReasoner() {
-        return modelManager.getReasoner();
-    }
-
 
     /**
      * Gets the number of explanations that have actually been computed for an entailment
@@ -136,7 +108,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
      * @return The number of computed explanations.  If no explanations have been computed this value
      *         will be -1.
      */
-    public int getComputedExplanationCount(OWLAxiom entailment, JustificationType type) {
+    int getComputedExplanationCount(OWLAxiom entailment, JustificationType type) {
         JustificationCache cache = justificationCacheManager.getJustificationCache(type);
         if(cache.contains(entailment)) {
             return cache.get(entailment).size();
@@ -146,7 +118,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         }
     }
 
-    public Set<Explanation<OWLAxiom>> getJustifications(OWLAxiom entailment, JustificationType type) throws ExplanationException {
+    Set<Explanation<OWLAxiom>> getJustifications(OWLAxiom entailment, JustificationType type) throws ExplanationException {
         JustificationCache cache = justificationCacheManager.getJustificationCache(type);
         if (!cache.contains(entailment)) {
             Set<Explanation<OWLAxiom>> expls = computeJustifications(entailment, type);
@@ -155,7 +127,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         return cache.get(entailment);
     }
 
-    public Explanation<OWLAxiom> getLaconicJustification(Explanation<OWLAxiom> explanation) {
+    Explanation<OWLAxiom> getLaconicJustification(Explanation<OWLAxiom> explanation) {
         Set<Explanation<OWLAxiom>> explanations = getLaconicExplanations(explanation, 1);
         if(explanations.isEmpty()) {
             return Explanation.getEmptyExplanation(explanation.getEntailment());
@@ -164,7 +136,6 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
             return explanations.iterator().next();
         }
     }
-
 
     private Set<Explanation<OWLAxiom>> computeJustifications(OWLAxiom entailment, JustificationType justificationType) throws ExplanationException {
         logger.info(LogBanner.start("Computing Justifications"));
@@ -222,12 +193,8 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         
     }
 
-    public OWLOntologyManager getExplanationOntologyManager() {
-        return modelManager.getOWLOntologyManager();
-    }
 
-
-    public Set<Explanation<OWLAxiom>> getLaconicExplanations(Explanation<OWLAxiom> explanation, int limit) throws ExplanationException {
+    private Set<Explanation<OWLAxiom>> getLaconicExplanations(Explanation<OWLAxiom> explanation, int limit) throws ExplanationException {
         return computeLaconicExplanations(explanation, limit);
     }
 
@@ -259,27 +226,13 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     }
 
 
-    public void addListener(ExplanationManagerListener lsnr) {
-        listeners.add(lsnr);
-    }
-
-    public void removeListener(ExplanationManagerListener lsnr) {
-        listeners.remove(lsnr);
-    }
-
-    protected void fireExplanationLimitChanged() {
-        for (ExplanationManagerListener lsnr : new ArrayList<>(listeners)) {
-            lsnr.explanationLimitChanged(this);
-        }
-    }
-
-    protected void fireExplanationsComputed(OWLAxiom entailment) {
+    private void fireExplanationsComputed(OWLAxiom entailment) {
         for (ExplanationManagerListener lsnr : new ArrayList<>(listeners)) {
             lsnr.explanationsComputed(entailment);
         }
     }
 
-    public static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
+    static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
         JustificationManager m = modelManager.get(KEY);
         if (m == null) {
             m = new JustificationManager(parentWindow, modelManager);

@@ -13,12 +13,9 @@ import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
-import org.protege.editor.owl.model.inference.ReasonerPreferences;
-import org.protege.editor.owl.ui.explanation.ExplanationManager;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The explanation for an axiom. Each repair list item holds a reference to one instance of this class.
@@ -139,7 +135,7 @@ public class Explanation {
         panel.setExplanation(this.explanation, label);
     }
 
-    public void showConsistencyExplanation() {
+    private void showConsistencyExplanation() {
         verifyActiveOntology();
 
         // clean up dangling resources
@@ -221,10 +217,6 @@ public class Explanation {
         return ((EditorKitHook) editorKit.get("org.exquisite.protege.EditorKitHook")).getActiveOntologyDebugger();
     }
 
-    private ExplanationManager getExplanationManager() {
-        return editorKit.getModelManager().getExplanationManager();
-    }
-
     private void showExplanationForInconsistency() {
         OWLModelManager owlModelManager = editorKit.getOWLModelManager();
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
@@ -235,10 +227,12 @@ public class Explanation {
 
     private void synchronizeReasoner() {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
-        ReasonerPreferences preferences = reasonerManager.getReasonerPreferences();
-        Set<InferenceType> precompute = preferences.getPrecomputedInferences();
+        // todo: this overrides the exception handling of the reasoner - maybe there is a way to reset after wards?
+        reasonerManager.setReasonerExceptionHandler(throwable -> {
+            // no action
+        });
         logger.debug("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
-        final boolean b = reasonerManager.classifyAsynchronously(precompute);
+        final boolean b = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
     }
 
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {

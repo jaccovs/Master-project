@@ -12,7 +12,6 @@ import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.ChangeApplied;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -138,9 +137,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         changeActiveOntology(newActiveOntology);
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
-                        // clears the explanation cache in order to force the recalculation
-                        //clearExplanationCache(selectedItem.getOntology());
-
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
                             showExplanation();
                         }
@@ -155,7 +151,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         }
     }
 
-    public void showExplanation() {
+    private void showExplanation() {
         if (selectedItem.isDeleted()) {
             selectedItem.showNoExplanation();
         } else {
@@ -170,9 +166,9 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     /**
      * Checks if on of the buttons have been pressed.
      *
-     * @param mousePressedPoint
-     * @param listItemButtons
-     * @return
+     * @param mousePressedPoint The position of the mouse where the mouse button has been pressed.
+     * @param listItemButtons A list of item buttons which can be pressed.
+     * @return <code>true</code> if the mouse position overlaps with with one of the button positions, otherwise <code>false</code>
      */
     private boolean isButtonPressed(final Point mousePressedPoint, final List<MListButton> listItemButtons) {
         if (mousePressedPoint == null)
@@ -212,31 +208,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                 manager.applyChanges(changes);
             }
         }
-    }
-
-    /**
-     * Clears the explanation cache in order to force the explanation workbench to recalculate the explanation.
-     *
-     * @param ontology The test ontology.
-     */
-    private void clearExplanationCache(final OWLOntology ontology) {
-        final List<OWLAxiomChange> changes = new ArrayList<>();
-
-        // pick a random axiom that does exist in the ontology ..
-        final OWLLogicalAxiom axiom = ontology.getLogicalAxioms().iterator().next();
-
-        // .. remove it ..
-        changes.add(new RemoveAxiom(ontology, axiom));
-
-        // .. and immediately add it again to the ontology
-        changes.add(new AddAxiom(ontology, axiom));
-
-        // this change will cause an OntologyChangeEvent and clears the explanation cache of the explanation workbench
-        OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        final ChangeApplied changeApplied = manager.applyChanges(changes);
-
-        // assert that the change has been effectively executed (executed only when using the VM option -ea)
-        assert changeApplied.equals(ChangeApplied.SUCCESSFULLY);
     }
 
 }

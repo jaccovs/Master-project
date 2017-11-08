@@ -8,9 +8,7 @@ import org.protege.editor.owl.ui.frame.OWLFrameSection;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLOntology;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,30 +17,26 @@ import java.util.List;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 19/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
 public class JustificationFrameSectionRow extends AbstractOWLFrameSectionRow<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> {
 
     private int depth;
-    
 
-    public JustificationFrameSectionRow(OWLEditorKit owlEditorKit, OWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> section, Explanation<OWLAxiom> rootObject, OWLAxiom axiom, int depth) {
-        super(owlEditorKit, section, getOntologyForAxiom(owlEditorKit, axiom), rootObject, axiom);
+
+    JustificationFrameSectionRow(OWLEditorKit owlEditorKit, OWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> section, Explanation<OWLAxiom> rootObject, OWLAxiom axiom, int depth) {
+        super(owlEditorKit, section, null, rootObject, axiom);
         this.depth = depth;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    private static OWLOntology getOntologyForAxiom(OWLEditorKit editorKit, OWLAxiom axiom) {
-        return null;
     }
 
     @Override
     public String getRendering() {
-        String rendering =  super.getRendering().replaceAll("\\s", " ");
+        String rendering = super.getRendering().replaceAll("\\s", " ");
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < depth; i++) {
+        for (int i = 0; i < depth; i++) {
             sb.append("        ");
         }
         sb.append(rendering);
@@ -65,7 +59,7 @@ public class JustificationFrameSectionRow extends AbstractOWLFrameSectionRow<Exp
     }
 
     public List<? extends OWLObject> getManipulatableObjects() {
-        return Arrays.asList(getAxiom());
+        return Collections.singletonList(getAxiom());
     }
 
     @Override

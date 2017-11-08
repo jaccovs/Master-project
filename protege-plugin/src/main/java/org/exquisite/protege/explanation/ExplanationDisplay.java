@@ -32,6 +32,10 @@ import org.semanticweb.owlapi.model.OWLAxiom;
  * 03-Oct-2008
  *
  * An interface to a component that can display justifications.
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: added annotations by @author wolfi
  */
 public interface ExplanationDisplay extends Disposable {
 
@@ -41,6 +45,7 @@ public interface ExplanationDisplay extends Disposable {
      */
     Explanation<OWLAxiom> getExplanation();
 
+    @Override
     void dispose();
 
     /**

@@ -4,7 +4,6 @@ import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.core.ui.list.MListItem;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.frame.OWLFrame;
-import org.protege.editor.owl.ui.framelist.ExplainButton;
 import org.protege.editor.owl.ui.framelist.OWLFrameList;
 import org.protege.editor.owl.ui.framelist.OWLFrameListPopupMenuAction;
 import org.semanticweb.owl.explanation.api.Explanation;
@@ -18,7 +17,6 @@ import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedString;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,31 +25,30 @@ import java.util.List;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 19/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
 public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> {
 
-    public static final Color SINGLE_POPULARITY_COLOR = new Color(170, 70, 15);
+    private static final Color SINGLE_POPULARITY_COLOR = new Color(170, 70, 15);
 
-    public static final Color MULTI_POPULARITY_COLOR = new Color(10, 75, 175);
+    private static final Color MULTI_POPULARITY_COLOR = new Color(10, 75, 175);
 
-    public static final Color ALL_POPULARITY_COLOR = new Color(6, 133, 19);
-
-    private OWLEditorKit editorKit;
-
-    private int buttonRunWidth = 0;
+    private static final Color ALL_POPULARITY_COLOR = new Color(6, 133, 19);
 
     private AxiomSelectionModel axiomSelectionModel;
-    
+
     private WorkbenchManager workbenchManager;
 
-    public JustificationFrameList(OWLEditorKit editorKit, AxiomSelectionModel axiomSelectionModel, WorkbenchManager workbenchManager, OWLFrame<Explanation<OWLAxiom>> explanationOWLFrame) {
+    JustificationFrameList(OWLEditorKit editorKit, AxiomSelectionModel axiomSelectionModel, WorkbenchManager workbenchManager, OWLFrame<Explanation<OWLAxiom>> explanationOWLFrame) {
         super(editorKit, explanationOWLFrame);
         this.workbenchManager = workbenchManager;
         this.axiomSelectionModel = axiomSelectionModel;
-        this.editorKit = editorKit;
         setWrap(false);
         setCellRenderer(new JustificationFrameListRenderer(editorKit));
-        
+
         Action moveUpAction = new AbstractAction("Move up") {
             public void actionPerformed(ActionEvent e) {
                 handleMoveUp();
@@ -88,13 +85,12 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK), decreaseIndentation.getValue(Action.NAME));
 
 
-
     }
-    
-    
+
+
     private void handleMoveUp() {
         OWLAxiom selectedAxiom = getSelectedAxiom();
-        if(selectedAxiom == null) {
+        if (selectedAxiom == null) {
             return;
         }
         JustificationFormattingManager formattingManager = JustificationFormattingManager.getManager();
@@ -102,12 +98,11 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         getFrame().setRootObject(getRootObject());
         setSelectedIndex(newIndex + 1);
     }
-    
-    
+
 
     private void handleMoveDown() {
         OWLAxiom selectedAxiom = getSelectedAxiom();
-        if(selectedAxiom == null) {
+        if (selectedAxiom == null) {
             return;
         }
         JustificationFormattingManager formattingManager = JustificationFormattingManager.getManager();
@@ -115,11 +110,11 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         getFrame().setRootObject(getRootObject());
         setSelectedIndex(newIndex + 1);
     }
-    
-    
+
+
     private void handleIncreaseIndentation() {
         OWLAxiom selectedAxiom = getSelectedAxiom();
-        if(selectedAxiom == null) {
+        if (selectedAxiom == null) {
             return;
         }
         JustificationFormattingManager formattingManager = JustificationFormattingManager.getManager();
@@ -131,7 +126,7 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
 
     private void handleDecreaseIndentation() {
         OWLAxiom selectedAxiom = getSelectedAxiom();
-        if(selectedAxiom == null) {
+        if (selectedAxiom == null) {
             return;
         }
         JustificationFormattingManager formattingManager = JustificationFormattingManager.getManager();
@@ -142,15 +137,13 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
     }
 
 
-
-
     private OWLAxiom getSelectedAxiom() {
         int selectedIndex = getSelectedIndex();
-        if(selectedIndex == -1) {
+        if (selectedIndex == -1) {
             return null;
         }
         Object element = getModel().getElementAt(selectedIndex);
-        if(!(element instanceof JustificationFrameSectionRow)) {
+        if (!(element instanceof JustificationFrameSectionRow)) {
             return null;
         }
         return ((JustificationFrameSectionRow) element).getAxiom();
@@ -158,20 +151,6 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
 
     @Override
     protected List<MListButton> getButtons(Object value) {
-        /*
-        if (value instanceof JustificationFrameSectionRow) {
-            List<MListButton> buttons = Arrays.<MListButton>asList(new ExplainButton(new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    invokeExplanationHandler();
-                }
-            }));
-            buttonRunWidth = buttons.size() * (getButtonDimension() + 2) + 20;
-            return buttons;
-        }
-        else {
-            return Collections.emptyList();
-        }
-        */
         return Collections.emptyList();
     }
 
@@ -182,29 +161,14 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
 
     @Override
     protected Color getItemBackgroundColor(MListItem item) {
-        if(item instanceof JustificationFrameSectionRow) {
+        if (item instanceof JustificationFrameSectionRow) {
             JustificationFrameSectionRow row = (JustificationFrameSectionRow) item;
             OWLAxiom axiom = row.getAxiom();
             int rowIndex = row.getFrameSection().getRowIndex(row) + 1;
-            if(!isSelectedIndex(rowIndex)) {
-                if(axiomSelectionModel.getSelectedAxioms().contains(axiom)) {
+            if (!isSelectedIndex(rowIndex)) {
+                if (axiomSelectionModel.getSelectedAxioms().contains(axiom)) {
                     return Color.YELLOW;
                 }
-                /*
-                else {
-                    boolean inAll = true;
-                    for(Explanation<?> expl : workbenchManager.getJustifications(getRootObject().getEntailment())) {
-                        if(!expl.contains(axiom)) {
-                            inAll = false;
-                            break;
-                        }
-                    }
-                    if(inAll) {
-                        return new Color(245, 255 , 235);
-                    }
-
-                }
-                */
             }
         }
         return super.getItemBackgroundColor(item);
@@ -231,17 +195,18 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         int size = getModel().getSize();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             Object element = getModel().getElementAt(i);
-            if(element instanceof JustificationFrameSectionRow) {
+            if (element instanceof JustificationFrameSectionRow) {
                 JustificationFrameSectionRow row = (JustificationFrameSectionRow) element;
                 Rectangle rect = getCellBounds(i, i);
                 if (rect.intersects(g.getClip().getBounds())) {
                     OWLAxiom entailment = getRootObject().getEntailment();
-                    if(workbenchManager.getJustificationCount(entailment) > 1) {
+                    if (workbenchManager.getJustificationCount(entailment) > 1) {
                         AttributedString popularityString = getPopularityString(isSelectedIndex(i), row);
                         TextLayout textLayout = new TextLayout(popularityString.getIterator(), g2.getFontRenderContext());
                         float advance = textLayout.getAdvance();
+                        int buttonRunWidth = 0;
                         float x = rect.x + rect.width - advance - buttonRunWidth;
                         float h = textLayout.getAscent() + textLayout.getDescent();
                         float y = ((rect.height - h) / 2) + rect.y + textLayout.getLeading() + textLayout.getAscent();
@@ -265,18 +230,16 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         StringBuilder sb = new StringBuilder("In ");
         int start = sb.length();
         final Color highlightColor;
-            if(popularity <= 1) {
-                sb.append("NO");
-                highlightColor = SINGLE_POPULARITY_COLOR;
-            }
-            else if (popularity != count) {
-                sb.append(popularity - 1);
-                highlightColor = MULTI_POPULARITY_COLOR;
-            }
-            else {
-                sb.append("ALL");
-                highlightColor = ALL_POPULARITY_COLOR;
-            }
+        if (popularity <= 1) {
+            sb.append("NO");
+            highlightColor = SINGLE_POPULARITY_COLOR;
+        } else if (popularity != count) {
+            sb.append(popularity - 1);
+            highlightColor = MULTI_POPULARITY_COLOR;
+        } else {
+            sb.append("ALL");
+            highlightColor = ALL_POPULARITY_COLOR;
+        }
         int end = sb.length();
         sb.append(" other justifications");
         AttributedString as = new AttributedString(sb.toString());

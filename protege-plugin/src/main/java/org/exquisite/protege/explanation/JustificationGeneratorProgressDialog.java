@@ -14,6 +14,10 @@ import java.util.Set;
  * Stanford University
  * Bio-Medical Informatics Research Group
  * Date: 20/03/2012
+ *
+ * @apiNote This is a <i>modified</i> copy from the explanation-workbench 5.0.0-beta-19
+ * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
+ * <br>modifications: visibility changes by @author wolfi
  */
 public class JustificationGeneratorProgressDialog extends JDialog {
 
@@ -21,7 +25,7 @@ public class JustificationGeneratorProgressDialog extends JDialog {
 
     private ExplanationProgressMonitor<OWLAxiom> progressMonitor;
     
-    public JustificationGeneratorProgressDialog(Frame owner) {
+    JustificationGeneratorProgressDialog(Frame owner) {
         super(owner, "Computing explanations", true);
         setContentPane(panel);
         pack();
@@ -32,13 +36,11 @@ public class JustificationGeneratorProgressDialog extends JDialog {
         progressMonitor = new JustificationGeneratorProgressDialogMonitor();
     }
 
-
-
     public void reset() {
         panel.reset();
     }
 
-    public ExplanationProgressMonitor<OWLAxiom> getProgressMonitor() {
+    ExplanationProgressMonitor<OWLAxiom> getProgressMonitor() {
         return progressMonitor;
     }
 
