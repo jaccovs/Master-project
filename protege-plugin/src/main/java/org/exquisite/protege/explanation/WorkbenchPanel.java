@@ -76,7 +76,6 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
         this.editorKit = ek;
         JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(ek.getWorkspace());
         JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager());
-        justificationManager.clearCache(); // clears the justification cache each time a new workbench panel is created
         this.workbenchManager = new WorkbenchManager(justificationManager, entailment);
         setLayout(new BorderLayout());
 

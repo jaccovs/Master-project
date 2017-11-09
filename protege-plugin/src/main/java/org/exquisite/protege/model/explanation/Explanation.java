@@ -13,6 +13,7 @@ import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.*;
@@ -100,7 +101,7 @@ public class Explanation {
      */
     public void showExplanation() {
         if (!panel.isExplanationEnabled()) {
-            showNoExplanation(null);// TODO deactivate this and activate the next statement
+            showNoExplanation(null);
         } else {
             verifyActiveOntology();
             final boolean isOntologyConsistent = isOntologyConsistent();
@@ -231,8 +232,23 @@ public class Explanation {
         reasonerManager.setReasonerExceptionHandler(throwable -> {
             // no action
         });
-        logger.debug("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
-        final boolean b = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
+        logger.info("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
+
+        if (reasonerManager.getReasonerStatus().equals(ReasonerStatus.REASONER_NOT_INITIALIZED)) {
+
+            logger.info("Synchronizing reasoner ...");
+            final boolean b = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
+
+            // we started an asynchronous job, we have to wait until the reasoner has been synchronized.
+            ReasonerStatus status = reasonerManager.getReasonerStatus();
+            while (status.equals(ReasonerStatus.REASONER_NOT_INITIALIZED) || status.equals(ReasonerStatus.INITIALIZATION_IN_PROGRESS)) {
+                logger.info("\n\n\n\n" + status + "\n\n\n\n");
+                status = reasonerManager.getReasonerStatus();
+            }
+
+            logger.info("\n\n\n\n" + status + "\n\n\n\n");
+        }
+
     }
 
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {

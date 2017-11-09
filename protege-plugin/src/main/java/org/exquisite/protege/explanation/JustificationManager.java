@@ -93,7 +93,7 @@ public class JustificationManager implements Disposable {
     /**
      * Clears the Justification Cache.
      */
-    void clearCache() {
+    public void clearCache() {
         justificationCacheManager.clear();
     }
 
@@ -232,7 +232,7 @@ public class JustificationManager implements Disposable {
         }
     }
 
-    static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
+    public static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
         JustificationManager m = modelManager.get(KEY);
         if (m == null) {
             m = new JustificationManager(parentWindow, modelManager);

@@ -4,6 +4,7 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.list.RepairAxiomList;
+import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
@@ -13,17 +14,14 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author wolfi
  */
-public class RepairDiagnosisPanel extends JComponent {
+public class RepairDiagnosisPanel extends JPanel {
 
     private OWLEditorKit editorKit;
 
@@ -37,9 +35,9 @@ public class RepairDiagnosisPanel extends JComponent {
 
     private ExplanationResult explanation;
 
-    private JCheckBox label;
+    private JLabel label;
 
-    private boolean explanationEnabled = false;
+    private boolean explanationEnabled = true;
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
 
@@ -49,67 +47,78 @@ public class RepairDiagnosisPanel extends JComponent {
         EditorKitHook editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
         setPreferredSize(getPreferredSize());
-        addComponentToPane(this);
+
+        setLayout(new GridBagLayout());
+        addRepairAxiomList();
+        addExplanationContainer();
+
         setVisible(true);
     }
 
-    private void addComponentToPane(Container pane) throws OWLOntologyCreationException {
-        pane.setLayout(new GridBagLayout());
-
+    private void addRepairAxiomList() throws OWLOntologyCreationException {
         repairAxiomList = new RepairAxiomList(this, editorKit, this.debugger, this);
         repairAxiomList.updateList(this.diagnosis);
-        addToPane(0,0,2,1,1.0,0.4, repairAxiomList, "Repair", pane, false);
-
-        explanationContainer = new JPanel();
-        explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
-        addToPane(0,1,2,1,1.0,0.6,explanationContainer,"Explanations", pane, true);
-    }
-
-    private void addToPane(int x, int y, int w, int h, double weightx, double weighty, JComponent component, String title, Container pane, boolean withLabel) {
-
         GridBagConstraints c = new GridBagConstraints();
 
         // sets the GridBagConstraints
         c.fill = GridBagConstraints.BOTH;
-        c.gridx = x;
-        c.gridy = y;
-        c.gridwidth = w;
-        c.gridheight = h;
-        c.weightx = weightx;
-        c.weighty = weighty;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.gridheight = 1;
+        c.weightx = 1.0;
+        c.weighty = 0.4;
 
         final JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder(
                         BorderFactory.createEmptyBorder(),
-                        title),
+                        "Repair"),
                 BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
-        if (withLabel) {
-            label = new JCheckBox("<html>Select an axiom to explain why it has to be repaired</html>");
-            label.setSelected(isExplanationEnabled());
-            label.addItemListener(
-                    new ItemListener() {
-                        @Override
-                        public void itemStateChanged(ItemEvent e) {
-                            explanationEnabled = !explanationEnabled;
-                        }
-                    }
-            );
+        panel.add(ComponentFactory.createScrollPane(repairAxiomList), BorderLayout.CENTER);
+        add(panel, c);
+    }
 
-            final Border border = label.getBorder();
-            Border margin = new EmptyBorder(0,10,10,0);
-            label.setBorder(new CompoundBorder(border, margin));
-            panel.add(label, BorderLayout.NORTH);
-        }
+    private void addExplanationContainer() {
+        explanationContainer = new JPanel();
+        explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
 
-        if (withLabel) {
-            panel.add(component, BorderLayout.CENTER);
-        } else {
-            panel.add(ComponentFactory.createScrollPane(component), BorderLayout.CENTER);
-        }
+        GridBagConstraints c = new GridBagConstraints();
 
-        pane.add(panel, c);
+        // sets the GridBagConstraints
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 2;
+        c.gridheight = 1;
+        c.weightx = 1.0;
+        c.weighty = 0.6;
+
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createEmptyBorder(),
+                        "Explanations"),
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+
+        final JCheckBox checkBox = new JCheckBox("<html>Compute explanations for selected axioms</html>");
+        checkBox.setSelected(isExplanationEnabled());
+        checkBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                explanationEnabled = !explanationEnabled;
+                checkBox.setSelected(isExplanationEnabled());
+                final RepairListItem selectedItem = repairAxiomList.getSelectedItem();
+                if (selectedItem != null)
+                    selectedItem.showExplanation();
+            }
+        });
+
+        panel.add(checkBox, BorderLayout.NORTH);
+
+        panel.add(explanationContainer, BorderLayout.CENTER);
+        add(panel, c);
     }
 
     public void dispose() {
@@ -135,9 +144,11 @@ public class RepairDiagnosisPanel extends JComponent {
         }
         this.explanation = expl;
         explanationContainer.add(this.explanation);
-        if (label != null) this.label.setText(label);
-        else this.label.setText("");
-        revalidate();
+        if (this.label != null) {
+            if (label != null) this.label.setText(label);
+            else this.label.setText("");
+        }
+        explanationContainer.revalidate();
     }
 
     public void doCancelAction() {

@@ -3,15 +3,18 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.explanation.JustificationManager;
 import org.exquisite.protege.model.explanation.Explanation;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
+import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.InconsistentOntologyException;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -137,14 +140,21 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         changeActiveOntology(newActiveOntology);
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
-                        if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
-                            showExplanation();
-                        }
-
                         // The actions applied before cause the synchronization of the diagnosis model from the ontology.
                         // The separation of the axioms into correct, possibly faulty, entailed and non-entailed is lost
                         // with that synchronization. We therefore must restore the diagnosis model of the active debugger.
                         getDebugger().setDiagnosisModel(selectedItem.getDiagnosisModel());
+
+                        if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
+                            // clear justification cache
+                            JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
+                            JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, editorKit.getOWLModelManager());
+                            justificationManager.clearCache();
+                            showExplanation();
+                        }
+
+                    } else if (o instanceof DiagnosisListHeader) {
+                        selectedItem = null;
                     }
                 }
             }
@@ -152,10 +162,12 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     }
 
     private void showExplanation() {
-        if (selectedItem.isDeleted()) {
-            selectedItem.showNoExplanation();
-        } else {
-            selectedItem.showExplanation();
+        if (selectedItem != null) {
+            if (selectedItem.isDeleted()) {
+                selectedItem.showNoExplanation();
+            } else {
+                selectedItem.showExplanation();
+            }
         }
     }
 
@@ -185,7 +197,11 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
     private void changeActiveOntology(OWLOntology ontology) {
         // change active ontology to the the repair debugging ontology
         final OWLModelManager modelManager = editorKit.getModelManager();
-        modelManager.setActiveOntology(ontology);
+        try {
+            modelManager.setActiveOntology(ontology);
+        } catch (InconsistentOntologyException e) {
+            // this can happen!
+        }
     }
 
     /**
@@ -208,6 +224,10 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                 manager.applyChanges(changes);
             }
         }
+    }
+
+    public RepairListItem getSelectedItem() {
+        return selectedItem;
     }
 
 }
