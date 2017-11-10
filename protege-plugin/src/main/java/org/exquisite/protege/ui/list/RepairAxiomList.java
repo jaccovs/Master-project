@@ -140,11 +140,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         changeActiveOntology(newActiveOntology);
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
-                        // The actions applied before cause the synchronization of the diagnosis model from the ontology.
-                        // The separation of the axioms into correct, possibly faulty, entailed and non-entailed is lost
-                        // with that synchronization. We therefore must restore the diagnosis model of the active debugger.
-                        getDebugger().setDiagnosisModel(selectedItem.getDiagnosisModel());
-
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
                             // clear justification cache
                             JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
@@ -152,6 +147,11 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                             justificationManager.clearCache();
                             showExplanation();
                         }
+
+                        // The actions applied before cause the synchronization of the diagnosis model from the ontology.
+                        // The separation of the axioms into correct, possibly faulty, entailed and non-entailed is lost
+                        // with that synchronization. We therefore must restore the diagnosis model of the active debugger.
+                        getDebugger().setDiagnosisModel(selectedItem.getDiagnosisModel());
 
                     } else if (o instanceof DiagnosisListHeader) {
                         selectedItem = null;
