@@ -165,12 +165,63 @@ public class Explanation {
                 getDiagnosisModel().getPossiblyFaultyFormulas().remove(oldAxiom);
             } catch (DiagnosisRuntimeException e) {
                 // the diagnosis model may become inconsistent!
+            } catch (RuntimeException rex) {
+                logger.warn("Starting rollback for modifyAxiom("+ newAxiom + "," + oldAxiom + ") because of unexpected " + rex);
+
+                // try to rollback ontology and diagnosis model and return exception to the caller
+                boolean wasRollbackSuccessful = reasoner.modifyAxiom(oldAxiom, newAxiom);
+                if (wasRollbackSuccessful) {
+                    // rollback the diagnosis model too
+                    if (!getDiagnosisModel().getPossiblyFaultyFormulas().contains(oldAxiom)) {
+                        try {
+                            getDiagnosisModel().getPossiblyFaultyFormulas().add(oldAxiom);
+                        } catch (DiagnosisRuntimeException e1) {
+                            // diagnosis model might be inconsistent
+                        } catch (RuntimeException rex1) {
+                            logger.warn("Rollback on diagnosis model was not successful");
+                        }
+                    }
+                } else {
+                    logger.warn("Rollback on ontology was not successful");
+                }
+                getDebugger().setDiagnosisModel(getDiagnosisModel());
+                throw rex;
             }
 
             try {
                 getDiagnosisModel().getPossiblyFaultyFormulas().add(newAxiom);
             } catch (DiagnosisRuntimeException e) {
                 // the diagnosis model may become inconsistent!
+            } catch (RuntimeException rex) {
+                logger.warn("Starting rollback for modifyAxiom("+ newAxiom + "," + oldAxiom + ") because of unexpected " + rex);
+
+                // rollback
+                boolean wasRollbackSuccessful = reasoner.modifyAxiom(oldAxiom, newAxiom);
+                if (wasRollbackSuccessful) {
+                    // rollback the diagnosis model too
+                    if (getDiagnosisModel().getPossiblyFaultyFormulas().contains(newAxiom)) {
+                        try {
+                            getDiagnosisModel().getPossiblyFaultyFormulas().remove(newAxiom);
+                        } catch (DiagnosisRuntimeException e1) {
+                            // diagnosis model might be inconsistent
+                        } catch (RuntimeException rex1) {
+                            logger.warn("Rollback on diagnosis model was not successful");
+                        }
+                    }
+                    if (!getDiagnosisModel().getPossiblyFaultyFormulas().contains(oldAxiom)) {
+                        try {
+                            getDiagnosisModel().getPossiblyFaultyFormulas().add(oldAxiom);
+                        } catch (DiagnosisRuntimeException e1) {
+                            // diagnosis model might be inconsistent
+                        } catch (RuntimeException rex1) {
+                            logger.warn("Rollback on diagnosis model was not successful");
+                        }
+                    }
+                } else {
+                    logger.warn("Rollback on ontology was not successful");
+                }
+                getDebugger().setDiagnosisModel(getDiagnosisModel());
+                throw rex;
             }
 
             getDebugger().setDiagnosisModel(getDiagnosisModel());
@@ -188,7 +239,29 @@ public class Explanation {
                 getDiagnosisModel().getPossiblyFaultyFormulas().remove(axiom);
             } catch (DiagnosisRuntimeException e) {
                 // the diagnosis model can become inconsistent!
+            } catch (RuntimeException rex) {
+                logger.warn("Starting rollback for deleteAxiom("+ axiom + ") because of unexpected " + rex);
+
+                // rollback
+                boolean wasRollbackSuccessful = reasoner.restoreAxiom(axiom);
+                if (wasRollbackSuccessful) {
+                    // rollback the diagnosis model too
+                    if (!getDiagnosisModel().getPossiblyFaultyFormulas().contains(axiom)) {
+                        try {
+                            getDiagnosisModel().getPossiblyFaultyFormulas().add(axiom);
+                        } catch (DiagnosisRuntimeException e1) {
+                            // diagnosis model might be inconsistent
+                        } catch (RuntimeException rex1) {
+                            logger.warn("Rollback on diagnosis model was not successful");
+                        }
+                    }
+                } else {
+                    logger.warn("Rollback on ontology was not successful");
+                }
+                getDebugger().setDiagnosisModel(getDiagnosisModel());
+                throw rex;
             }
+
             getDebugger().setDiagnosisModel(getDiagnosisModel());
             showNoExplanation(null);
         }
@@ -203,6 +276,27 @@ public class Explanation {
                 getDiagnosisModel().getPossiblyFaultyFormulas().add(axiom);
             } catch (DiagnosisRuntimeException e) {
                 // the diagnosis model can become inconsistent!
+            } catch (RuntimeException rex) {
+                logger.warn("Starting rollback for restoreAxiom("+ axiom + ") because of unexpected " + rex);
+
+                // rollback ontology
+                boolean wasRollbackSuccessful = reasoner.deleteAxiom(axiom);
+                if (wasRollbackSuccessful) {
+                    // rollback the diagnosis model too
+                    if (getDiagnosisModel().getPossiblyFaultyFormulas().contains(axiom)) {
+                        try {
+                            getDiagnosisModel().getPossiblyFaultyFormulas().remove(axiom);
+                        } catch (DiagnosisRuntimeException e1) {
+                            // diagnosis model might be inconsistent
+                        } catch (RuntimeException rex1) {
+                            logger.warn("Rollback on diagnosis model was not successful");
+                        }
+                    }
+                } else {
+                    logger.warn("Rollback on ontology was not successful");
+                }
+                getDebugger().setDiagnosisModel(getDiagnosisModel());
+                throw rex;
             }
 
             getDebugger().setDiagnosisModel(getDiagnosisModel());

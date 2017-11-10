@@ -99,10 +99,9 @@ public abstract class AbstractOWLObjectRepairEditor<R extends OWLObject, A exten
                     try {
                         handler.handleEditFinished(editor);
                     } catch (Exception ex) {
-                        DebuggingDialog.showErrorDialog("Error occcurred!", ex.getMessage(), ex); // TODO rollback before!
+                        DebuggingDialog.showErrorDialog("An error has occurred!", ex.getMessage(), ex);
                     }
                 }
-                //setSelectedValue(frameObject, true); todo
                 if (editor instanceof VerifiedInputEditor) {
                     ((VerifiedInputEditor) editor).removeStatusChangedListener(verificationListener);
                 }
