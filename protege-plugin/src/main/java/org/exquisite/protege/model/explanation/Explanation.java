@@ -12,6 +12,7 @@ import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
+import org.protege.editor.owl.model.inference.DefaultOWLReasonerExceptionHandler;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
@@ -228,27 +229,47 @@ public class Explanation {
 
     private void synchronizeReasoner() {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
-        // todo: this overrides the exception handling of the reasoner - maybe there is a way to reset after wards?
-        reasonerManager.setReasonerExceptionHandler(throwable -> {
-            // no action
-        });
-        logger.info("\n\n\n\n" + reasonerManager.getReasonerStatus() + "\n\n\n\n");
 
-        if (reasonerManager.getReasonerStatus().equals(ReasonerStatus.REASONER_NOT_INITIALIZED)) {
+        // this overrides the exception handling of the currently selected reasoner in order to avoid as much interfering
+        // actions from the reasoner as possible
+        reasonerManager.setReasonerExceptionHandler(throwable -> {/*no action*/});
+
+        ReasonerStatus reasonerStatus = reasonerManager.getReasonerStatus();
+
+        logger.info("\n\n" + reasonerStatus + "\n\n");
+        if (!isReasonerSynchronized(reasonerStatus)) {
 
             logger.info("Synchronizing reasoner ...");
             final boolean b = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
 
             // we started an asynchronous job, we have to wait until the reasoner has been synchronized.
-            ReasonerStatus status = reasonerManager.getReasonerStatus();
-            while (status.equals(ReasonerStatus.REASONER_NOT_INITIALIZED) || status.equals(ReasonerStatus.INITIALIZATION_IN_PROGRESS)) {
-                logger.info("\n\n\n\n" + status + "\n\n\n\n");
-                status = reasonerManager.getReasonerStatus();
+            reasonerStatus = reasonerManager.getReasonerStatus();
+            while (!isReasonerSynchronized(reasonerStatus)) {
+                logger.info("\n\n" + reasonerStatus + "\n\n");
+                reasonerStatus = reasonerManager.getReasonerStatus();
             }
 
-            logger.info("\n\n\n\n" + status + "\n\n\n\n");
+            logger.info("\n\n" + reasonerStatus + "\n\n");
         }
 
+        // resets to the default reasoner exception handling
+        reasonerManager.setReasonerExceptionHandler(new DefaultOWLReasonerExceptionHandler());
+    }
+
+    private boolean isReasonerSynchronized(final ReasonerStatus status) {
+        switch (status) {
+            case NO_REASONER_FACTORY_CHOSEN:
+                throw new UnsupportedOperationException("No Reasoner selected!");
+            case REASONER_NOT_INITIALIZED:
+            case INITIALIZATION_IN_PROGRESS:
+            case OUT_OF_SYNC:
+                return false;
+            case INCONSISTENT:
+            case INITIALIZED:
+                return true;
+            default:
+                throw new UnsupportedOperationException("Unsupported reasoner status " + status);
+        }
     }
 
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {

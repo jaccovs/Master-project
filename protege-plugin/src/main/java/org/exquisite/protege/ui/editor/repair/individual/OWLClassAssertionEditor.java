@@ -2,9 +2,14 @@ package org.exquisite.protege.ui.editor.repair.individual;
 
 import org.exquisite.protege.ui.editor.repair.AbstractOWLObjectRepairEditor;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.protege.editor.owl.ui.editor.OWLClassDescriptionEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
+import org.protege.editor.owl.ui.util.OWLComponentFactory;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.InconsistentOntologyException;
 
 import java.awt.*;
 
@@ -25,7 +30,25 @@ public class OWLClassAssertionEditor extends AbstractOWLObjectRepairEditor<OWLIn
 
     @Override
     public OWLObjectEditor<OWLClassExpression> getOWLObjectEditor() {
-        return getOWLEditorKit().getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(getAxiom().getClassExpression(), AxiomType.CLASS_ASSERTION);
+        final OWLReasonerManager reasonerManager = getOWLEditorKit().getOWLModelManager().getOWLReasonerManager();
+        OWLClassDescriptionEditor editor;
+        final OWLComponentFactory owlComponentFactory = getOWLEditorKit().getWorkspace().getOWLComponentFactory();
+
+        try {
+            editor = owlComponentFactory.getOWLClassDescriptionEditor(getAxiom().getClassExpression(), AxiomType.CLASS_ASSERTION);
+        } catch (InconsistentOntologyException e) {
+            // for inconsistent ontologies an InconsistentOntologyException will be thrown when creating an editor.
+            // therefore let us kill the current running reasoner and try it again.
+            reasonerManager.killCurrentReasoner();
+            getOWLModelManager().fireEvent(EventType.REASONER_CHANGED);
+            try {
+                editor = owlComponentFactory.getOWLClassDescriptionEditor(getAxiom().getClassExpression(), AxiomType.CLASS_ASSERTION);
+            } catch (Exception ex) {
+                // fall back solution if there is still an exception
+                editor = owlComponentFactory.getOWLClassDescriptionEditor(null, AxiomType.CLASS_ASSERTION);
+            }
+        }
+        return editor;
     }
 
     @Override
