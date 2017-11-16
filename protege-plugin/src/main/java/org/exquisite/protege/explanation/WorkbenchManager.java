@@ -17,15 +17,16 @@ import java.util.Set;
  */
 public class WorkbenchManager {
 
-    private WorkbenchSettings workbenchSettings = new WorkbenchSettings();
+    private WorkbenchSettings workbenchSettings;
 
     private JustificationManager justificationManager;
 
     private OWLAxiom entailment;
 
-    WorkbenchManager(JustificationManager justificationManager, OWLAxiom entailment) {
+    WorkbenchManager(JustificationManager justificationManager, OWLAxiom entailment, WorkbenchSettings settings) {
         this.justificationManager = justificationManager;
         this.entailment = entailment;
+        this.workbenchSettings = settings;
     }
 
     WorkbenchSettings getWorkbenchSettings() {

@@ -3,6 +3,7 @@ package org.exquisite.protege.ui.panel.repair;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
+import org.exquisite.protege.explanation.WorkbenchSettings;
 import org.exquisite.protege.ui.list.RepairAxiomList;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.protege.editor.core.ui.util.ComponentFactory;
@@ -35,6 +36,8 @@ public class RepairDiagnosisPanel extends JPanel {
 
     private JLabel label;
 
+    private WorkbenchSettings workbenchSettings;
+
     private boolean explanationEnabled = true;
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairDiagnosisPanel.class.getName());
@@ -44,6 +47,8 @@ public class RepairDiagnosisPanel extends JPanel {
         this.diagnosis = diagnosis;
         EditorKitHook editorKitHook = (EditorKitHook) this.editorKit.get("org.exquisite.protege.EditorKitHook");
         this.debugger = editorKitHook.getActiveOntologyDebugger();
+        this.workbenchSettings = new WorkbenchSettings();
+
         setPreferredSize(getPreferredSize());
 
         setLayout(new GridBagLayout());
@@ -54,7 +59,7 @@ public class RepairDiagnosisPanel extends JPanel {
     }
 
     private void addRepairAxiomList() throws OWLOntologyCreationException {
-        repairAxiomList = new RepairAxiomList(this, editorKit, this.debugger, this);
+        repairAxiomList = new RepairAxiomList(this, editorKit, workbenchSettings, debugger, this);
         repairAxiomList.updateList(this.diagnosis);
         GridBagConstraints c = new GridBagConstraints();
 
@@ -143,7 +148,7 @@ public class RepairDiagnosisPanel extends JPanel {
         this.explanation = expl;
         explanationContainer.add(this.explanation);
         if (this.label != null) {
-            if (label != null) this.label.setText("<html><h1>" + label + "</h1></html>");
+            if (label != null) this.label.setText("<html><h3>" + label + "</h3></html>");
             else this.label.setText("");
         }
         explanationContainer.revalidate();

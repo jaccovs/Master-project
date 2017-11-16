@@ -72,11 +72,11 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private static final Logger logger = LoggerFactory.getLogger(WorkbenchPanel.class);
 
-    WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment) {
+    WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment, WorkbenchSettings settings) {
         this.editorKit = ek;
         JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(ek.getWorkspace());
         JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager());
-        this.workbenchManager = new WorkbenchManager(justificationManager, entailment);
+        this.workbenchManager = new WorkbenchManager(justificationManager, entailment, settings);
         setLayout(new BorderLayout());
 
         selectionModel = new AxiomSelectionModelImpl();

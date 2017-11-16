@@ -20,8 +20,11 @@ public class JustificationBasedExplanationServiceImpl extends ExplanationService
 
     private OWLEditorKit owlEditorKit;
 
-    JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit) {
+    private WorkbenchSettings settings;
+
+    JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit, WorkbenchSettings settings) {
         this.owlEditorKit = owlEditorKit;
+        this.settings = settings;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class JustificationBasedExplanationServiceImpl extends ExplanationService
 
     @Override
     public ExplanationResult explain(OWLAxiom entailment) {
-        WorkbenchPanel workbenchPanel = new WorkbenchPanel(getOWLEditorKit(), entailment);
+        WorkbenchPanel workbenchPanel = new WorkbenchPanel(getOWLEditorKit(), entailment, settings);
         return new WorkbenchPanelExplanationResult(workbenchPanel);
     }
 

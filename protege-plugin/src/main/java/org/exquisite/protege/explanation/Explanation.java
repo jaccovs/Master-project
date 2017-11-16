@@ -44,13 +44,16 @@ public class Explanation {
 
     private ExplanationResult explanation = null;
 
-    public Explanation(Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, OWLEditorKit editorKit, Debugger debugger) throws OWLOntologyCreationException {
-        this(diagnosis, panel, axiom, debugger.getDiagnosisModel(), editorKit, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
+    private WorkbenchSettings settings = null;
+
+    public Explanation(Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, OWLEditorKit editorKit, Debugger debugger, WorkbenchSettings settings) throws OWLOntologyCreationException {
+        this(diagnosis, panel, axiom, debugger.getDiagnosisModel(), editorKit, settings, debugger.getDiagnosisEngineFactory().getReasonerFactory(), debugger.getDiagnosisEngineFactory().getDebuggerConfiguration());
     }
 
-    private Explanation(final Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
+    private Explanation(final Diagnosis<OWLLogicalAxiom> diagnosis, RepairDiagnosisPanel panel, OWLLogicalAxiom axiom, DiagnosisModel<OWLLogicalAxiom> originalDiagnosisModel, OWLEditorKit editorKit, WorkbenchSettings settings, OWLReasonerFactory reasonerFactory, DebuggerConfiguration config) throws OWLOntologyCreationException {
         this.editorKit = editorKit;
         this.panel = panel;
+        this.settings = settings;
         this.notEntailedExamples = originalDiagnosisModel.getNotEntailedExamples();
 
         List<OWLLogicalAxiom> possiblyFaultyAxiomsMinusDiagnosis = new ArrayList<>();
@@ -322,7 +325,7 @@ public class Explanation {
 
     private boolean synchronizeReasoner() {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
-        boolean isReasonerSynchronized = false;
+        boolean isReasonerSynchronized;
 
         // this overrides the exception handling of the currently selected reasoner in order to avoid as much interfering
         // actions from the reasoner as possible
@@ -377,7 +380,7 @@ public class Explanation {
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {
         final boolean isReasonerSynchronized = synchronizeReasoner();
         if (isReasonerSynchronized) {
-            final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit());
+            final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit(), settings);
             if (explanationService.hasExplanation(entailment)) {
                 if (this.explanation != null) this.explanation.dispose(); // dispose the previous explanation
                 this.explanation = explanationService.explain(entailment);

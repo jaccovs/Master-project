@@ -5,6 +5,7 @@ import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.explanation.JustificationManager;
 import org.exquisite.protege.explanation.Explanation;
+import org.exquisite.protege.explanation.WorkbenchSettings;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
@@ -37,10 +38,13 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
 
     private RepairListItem selectedItem;
 
+    private WorkbenchSettings settings;
+
     private org.slf4j.Logger logger = LoggerFactory.getLogger(RepairAxiomList.class.getName());
 
-    public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, Debugger debugger, Component parent) {
+    public RepairAxiomList(RepairDiagnosisPanel repairDiagnosisPanel, OWLEditorKit editorKit, WorkbenchSettings settings, Debugger debugger, Component parent) {
         super(editorKit);
+        this.settings = settings;
         this.repairDiagnosisPanel = repairDiagnosisPanel;
         this.debugger = debugger;
 
@@ -76,7 +80,7 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
         List<Object> items = new ArrayList<>();
         items.add(new DiagnosisListHeader(diagnosis, createHeaderName(diagnosis)));
         for (OWLLogicalAxiom axiom : diagnosis.getFormulas()) {
-            final Explanation explanation = new Explanation(diagnosis, this.repairDiagnosisPanel, axiom, editorKit, debugger);
+            final Explanation explanation = new Explanation(diagnosis, this.repairDiagnosisPanel, axiom, editorKit, debugger, settings);
             items.add(new RepairListItem(axiom, explanation, parent));
         }
         items.add(" ");

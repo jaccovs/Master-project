@@ -10,7 +10,7 @@ package org.exquisite.protege.explanation;
  * (Revision Number 3c2a4fa7f0591c18693d2b8a6bd0a9739dde2340) at https://github.com/protegeproject/explanation-workbench.git
  * <br>modifications: visibility changes by @author wolfi, code changes by @author wolfi
  */
-class WorkbenchSettings {
+public class WorkbenchSettings {
 
     private JustificationType justificationType = JustificationType.REGULAR;
     
