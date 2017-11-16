@@ -2,9 +2,14 @@ package org.exquisite.protege.ui.editor.repair.objectproperty;
 
 import org.exquisite.protege.ui.editor.repair.AbstractOWLObjectRepairEditor;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.inference.OWLReasonerManager;
+import org.protege.editor.owl.ui.editor.OWLClassDescriptionEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.editor.OWLObjectEditorHandler;
+import org.protege.editor.owl.ui.util.OWLComponentFactory;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.InconsistentOntologyException;
 
 import java.awt.*;
 
@@ -28,7 +33,25 @@ public class OWLObjectPropertyRangeEditor extends AbstractOWLObjectRepairEditor<
 
     @Override
     public OWLObjectEditor<OWLClassExpression> getOWLObjectEditor() {
-        return getOWLEditorKit().getWorkspace().getOWLComponentFactory().getOWLClassDescriptionEditor(getAxiom().getRange(), AxiomType.OBJECT_PROPERTY_RANGE);
+        final OWLReasonerManager reasonerManager = getOWLEditorKit().getOWLModelManager().getOWLReasonerManager();
+        OWLClassDescriptionEditor editor;
+        final OWLComponentFactory owlComponentFactory = getOWLEditorKit().getWorkspace().getOWLComponentFactory();
+
+        try {
+            editor = owlComponentFactory.getOWLClassDescriptionEditor(getAxiom().getRange(), AxiomType.OBJECT_PROPERTY_RANGE);
+        } catch (InconsistentOntologyException e) {
+            // for inconsistent ontologies an InconsistentOntologyException will be thrown when creating an editor.
+            // therefore let us kill the current running reasoner and try it again.
+            reasonerManager.killCurrentReasoner();
+            getOWLModelManager().fireEvent(EventType.REASONER_CHANGED);
+            try {
+                editor = owlComponentFactory.getOWLClassDescriptionEditor(getAxiom().getRange(), AxiomType.OBJECT_PROPERTY_RANGE);
+            } catch (Exception ex) {
+                // fall back solution if there is still an exception
+                editor = owlComponentFactory.getOWLClassDescriptionEditor(null, AxiomType.OBJECT_PROPERTY_RANGE);
+            }
+        }
+        return editor;
     }
 
     @Override
