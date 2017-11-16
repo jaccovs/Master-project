@@ -1,4 +1,4 @@
-package org.exquisite.protege.model.explanation;
+package org.exquisite.protege.explanation;
 
 import org.exquisite.core.DiagnosisRuntimeException;
 import org.exquisite.core.model.Diagnosis;
@@ -6,7 +6,6 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.RepairOWLReasoner;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.explanation.JustificationBasedExplanationServiceImpl;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
@@ -117,7 +116,7 @@ public class Explanation {
                 if (entailedTestCases.size() > 0) {
                     for (OWLLogicalAxiom entailment : entailedTestCases) {
                         logger.debug("Explaining entailment " + entailment);
-                        showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font></html>");
+                        showExplanationForEntailment(entailment, "The selected axiom is responsible for the <b>entailment</b> of <font color=\"blue\">" + entailment + "</font>");
                     }
                 } else {
                     showConsistencyExplanation();
@@ -145,7 +144,7 @@ public class Explanation {
             this.explanation.dispose();
 
         this.explanation = new NoExplanationResult();
-        panel.setExplanation(this.explanation, "The selected axiom is consistent!");
+        panel.setExplanation(this.explanation, "This selected axiom has been repaired!");
     }
 
     public OWLOntology getOntology() {
@@ -318,11 +317,12 @@ public class Explanation {
         OWLDataFactory df = owlModelManager.getOWLDataFactory();
         OWLSubClassOfAxiom entailment = df.getOWLSubClassOfAxiom(df.getOWLThing(), df.getOWLNothing());
 
-        this.showExplanationForEntailment(entailment, "<html>The selected axiom is responsible for an <b>inconsistency</b></html>");
+        this.showExplanationForEntailment(entailment, "The selected axiom is responsible for an <b>inconsistency</b>");
     }
 
-    private void synchronizeReasoner() {
+    private boolean synchronizeReasoner() {
         final OWLReasonerManager reasonerManager = editorKit.getOWLModelManager().getOWLReasonerManager();
+        boolean isReasonerSynchronized = false;
 
         // this overrides the exception handling of the currently selected reasoner in order to avoid as much interfering
         // actions from the reasoner as possible
@@ -334,20 +334,28 @@ public class Explanation {
         if (!isReasonerSynchronized(reasonerStatus)) {
 
             logger.info("Synchronizing reasoner ...");
-            final boolean b = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
+            final boolean hasClassificationStarted = reasonerManager.classifyAsynchronously(reasonerManager.getReasonerPreferences().getPrecomputedInferences());
 
-            // we started an asynchronous job, we have to wait until the reasoner has been synchronized.
-            reasonerStatus = reasonerManager.getReasonerStatus();
-            while (!isReasonerSynchronized(reasonerStatus)) {
-                logger.info("\n\n" + reasonerStatus + "\n\n");
+            if (hasClassificationStarted) {
+                // we started an asynchronous job, we have to wait until the reasoner has been synchronized.
                 reasonerStatus = reasonerManager.getReasonerStatus();
-            }
+                while (!isReasonerSynchronized(reasonerStatus)) {
+                    logger.info("\n\n" + reasonerStatus + "\n\n");
+                    reasonerStatus = reasonerManager.getReasonerStatus();
+                }
 
-            logger.info("\n\n" + reasonerStatus + "\n\n");
+                logger.info("\n\n" + reasonerStatus + "\n\n");
+                isReasonerSynchronized = true;
+            } else {
+                isReasonerSynchronized = false;
+            }
+        } else {
+            isReasonerSynchronized = true;
         }
 
         // resets to the default reasoner exception handling
         reasonerManager.setReasonerExceptionHandler(new DefaultOWLReasonerExceptionHandler());
+        return isReasonerSynchronized;
     }
 
     private boolean isReasonerSynchronized(final ReasonerStatus status) {
@@ -367,17 +375,19 @@ public class Explanation {
     }
 
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {
-        synchronizeReasoner();
-
-        final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit());
-        if (explanationService.hasExplanation(entailment)) {
-            if (this.explanation!=null) this.explanation.dispose(); // dispose the previous explanation
-            this.explanation = explanationService.explain(entailment);
-            panel.setExplanation(this.explanation, label);
+        final boolean isReasonerSynchronized = synchronizeReasoner();
+        if (isReasonerSynchronized) {
+            final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit());
+            if (explanationService.hasExplanation(entailment)) {
+                if (this.explanation != null) this.explanation.dispose(); // dispose the previous explanation
+                this.explanation = explanationService.explain(entailment);
+                panel.setExplanation(this.explanation, label);
+            } else {
+                showNoExplanation("No explanation service available!");
+            }
         } else {
-            showNoExplanation(null);
+            showNoExplanation("Explanation not possible! Reasoner could not be synchronized");
         }
-
     }
 
     private void verifyActiveOntology() {

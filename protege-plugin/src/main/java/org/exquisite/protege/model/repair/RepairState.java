@@ -1,6 +1,6 @@
 package org.exquisite.protege.model.repair;
 
-import org.exquisite.protege.model.explanation.Explanation;
+import org.exquisite.protege.explanation.Explanation;
 import org.exquisite.protege.ui.editor.repair.AbstractOWLObjectRepairEditor;
 import org.exquisite.protege.ui.editor.repair.OWLObjectRepairEditorFactory;
 import org.exquisite.protege.ui.list.item.RepairListItem;

@@ -4,7 +4,7 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.explanation.JustificationManager;
-import org.exquisite.protege.model.explanation.Explanation;
+import org.exquisite.protege.explanation.Explanation;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;

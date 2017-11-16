@@ -1,7 +1,7 @@
 package org.exquisite.protege.ui.list.item;
 
 import org.exquisite.core.model.DiagnosisModel;
-import org.exquisite.protege.model.explanation.Explanation;
+import org.exquisite.protege.explanation.Explanation;
 import org.exquisite.protege.model.repair.RepairState;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;

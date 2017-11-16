@@ -20,7 +20,7 @@ public class JustificationBasedExplanationServiceImpl extends ExplanationService
 
     private OWLEditorKit owlEditorKit;
 
-    public JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit) {
+    JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit) {
         this.owlEditorKit = owlEditorKit;
     }
 

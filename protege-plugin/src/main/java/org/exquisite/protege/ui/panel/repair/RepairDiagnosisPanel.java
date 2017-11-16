@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author wolfi
@@ -81,6 +79,30 @@ public class RepairDiagnosisPanel extends JPanel {
     }
 
     private void addExplanationContainer() {
+        final JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createEmptyBorder(),
+                        "Explanations"),
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+
+        final JCheckBox checkBox = new JCheckBox("<html>Compute explanations for selected axioms</html>");
+        checkBox.setSelected(isExplanationEnabled());
+        checkBox.addActionListener(e -> {
+            explanationEnabled = !explanationEnabled;
+            checkBox.setSelected(isExplanationEnabled());
+            final RepairListItem selectedItem = repairAxiomList.getSelectedItem();
+            if (selectedItem != null)
+                selectedItem.showExplanation();
+        });
+
+        panel.add(checkBox, BorderLayout.NORTH);
+
+        final JPanel explanations = new JPanel(new BorderLayout());
+
+        label = new JLabel();
+        explanations.add(this.label, BorderLayout.NORTH);
+
         explanationContainer = new JPanel();
         explanationContainer.setLayout(new BoxLayout(explanationContainer, BoxLayout.Y_AXIS));
 
@@ -95,29 +117,9 @@ public class RepairDiagnosisPanel extends JPanel {
         c.weightx = 1.0;
         c.weighty = 0.6;
 
-        final JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(
-                        BorderFactory.createEmptyBorder(),
-                        "Explanations"),
-                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+        explanations.add(explanationContainer, BorderLayout.CENTER);
 
-        final JCheckBox checkBox = new JCheckBox("<html>Compute explanations for selected axioms</html>");
-        checkBox.setSelected(isExplanationEnabled());
-        checkBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                explanationEnabled = !explanationEnabled;
-                checkBox.setSelected(isExplanationEnabled());
-                final RepairListItem selectedItem = repairAxiomList.getSelectedItem();
-                if (selectedItem != null)
-                    selectedItem.showExplanation();
-            }
-        });
-
-        panel.add(checkBox, BorderLayout.NORTH);
-
-        panel.add(explanationContainer, BorderLayout.CENTER);
+        panel.add(explanations, BorderLayout.CENTER);
         add(panel, c);
     }
 
@@ -133,10 +135,6 @@ public class RepairDiagnosisPanel extends JPanel {
         }
     }
 
-    public void setExplanation(final ExplanationResult expl) {
-        setExplanation(expl, null);
-    }
-
     public void setExplanation(final ExplanationResult expl, final String label) {
         explanationContainer.removeAll();
         if (this.explanation != null) {
@@ -145,7 +143,7 @@ public class RepairDiagnosisPanel extends JPanel {
         this.explanation = expl;
         explanationContainer.add(this.explanation);
         if (this.label != null) {
-            if (label != null) this.label.setText(label);
+            if (label != null) this.label.setText("<html><h1>" + label + "</h1></html>");
             else this.label.setText("");
         }
         explanationContainer.revalidate();

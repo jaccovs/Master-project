@@ -3,6 +3,7 @@ package org.exquisite.protege.explanation;
 import org.protege.editor.core.Disposable;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.model.OWLModelManager;
+import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owl.explanation.api.*;
 import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntologyExplanationGeneratorFactory;
 import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGeneratorFactory;
