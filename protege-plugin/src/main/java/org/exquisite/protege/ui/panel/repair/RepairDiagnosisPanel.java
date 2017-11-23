@@ -91,7 +91,7 @@ public class RepairDiagnosisPanel extends JPanel {
                         "Explanations"),
                 BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
-        final JCheckBox checkBox = new JCheckBox("<html>Compute explanations for selected axioms</html>");
+        final JCheckBox checkBox = new JCheckBox("<html>Show explanations for selected axioms</html>");
         checkBox.setSelected(isExplanationEnabled());
         checkBox.addActionListener(e -> {
             explanationEnabled = !explanationEnabled;
