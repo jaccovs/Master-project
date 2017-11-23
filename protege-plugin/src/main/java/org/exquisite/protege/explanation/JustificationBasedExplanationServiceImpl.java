@@ -5,6 +5,7 @@ import org.protege.editor.owl.ui.explanation.ExplanationResult;
 import org.protege.editor.owl.ui.explanation.ExplanationService;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
  * Author: Matthew Horridge
@@ -22,9 +23,12 @@ public class JustificationBasedExplanationServiceImpl extends ExplanationService
 
     private WorkbenchSettings settings;
 
-    JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit, WorkbenchSettings settings) {
+    private OWLOntology ontology;
+
+    JustificationBasedExplanationServiceImpl(OWLEditorKit owlEditorKit, WorkbenchSettings settings, OWLOntology anOntology) {
         this.owlEditorKit = owlEditorKit;
         this.settings = settings;
+        this.ontology = anOntology;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class JustificationBasedExplanationServiceImpl extends ExplanationService
 
     @Override
     public ExplanationResult explain(OWLAxiom entailment) {
-        WorkbenchPanel workbenchPanel = new WorkbenchPanel(getOWLEditorKit(), entailment, settings);
+        WorkbenchPanel workbenchPanel = new WorkbenchPanel(getOWLEditorKit(), entailment, settings, ontology);
         return new WorkbenchPanelExplanationResult(workbenchPanel);
     }
 

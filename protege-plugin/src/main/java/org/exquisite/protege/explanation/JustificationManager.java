@@ -9,6 +9,7 @@ import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntolog
 import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGeneratorFactory;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -70,6 +71,8 @@ public class JustificationManager implements Disposable {
 
     private OWLModelManager modelManager;
 
+    private OWLOntology ontology;
+
     private CachingRootDerivedGenerator rootDerivedGenerator;
 
     private List<ExplanationManagerListener> listeners;
@@ -80,22 +83,33 @@ public class JustificationManager implements Disposable {
     
     private JustificationGeneratorProgressDialog progressDialog;
 
-    private JustificationManager(JFrame parentWindow, OWLModelManager modelManager) {
+    private JustificationManager(JFrame parentWindow, OWLModelManager modelManager, OWLOntology ontology) {
         this.modelManager = modelManager;
+        this.ontology = ontology;
         rootDerivedGenerator = new CachingRootDerivedGenerator(modelManager);
         listeners = new ArrayList<>();
         findAllExplanations = true;
         progressDialog = new JustificationGeneratorProgressDialog(parentWindow);
         executorService = Executors.newSingleThreadExecutor();
-        ontologyChangeListener = changes -> justificationCacheManager.clear();
-        modelManager.addOntologyChangeListener(ontologyChangeListener);
-    }
+        ontologyChangeListener = changes -> {
+            if (!changes.isEmpty()) {
+                if (changes.get(0).getOntology().equals(ontology)) {
+                    // the change involves the ontology this cache manager is responsible for
 
-    /**
-     * Clears the Justification Cache.
-     */
-    public void clearCache() {
-        justificationCacheManager.clear();
+                    // now check if one of the changes is an addition, if so clear the cache and stop search
+                    for (OWLOntologyChange change : changes) {
+                        assert change.getOntology().equals(JustificationManager.this.ontology);
+
+                        if (change.isAddAxiom()) {
+                            JustificationManager.this.justificationCacheManager.clear();
+                            return;
+                        }
+                    }
+
+                }
+            }
+        };
+        modelManager.addOntologyChangeListener(ontologyChangeListener);
     }
 
     private OWLReasonerFactory getReasonerFactory() {
@@ -224,6 +238,7 @@ public class JustificationManager implements Disposable {
     public void dispose() {
         rootDerivedGenerator.dispose();
         modelManager.removeOntologyChangeListener(ontologyChangeListener);
+        justificationCacheManager.clear();
     }
 
 
@@ -233,11 +248,13 @@ public class JustificationManager implements Disposable {
         }
     }
 
-    public static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
-        JustificationManager m = modelManager.get(KEY);
+    static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager, OWLOntology ontology) {
+        final String key = KEY + "_" + ontology.getOntologyID();
+
+        JustificationManager m = modelManager.get(key);
         if (m == null) {
-            m = new JustificationManager(parentWindow, modelManager);
-            modelManager.put(KEY, m);
+            m = new JustificationManager(parentWindow, modelManager, ontology);
+            modelManager.put(key, m);
         }
         return m;
     }

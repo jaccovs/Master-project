@@ -7,10 +7,7 @@ import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owl.explanation.api.ExplanationException;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.ClassExpressionType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,10 +69,10 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private static final Logger logger = LoggerFactory.getLogger(WorkbenchPanel.class);
 
-    WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment, WorkbenchSettings settings) {
+    WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment, WorkbenchSettings settings, OWLOntology ontology) {
         this.editorKit = ek;
         JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(ek.getWorkspace());
-        JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager());
+        JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager(), ontology);
         this.workbenchManager = new WorkbenchManager(justificationManager, entailment, settings);
         setLayout(new BorderLayout());
 

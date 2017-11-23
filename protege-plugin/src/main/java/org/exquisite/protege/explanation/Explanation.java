@@ -9,6 +9,7 @@ import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.ui.panel.explanation.NoExplanationResult;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
+import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.DefaultOWLReasonerExceptionHandler;
@@ -21,6 +22,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,9 +81,14 @@ public class Explanation {
     }
 
     public void dispose()  {
-        if (this.explanation != null) this.explanation.dispose();
+        JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
+        JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, editorKit.getOWLModelManager(), getOntology());
+        justificationManager.dispose();
 
-        final OWLOntology testOntology = reasoner.getDebuggingOntology();
+        if (this.explanation != null)
+            this.explanation.dispose();
+
+        final OWLOntology testOntology = getOntology();
         final boolean removedOntology = editorKit.getOWLModelManager().removeOntology(testOntology);
         if (!removedOntology) {
             logger.warn("Test-Ontology " + testOntology + " could not be removed!");
@@ -380,7 +387,7 @@ public class Explanation {
     private void showExplanationForEntailment(final OWLAxiom entailment, final String label) {
         final boolean isReasonerSynchronized = synchronizeReasoner();
         if (isReasonerSynchronized) {
-            final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit(), settings);
+            final ExplanationService explanationService = new JustificationBasedExplanationServiceImpl(getOWLEditorKit(), settings, getOntology());
             if (explanationService.hasExplanation(entailment)) {
                 if (this.explanation != null) this.explanation.dispose(); // dispose the previous explanation
                 this.explanation = explanationService.explain(entailment);

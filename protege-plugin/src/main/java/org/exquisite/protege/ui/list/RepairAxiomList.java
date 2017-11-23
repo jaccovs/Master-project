@@ -3,14 +3,12 @@ package org.exquisite.protege.ui.list;
 import org.exquisite.core.model.Diagnosis;
 import org.exquisite.protege.Debugger;
 import org.exquisite.protege.EditorKitHook;
-import org.exquisite.protege.explanation.JustificationManager;
 import org.exquisite.protege.explanation.Explanation;
 import org.exquisite.protege.explanation.WorkbenchSettings;
 import org.exquisite.protege.ui.buttons.ResetAxiomButton;
 import org.exquisite.protege.ui.list.header.DiagnosisListHeader;
 import org.exquisite.protege.ui.list.item.RepairListItem;
 import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
-import org.protege.editor.core.ProtegeManager;
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -145,10 +143,6 @@ public class RepairAxiomList extends AbstractAxiomList implements ListSelectionL
                         logger.debug("Set active ontology to " + newActiveOntology.getOntologyID());
 
                         if (! isButtonPressed(mousePoint, lsm.getListItemButtons(selectedItem))) {
-                            // clear justification cache
-                            JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(editorKit.getWorkspace());
-                            JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, editorKit.getOWLModelManager());
-                            justificationManager.clearCache();
                             showExplanation();
                         }
 
