@@ -21,25 +21,28 @@ import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinMaxFo
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinQueryCardinality;
 import org.exquisite.core.query.querycomputation.heuristic.sortcriteria.MinSumFormulaWeights;
 import org.exquisite.protege.model.DebuggingSession;
-import org.exquisite.protege.model.listener.OntologyChangeListener;
 import org.exquisite.protege.model.TestcasesModel;
-import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
-import org.exquisite.protege.model.preferences.DebuggerConfiguration;
 import org.exquisite.protege.model.error.AbstractErrorHandler;
 import org.exquisite.protege.model.error.QueryErrorHandler;
 import org.exquisite.protege.model.event.EventType;
 import org.exquisite.protege.model.event.OntologyDebuggerChangeEvent;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
+import org.exquisite.protege.model.listener.OntologyChangeListener;
+import org.exquisite.protege.model.preferences.DebuggerConfiguration;
+import org.exquisite.protege.model.preferences.DiagnosisEngineFactory;
 import org.exquisite.protege.model.state.PagingState;
 import org.exquisite.protege.ui.dialog.DebuggingDialog;
 import org.exquisite.protege.ui.list.item.AxiomListItem;
+import org.exquisite.protege.ui.panel.repair.RepairDiagnosisPanel;
 import org.exquisite.protege.ui.progress.DebuggerProgressUI;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
 import org.protege.editor.owl.model.inference.ReasonerStatus;
+import org.protege.editor.owl.ui.UIHelper;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.ReasonerInternalException;
 import org.semanticweb.owlapi.reasoner.ReasonerProgressMonitor;
 import org.slf4j.Logger;
@@ -51,15 +54,13 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.exquisite.protege.Debugger.ErrorStatus.NO_ERROR;
-import static org.exquisite.protege.Debugger.ErrorStatus.RUNTIME_EXCEPTION;
-import static org.exquisite.protege.Debugger.ErrorStatus.SOLVER_EXCEPTION;
+import static org.exquisite.protege.Debugger.ErrorStatus.*;
 
 public class Debugger {
 
     private Logger logger = LoggerFactory.getLogger(Debugger.class.getCanonicalName());
 
-    public enum TestcaseType {ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
+    public enum TestcaseType {ENTAILED_TC, NON_ENTAILED_TC, ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
         NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION}
@@ -71,7 +72,7 @@ public class Debugger {
      */
     public enum SessionStopReason { PREFERENCES_CHANGED, INVOKED_BY_USER, CONSISTENT_ONTOLOGY,
         ERROR_OCCURRED, DEBUGGER_RESET, REASONER_CHANGED, ONTOLOGY_RELOADED, ONTOLOGY_CHANGED, SESSION_RESTARTED,
-        DEBUGGING_ONTOLOGY_SELECTED
+        DEBUGGING_ONTOLOGY_SELECTED, REPAIR_FINISHED
     }
 
     private DebuggingSession debuggingSession;
@@ -167,6 +168,16 @@ public class Debugger {
         return pagingState;
     }
 
+    public void setDiagnosisModel(DiagnosisModel<OWLLogicalAxiom> dm) {
+        this.diagnosisModel = dm;
+        getTestcases().reset();
+        notifyDiagnosisModelChanged();
+    }
+
+    public void notifyDiagnosisModelChanged() {
+        notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_MODEL_CHANGED));
+    }
+
     public DiagnosisModel<OWLLogicalAxiom> getDiagnosisModel() {
         return diagnosisModel;
     }
@@ -212,7 +223,11 @@ public class Debugger {
     }
 
     public boolean isSessionRunning() {
-        return debuggingSession.getState() == DebuggingSession.State.STARTED;
+        return debuggingSession.getState() == DebuggingSession.State.RUNNING;
+    }
+
+    public boolean isRepairing() {
+        return debuggingSession.getState() == DebuggingSession.State.REPAIRING;
     }
 
     public boolean isSessionStopped() {
@@ -253,7 +268,7 @@ public class Debugger {
      * @param errorHandler An error handler.
      */
     private void doStartDebugging(QueryErrorHandler errorHandler) {
-        if (!isSessionRunning()) {
+        if (!isSessionRunning() && !isRepairing()) {
             if (reasonerManager.getReasonerStatus() == ReasonerStatus.NO_REASONER_FACTORY_CHOSEN) {
                 DebuggingDialog.showNoReasonerSelectedMessage();
                 return;
@@ -296,81 +311,84 @@ public class Debugger {
      * Stop diagnosis session -> reset engine, diagnoses, conflicts, queries and history.
      */
     public void doStopDebugging(SessionStopReason reason) {
-        if (isSessionRunning()) {
-            logger.info(LogBanner.start("Stopping Debugging Session"));
+        if (!isRepairing()) {
+            if (isSessionRunning()) {
+                logger.info(LogBanner.start("Stopping Debugging Session"));
 
-            try {
-                diagnosisEngineFactory.dispose();
-            } catch (RuntimeException rex) {
-                logger.error("A runtime exception occurred while disposing diagnosis engine", rex);
-            }
+                try {
+                    diagnosisEngineFactory.dispose();
+                } catch (RuntimeException rex) {
+                    logger.error("A runtime exception occurred while disposing diagnosis engine", rex);
+                }
 
-            this.diagnoses.clear();                                     // reset diagnoses, conflicts
-            this.conflicts.clear();
+                this.diagnoses.clear();                                     // reset diagnoses, conflicts
+                this.conflicts.clear();
 
-            this.previousDiagnoses.clear();
+                this.previousDiagnoses.clear();
 
-            resetQuery();                                               // reset queries
-            resetQueryHistory();                                        // reset history
-            testcases.reset();
-            debuggingSession.stopSession();                             // stop session
+                resetQuery();                                               // reset queries
+                resetQueryHistory();                                        // reset history
+                testcases.reset();
+                debuggingSession.stopSession();                             // stop session
 
-            this.cautiousParameter = null;
-            this.previousCautiousParameter = null;
+                this.cautiousParameter = null;
+                this.previousCautiousParameter = null;
 
-            notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
+                notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
-            // notify the user why session has stopped
-            String reasonMsg = null;
-            switch (reason) {
-                case ERROR_OCCURRED:
-                    reasonMsg = "an unexpected error occured!";
-                    break;
-                case ONTOLOGY_RELOADED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
-                    break;
-                case ONTOLOGY_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
-                    break;
-                case PREFERENCES_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the preferences have been modified!";
-                    break;
-                case REASONER_CHANGED:
-                    syncDiagnosisModel();
-                    reasonMsg = "the reasoner has been changed!";
-                    break;
-                case DEBUGGING_ONTOLOGY_SELECTED:
-                    reasonMsg = "an anonymous debugging ontology has been selected!";
-                    break;
-                case INVOKED_BY_USER:     // no message necessary
-                case DEBUGGER_RESET:      // no message necessary
-                case CONSISTENT_ONTOLOGY: // no message necessary
-                case SESSION_RESTARTED:   // no message necessary
-                    final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
-                    if (configuration.reduceIncoherency && configuration.extractModules) {
-                        // During the debugging session the diagnosis model also has been reduced to set of axioms from
-                        // the extracted module and needs to be recreated.
+                // notify the user why session has stopped
+                String reasonMsg = null;
+                switch (reason) {
+                    case ERROR_OCCURRED:
+                        reasonMsg = "an unexpected error occured!";
+                        break;
+                    case ONTOLOGY_RELOADED:
                         syncDiagnosisModel();
-                    }
-                    break;
-                default:
-                    reasonMsg = reason.toString();
-                    logger.warn("unknown reason: " + reason);
-            }
+                        reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been reloaded.";
+                        break;
+                    case ONTOLOGY_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the ontology " + DebuggingDialog.getOntologyName(diagnosisEngineFactory.getOntology()) + " has been modified!";
+                        break;
+                    case PREFERENCES_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the preferences have been modified!";
+                        break;
+                    case REASONER_CHANGED:
+                        syncDiagnosisModel();
+                        reasonMsg = "the reasoner has been changed!";
+                        break;
+                    case DEBUGGING_ONTOLOGY_SELECTED:
+                        reasonMsg = "an anonymous debugging ontology has been selected!";
+                        break;
+                    case INVOKED_BY_USER:     // no message necessary
+                    case DEBUGGER_RESET:      // no message necessary
+                    case CONSISTENT_ONTOLOGY: // no message necessary
+                    case SESSION_RESTARTED:   // no message necessary
+                    case REPAIR_FINISHED:     // no message necessary
+                        final DebuggerConfiguration configuration = diagnosisEngineFactory.getSearchConfiguration();
+                        if (configuration.reduceIncoherency && configuration.extractModules) {
+                            // During the debugging session the diagnosis model also has been reduced to set of axioms from
+                            // the extracted module and needs to be recreated.
+                            syncDiagnosisModel();
+                        }
+                        break;
+                    default:
+                        reasonMsg = reason.toString();
+                        logger.warn("unknown reason: " + reason);
+                }
 
-            if (reasonMsg != null)
-                DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
-        } else {
-            switch (reason) {
-                case REASONER_CHANGED:
-                case PREFERENCES_CHANGED:
-                case ONTOLOGY_CHANGED:
-                case ONTOLOGY_RELOADED:
-                    syncDiagnosisModel();
-                    break;
+                if (reasonMsg != null)
+                    DebuggingDialog.showDebuggingSessionStoppedMessage(diagnosisEngineFactory.getOntology(), reasonMsg);
+            } else {
+                switch (reason) {
+                    case REASONER_CHANGED:
+                    case PREFERENCES_CHANGED:
+                    case ONTOLOGY_CHANGED:
+                    case ONTOLOGY_RELOADED:
+                        syncDiagnosisModel();
+                        break;
+                }
             }
         }
     }
@@ -387,6 +405,36 @@ public class Debugger {
      */
     void doReload() {
         doStopDebugging(SessionStopReason.ONTOLOGY_RELOADED);
+    }
+
+    public void doStartRepair(final Diagnosis<OWLLogicalAxiom> diagnosis) {
+        if (diagnosis != null && !isRepairing() && isSessionRunning()) {
+            this.debuggingSession.startRepair();
+
+            try {
+                RepairDiagnosisPanel repairPanel = new RepairDiagnosisPanel(getEditorKit(), diagnosis);
+                int ret = new UIHelper(editorKit).showDialog("Repair of Faulty Axioms", repairPanel);
+
+                switch (ret) {
+                    case JOptionPane.CLOSED_OPTION:
+                    case JOptionPane.CANCEL_OPTION:
+                        this.debuggingSession.stopRepair();
+                        repairPanel.doCancelAction();
+                        break;
+                    case JOptionPane.OK_OPTION:
+                        this.debuggingSession.stopRepair();
+                        repairPanel.doOkAction();
+                        if (repairPanel.hasChanged()) {
+                            doStopDebugging(SessionStopReason.REPAIR_FINISHED);
+                            doStartDebugging(new QueryErrorHandler());
+                        }
+                        break;
+                }
+            } catch (OWLOntologyCreationException e) {
+                logger.error(e.getMessage(), e);
+                DebuggingDialog.showErrorDialog("Unexpected exception occurred", e.getMessage(), e);
+            }
+        }
     }
 
     private void resetQuery() {

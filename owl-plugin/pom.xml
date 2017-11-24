@@ -22,6 +22,7 @@
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
             <version>${owlapi.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>

@@ -1,12 +1,11 @@
 package org.exquisite.protege.ui.view;
 
 import org.exquisite.protege.Debugger;
-import org.exquisite.protege.ui.buttons.SubmitButton;
 import org.exquisite.protege.ui.buttons.StartDebuggingButton;
 import org.exquisite.protege.ui.buttons.StopDebuggingButton;
+import org.exquisite.protege.ui.buttons.SubmitButton;
 import org.exquisite.protege.ui.list.QueryAxiomList;
 import org.protege.editor.core.ui.list.MList;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,10 +28,29 @@ public class QueryView extends AbstractListViewComponent {
     private StopDebuggingButton stopDebuggingButton;
     private SubmitButton submitButton;
 
-    private JToolBar createNewQueryToolBar() {
-        JToolBar toolBar = new JToolBar();
+    @Override
+    protected void initialiseOWLView() throws Exception {
+        super.initialiseOWLView();
+        add(createQueryToolBar(), BorderLayout.NORTH);
+        updateView(getEditorKitHook().getActiveOntologyDebugger());
+    }
 
+    @Override
+    protected MList createListForComponent() {
+        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook());
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        updateView((Debugger) e.getSource());
+    }
+
+    private JToolBar createQueryToolBar() {
+        JToolBar toolBar = new JToolBar();
+        toolBar.setOpaque(false);
         toolBar.setFloatable(false);
+        toolBar.setBorderPainted(false);
+        toolBar.setBorder(null);
 
         startDebuggingButton = new StartDebuggingButton(this);
         stopDebuggingButton = new StopDebuggingButton(this);
@@ -49,31 +67,14 @@ public class QueryView extends AbstractListViewComponent {
         return toolBar;
     }
 
-    @Override
-    protected void initialiseOWLView() throws Exception {
-        super.initialiseOWLView();
-        add(createNewQueryToolBar(), BorderLayout.NORTH);
-        updateView(getEditorKitHook().getActiveOntologyDebugger());
-    }
-
-    @Override
-    protected MList createListForComponent() {
-        return new QueryAxiomList(getOWLEditorKit(),getEditorKitHook());
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        updateView((Debugger) e.getSource());
-    }
-
     private void updateView(final Debugger debugger) {
         switch(debugger.getQuerySearchStatus()) {
             case ASKING_QUERY:
-                OWLOntology ontology = getOWLEditorKit().getModelManager().getActiveOntology();
-                ((QueryAxiomList)getList()).updateList(debugger, ontology);
+                ((QueryAxiomList)getList()).updateList(debugger, getOWLEditorKit().getModelManager().getActiveOntology());
                 break;
             case IDLE:
                 ((QueryAxiomList)getList()).clearList();
+                ((QueryAxiomList)getList()).updateList(debugger, getOWLEditorKit().getModelManager().getActiveOntology());
                 break;
         }
 

@@ -179,7 +179,7 @@ public class DebuggingDialog {
         return sb.toString();
     }
 
-    private static void showMessageDialog(String title, String message) {
+    public static void showMessageDialog(String title, String message) {
         StringBuilder sb = new StringBuilder("<html><body>").append(message).append("</body></html>");
         JOptionPane.showMessageDialog(null, sb.toString(), title, JOptionPane.INFORMATION_MESSAGE);
     }

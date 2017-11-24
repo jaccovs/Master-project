@@ -81,6 +81,14 @@ public class DiagnosisEngineFactory {
         this.diagnosisEngine = createDiagnosisEngine();
     }
 
+    public DebuggerConfiguration getDebuggerConfiguration() {
+        return config;
+    }
+
+    public OWLReasonerFactory getReasonerFactory() {
+        return this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+    }
+
     public IDiagnosisEngine<OWLLogicalAxiom> getDiagnosisEngine() {
         return diagnosisEngine;
     }
@@ -90,7 +98,7 @@ public class DiagnosisEngineFactory {
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = null;
 
         try {
-            final OWLReasonerFactory reasonerFactory = this.reasonerMan.getCurrentReasonerFactory().getReasonerFactory();
+            final OWLReasonerFactory reasonerFactory = getReasonerFactory();
             ExquisiteOWLReasoner reasoner = new ExquisiteOWLReasoner(this.debugger.getDiagnosisModel(), reasonerFactory, this.debugger.getReasonerProgressMonitor());
 
             reasoner.setEntailmentTypes(config.getEntailmentTypes());
@@ -141,6 +149,16 @@ public class DiagnosisEngineFactory {
 
             DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology);
 
+            /*
+            // the following lines assume some axioms of assertional type to be correct by default
+            // this has been outcommented by intention because the assertions might be the source of faults too
+            for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
+                diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
+                diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+            }
+            diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
+*/
+
             logger.info(LogBanner.start("Generated Diagnosis Model"));
             logger.info("Ontology: {}", ontology.getOntologyID());
             logger.info("Generated in {} ms", (System.currentTimeMillis() - start));
@@ -149,12 +167,6 @@ public class DiagnosisEngineFactory {
             logger.info("{} Entailed Examples", diagnosisModel.getEntailedExamples().size());
             logger.info("{} Not-Entailed Examples", diagnosisModel.getNotEntailedExamples().size());
             logger.info(LogBanner.end());
-
-            for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-                diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
-                diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
-            }
-            diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
             // make a snapshot of the 'original' entailed and non-entailed test cases
             debugger.getTestcases().setOriginalEntailedTestcases(new TreeSet<>(diagnosisModel.getEntailedExamples()));

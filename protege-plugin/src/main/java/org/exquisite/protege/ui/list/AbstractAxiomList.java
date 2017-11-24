@@ -1,8 +1,8 @@
 package org.exquisite.protege.ui.list;
 
 import org.exquisite.protege.ui.list.renderer.BasicAxiomListItemRenderer;
-import org.protege.editor.core.ui.list.MList;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.ui.list.OWLAxiomList;
 import org.protege.editor.owl.ui.renderer.LinkedObjectComponent;
 import org.protege.editor.owl.ui.renderer.LinkedObjectComponentMediator;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -10,13 +10,14 @@ import org.semanticweb.owlapi.model.OWLObject;
 import javax.swing.*;
 import java.awt.*;
 
-abstract class AbstractAxiomList extends MList implements LinkedObjectComponent {
+abstract class AbstractAxiomList extends OWLAxiomList implements LinkedObjectComponent {
 
     protected OWLEditorKit editorKit;
 
     private LinkedObjectComponentMediator mediator;
 
-    AbstractAxiomList(OWLEditorKit editorKit) {
+    public AbstractAxiomList(OWLEditorKit editorKit) {
+        super(editorKit);
         this.mediator = new LinkedObjectComponentMediator(editorKit, this);
         setCellRenderer(new BasicAxiomListItemRenderer(editorKit));
         getMouseListeners();
@@ -61,5 +62,8 @@ abstract class AbstractAxiomList extends MList implements LinkedObjectComponent 
 
     public OWLEditorKit getEditorKit() {
         return editorKit;
+    }
+
+    public void dispose() {
     }
 }

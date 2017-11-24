@@ -21,7 +21,7 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  */
 public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
 
-    private final OWLReasoner reasoner;
+    OWLReasoner reasoner;
     private InferenceType[] inferenceTypes = new InferenceType[]{InferenceType.CLASS_HIERARCHY,
             InferenceType.CLASS_ASSERTIONS, InferenceType.DISJOINT_CLASSES, InferenceType.DIFFERENT_INDIVIDUALS,
             InferenceType.SAME_INDIVIDUAL};
@@ -30,12 +30,12 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
     /**
      * An anonymous ontology that is used by the internal OWLReasoner for debugging sessions.
      */
-    private OWLOntology debuggingOntology;
+    OWLOntology debuggingOntology;
 
     /**
      * The debugging ontology's manager to be used in constructor and in dispose() for a proper cleanup.
      */
-    private OWLOntologyManager debuggingOntologyManager;
+    OWLOntologyManager debuggingOntologyManager;
 
     /**
      * Default constructor of the reasoner.
@@ -74,6 +74,10 @@ public class ExquisiteOWLReasoner extends AbstractSolver<OWLLogicalAxiom> {
             this.reasoner = reasonerFactory.createReasoner(debuggingOntology);
         }
         checkDiagnosisModel();
+    }
+
+    public ExquisiteOWLReasoner(DiagnosisModel<OWLLogicalAxiom> dm) {
+        super(dm);
     }
 
     /**

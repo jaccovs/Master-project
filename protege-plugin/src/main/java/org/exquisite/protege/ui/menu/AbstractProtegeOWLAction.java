@@ -23,7 +23,7 @@ abstract class AbstractProtegeOWLAction extends ProtegeOWLAction implements Chan
 
     /**
      * Returns the current state of the debugging session.
-     * @return Either <code>true</code> if current active diagnosis searcher's DebuggingSession is in state STARTED or
+     * @return Either <code>true</code> if current active diagnosis searcher's DebuggingSession is in state RUNNING or
      * <code>false</code> if the state is in STOPPED.
      */
     boolean isSessionRunning() {
