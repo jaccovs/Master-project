@@ -2,15 +2,18 @@ package org.exquisite.protege.explanation;
 
 import org.protege.editor.core.ui.list.MListButton;
 import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.ui.editor.OWLObjectEditor;
 import org.protege.editor.owl.ui.frame.AbstractOWLFrameSectionRow;
 import org.protege.editor.owl.ui.frame.OWLFrameSection;
 import org.semanticweb.owl.explanation.api.Explanation;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge
@@ -28,7 +31,7 @@ public class JustificationFrameSectionRow extends AbstractOWLFrameSectionRow<Exp
 
 
     JustificationFrameSectionRow(OWLEditorKit owlEditorKit, OWLFrameSection<Explanation<OWLAxiom>, OWLAxiom, OWLAxiom> section, Explanation<OWLAxiom> rootObject, OWLAxiom axiom, int depth) {
-        super(owlEditorKit, section, null, rootObject, axiom);
+        super(owlEditorKit, section, owlEditorKit.getOWLModelManager().getActiveOntology(), rootObject, axiom);
         this.depth = depth;
     }
 
@@ -56,6 +59,34 @@ public class JustificationFrameSectionRow extends AbstractOWLFrameSectionRow<Exp
     @Override
     protected OWLAxiom createAxiom(OWLAxiom editedObject) {
         return null;
+    }
+
+    @Override
+    public String getTooltip() {
+        if (this.getOntology() != null) {
+            StringBuilder sb = new StringBuilder("<html>\n\t<body>\n\t\tAsserted in test ontology: ");
+            sb.append("<font color=\"0000ff\"><b>");
+            sb.append(getOntology().getOntologyID());
+            sb.append("</font></b>");
+            Set<OWLAnnotation> annotations = getAxiom().getAnnotations();
+            if (!annotations.isEmpty()) {
+                OWLModelManager protegeManager = getOWLModelManager();
+                sb.append("\n\t\t<p>Annotations:");
+                sb.append("\n\t\t<dl>");
+                for (OWLAnnotation annotation : annotations) {
+                    sb.append("\n\t\t\t<dt>");
+                    sb.append(protegeManager.getRendering(annotation.getProperty()));
+                    sb.append("</dt>\n\t\t\t<dd>");
+                    sb.append(protegeManager.getRendering(annotation.getValue()));
+                    sb.append("</dd>");
+                }
+                sb.append("\n\t\t</dl>\n\t</p>\n");
+            }
+            sb.append("\t</body>\n</html>");
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
 
     public List<? extends OWLObject> getManipulatableObjects() {
