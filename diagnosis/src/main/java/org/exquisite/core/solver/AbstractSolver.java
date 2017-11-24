@@ -58,6 +58,13 @@ public abstract class AbstractSolver<F> implements ISolver<F>, Observer {
 
             // check non-entailed examples
             for (F example : diagnosisModel.getNotEntailedExamples()) {
+
+                // some reasoners do not recognize such a trivial entailment
+                // this fixes the 2nd example in issue #79
+                if (formulas.contains(example)) {
+                    return false;
+                }
+
                 if (isEntailed(Collections.singleton(example))) {
                     return false;
                 }
