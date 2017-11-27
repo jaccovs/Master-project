@@ -7,11 +7,7 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +28,13 @@ public class ConflictAxiomList extends AbstractAxiomList {
     }
 
     public void updateList(Set<Set<OWLLogicalAxiom>> minimalConflictSets, OWLOntology ontology) {
+        // order the minimal conflict sets by size in ascending order
+        List<Set<OWLLogicalAxiom>> orderedMinimalConflictSets = new ArrayList<>(minimalConflictSets);
+        orderedMinimalConflictSets.sort(Comparator.comparingInt(Set::size));
+
         List<Object> items = new ArrayList<>();
         int cnt = 0;
-        for (Set<OWLLogicalAxiom> minimalConflictSet : minimalConflictSets) {
+        for (Set<OWLLogicalAxiom> minimalConflictSet : orderedMinimalConflictSets) {
             Set<OWLLogicalAxiom> sortedAxioms = new TreeSet<>(minimalConflictSet); // list the axioms in a sorted order
             items.add(new ConflictListHeader(sortedAxioms,createHeaderName(++cnt, sortedAxioms))); // section header for one conflict set
             items.addAll(sortedAxioms.stream().map(axiom -> new AxiomListItem(axiom, ontology)).collect(Collectors.toList())); // the conflict axioms of the conflict set
