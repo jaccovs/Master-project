@@ -5,7 +5,7 @@ package org.exquisite.core.query.querycomputation;
  *
  * @author wolfi
  */
-public class UserInterruptionException extends RuntimeException {
+public class UserInterruptionException extends QueryException {
 
     public UserInterruptionException() {
         super();

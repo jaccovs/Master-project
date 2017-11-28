@@ -19,6 +19,8 @@ public class QueryErrorHandler extends SearchErrorHandler {
             case ONLY_ONE_DIAG:
                 showErrorDialog(null, "There is only one diagnosis so we can not discriminate  ", "Only One Diagnosis", JOptionPane.INFORMATION_MESSAGE, ex);
                 break;
+            case RECURRING_QUERY_ERROR:
+                showErrorDialog(null, "The next query has an already answered axiom.", "Recurring Query Error", JOptionPane.INFORMATION_MESSAGE, ex);
             default:
                 super.errorHappened(error, ex);
                 break;

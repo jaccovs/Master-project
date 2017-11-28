@@ -14,6 +14,7 @@ import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.query.Answer;
 import org.exquisite.core.query.Query;
 import org.exquisite.core.query.querycomputation.IQueryComputation;
+import org.exquisite.core.query.querycomputation.QueryException;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicConfiguration;
 import org.exquisite.core.query.querycomputation.heuristic.HeuristicQueryComputation;
 import org.exquisite.core.query.querycomputation.heuristic.partitionmeasures.*;
@@ -63,7 +64,8 @@ public class Debugger {
     public enum TestcaseType {ENTAILED_TC, NON_ENTAILED_TC, ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
-        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION}
+        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION, RECURRING_QUERY_ERROR
+    }
 
     public enum QuerySearchStatus { IDLE, ASKING_QUERY }
 
@@ -449,6 +451,21 @@ public class Debugger {
         this.queryHistory.clear();
     }
 
+    private void checkQuery(Query<OWLLogicalAxiom> nextQuery) {
+        final ListIterator<Answer<OWLLogicalAxiom>> iterator = queryHistory.listIterator(queryHistory.size());
+        while (iterator.hasPrevious()) {
+            final Answer<OWLLogicalAxiom> previousAnswer = iterator.previous();
+            for (OWLLogicalAxiom axiom : nextQuery.formulas) {
+                if (previousAnswer.positive.contains(axiom) || previousAnswer.negative.contains(axiom)) {
+                    String message = "The next query contains the already answered axiom \"" + axiom + "\"\n" +
+                            "This indicates an incomplete or incorrect entailment check of the selected reasoner.\n";
+                    throw new QueryException(message);
+                }
+            }
+
+        }
+    }
+
     /**
      * Moves a set of correct axioms to the set of possibly faulty axioms in the diagnosis model.
      *
@@ -770,6 +787,16 @@ public class Debugger {
             if (qc.hasNext()) {
                 this.answer.query = qc.next();
                 logger.debug("query configuration: " + qc);
+
+                // check, if the query contains axioms previously answered already
+                try {
+                    checkQuery(this.answer.query);
+                } catch (QueryException qex) {
+                    errorHandler.errorHappened(ErrorStatus.RECURRING_QUERY_ERROR, qex);
+                    errorStatus = ErrorStatus.RECURRING_QUERY_ERROR;
+                    resetQuery();
+                    return false;
+                }
             } else {
                 errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
