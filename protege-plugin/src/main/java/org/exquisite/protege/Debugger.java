@@ -64,7 +64,7 @@ public class Debugger {
     public enum TestcaseType {ENTAILED_TC, NON_ENTAILED_TC, ORIGINAL_ENTAILED_TC, ORIGINAL_NON_ENTAILED_TC, ACQUIRED_ENTAILED_TC, ACQUIRED_NON_ENTAILED_TC}
 
     public enum ErrorStatus {NO_CONFLICT_EXCEPTION, SOLVER_EXCEPTION, INCONSISTENT_THEORY_EXCEPTION,
-        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION, RECURRING_QUERY_ERROR
+        NO_QUERY, ONLY_ONE_DIAG, NO_ERROR, UNKNOWN_RM, UNKNOWN_SORTCRITERION, RUNTIME_EXCEPTION, QUERYCOMPUTATION_ERROR
     }
 
     public enum QuerySearchStatus { IDLE, ASKING_QUERY }
@@ -457,12 +457,12 @@ public class Debugger {
             final Answer<OWLLogicalAxiom> previousAnswer = iterator.previous();
             for (OWLLogicalAxiom axiom : nextQuery.formulas) {
                 if (previousAnswer.positive.contains(axiom) || previousAnswer.negative.contains(axiom)) {
-                    String message = "The next query contains the already answered axiom \"" + axiom + "\"\n" +
-                            "This indicates an incomplete or incorrect entailment check of the selected reasoner.\n";
+                    String message = "The computed query includes the answered axiom \"" + axiom + "\"\n" +
+                            "This indicates an incorrect reasoner behaviour.\n" +
+                            "Please select another reasoner and restart the debugging session.";
                     throw new QueryException(message);
                 }
             }
-
         }
     }
 
@@ -792,8 +792,8 @@ public class Debugger {
                 try {
                     checkQuery(this.answer.query);
                 } catch (QueryException qex) {
-                    errorHandler.errorHappened(ErrorStatus.RECURRING_QUERY_ERROR, qex);
-                    errorStatus = ErrorStatus.RECURRING_QUERY_ERROR;
+                    errorHandler.errorHappened(ErrorStatus.QUERYCOMPUTATION_ERROR, qex);
+                    errorStatus = ErrorStatus.QUERYCOMPUTATION_ERROR;
                     resetQuery();
                     return false;
                 }
