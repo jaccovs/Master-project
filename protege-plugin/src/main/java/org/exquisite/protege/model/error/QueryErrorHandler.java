@@ -21,6 +21,7 @@ public class QueryErrorHandler extends SearchErrorHandler {
                 break;
             case QUERYCOMPUTATION_ERROR:
                 showErrorDialog(null, "Unexpected reasoner error.", "Query Computation Error", JOptionPane.INFORMATION_MESSAGE, ex);
+                break;
             default:
                 super.errorHappened(error, ex);
                 break;

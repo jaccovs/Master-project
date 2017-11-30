@@ -336,6 +336,8 @@ public class Debugger {
                 this.cautiousParameter = null;
                 this.previousCautiousParameter = null;
 
+                errorStatus = NO_ERROR;
+
                 notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.SESSION_STATE_CHANGED));
 
                 // notify the user why session has stopped
@@ -792,23 +794,25 @@ public class Debugger {
                 try {
                     checkQuery(this.answer.query);
                 } catch (QueryException qex) {
-                    errorHandler.errorHappened(ErrorStatus.QUERYCOMPUTATION_ERROR, qex);
                     errorStatus = ErrorStatus.QUERYCOMPUTATION_ERROR;
+                    errorHandler.errorHappened(ErrorStatus.QUERYCOMPUTATION_ERROR, qex);
                     resetQuery();
                     return false;
                 }
             } else {
-                errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 errorStatus = ErrorStatus.NO_QUERY;
+                errorHandler.errorHappened(ErrorStatus.NO_QUERY);
                 resetQuery();
                 return false;
             }
             querySearchStatus = QuerySearchStatus.ASKING_QUERY;
             return true;
         } catch (DiagnosisException e) {
+            errorStatus = ErrorStatus.SOLVER_EXCEPTION;
             errorHandler.errorHappened(ErrorStatus.SOLVER_EXCEPTION, e);
             return false;
         } catch (RuntimeException e) {
+            errorStatus = ErrorStatus.RUNTIME_EXCEPTION;
             errorHandler.errorHappened(ErrorStatus.RUNTIME_EXCEPTION, e);
             return false;
         } finally {
