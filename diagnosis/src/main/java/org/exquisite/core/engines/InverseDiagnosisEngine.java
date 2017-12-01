@@ -9,6 +9,7 @@ import org.exquisite.core.model.Diagnosis;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.core.solver.ISolver;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
@@ -91,10 +92,20 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
             getSolver().getDiagnosisModel().setCorrectFormulas(correctFormulasCopy);
 
             incrementCounter(COUNTER_INVERSE_DIAGNOSES);
+
+            setDiagnosesMeasures(diagnoses);
+
             return diagnoses;
         } finally {
             notifyTaskStopped(); // progress
             stop(TIMER_INVERSE_DIAGNOSES);
+        }
+    }
+
+    private void setDiagnosesMeasures(Set<Diagnosis<F>> diagnoses) {
+        for (Diagnosis<F> diagnosis : diagnoses) {
+            final BigDecimal diagnosisMeasure = this.getCostsEstimator().getFormulasCosts(diagnosis.getFormulas());
+            diagnosis.setMeasure(diagnosisMeasure);
         }
     }
 
