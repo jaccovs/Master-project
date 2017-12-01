@@ -193,6 +193,8 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
     private BigDecimal computeAxiomProbability(OWLLogicalAxiom axiom) {
         BigDecimal result = getAxiomScore(axiom);
         result = BigDecimal.ONE.subtract(result);
+        // necessary to guarantee that uniform cost HS-Tree finds set-minimal diagnoses first. each axiom probability must be < 0.5, therefore the divide by number > 2
+        result = result.divide(new BigDecimal("2.001"), MathContext.DECIMAL128);
         // no keyword is known
         if (result.compareTo(BigDecimal.ZERO) == 0)
             result = new BigDecimal("0.000000000000000000000000000000000000000000001");
