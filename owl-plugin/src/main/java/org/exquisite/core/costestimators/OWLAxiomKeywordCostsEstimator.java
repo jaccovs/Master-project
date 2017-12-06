@@ -7,6 +7,8 @@ import org.exquisite.core.parser.OWLAxiomKeywordCounter;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -21,6 +23,8 @@ import java.util.*;
  */
 public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogicalAxiom>
         implements ICostsEstimator<OWLLogicalAxiom> {
+
+    private Logger logger = LoggerFactory.getLogger(OWLAxiomKeywordCostsEstimator.class.getCanonicalName());
 
     public final static ManchesterOWLSyntax[] keywords = {
             ManchesterOWLSyntax.TYPE,
@@ -128,9 +132,15 @@ public class OWLAxiomKeywordCostsEstimator extends AbstractCostEstimator<OWLLogi
             final int occurrence = visitor.getOccurrences(keyword);
             if (occurrence > 0) {
                 final BigDecimal probability = keywordProbabilities.get(keyword);
-                BigDecimal temp = BigDecimal.ONE.subtract(probability);
-                temp = temp.pow(occurrence, MathContext.DECIMAL128);
-                result = result.multiply(temp);
+                if (probability != null) {
+                    BigDecimal temp = BigDecimal.ONE.subtract(probability);
+                    temp = temp.pow(occurrence, MathContext.DECIMAL128);
+                    result = result.multiply(temp);
+                } else {
+                    // no probability found for keyword, log this but do not throw an exception
+                    logger.warn("No probability is found for unknown keyword \"" + keyword + "\". " +
+                            "This keyword will be ignored in score computation of axiom \"" + axiom + "\".");
+                }
             }
         }
 
