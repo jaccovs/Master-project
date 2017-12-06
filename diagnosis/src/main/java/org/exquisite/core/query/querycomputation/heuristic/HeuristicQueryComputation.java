@@ -56,30 +56,28 @@ public class HeuristicQueryComputation<F> implements IQueryComputation<F> {
                 monitor.setCancel(true); // we already have the canonical query therefore the user can cancel the
             }
 
-            if (monitor!=null && !monitor.isCancelled()) {
+            try {
+                // (3) in order to come up with a query that is as simple and easy to answer as possible for the
+                // respective user U, the query can optionally enriched by additional logical formulas by invoking
+                // a reasoner for entailments calculation.
+                Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
+
+                // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
+                // which constructs a set-minimal query where most complex sentences in terms of the logical construct
+                // and term fault estimates are eliminated from Q and the most simple ones retained
+                incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
+                if (monitor != null) monitor.taskBusy("optimizing query...");
+
+                Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
+                incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
+                query = optimizedQuery;
+            } catch (UserInterruptionException uiex) {
+                // expected exception thrown when user interrupts the extended query computation.
+                if (monitor != null) monitor.taskBusy("cancelling query enrichment...");
                 try {
-                    // (3) in order to come up with a query that is as simple and easy to answer as possible for the
-                    // respective user U, the query can optionally enriched by additional logical formulas by invoking
-                    // a reasoner for entailments calculation.
-                    Set<F> enrichedQuery = enrichQuery(originalQuery, qPartition, config.diagnosisEngine.getSolver().getDiagnosisModel());
-
-                    // (4) the previous step causes a larger pool of formulas to select from in the query optimization step
-                    // which constructs a set-minimal query where most complex sentences in terms of the logical construct
-                    // and term fault estimates are eliminated from Q and the most simple ones retained
-                    incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_ENRICHTMENT, enrichedQuery.size()); // SIZE of queries vor minimieren
-                    if (monitor != null) monitor.taskBusy("optimizing query...");
-
-                    Set<F> optimizedQuery = optimizeQuery(enrichedQuery, originalQuery, qPartition, config.diagnosisEngine);
-                    incrementCounter(COUNTER_QUERYCOMPUTATION_HEURISTIC_QUERIES_SIZE_AFTER_MINIMIZE, optimizedQuery.size()); // SIZE of queries nach minimieren
-                    query = optimizedQuery;
-                } catch (UserInterruptionException uiex) {
-                    // expected exception thrown when user interrupts the extended query computation.
-                    if (monitor != null) monitor.taskBusy("cancelling query enrichment...");
-                    try {
-                        Thread.currentThread().sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
