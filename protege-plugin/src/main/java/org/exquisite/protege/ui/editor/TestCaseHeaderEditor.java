@@ -8,6 +8,7 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 
 public class TestCaseHeaderEditor extends AbstractEditor {
@@ -17,6 +18,8 @@ public class TestCaseHeaderEditor extends AbstractEditor {
     }
 
     private TestcaseListHeader header;
+
+    private final NotificationLabel notificationLabel = new NotificationLabel();
 
     public TestCaseHeaderEditor(TestcaseListHeader header, OWLEditorKit editorKit, EditorKitHook editorKitHook) {
         super(editorKit, editorKitHook);
@@ -36,10 +39,31 @@ public class TestCaseHeaderEditor extends AbstractEditor {
     }
 
     @Override
+    protected JToolBar createAddEntitiesToolbar() {
+        JToolBar toolBar = super.createAddEntitiesToolbar();
+        toolBar.add(notificationLabel,
+                new GridBagConstraints(
+                        4, 0,
+                        1, 1,
+                        0, 0,
+                        GridBagConstraints.EAST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0),
+                        0, 0
+                )
+        );
+        return toolBar;
+    }
+
+    @Override
     protected boolean isValid(Set<OWLLogicalAxiom> testcase) {
         final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
 
-        return debugger.isValidNewTestCase(testcase, header.getType());
+        boolean isValid = debugger.isValidNewTestCase(testcase, header.getType());
+        if (isValid) notificationLabel.hideNotification();
+        else notificationLabel.showNotification("This axiom cannot be added because an inconsistency/incoherency would be introduced!");
+
+        return isValid;
     }
 
 }
