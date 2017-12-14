@@ -1,5 +1,6 @@
 package org.exquisite.protege.model;
 
+import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.Debugger;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
@@ -118,18 +119,52 @@ public class TestcasesModel {
      * would generate an inconsistency (if it is both entailed and non entailed or if it occurs in the background).
      *
      * @param axioms The axiom representing the to be added axiom.
+     * @param type
      * @return <code>true</code> if the axiom is ok for the diagnosis model, <code>false</code> otherwise.
      */
-    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms) {
+    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
         if (axioms.size() == 1) {
             final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.debugger.getDiagnosisModel();
             final OWLLogicalAxiom axiom = axioms.iterator().next();
             final List<OWLLogicalAxiom> entailedExamples = diagnosisModel.getEntailedExamples();
             final List<OWLLogicalAxiom> notEntailedExamples = diagnosisModel.getNotEntailedExamples();
             final List<OWLLogicalAxiom> correctFormulas = diagnosisModel.getCorrectFormulas();
-            return !(entailedExamples.contains(axiom) || notEntailedExamples.contains(axiom) || correctFormulas.contains(axiom));
+            final boolean isAlreadyDefined = entailedExamples.contains(axiom) || notEntailedExamples.contains(axiom) || correctFormulas.contains(axiom);
+            return !isAlreadyDefined && isConsistent(axioms, type);
         } else {
             throw new UnsupportedOperationException("An unexpected case has occurred. The validity check for test cases expects only one axiom to test.");
         }
+    }
+
+    private boolean isConsistent(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = debugger.getDiagnosisEngineFactory().getDiagnosisEngine();
+
+        if (diagnosisEngine == null) {
+            // no diagnosis session has been started before, therefore no diagnosis engine has been created yet
+            debugger.getDiagnosisEngineFactory().reset();
+            diagnosisEngine = debugger.getDiagnosisEngineFactory().getDiagnosisEngine();
+        }
+        // temporarily add the axioms to the testcases to be check the consistency
+        final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.debugger.getDiagnosisModel();
+        final OWLLogicalAxiom axiom = axioms.iterator().next();
+        if (!diagnosisModel.getPossiblyFaultyFormulas().contains(axiom)) {
+            switch (type) {
+                case ORIGINAL_ENTAILED_TC:
+                    return isConsistent(axioms, debugger.getDiagnosisModel().getEntailedExamples());
+                case ORIGINAL_NON_ENTAILED_TC:
+                    // we want
+                    return isConsistent(axioms, debugger.getDiagnosisModel().getNotEntailedExamples());
+                default:
+                    throw new UnsupportedOperationException("Consistency check for testcases of type " + type + " is not supported.");
+            }
+        } else return true; // possibly faulty axioms added as test case shall be always possible
+    }
+
+    private boolean isConsistent(Set<OWLLogicalAxiom> axioms, List<OWLLogicalAxiom> testcases) {
+        final OWLLogicalAxiom axiom = axioms.iterator().next();
+        testcases.add(axiom);
+        boolean isConsistent = debugger.getDiagnosisEngineFactory().getDiagnosisEngine().getSolver().isConsistent(axioms);
+        testcases.remove(axiom);
+        return isConsistent;
     }
 }

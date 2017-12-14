@@ -38,7 +38,8 @@ public class TestCaseHeaderEditor extends AbstractEditor {
     @Override
     protected boolean isValid(Set<OWLLogicalAxiom> testcase) {
         final Debugger debugger = getEditorKitHook().getActiveOntologyDebugger();
-        return debugger.isValidNewTestCase(testcase);
+
+        return debugger.isValidNewTestCase(testcase, header.getType());
     }
 
 }

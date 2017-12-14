@@ -569,10 +569,11 @@ public class Debugger {
     /**
      * Checks if the to be added new test case is valid and compatible with the current state.
      * @param axioms A set of axioms representing a new test case.
+     * @param type
      * @return <code>true</code> if test case is valid and sound for the current diagnosis model</code>, <code>false</code> otherwise.
      */
-    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms) {
-        return getTestcases().isValidNewTestCase(axioms);
+    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+        return getTestcases().isValidNewTestCase(axioms, type);
     }
 
     /**
