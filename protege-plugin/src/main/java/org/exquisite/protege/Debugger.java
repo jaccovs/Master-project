@@ -507,6 +507,9 @@ public class Debugger {
         // We need to calculate the queries only after the second call of this method.
         if (isSessionRunning()) {
             new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+        } else {
+            // this case is when original test cases are beeing removed.
+            notifyDiagnosisModelChanged();
         }
     }
 
@@ -554,6 +557,22 @@ public class Debugger {
         this.testcases.addTestcase(axioms, type);
         if(!getErrorStatus().equals(NO_ERROR))
             errorHandler.errorHappened(getErrorStatus());
+        else
+            // a test case axiom has been manually added by the user
+            if (axioms.size() == 1 && (type == TestcaseType.ORIGINAL_ENTAILED_TC || type == TestcaseType.ORIGINAL_NON_ENTAILED_TC)) {
+                // compute a new query if currently a session is running
+                if (isSessionRunning()) new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+                else notifyDiagnosisModelChanged(); // otherwise only notify to update view
+            }
+    }
+
+    /**
+     * Checks if the to be added new test case is valid and compatible with the current state.
+     * @param axioms A set of axioms representing a new test case.
+     * @return <code>true</code> if test case is valid and sound for the current diagnosis model</code>, <code>false</code> otherwise.
+     */
+    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms) {
+        return getTestcases().isValidNewTestCase(axioms);
     }
 
     /**

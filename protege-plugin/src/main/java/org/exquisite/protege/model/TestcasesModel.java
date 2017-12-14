@@ -1,8 +1,10 @@
 package org.exquisite.protege.model;
 
+import org.exquisite.core.model.DiagnosisModel;
 import org.exquisite.protege.Debugger;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -110,4 +112,24 @@ public class TestcasesModel {
         this.acquiredNonEntailedTestcases.clear();
     }
 
+    /**
+     * A new test case is only valid if it does not already occur as an entailed or non entailed axiom or in the background.
+     * If the same axiom is both entailed and non entailed or already defined as an axiom in the background then we
+     * would generate an inconsistency (if it is both entailed and non entailed or if it occurs in the background).
+     *
+     * @param axioms The axiom representing the to be added axiom.
+     * @return <code>true</code> if the axiom is ok for the diagnosis model, <code>false</code> otherwise.
+     */
+    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms) {
+        if (axioms.size() == 1) {
+            final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = this.debugger.getDiagnosisModel();
+            final OWLLogicalAxiom axiom = axioms.iterator().next();
+            final List<OWLLogicalAxiom> entailedExamples = diagnosisModel.getEntailedExamples();
+            final List<OWLLogicalAxiom> notEntailedExamples = diagnosisModel.getNotEntailedExamples();
+            final List<OWLLogicalAxiom> correctFormulas = diagnosisModel.getCorrectFormulas();
+            return !(entailedExamples.contains(axiom) || notEntailedExamples.contains(axiom) || correctFormulas.contains(axiom));
+        } else {
+            throw new UnsupportedOperationException("An unexpected case has occurred. The validity check for test cases expects only one axiom to test.");
+        }
+    }
 }
