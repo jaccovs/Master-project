@@ -74,7 +74,9 @@ public abstract class AbstractEditor {
 
         editor.addStatusChangedListener(newState -> {
             try {
-                optionPane.setOKEnabled(isWellFormed(editor) && isValid(editor.createObject()));
+                boolean isWellFormed = isWellFormed(editor);
+                if (isWellFormed) isValid(editor.createObject());
+                optionPane.setOKEnabled(isWellFormed);
             } catch (OWLException ex) {
                 logger.error(ex.getMessage(), ex);
             }
