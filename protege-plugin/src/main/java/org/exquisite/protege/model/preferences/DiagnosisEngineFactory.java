@@ -11,7 +11,6 @@ import org.exquisite.protege.Debugger;
 import org.exquisite.protege.model.exception.DiagnosisModelCreationException;
 import org.protege.editor.core.log.LogBanner;
 import org.protege.editor.owl.model.inference.OWLReasonerManager;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;

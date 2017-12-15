@@ -2,13 +2,13 @@ package org.exquisite.protege.ui.editor;
 
 import org.exquisite.protege.EditorKitHook;
 import org.exquisite.protege.ui.action.CreateOWLEntityAction;
-import org.protege.editor.core.ui.util.InputVerificationStatusChangedListener;
 import org.protege.editor.core.ui.util.VerifyingOptionPane;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.OWLIcons;
 import org.protege.editor.owl.ui.clsdescriptioneditor.ExpressionEditor;
 import org.protege.editor.owl.ui.clsdescriptioneditor.OWLExpressionChecker;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +17,8 @@ import java.awt.event.ComponentEvent;
 import java.util.Set;
 
 public abstract class AbstractEditor {
+
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractEditor.class.getName());
 
     private OWLEditorKit editorKit;
 
@@ -60,7 +62,7 @@ public abstract class AbstractEditor {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(createAddEntitiesToolbar(), BorderLayout.NORTH);
         OWLExpressionChecker<Set<OWLLogicalAxiom>> checker = new AxiomChecker(editorKit.getModelManager());
-        final ExpressionEditor<Set<OWLLogicalAxiom>> editor = new ExpressionEditor<Set<OWLLogicalAxiom>>(editorKit, checker);
+        final ExpressionEditor<Set<OWLLogicalAxiom>> editor = new ExpressionEditor<>(editorKit, checker);
         setEditedAxioms(editor);
 
         JScrollPane scroller = new JScrollPane(editor);
@@ -68,12 +70,13 @@ public abstract class AbstractEditor {
         panel.setPreferredSize(new Dimension(400,300));
 
         final VerifyingOptionPane optionPane = new VerifyingOptionPane(panel);
+        optionPane.setOKEnabled(false);
 
-        editor.addStatusChangedListener(new InputVerificationStatusChangedListener() {
-            @Override
-            public void verifiedStatusChanged(boolean newState) {
-
-                optionPane.setOKEnabled(editor.isWellFormed());
+        editor.addStatusChangedListener(newState -> {
+            try {
+                optionPane.setOKEnabled(isWellFormed(editor) && isValid(editor.createObject()));
+            } catch (OWLException ex) {
+                logger.error(ex.getMessage(), ex);
             }
         });
         JDialog dlg = optionPane.createDialog(getEditorTitle());
@@ -89,24 +92,25 @@ public abstract class AbstractEditor {
                     try {
                         handleEditorConfirmed(editor.createObject());
                     } catch (OWLException e1) {
-                        e1.printStackTrace();
+                        logger.error(e1.getMessage(), e1);
                     }
             }
         });
-
         return dlg;
     }
 
-    protected void setEditedAxioms(ExpressionEditor<Set<OWLLogicalAxiom>> editor) {
-
-    }
+    protected void setEditedAxioms(ExpressionEditor<Set<OWLLogicalAxiom>> editor) {}
 
     protected abstract String getEditorTitle();
 
     protected abstract void handleEditorConfirmed(Set<OWLLogicalAxiom> testcase);
 
-    public void show() {
+    protected boolean isWellFormed(final ExpressionEditor<Set<OWLLogicalAxiom>> editor) {
+        return editor.isWellFormed();
+    }
+    protected abstract boolean isValid(Set<OWLLogicalAxiom> testcase);
 
+    public void show() {
         JDialog dialog = createDialog();
         dialog.setVisible(true);
     }

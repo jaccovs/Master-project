@@ -176,7 +176,7 @@ public class Debugger {
         notifyDiagnosisModelChanged();
     }
 
-    public void notifyDiagnosisModelChanged() {
+    private void notifyDiagnosisModelChanged() {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_MODEL_CHANGED));
     }
 
@@ -507,10 +507,13 @@ public class Debugger {
         // We need to calculate the queries only after the second call of this method.
         if (isSessionRunning()) {
             new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+        } else {
+            // this case is when original test cases are beeing removed.
+            notifyDiagnosisModelChanged();
         }
     }
 
-    public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+    private void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
         this.testcases.removeTestcase(axioms, type);
 
         // We also have to synchronize the query history (if the user removed the test case from the acquired test cases)
@@ -554,6 +557,13 @@ public class Debugger {
         this.testcases.addTestcase(axioms, type);
         if(!getErrorStatus().equals(NO_ERROR))
             errorHandler.errorHappened(getErrorStatus());
+        else
+            // a test case axiom has been manually added by the user
+            if (axioms.size() == 1 && (type == TestcaseType.ORIGINAL_ENTAILED_TC || type == TestcaseType.ORIGINAL_NON_ENTAILED_TC)) {
+                // compute a new query if currently a session is running
+                if (isSessionRunning()) new Thread(() -> doCalculateDiagnosesAndGetQuery(new QueryErrorHandler())).start();
+                else notifyDiagnosisModelChanged(); // otherwise only notify to update view
+            }
     }
 
     /**
@@ -599,7 +609,7 @@ public class Debugger {
      *
      * @param errorHandler An error handler.
      */
-    public void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
+    private void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
         this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
         doCalculateDiagnosesAndGetQuery(errorHandler);
