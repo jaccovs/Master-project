@@ -74,7 +74,7 @@ public abstract class AbstractEditor {
 
         editor.addStatusChangedListener(newState -> {
             try {
-                optionPane.setOKEnabled(editor.isWellFormed() && isValid(editor.createObject()));
+                optionPane.setOKEnabled(isWellFormed(editor) && isValid(editor.createObject()));
             } catch (OWLException ex) {
                 logger.error(ex.getMessage(), ex);
             }
@@ -105,6 +105,9 @@ public abstract class AbstractEditor {
 
     protected abstract void handleEditorConfirmed(Set<OWLLogicalAxiom> testcase);
 
+    protected boolean isWellFormed(final ExpressionEditor<Set<OWLLogicalAxiom>> editor) {
+        return editor.isWellFormed();
+    }
     protected abstract boolean isValid(Set<OWLLogicalAxiom> testcase);
 
     public void show() {

@@ -176,7 +176,7 @@ public class Debugger {
         notifyDiagnosisModelChanged();
     }
 
-    public void notifyDiagnosisModelChanged() {
+    private void notifyDiagnosisModelChanged() {
         notifyListeners(new OntologyDebuggerChangeEvent(this, EventType.DIAGNOSIS_MODEL_CHANGED));
     }
 
@@ -513,7 +513,7 @@ public class Debugger {
         }
     }
 
-    public void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
+    private void doRemoveTestcase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
         this.testcases.removeTestcase(axioms, type);
 
         // We also have to synchronize the query history (if the user removed the test case from the acquired test cases)
@@ -567,16 +567,6 @@ public class Debugger {
     }
 
     /**
-     * Checks if the to be added new test case is valid and compatible with the current state.
-     * @param axioms A set of axioms representing a new test case.
-     * @param type
-     * @return <code>true</code> if test case is valid and sound for the current diagnosis model</code>, <code>false</code> otherwise.
-     */
-    public boolean isValidNewTestCase(Set<OWLLogicalAxiom> axioms, TestcaseType type) {
-        return getTestcases().isValidNewTestCase(axioms, type);
-    }
-
-    /**
      * Check if the set of new acquired test cases is empty. This check is called by the ResetDebuggerAction.
      *
      * @return <code>true</code> if there are no acquired test cases yet, otherwise <code>false</code>.
@@ -619,7 +609,7 @@ public class Debugger {
      *
      * @param errorHandler An error handler.
      */
-    public void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
+    private void doCommitAndGetNewQuery(QueryErrorHandler errorHandler) {
         this.previousDiagnoses = new HashSet<>(this.diagnoses);
         doCommitQuery();
         doCalculateDiagnosesAndGetQuery(errorHandler);
