@@ -56,7 +56,7 @@ public class TestcaseListHeader implements MListSectionHeader {
 
     @Override
     public boolean canAdd() {
-        return false;
-    } // TODO not yet fully functional implemented
+        return type.equals(TestcaseType.ORIGINAL_ENTAILED_TC) || type.equals(TestcaseType.ORIGINAL_NON_ENTAILED_TC);
+    }
 
 }
