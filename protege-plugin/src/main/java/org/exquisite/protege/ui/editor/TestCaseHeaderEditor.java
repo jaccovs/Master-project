@@ -80,13 +80,13 @@ public class TestCaseHeaderEditor extends AbstractEditor {
         final DiagnosisModel<OWLLogicalAxiom> diagnosisModel = debugger.getDiagnosisModel();
         final OWLLogicalAxiom axiom = axioms.iterator().next();
         if (diagnosisModel.getEntailedExamples().contains(axiom)) {
-            notificationLabel.showNotification("This axiom is already defined as entailed testcase!");
+            notificationLabel.showNotification("<html>Warning!<br>The axiom is already defined as an entailed testcase!</html>");
             return false;
         } else if (diagnosisModel.getNotEntailedExamples().contains(axiom)) {
-            notificationLabel.showNotification("This axiom is already defined as not entailed testcase!");
+            notificationLabel.showNotification("<html>Warning!<br>The axiom is already defined as not entailed testcase!</html>");
             return false;
         } else if (diagnosisModel.getCorrectFormulas().contains(axiom)) {
-            notificationLabel.showNotification("This axiom is already defined as a correct axiom!");
+            notificationLabel.showNotification("<html>Warning!<br>The axiom is already defined as a correct axiom!</html>");
             return false;
         }
 
@@ -110,7 +110,7 @@ public class TestCaseHeaderEditor extends AbstractEditor {
                     if (isConsistent)
                         notificationLabel.hideNotification();
                     else
-                        notificationLabel.showNotification("This axiom cannot be added because an inconsistency/incoherency would be introduced!");
+                        notificationLabel.showNotification("<html>Warning!<br>The axiom causes an inconsistency!</html>");
                     return isConsistent;
                 case ORIGINAL_NON_ENTAILED_TC:
                     debugger.getDiagnosisModel().getNotEntailedExamples().add(axiom);
@@ -119,7 +119,7 @@ public class TestCaseHeaderEditor extends AbstractEditor {
                     if (isConsistent_)
                         notificationLabel.hideNotification();
                     else
-                        notificationLabel.showNotification("This axiom cannot be added because an inconsistency/incoherency would be introduced!");
+                        notificationLabel.showNotification("<html>Warning!<br>The axiom causes an inconsistency!</html>");
                     return isConsistent_;
                 default:
                     throw new UnsupportedOperationException("Consistency check for testcases of type " + header.getType() + " is not supported.");
