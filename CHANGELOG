@@ -1,3 +1,13 @@
+0.1.5.BETA (December 19, 2017)
+- New: Repair interface with explanations (Issues #63, #53)
+- New: Manual addition of testcases (Issue #104)
+- New: Support of module extraction (Issue #72)
+- New: All axioms are now assumed to as possibly faulty by default
+- New: Order conflicts by size (Issue #98)
+- New: Add/remove multiple axioms to the background knowledge (Issue #56)
+- New: Cancel enhanced query computation (Issues #58, #74)
+- New: Removed "not sure" icon in queries view (Issue #91)
+- Fix: Check for recurring and duplicate queries because of entailment errors caused by reasoner (Issue #79)
 0.1.4.BETA (May 19, 2017)
 - Fix: Proper handling of unexpected behaviour/errors/exceptions during debugging session (Issues #76, #77, #80, #82, #84, #85, #90)
 - Fix: Activates Debugging Buttons after exceptions (Issue #71)
