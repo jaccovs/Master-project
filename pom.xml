@@ -7,10 +7,16 @@
     <groupId>org.exquisite</groupId>
     <artifactId>exquisite</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.5.BETA</version>
+    <version>0.1.6.BETA-SNAPSHOT</version>
 
     <name>exquisite</name>
-    <description>Exquisite is a free, open source ontology debugger plugin for Protege.</description>
+    <description>
+        OntoDebug is a free and open source interactive ontology debugging plugin for Protégé.
+        OntoDebug is based on the Exquisite interactive framework for spreadsheet debugging developed at the
+        Technische Universität Dortmund by Dietmar Jannach, et.al.
+        The Exquisite framework comprises the diagnosis module and the - in OntoDebug unused - excel module.
+        OntoDebug is built on top of the diagnosis module and implements the modules owl-plugin and protege-plugin.
+    </description>
     <url>http://isbi.aau.at/ontodebug/</url>
     <inceptionYear>2016</inceptionYear>
 
