@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.mansyntax.ManchesterOWLSyntaxParser;
 
 import java.io.File;
+import java.util.Set;
 
 import static junit.framework.Assert.assertNotNull;
 
@@ -72,10 +73,18 @@ public class AbstractTest {
         DiagnosisModel<OWLLogicalAxiom> diagnosisModel = ExquisiteOWLReasoner.generateDiagnosisModel(ontology/*, reasonerFactory, extractModule, reduceIncoherencyToInconsistency*/);
         diagnosisModel = ExquisiteOWLReasoner.consistencyCheck(diagnosisModel, ontology, reasonerFactory, extractModule, reduceIncoherencyToInconsistency);
 
-        for (OWLIndividual ind : ontology.getIndividualsInSignature()) {
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getClassAssertionAxioms(ind));
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyAssertionAxioms(ind));
+        for (OWLClass cls : ontology.getClassesInSignature()) {
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSubClass(cls));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSuperClass(cls));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDisjointClassesAxioms(cls));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getEquivalentClassesAxioms(cls));
         }
+
+        for (OWLObjectProperty prop : ontology.getObjectPropertiesInSignature()) {
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyDomainAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyRangeAxioms(prop));
+        }
+
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
         return new ExquisiteOWLReasoner(diagnosisModel, reasonerFactory);

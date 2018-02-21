@@ -13,6 +13,9 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency> <groupId>net.sourceforge.owlapi</groupId> <artifactId>org.semanticweb.hermit</artifactId>
+            <version>1.3.8.500</version>
+        </dependency>
         <dependency>
             <groupId>org.exquisite</groupId>
             <artifactId>diagnosis</artifactId>
@@ -29,6 +32,16 @@
             <artifactId>org.semanticweb.hermit</artifactId>
             <version>1.3.8.413</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-osgidistribution</artifactId>
+            <version>5.0.0-BETA5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-osgidistribution</artifactId>
+            <version>5.0.0-BETA5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

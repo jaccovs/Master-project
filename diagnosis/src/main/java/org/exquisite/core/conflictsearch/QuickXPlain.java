@@ -50,14 +50,14 @@ public class QuickXPlain<F> implements IConflictSearcher<F> {
     }
 
     protected List<F> quickXPlain(List<F> b, List<F> d, List<F> c) {
-        if (!d.isEmpty() && !verifyConsistency(b))
-            return new ArrayList<>(0);
-        if (c.size() == 1)
-            return new ArrayList<>(c);
-        //Collections.sort(c)
-        int k = split(c);
-        List<F> c1 = c.subList(0, k);
-        List<F> c2 = c.subList(k, c.size());
+            if (!d.isEmpty() && !verifyConsistency(b))
+                return new ArrayList<>(0);
+            if (c.size() == 1)
+                return new ArrayList<>(c);
+            //Collections.sort(c)
+            int k = split(c);
+            List<F> c1 = c.subList(0, k);
+            List<F> c2 = c.subList(k, c.size());
 
         b.addAll(c1);
         List<F> d2 = quickXPlain(b, c1, c2);
