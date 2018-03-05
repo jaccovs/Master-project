@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
 
 import java.util.*;
 
@@ -101,5 +102,16 @@ public class IARSemantics extends Semantics {
         Set<OWLClassAssertionAxiom> IARClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
 
         return IARClassAssertionAxioms;
+    }
+
+    public Set<OWLPropertyAssertionAxiom<?,?>> getPropertyAssertionAxioms() throws Exception {
+        OWLDataFactory df = intersectionRepairs.getManager().getOWLDataFactory();
+        OWLReasonerFactory rf = new ReasonerFactory();
+        OWLReasoner r = rf.createReasoner(intersectionRepairs.getOntology());
+
+        InferredPropertyAssertionGenerator propertyAssertionAxiomGenerator = new InferredPropertyAssertionGenerator();
+        Set<OWLPropertyAssertionAxiom<?,?>> ICRPropertyAssertionAxioms = propertyAssertionAxiomGenerator.createAxioms(df, r);
+
+        return ICRPropertyAssertionAxioms;
     }
 }

@@ -84,4 +84,39 @@ public class ARSemantics extends Semantics {
         return ARClassAssertionAxioms;
     }
 
+    public Set<OWLPropertyAssertionAxiom> getPropertyAssertionAxioms() throws Exception{
+        Hashtable<OWLPropertyAssertionAxiom, Integer> instancesInRepairs = new Hashtable<OWLPropertyAssertionAxiom, Integer>();
+
+        for (int i = 0 ; i < repairs.length ; i++) {
+            OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
+            OWLReasonerFactory rf = new ReasonerFactory();
+            OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
+
+            InferredPropertyAssertionGenerator propertyAssertionGenerator = new InferredPropertyAssertionGenerator();
+            Set<OWLPropertyAssertionAxiom<?,?>> propertyAssertionAxioms = propertyAssertionGenerator.createAxioms(df, r);
+
+            for (OWLPropertyAssertionAxiom propertyAssertionAxiom: propertyAssertionAxioms){
+                instancesInRepairs.put(propertyAssertionAxiom, instancesInRepairs.containsKey(propertyAssertionAxiom) ? instancesInRepairs.get(propertyAssertionAxiom) + 1 : 1);
+            }
+        }
+
+//        for (Map.Entry<OWLClassAssertionAxiom, Integer> entry : instancesInRepairs.entrySet()) {
+//            OWLClassAssertionAxiom key = entry.getKey();
+//            Integer value = entry.getValue();
+//
+//            System.out.println ("Key: " + key + " Value: " + value);
+//        }
+
+        Integer value = repairs.length;
+        Set<OWLPropertyAssertionAxiom> ARPropertyAssertionAxioms = new HashSet();
+
+        for(Map.Entry entry: instancesInRepairs.entrySet()){
+            if(value.equals(entry.getValue())){
+                ARPropertyAssertionAxioms.add((OWLPropertyAssertionAxiom) entry.getKey());
+            }
+        }
+
+        return ARPropertyAssertionAxioms;
+    }
+
 }

@@ -8,4 +8,4 @@ bases as well as normal logic programs under ASP semantics.
 At the moment the project team focuses on development on the OWL 
 debugging module, therefore, CP and SAT modules might be slightly outdated.
 
-Please see our [Wiki](https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/home) for more details. 
+Please see our [Wiki](https://git-ainf.aau.at/interactive-KB-debugging/debugger/wikis/home) for more details. "# Master-project" 

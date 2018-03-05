@@ -15,8 +15,8 @@ import java.util.*;
 public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
-
-        MyOntology original = new MyOntology("ontologies/University.owl");
+        
+        MyOntology original = new MyOntology("ontologies/Matthew/country.owl");
 
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
@@ -25,41 +25,53 @@ public class DebuggerTest {
 
         OWLReasonerFactory rf = new ReasonerFactory();
         OWLReasoner r = rf.createReasoner(original.getOntology());
+        System.out.println(original.getOntology().getIndividualsInSignature());
         if (!r.isConsistent()) {
 
-            ARSemantics AR = new ARSemantics(original);
+//            ARSemantics AR = new ARSemantics(original);
 
             BraveSemantics Brave = new BraveSemantics(original);
 
-            IARSemantics IAR = new IARSemantics(original);
+//            IARSemantics IAR = new IARSemantics(original);
 
-            ICRSemantics ICR = new ICRSemantics(original);
+//            ICRSemantics ICR = new ICRSemantics(original);
 
-            MyOntology[] repairList = AR.getRepairs();
-            for (int i = 0; i < repairList.length; i++) {
-                System.out.println(repairList[i].getOntology());
-            }
+//            MyOntology[] repairList = AR.getRepairs();
+//            for (int i = 0; i < repairList.length; i++) {
+//                System.out.println(repairList[i].getOntology());
+//            }
 
-//        OWLDataFactory df = original.getManager().getOWLDataFactory();
-//
-//        OWLClass mechanic = df.getOWLClass(IRI.create("http://owl.api.toyExample#Human"));
-//        OWLIndividual max = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#Max"));
-//        OWLAxiom mechanicMax = df.getOWLClassAssertionAxiom(mechanic, max);
-//
-//        System.out.println(AR.isEntailed(mechanicMax));
-            System.out.println(AR.getClassAssertionAxioms().size());
+        OWLDataFactory df = original.getManager().getOWLDataFactory();
+        OWLClass car = df.getOWLClass(IRI.create("http://owl.api.toyExample#Car"));
+        OWLObjectProperty drives = df.getOWLObjectProperty(IRI.create("http://owl.api.toyExample#Drives"));
+        OWLClass driver = df.getOWLClass(IRI.create("http://owl.api.toyExample#Driver"));
+        OWLClassExpression drivesSomeCar = df.getOWLObjectSomeValuesFrom(drives, car);
+        OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(driver, drivesSomeCar);
 
-//        System.out.println(Brave.isEntailed(mechanicMax));
-            System.out.println(Brave.getClassAssertionAxioms().size());
+        OWLClass mechanic = df.getOWLClass(IRI.create("http://owl.api.toyExample#Human"));
+        OWLIndividual max = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#Max"));
+        OWLAxiom mechanicMax = df.getOWLClassAssertionAxiom(mechanic, max);
+        OWLAxiom maxDrivesCar = df.getOWLClassAssertionAxiom(drivesSomeCar, max);
 
-//        System.out.println(IAR.isEntailed(mechanicMax));
-            System.out.println(IAR.getClassAssertionAxioms().size());
+//        System.out.println(AR.isEntailed(maxDrivesCar));
+//        System.out.println(AR.getClassAssertionAxioms().size());
+//        System.out.println(AR.getPropertyAssertionAxioms().size());
 
-//        System.out.println(ICR.isEntailed(mechanicMax));
-            System.out.println(ICR.getClassAssertionAxioms().size());
+//        System.out.println(Brave.isEntailed(maxDrivesCar));
+//        System.out.println(Brave.getClassAssertionAxioms().size());
+        System.out.println(Brave.getPropertyAssertionAxioms().size());
+
+//        System.out.println(IAR.isEntailed(maxDrivesCar));
+//        System.out.println(IAR.getClassAssertionAxioms().size());
+//        System.out.println(IAR.getPropertyAssertionAxioms().size());
+
+//        System.out.println(ICR.isEntailed(maxDrivesCar));
+//        System.out.println(ICR.getClassAssertionAxioms().size());
+//        System.out.println(ICR.getPropertyAssertionAxioms().size());
+
         }
         else {
-            System.out.println("Consistent Bitch!");
+            System.out.println("Ontology is consistent!");
         }
 
 //    private static Boolean CARSemantics(MyOntology original, OWLAxiom axiomToCheck) {

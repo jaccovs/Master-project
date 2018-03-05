@@ -37,7 +37,7 @@ public class ICRSemantics extends Semantics {
         repairs = newRepairs;
     }
 
-    public MyOntology getClosedRepair() {
+    public MyOntology getIntersectionClosedRepair() {
         return intersectionClosedRepairs;
     }
 
@@ -52,6 +52,7 @@ public class ICRSemantics extends Semantics {
             }   catch (Exception e) {
                 e.printStackTrace();
             }
+
 
             InferredClassAssertionAxiomGenerator classAssertionGen = new InferredClassAssertionAxiomGenerator();
             InferredPropertyAssertionGenerator propertyAssertionGen = new InferredPropertyAssertionGenerator();
@@ -72,11 +73,11 @@ public class ICRSemantics extends Semantics {
             for (OWLAxiom axiom : inferedAxiomsToAdd) {
                 addAxioms.add(new AddAxiom(entailedRepairs[i].getOntology(), axiom));
             }
-            repairs[i].getManager().applyChanges(addAxioms);
 
-            System.out.println(entailedRepairs[i].getOntology());
+            entailedRepairs[i].getManager().applyChanges(addAxioms);
 
-            ontologies.remove(repairs[i]);
+
+            ontologies.remove(repairs[i].getOntology());
         }
 
         Hashtable<OWLAxiom, Integer> axiomOccurrences = new Hashtable<>();
@@ -98,7 +99,16 @@ public class ICRSemantics extends Semantics {
             }
         }
 
+//        for (Map.Entry<OWLAxiom, Integer> entry : axiomOccurrences.entrySet()) {
+//            OWLAxiom key = entry.getKey();
+//            Integer value = entry.getValue();
+//
+//            System.out.println ("Key: " + key + " Value: " + value);
+//        }
+
         Set<OWLAxiom> axiomsToRemove = findAxiomsToRemove(axiomOccurrences, repairs.length);
+
+//        System.out.println(axiomsToRemove);
 
         ArrayList<OWLOntologyChange> removal = new ArrayList<>();
 
@@ -136,8 +146,19 @@ public class ICRSemantics extends Semantics {
         OWLReasoner r = rf.createReasoner(intersectionClosedRepairs.getOntology());
 
         InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
-        Set<OWLClassAssertionAxiom> IARClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+        Set<OWLClassAssertionAxiom> ICRClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
 
-        return IARClassAssertionAxioms;
+        return ICRClassAssertionAxioms;
+    }
+
+    public Set<OWLPropertyAssertionAxiom<?,?>> getPropertyAssertionAxioms() throws Exception {
+        OWLDataFactory df = intersectionClosedRepairs.getManager().getOWLDataFactory();
+        OWLReasonerFactory rf = new ReasonerFactory();
+        OWLReasoner r = rf.createReasoner(intersectionClosedRepairs.getOntology());
+
+        InferredPropertyAssertionGenerator propertyAssertionAxiomGenerator = new InferredPropertyAssertionGenerator();
+        Set<OWLPropertyAssertionAxiom<?,?>> ICRPropertyAssertionAxioms = propertyAssertionAxiomGenerator.createAxioms(df, r);
+
+        return ICRPropertyAssertionAxioms;
     }
 }
