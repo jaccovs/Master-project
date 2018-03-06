@@ -32,9 +32,9 @@ ObjectPropertyRange(:Drives :Car)
 
 # Object Property: :IsDrivenBy (:IsDrivenBy)
 
-Declaration(ObjectProperty(:IsDrivenBy))
 ObjectPropertyDomain(:IsDrivenBy :Car)
 ObjectPropertyRange(:IsDrivenBy :Driver)
+
 
 ############################
 #   Classes
@@ -44,11 +44,11 @@ ObjectPropertyRange(:IsDrivenBy :Driver)
 
 SubClassOf(:Driver :TeamMember)
 DisjointClasses(:Driver :Mechanic)
-DisjointClasses(:Ferrari :Renault)
 
 # Class: :Ferrari (:Ferrari)
 
 SubClassOf(:Ferrari :Car)
+DisjointClasses(:Ferrari :Renault)
 
 # Class: :Mechanic (:Mechanic)
 
@@ -70,21 +70,18 @@ SubClassOf(:TeamMember :Human)
 # Individual: :Max (:Max)
 
 ClassAssertion(:Driver :Max)
-ClassAssertion(:Mechanic :Max)
-
 ObjectPropertyAssertion(:Drives :Max :fr5)
 ObjectPropertyAssertion(:Drives :Max :rb14)
-
-ObjectPropertyAssertion(:IsDrivenBy :fr5 :Max)
-ObjectPropertyAssertion(:IsDrivenBy :rb14 :Max)
 
 # Individual: :fr5 (:fr5)
 
 ClassAssertion(:Ferrari :fr5)
+ObjectPropertyAssertion(:IsDrivenBy :fr5 :Max)
 
 # Individual: :rb14 (:rb14)
 
 ClassAssertion(:Renault :rb14)
+ObjectPropertyAssertion(:IsDrivenBy :rb14 :Max)
 
 
 )

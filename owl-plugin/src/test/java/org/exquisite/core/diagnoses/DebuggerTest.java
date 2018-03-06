@@ -16,21 +16,29 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/country.owl");
+        MyOntology original = new MyOntology("ontologies/Matthew/unit.owl");
 
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
-        System.out.println(original.getOntology());
-
         OWLReasonerFactory rf = new ReasonerFactory();
         OWLReasoner r = rf.createReasoner(original.getOntology());
         System.out.println(original.getOntology().getIndividualsInSignature());
+        OWLDataFactory df = original.getManager().getOWLDataFactory();
+        OWLClass car = df.getOWLClass(IRI.create("http://owl.api.toyExample#Car"));
+        OWLObjectProperty drives = df.getOWLObjectProperty(IRI.create("http://owl.api.toyExample#Drives"));
+        OWLClassExpression drivesSomeCar = df.getOWLObjectSomeValuesFrom(drives, car);
+
+        OWLClass mechanic = df.getOWLClass(IRI.create("http://owl.api.toyExample#Human"));
+        OWLIndividual max = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#Max"));
+        OWLAxiom mechanicMax = df.getOWLClassAssertionAxiom(mechanic, max);
+        OWLAxiom maxDrivesCar = df.getOWLClassAssertionAxiom(drivesSomeCar, max);
+
         if (!r.isConsistent()) {
 
-//            ARSemantics AR = new ARSemantics(original);
+            ARSemantics AR = new ARSemantics(original);
 
-            BraveSemantics Brave = new BraveSemantics(original);
+//            BraveSemantics Brave = new BraveSemantics(original);
 
 //            IARSemantics IAR = new IARSemantics(original);
 
@@ -41,25 +49,13 @@ public class DebuggerTest {
 //                System.out.println(repairList[i].getOntology());
 //            }
 
-        OWLDataFactory df = original.getManager().getOWLDataFactory();
-        OWLClass car = df.getOWLClass(IRI.create("http://owl.api.toyExample#Car"));
-        OWLObjectProperty drives = df.getOWLObjectProperty(IRI.create("http://owl.api.toyExample#Drives"));
-        OWLClass driver = df.getOWLClass(IRI.create("http://owl.api.toyExample#Driver"));
-        OWLClassExpression drivesSomeCar = df.getOWLObjectSomeValuesFrom(drives, car);
-        OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(driver, drivesSomeCar);
-
-        OWLClass mechanic = df.getOWLClass(IRI.create("http://owl.api.toyExample#Human"));
-        OWLIndividual max = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#Max"));
-        OWLAxiom mechanicMax = df.getOWLClassAssertionAxiom(mechanic, max);
-        OWLAxiom maxDrivesCar = df.getOWLClassAssertionAxiom(drivesSomeCar, max);
-
 //        System.out.println(AR.isEntailed(maxDrivesCar));
-//        System.out.println(AR.getClassAssertionAxioms().size());
+        System.out.println(AR.getClassAssertionAxioms().size());
 //        System.out.println(AR.getPropertyAssertionAxioms().size());
 
 //        System.out.println(Brave.isEntailed(maxDrivesCar));
 //        System.out.println(Brave.getClassAssertionAxioms().size());
-        System.out.println(Brave.getPropertyAssertionAxioms().size());
+//        System.out.println(Brave.getPropertyAssertionAxioms().size());
 
 //        System.out.println(IAR.isEntailed(maxDrivesCar));
 //        System.out.println(IAR.getClassAssertionAxioms().size());

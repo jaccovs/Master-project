@@ -16,7 +16,7 @@ public class Semantics {
     MyOntology original;
     MyOntology[] repairs;
 
-    public MyOntology[] createRepairs(MyOntology ont) throws Exception{
+    public MyOntology[] createRepairs(MyOntology ont) throws Exception {
         original = ont;
         TestClass test = new TestClass();
         Set<Diagnosis<OWLLogicalAxiom>> result = test.calculateDiagnoses(original.getOntologyName());
@@ -29,7 +29,7 @@ public class Semantics {
         ontologies.add(original.getOntology());
 
         for (int i = 0; i < numberOfRepairs; i++) {
-            repairList[i] = new MyOntology("urn:absolute:repair nr." + (i+1) + ".owl", ontologies);
+            repairList[i] = new MyOntology("urn:absolute:repair nr." + (i + 1) + ".owl", ontologies);
             Diagnosis<OWLLogicalAxiom> diagnosis = it.next();
             ArrayList<OWLOntologyChange> changes = determineRepair(repairList[i].getOntology(), diagnosis.getFormulas());
             repairList[i].getManager().applyChanges(changes);
@@ -38,15 +38,15 @@ public class Semantics {
         return repairList;
     }
 
-    private ArrayList<OWLOntologyChange> determineRepair(OWLOntology ont, Set<OWLLogicalAxiom> diagnosis){
-        ArrayList <OWLOntologyChange> removal = new ArrayList<>();
-        for (OWLAxiom axiom : diagnosis){
+    private ArrayList<OWLOntologyChange> determineRepair(OWLOntology ont, Set<OWLLogicalAxiom> diagnosis) {
+        ArrayList<OWLOntologyChange> removal = new ArrayList<>();
+        for (OWLAxiom axiom : diagnosis) {
             removal.add(new RemoveAxiom(ont, axiom));
         }
         return removal;
     }
 
-    public Boolean[] repairEntailments(MyOntology[] repairs, OWLAxiom axiomToCheck){
+    public Boolean[] repairEntailments(MyOntology[] repairs, OWLAxiom axiomToCheck) {
         Boolean[] answers = new Boolean[repairs.length];
         for (int i = 0; i < repairs.length; i++) {
             answers[i] = repairEntailment(repairs[i], axiomToCheck);
@@ -54,7 +54,7 @@ public class Semantics {
         return answers;
     }
 
-    public Boolean repairEntailment(MyOntology repair, OWLAxiom axiomToCheck){
+    public Boolean repairEntailment(MyOntology repair, OWLAxiom axiomToCheck) {
         OWLOntology o = repair.getOntology();
         OWLReasonerFactory rf = new ReasonerFactory();
         OWLReasoner r = rf.createReasoner(o);
