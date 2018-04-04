@@ -30,6 +30,8 @@ public class MyOntology {
         ontology = manager.createOntology(iri, ontologies);
     }
 
+    public void setOntologyName (String newName) { ontologyName = newName;}
+
     public void setOntology (OWLOntology ont){
         ontology = ont;
     }

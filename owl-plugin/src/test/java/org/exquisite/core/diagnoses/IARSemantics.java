@@ -21,6 +21,12 @@ public class IARSemantics extends Semantics {
         intersectionRepairs = getIntersectionRepairs();
     }
 
+    IARSemantics(MyOntology ontology, MyOntology[] givenRepairs) throws Exception {
+        original = ontology;
+        repairs = givenRepairs;
+        intersectionRepairs = getIntersectionRepairs();
+    }
+
     public MyOntology[] getRepairs() {
         return repairs;
     }
@@ -46,7 +52,7 @@ public class IARSemantics extends Semantics {
 
         //Create new ontology object to reason with
         Set<OWLOntology> onts = new HashSet<OWLOntology>();
-        onts.add(repairs[0].getOntology());
+                onts.add(repairs[0].getOntology());
         MyOntology ont = null;
         try {
             ont = new MyOntology("urn:absolute: Intersection.owl", onts);

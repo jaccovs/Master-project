@@ -18,6 +18,7 @@ public class ARSemantics extends Semantics {
     ARSemantics (MyOntology ontology) throws Exception{
         original = ontology;
         repairs = super.createRepairs(original);
+        System.out.println(repairs.length);
     }
 
     public MyOntology[] getRepairs() {

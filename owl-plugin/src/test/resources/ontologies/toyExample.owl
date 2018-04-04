@@ -48,6 +48,7 @@ DisjointClasses(:Driver :Mechanic)
 # Class: :Ferrari (:Ferrari)
 
 SubClassOf(:Ferrari :Car)
+
 DisjointClasses(:Ferrari :Renault)
 
 # Class: :Mechanic (:Mechanic)

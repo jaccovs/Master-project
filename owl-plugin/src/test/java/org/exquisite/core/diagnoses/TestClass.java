@@ -16,6 +16,8 @@ import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.exquisite.core.utils.OWLUtils;
@@ -28,18 +30,13 @@ import static junit.framework.Assert.*;
 
 public class TestClass extends AbstractTest {
 
-    OWLOntology ontology;
-
-    public void TestClass(){}
-
     private static final Logger logger = LoggerFactory.getLogger(TestExquisiteOWLReasonerWithOntologies.class);
 
-    public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(String ontologyName) throws DiagnosisException, OWLOntologyCreationException {
-
-        ExquisiteOWLReasoner reasoner = loadOntology(ontologyName, false, false);
-        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new HSTreeEngine<>(reasoner);
+    public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(MyOntology ont) throws DiagnosisException, OWLOntologyCreationException {
+        ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
+        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(10);
+        diagnosisEngine.setMaxNumberOfDiagnoses(40);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
         logger.debug("based on " + diagnosisEngine.getSolver().getDiagnosisModel());

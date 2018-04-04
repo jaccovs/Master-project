@@ -21,6 +21,12 @@ public class ICRSemantics extends Semantics {
         intersectionClosedRepairs = getClosureIntersectionRepairs();
     }
 
+    ICRSemantics(MyOntology ontology, MyOntology[] givenRepairs) throws Exception {
+        original = ontology;
+        repairs = givenRepairs;
+        intersectionClosedRepairs = getClosureIntersectionRepairs();
+    }
+
     public MyOntology[] getRepairs() {
         return repairs;
     }

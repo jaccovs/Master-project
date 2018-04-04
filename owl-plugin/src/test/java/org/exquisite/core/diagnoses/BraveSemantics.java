@@ -13,11 +13,17 @@ import java.util.*;
 public class BraveSemantics extends Semantics{
 
     MyOntology original;
+
     MyOntology[] repairs;
 
     BraveSemantics (MyOntology ontology) throws Exception{
         original = ontology;
         repairs = super.createRepairs(original);
+    }
+
+    BraveSemantics (MyOntology ontology, MyOntology[] givenRepairs) throws Exception{
+        original = ontology;
+        repairs = givenRepairs;
     }
 
     public MyOntology[] getRepairs() {
