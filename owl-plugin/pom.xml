@@ -20,8 +20,13 @@
         </dependency>
         <dependency> 
             <groupId>com.github.ansell.pellet</groupId>
-            <artifactId>pellet-parent</artifactId>
+            <artifactId>pellet-common</artifactId>
             <version>2.3.6-ansell</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ansell.pellet</groupId>
+            <artifactId>pellet-core</artifactId>
+            <version>2.3.3</version>
         </dependency>
         <dependency>
             <groupId>org.exquisite</groupId>
