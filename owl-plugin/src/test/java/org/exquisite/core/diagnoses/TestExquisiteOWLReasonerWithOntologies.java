@@ -142,11 +142,11 @@ public class TestExquisiteOWLReasonerWithOntologies extends AbstractTest {
 //        testInConsistentOntology("ontologies/ecai2010.owl",reasoner, 4, 3,4);
 //    }
 
-    @Test
-    public void testRunningExampleOntology() throws OWLOntologyCreationException, DiagnosisException {
-        ExquisiteOWLReasoner reasoner = loadOntology("ontologies/toyExample.owl");
-        testInConsistentOntology("ontologies/toyExample.owl", reasoner,4, 4);
-    }
+//    @Test
+//    public void testRunningExampleOntology() throws OWLOntologyCreationException, DiagnosisException {
+//        ExquisiteOWLReasoner reasoner = loadOntology("ontologies/Matthew/country.owl");
+//        testInConsistentOntology("ontologies/Matthew/country.owl", reasoner,12, 12);
+//    }
 
 //    @Test
 //    public void testKoalaOntology() throws OWLOntologyCreationException, DiagnosisException {
