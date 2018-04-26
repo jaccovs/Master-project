@@ -1,16 +1,11 @@
-package org.exquisite.core.diagnoses;
+package org.exquisite.core.diagnosis;
 
-import org.exquisite.core.model.Diagnosis;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import org.semanticweb.owlapi.util.*;
 
 
-import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.*;
 
 public class DebuggerTest {
 
