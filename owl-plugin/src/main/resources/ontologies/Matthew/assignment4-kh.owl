@@ -1,0 +1,944 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY assignment4-base "http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#"
+     xml:base="http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl"
+     xmlns:assignment4-base="http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#enrolledIn -->
+
+    <owl:ObjectProperty rdf:about="#enrolledIn">
+        <owl:inverseOf rdf:resource="#takenBy"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#hasPart -->
+
+    <owl:ObjectProperty rdf:about="#hasPart">
+        <owl:inverseOf rdf:resource="#partOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#hasTeachingType -->
+
+    <owl:ObjectProperty rdf:about="#hasTeachingType"/>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#leadsTo -->
+
+    <owl:ObjectProperty rdf:about="#leadsTo"/>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#partOf -->
+
+    <owl:ObjectProperty rdf:about="#partOf"/>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#supervises -->
+
+    <owl:ObjectProperty rdf:about="#supervises"/>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#takenBy -->
+
+    <owl:ObjectProperty rdf:about="#takenBy"/>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#takes -->
+
+    <owl:ObjectProperty rdf:about="#takes">
+        <owl:inverseOf rdf:resource="#takenBy"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#taughtBy -->
+
+    <owl:ObjectProperty rdf:about="#taughtBy">
+        <owl:inverseOf rdf:resource="#teaches"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#teaches -->
+
+    <owl:ObjectProperty rdf:about="#teaches">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:complementOf rdf:resource="#AdministrativeStaff"/>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#worksFor -->
+
+    <owl:ObjectProperty rdf:about="#worksFor"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#AcademicStaff -->
+
+    <owl:Class rdf:about="#AcademicStaff">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#worksFor"/>
+                <owl:someValuesFrom rdf:resource="#University"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#teaches"/>
+                <owl:someValuesFrom rdf:resource="#Module"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Person"/>
+        <rdfs:subClassOf rdf:resource="#UniversityEmployee"/>
+        <owl:disjointWith rdf:resource="#AdministrativeStaff"/>
+        <owl:disjointWith rdf:resource="#Student"/>
+        <rdfs:comment
+            >Constraint: 
+
+Academic Staff cannot be enrolled as Students</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+Academic Staff are those people that work for the university and teach at least one module.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#AdministrativeStaff -->
+
+    <owl:Class rdf:about="#AdministrativeStaff">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#teaches"/>
+                <owl:onClass rdf:resource="#Session"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">0</owl:cardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#UniversityEmployee"/>
+        <rdfs:comment
+            >Definition:
+
+AdministrativeStaff are people that work for the University but do not teach
+
+Note that this may be an artificial definition, but in this case, this is what we have decided we want to capture.</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#AssessmentMethod -->
+
+    <owl:Class rdf:about="#AssessmentMethod">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Building -->
+
+    <owl:Class rdf:about="#Building">
+        <rdfs:subClassOf rdf:resource="#PhysicalPart"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Coursework -->
+
+    <owl:Class rdf:about="#Coursework">
+        <rdfs:subClassOf rdf:resource="#AssessmentMethod"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#CourseworkModule -->
+
+    <owl:Class rdf:about="#CourseworkModule">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:allValuesFrom rdf:resource="#Coursework"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Module"/>
+        <rdfs:comment
+            >Definition:
+
+A Module that is assessed solely through course work, e.g. no exams</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Degree -->
+
+    <owl:Class rdf:about="#Degree">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#DegreeProgramme -->
+
+    <owl:Class rdf:about="#DegreeProgramme">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:someValuesFrom rdf:resource="#University"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#LogicalPart"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#leadsTo"/>
+                <owl:someValuesFrom rdf:resource="#Degree"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment
+            >Constraints:
+
+A DegreeProgramme is a logical part of the university.
+
+A DegreeProgramme leads to a Degree</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#DegreeType -->
+
+    <owl:Class rdf:about="#DegreeType">
+        <rdfs:subClassOf rdf:resource="#Modifier"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Employee -->
+
+    <owl:Class rdf:about="#Employee">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Person"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#worksFor"/>
+                        <owl:someValuesFrom rdf:resource="&owl;Thing"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+A Person that works for something</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Exam -->
+
+    <owl:Class rdf:about="#Exam">
+        <rdfs:subClassOf rdf:resource="#AssessmentMethod"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#ExamplesClass -->
+
+    <owl:Class rdf:about="#ExamplesClass">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#taughtBy"/>
+                <owl:someValuesFrom rdf:resource="#PostgraduateStudent"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#taughtBy"/>
+                <owl:someValuesFrom rdf:resource="#AcademicStaff"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Session"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasTeachingType"/>
+                <owl:someValuesFrom rdf:resource="#Practical"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment
+            >COnstraints:
+
+An Examples Class is a practical session.
+
+ExamplesClasses may be taught by Academic members of staff or postgraduate students</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Faculty -->
+
+    <owl:Class rdf:about="#Faculty">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:someValuesFrom rdf:resource="#University"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:someValuesFrom rdf:resource="#Faculty"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#LogicalPart"/>
+        <rdfs:comment
+            >Constraints:
+
+A Faculty is a logical division of the University. Each faculty contains one or more Schools.</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#FirstYear -->
+
+    <owl:Class rdf:about="#FirstYear">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#leadsTo"/>
+                <owl:someValuesFrom rdf:resource="#SecondYear"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Level"/>
+        <owl:disjointWith rdf:resource="#SecondYear"/>
+        <owl:disjointWith rdf:resource="#ThirdYear"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Lab -->
+
+    <owl:Class rdf:about="#Lab">
+        <rdfs:subClassOf rdf:resource="#Session"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasTeachingType"/>
+                <owl:someValuesFrom rdf:resource="#Practical"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment
+            >Constraint:
+
+A Lab is a practical session</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Lecture -->
+
+    <owl:Class rdf:about="#Lecture">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#taughtBy"/>
+                <owl:onClass rdf:resource="#Person"/>
+                <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:minCardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Session"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasTeachingType"/>
+                <owl:someValuesFrom rdf:resource="#Taught"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#taughtBy"/>
+                <owl:someValuesFrom rdf:resource="#Person"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Constraints:
+
+A Lecture is a taught session.
+
+Each Lecture is taught by at least one person
+
+Lectures are only taught by Academic Staff</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Lecturer -->
+
+    <owl:Class rdf:about="#Lecturer">
+        <rdfs:subClassOf rdf:resource="#AcademicStaff"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Comment:
+
+A Lecturer is an academic member of staff</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Level -->
+
+    <owl:Class rdf:about="#Level">
+        <rdfs:subClassOf rdf:resource="#Modifier"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+        <rdfs:comment
+            >Comment:
+
+Describes the level of study that a student is at.
+
+Children are disjoint.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#LogicalPart -->
+
+    <owl:Class rdf:about="#LogicalPart">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Modifier -->
+
+    <owl:Class rdf:about="#Modifier">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Module -->
+
+    <owl:Class rdf:about="#Module">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:onClass rdf:resource="#Session"/>
+                <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">4</owl:minCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment
+            >Constraints:
+
+A Module has at least 4 sessions, e.g. Labs, Lectures or Examples classes.
+.</rdfs:comment>
+        <rdfs:comment>Self_Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Person -->
+
+    <owl:Class rdf:about="#Person">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#PhysicalPart -->
+
+    <owl:Class rdf:about="#PhysicalPart">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Postgraduate -->
+
+    <owl:Class rdf:about="#Postgraduate">
+        <rdfs:subClassOf rdf:resource="#DegreeType"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#PostgraduateDegree -->
+
+    <owl:Class rdf:about="#PostgraduateDegree">
+        <rdfs:subClassOf rdf:resource="#Degree"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#PostgraduateStudent -->
+
+    <owl:Class rdf:about="#PostgraduateStudent">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Student"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#enrolledIn"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:intersectionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="#DegreeProgramme"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="#leadsTo"/>
+                                        <owl:someValuesFrom rdf:resource="#PostgraduateDegree"/>
+                                    </owl:Restriction>
+                                </owl:intersectionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+A Postgraduate student is a student who is enrolled in a programme that leads to the award of a postgraduate degree.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Practical -->
+
+    <owl:Class rdf:about="#Practical">
+        <rdfs:subClassOf rdf:resource="#TeachingType"/>
+        <owl:disjointWith rdf:resource="#Taught"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#PracticalModule -->
+
+    <owl:Class rdf:about="#PracticalModule">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:someValuesFrom rdf:resource="#Lab"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:onClass rdf:resource="#Lecture"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">0</owl:cardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasPart"/>
+                <owl:someValuesFrom rdf:resource="#ExamplesClass"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Module"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+A Module that has no taught sessions, e.g. all sessions are either Examples Classes or Labs.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Room -->
+
+    <owl:Class rdf:about="#Room">
+        <rdfs:subClassOf rdf:resource="#PhysicalPart"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#School -->
+
+    <owl:Class rdf:about="#School">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:onClass rdf:resource="#Faculty"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:someValuesFrom rdf:resource="#University"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#LogicalPart"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:someValuesFrom rdf:resource="#Faculty"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment
+            >Constraints:
+
+A School is a logical division of the University. 
+
+Each School belongs to one Faculty.</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#SecondYear -->
+
+    <owl:Class rdf:about="#SecondYear">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#leadsTo"/>
+                <owl:someValuesFrom rdf:resource="#ThirdYear"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Level"/>
+        <owl:disjointWith rdf:resource="#ThirdYear"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Session -->
+
+    <owl:Class rdf:about="#Session">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasTeachingType"/>
+                <owl:someValuesFrom rdf:resource="#CourseworkModule"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#hasTeachingType"/>
+                <owl:someValuesFrom rdf:resource="#PracticalModule"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#partOf"/>
+                <owl:someValuesFrom rdf:resource="#Module"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Constraints:
+
+A Session is part of a Module
+
+A Session may be practical or taught</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Student -->
+
+    <owl:Class rdf:about="#Student">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#enrolledIn"/>
+                <owl:onClass rdf:resource="#DegreeProgramme"/>
+                <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#enrolledIn"/>
+                <owl:someValuesFrom rdf:resource="#DegreeProgramme"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Person"/>
+        <rdfs:comment
+            >Definition:
+
+A student is a person who is enrolled in a DegreeProgramme.</rdfs:comment>
+        <rdfs:comment
+            >Constraint:
+
+A student can only be enrolled in one DegreeProgramme.</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#TALecture -->
+
+    <owl:Class rdf:about="#TALecture">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#taughtBy"/>
+                <owl:someValuesFrom rdf:resource="#TeachingAssistant"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Lecture"/>
+        <rdfs:comment
+            >Definition:
+
+A TA Lecture is a Lecture taught by a Teaching Assistant</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Taught -->
+
+    <owl:Class rdf:about="#Taught">
+        <rdfs:subClassOf rdf:resource="#TeachingType"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#TeachingAssistant -->
+
+    <owl:Class rdf:about="#TeachingAssistant">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#PostgraduateStudent"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#supervises"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="#ExamplesClass"/>
+                                    <rdf:Description rdf:about="#Lab"/>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment
+            >Definition:
+
+A TeachingAssistant is a Postgraduate student who supervises examples classes or labs.</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#TeachingType -->
+
+    <owl:Class rdf:about="#TeachingType">
+        <rdfs:subClassOf rdf:resource="#Modifier"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+        <rdfs:comment
+            >Comment:
+
+TeachingType distinguish different kinds of teaching session. For example, Labs are practical sessions, while Lectures are taught
+
+Sessions can be practical or taught, but not both</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Theoretician -->
+
+    <owl:Class rdf:about="#Theoretician">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#enrolledIn"/>
+                        <owl:someValuesFrom rdf:resource="#DegreeProgramme"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#leadsTo"/>
+                        <owl:someValuesFrom rdf:resource="#UndergraduateDegree"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#takes"/>
+                        <owl:someValuesFrom rdf:resource="#CourseworkModule"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#takes"/>
+                        <owl:onClass rdf:resource="#PracticalModule"/>
+                        <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">0</owl:cardinality>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Person"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+A person enrolled in a programme that leads to an undergraduate degree and who doesn&#39;t take any modules that involve practical sessions</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#ThirdYear -->
+
+    <owl:Class rdf:about="#ThirdYear">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#leadsTo"/>
+                <owl:someValuesFrom rdf:resource="#Undergraduate"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Level"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#Undergraduate -->
+
+    <owl:Class rdf:about="#Undergraduate">
+        <rdfs:subClassOf rdf:resource="#DegreeType"/>
+        <rdfs:comment>Modifier</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#UndergraduateDegree -->
+
+    <owl:Class rdf:about="#UndergraduateDegree">
+        <rdfs:subClassOf rdf:resource="#Degree"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#UndergraduateStudent -->
+
+    <owl:Class rdf:about="#UndergraduateStudent">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Student"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#enrolledIn"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:intersectionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="#DegreeProgramme"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="#leadsTo"/>
+                                        <owl:someValuesFrom rdf:resource="#UndergraduateDegree"/>
+                                    </owl:Restriction>
+                                </owl:intersectionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+        <rdfs:comment
+            >Definition:
+
+An Undergraduate student is a student who is enrolled in a programme that leads to the award of a undergraduate degree.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#University -->
+
+    <owl:Class rdf:about="#University">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl#UniversityEmployee -->
+
+    <owl:Class rdf:about="#UniversityEmployee">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#worksFor"/>
+                <owl:someValuesFrom rdf:resource="#University"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Person"/>
+        <rdfs:comment
+            >Definition:
+
+A Person employed by a University</rdfs:comment>
+        <rdfs:comment>Self-Standing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.974) http://owlapi.sourceforge.net -->
+

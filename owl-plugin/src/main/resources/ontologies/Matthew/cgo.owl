@@ -1,0 +1,2813 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY owl11 "http://www.w3.org/2006/12/owl11#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY cgao "http://www.comparagrid.org/cgao.owl#" >
+    <!ENTITY owl11xml "http://www.w3.org/2006/12/owl11-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.comparagrid.org/cgao.owl#"
+     xml:base="http://www.comparagrid.org/cgao.owl"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl11="http://www.w3.org/2006/12/owl11#"
+     xmlns:owl11xml="http://www.w3.org/2006/12/owl11-xml#"
+     xmlns:cgao="http://www.comparagrid.org/cgao.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="">
+        <dc:title
+            >ComparaGRID Application Ontology (CAO)</dc:title>
+        <dc:creator>Andrew Gibson</dc:creator>
+        <Developer_Comment
+            >Currently undergoing annotation with developer confidence values for classes...
+
+10	=	Dont touch this / changing class would result in large meaning change in ontology
+9	=	Stable / Immediate Scope Fully Addressed
+8	
+7	=	Stable / Unproven
+6
+5	=	Unstable / expecting changes
+4
+3	=	Experimental / required but use unclear
+2
+1	=	Placeholder / clearly needs further engineering</Developer_Comment>
+        <dc:date>02/08/2007</dc:date>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:AnnotationProperty rdf:about="&dc;date"/>
+    <owl:AnnotationProperty rdf:about="#Developer_Confidence"/>
+    <owl:AnnotationProperty rdf:about="&dc;title"/>
+    <owl:AnnotationProperty rdf:about="#Developer_Comment"/>
+    <owl:AnnotationProperty rdf:about="&dc;contributor"/>
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#belongs_to_taxon -->
+
+    <owl:ObjectProperty rdf:about="#belongs_to_taxon">
+        <rdfs:range rdf:resource="#Organism"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cloned_from -->
+
+    <owl:ObjectProperty rdf:about="#cloned_from">
+        <dc:creator>Trevor Paterson</dc:creator>
+        <rdfs:subPropertyOf rdf:resource="#derived_from"/>
+        <owl:inverseOf rdf:resource="#inverse_of_derived_from_1"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#derived_from -->
+
+    <owl:ObjectProperty rdf:about="#derived_from">
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >temporary relationship to allow cDNA/EST derived from gene; probably needs more specialist versions e.g. expressed_from</rdfs:comment>
+        <dc:creator>Trevor Paterson</dc:creator>
+        <owl:inverseOf rdf:resource="#has_derivative"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#expressed_from -->
+
+    <owl:ObjectProperty rdf:about="#expressed_from">
+        <dc:creator>Trevor Paterson</dc:creator>
+        <owl:inverseOf rdf:resource="#inverse_of_derived_from_2"/>
+        <rdfs:subPropertyOf rdf:resource="#derived_from"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_XREF -->
+
+    <owl:ObjectProperty rdf:about="#has_XREF">
+        <dc:creator
+            >Robert Davey / Tony Burdett</dc:creator>
+        <rdfs:range rdf:resource="#XREF"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_agent -->
+
+    <owl:ObjectProperty rdf:about="#has_agent">
+        <rdfs:range rdf:resource="#Agent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_asserting_agent -->
+
+    <owl:ObjectProperty rdf:about="#has_asserting_agent">
+        <rdfs:subPropertyOf rdf:resource="#has_agent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_blast_parameter -->
+
+    <owl:ObjectProperty rdf:about="#has_blast_parameter">
+        <rdfs:subPropertyOf rdf:resource="#has_experimental_parameter"/>
+        <rdfs:domain rdf:resource="#BLAST_Experiment"/>
+        <rdfs:range rdf:resource="#Blast_Parameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_component -->
+
+    <owl:ObjectProperty rdf:about="#has_component">
+        <rdfs:subPropertyOf rdf:resource="#has_part"/>
+        <rdfs:domain rdf:resource="#Biological_Conceptual_Model"/>
+        <rdfs:range rdf:resource="#Biological_Conceptual_Model"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_contig_region -->
+
+    <owl:ObjectProperty rdf:about="#has_contig_region">
+        <rdfs:subPropertyOf rdf:resource="#has_region"/>
+        <rdfs:domain rdf:resource="#Contig_Sequence"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_derivative -->
+
+    <owl:ObjectProperty rdf:about="#has_derivative">
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >inverse of temporary relationship to allow cDNA/EST derived from gene; probably needs more specialist versions e.g. expresses</rdfs:comment>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_detection_technique -->
+
+    <owl:ObjectProperty rdf:about="#has_detection_technique">
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_experimental_parameter -->
+
+    <owl:ObjectProperty rdf:about="#has_experimental_parameter">
+        <rdfs:range rdf:resource="#Experimental_Parameter"/>
+        <rdfs:subPropertyOf rdf:resource="#has_parameter"/>
+        <rdfs:domain rdf:resource="#Experimental_Procedure"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_homologous_member -->
+
+    <owl:ObjectProperty rdf:about="#has_homologous_member">
+        <rdfs:subPropertyOf rdf:resource="#has_member"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_marker -->
+
+    <owl:ObjectProperty rdf:about="#has_marker">
+        <rdfs:domain rdf:resource="#Physical_Genetic_Entity"/>
+        <Developer_Comment
+            >so we can make a link between markers and genes that they are somhow asserted to detect or be a proxy for</Developer_Comment>
+        <dc:contributor>Trevor</dc:contributor>
+        <rdfs:range rdf:resource="#Detectable_Physical_Genetic_Part"/>
+        <Developer_Confidence>3</Developer_Confidence>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_member -->
+
+    <owl:ObjectProperty rdf:about="#has_member">
+        <rdfs:domain rdf:resource="#Pair_Association_Assertion"/>
+        <owl:inverseOf rdf:resource="#is_member_of"/>
+        <rdfs:subPropertyOf rdf:resource="#has_part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_model -->
+
+    <owl:ObjectProperty rdf:about="#has_model">
+        <owl:inverseOf rdf:resource="#is_model_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_orthologous_member -->
+
+    <owl:ObjectProperty rdf:about="#has_orthologous_member">
+        <rdfs:subPropertyOf rdf:resource="#has_member"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_parameter -->
+
+    <owl:ObjectProperty rdf:about="#has_parameter">
+        <rdfs:range rdf:resource="#Parameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_part -->
+
+    <owl:ObjectProperty rdf:about="#has_part">
+        <owl:inverseOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_recombinant_part -->
+
+    <owl:ObjectProperty rdf:about="#has_recombinant_part">
+        <rdfs:subPropertyOf rdf:resource="#has_part"/>
+        <rdfs:domain rdf:resource="#Recombinant_DNA_Molecule"/>
+        <rdfs:range rdf:resource="#DNA_Molecule"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_region -->
+
+    <owl:ObjectProperty rdf:about="#has_region">
+        <rdfs:range rdf:resource="#Region_of_DNA_Sequence_Datum"/>
+        <rdfs:subPropertyOf rdf:resource="#has_part"/>
+        <rdfs:domain rdf:resource="#Maximal_DNA_Sequence_Datum"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_representation -->
+
+    <owl:ObjectProperty rdf:about="#has_representation">
+        <rdfs:domain rdf:resource="#Physical_Biological_Entity"/>
+        <owl:inverseOf rdf:resource="#is_representation_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_section -->
+
+    <owl:ObjectProperty rdf:about="#has_section">
+        <rdfs:range rdf:resource="#Physical_Biological_Molecule_Section"/>
+        <rdfs:subPropertyOf rdf:resource="#has_part"/>
+        <rdfs:domain rdf:resource="#Physical_Biological_Molecule"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_similar_member -->
+
+    <owl:ObjectProperty rdf:about="#has_similar_member">
+        <rdfs:subPropertyOf rdf:resource="#has_member"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_source -->
+
+    <owl:ObjectProperty rdf:about="#has_source"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_source_chromosome -->
+
+    <owl:ObjectProperty rdf:about="#has_source_chromosome">
+        <rdfs:range rdf:resource="#Chromosome"/>
+        <rdfs:subPropertyOf rdf:resource="#has_source"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_source_organism -->
+
+    <owl:ObjectProperty rdf:about="#has_source_organism">
+        <rdfs:range rdf:resource="#Organism"/>
+        <rdfs:domain rdf:resource="#Physical_Biological_Entity"/>
+        <rdfs:subPropertyOf rdf:resource="#has_source"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#inverse_of_derived_from_1 -->
+
+    <owl:ObjectProperty rdf:about="#inverse_of_derived_from_1">
+        <dc:creator>Trevor Paterson</dc:creator>
+        <rdfs:subPropertyOf rdf:resource="#has_derivative"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#inverse_of_derived_from_2 -->
+
+    <owl:ObjectProperty rdf:about="#inverse_of_derived_from_2">
+        <dc:creator>Trevor Paterson</dc:creator>
+        <rdfs:subPropertyOf rdf:resource="#has_derivative"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_XREF_of -->
+
+    <owl:ObjectProperty rdf:about="#is_XREF_of">
+        <dc:creator
+            >Robert Davey / Tony Burdett</dc:creator>
+        <owl:inverseOf rdf:resource="#has_XREF"/>
+        <rdfs:domain rdf:resource="#XREF"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_agent_of -->
+
+    <owl:ObjectProperty rdf:about="#is_agent_of">
+        <rdfs:domain rdf:resource="#Agent"/>
+        <owl:inverseOf rdf:resource="#has_agent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_asserting_agent_of -->
+
+    <owl:ObjectProperty rdf:about="#is_asserting_agent_of">
+        <owl:inverseOf rdf:resource="#has_asserting_agent"/>
+        <rdfs:range rdf:resource="#Pair_Association_Assertion"/>
+        <rdfs:subPropertyOf rdf:resource="#is_agent_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_component_of -->
+
+    <owl:ObjectProperty rdf:about="#is_component_of">
+        <owl:inverseOf rdf:resource="#has_component"/>
+        <rdfs:subPropertyOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_homologous_member_of -->
+
+    <owl:ObjectProperty rdf:about="#is_homologous_member_of">
+        <owl:inverseOf rdf:resource="#has_homologous_member"/>
+        <rdfs:subPropertyOf rdf:resource="#is_member_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_marker_for -->
+
+    <owl:ObjectProperty rdf:about="#is_marker_for">
+        <rdfs:range rdf:resource="#Physical_Genetic_Part"/>
+        <owl:inverseOf rdf:resource="#has_marker"/>
+        <dc:contributor>Trevor</dc:contributor>
+        <Developer_Confidence>3</Developer_Confidence>
+        <Developer_Comment
+            >so we can make a link between markers and genes that they are somhow asserted to detect or be a proxy for</Developer_Comment>
+        <rdfs:domain rdf:resource="#Detectable_Physical_Genetic_Part"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_member_of -->
+
+    <owl:ObjectProperty rdf:about="#is_member_of">
+        <rdfs:subPropertyOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_model_of -->
+
+    <owl:ObjectProperty rdf:about="#is_model_of">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Biological_Conceptual_Model"/>
+                    <rdf:Description rdf:about="#Component_of_Biological_Conceptual_Model"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_orthologous_member_of -->
+
+    <owl:ObjectProperty rdf:about="#is_orthologous_member_of">
+        <owl:inverseOf rdf:resource="#has_orthologous_member"/>
+        <rdfs:subPropertyOf rdf:resource="#is_member_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_outcome_of -->
+
+    <owl:ObjectProperty rdf:about="#is_outcome_of"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_part_of -->
+
+    <owl:ObjectProperty rdf:about="#is_part_of"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_recombinant_part_of -->
+
+    <owl:ObjectProperty rdf:about="#is_recombinant_part_of">
+        <owl:inverseOf rdf:resource="#has_recombinant_part"/>
+        <rdfs:subPropertyOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_region_of -->
+
+    <owl:ObjectProperty rdf:about="#is_region_of">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <owl:inverseOf rdf:resource="#has_region"/>
+        <rdfs:subPropertyOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_representation_of -->
+
+    <owl:ObjectProperty rdf:about="#is_representation_of">
+        <rdfs:range rdf:resource="#Physical_Biological_Entity"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_section_of -->
+
+    <owl:ObjectProperty rdf:about="#is_section_of">
+        <owl:inverseOf rdf:resource="#has_section"/>
+        <rdfs:subPropertyOf rdf:resource="#is_part_of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#is_similar_member_of -->
+
+    <owl:ObjectProperty rdf:about="#is_similar_member_of">
+        <rdfs:subPropertyOf rdf:resource="#is_member_of"/>
+        <owl:inverseOf rdf:resource="#has_similar_member"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_biotype -->
+
+    <owl:DatatypeProperty rdf:about="#has_biotype">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Physical_Genetic_Entity"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_description -->
+
+    <owl:DatatypeProperty rdf:about="#has_description">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Physical_Genetic_Entity"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_id -->
+
+    <owl:DatatypeProperty rdf:about="#has_id">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_length -->
+
+    <owl:DatatypeProperty rdf:about="#has_length">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Biological_Conceptual_Model"/>
+                    <rdf:Description rdf:about="#Maximal_DNA_Sequence_Datum"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_map_end_value -->
+
+    <owl:DatatypeProperty rdf:about="#has_map_end_value">
+        <rdfs:domain rdf:resource="#Component_of_Genetic_Model"/>
+        <rdfs:subPropertyOf rdf:resource="#has_map_position"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_map_length -->
+
+    <owl:DatatypeProperty rdf:about="#has_map_length">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:subPropertyOf rdf:resource="#has_length"/>
+        <rdfs:domain rdf:resource="#Genetic_Map"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_map_midpoint_value -->
+
+    <owl:DatatypeProperty rdf:about="#has_map_midpoint_value">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:domain rdf:resource="#Component_of_Genetic_Model"/>
+        <rdfs:subPropertyOf rdf:resource="#has_map_position"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_map_position -->
+
+    <owl:DatatypeProperty rdf:about="#has_map_position">
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:subPropertyOf rdf:resource="#has_position"/>
+        <rdfs:domain rdf:resource="#Biological_Conceptual_Model"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_map_start_value -->
+
+    <owl:DatatypeProperty rdf:about="#has_map_start_value">
+        <rdfs:subPropertyOf rdf:resource="#has_map_position"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:domain rdf:resource="#Component_of_Genetic_Model"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_name -->
+
+    <owl:DatatypeProperty rdf:about="#has_name">
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_nucleotide_string -->
+
+    <owl:DatatypeProperty rdf:about="#has_nucleotide_string">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#Maximal_DNA_Sequence_Datum"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_parameter_name -->
+
+    <owl:DatatypeProperty rdf:about="#has_parameter_name">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Parameter"/>
+        <rdfs:subPropertyOf rdf:resource="#has_name"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_parameter_value -->
+
+    <owl:DatatypeProperty rdf:about="#has_parameter_value">
+        <rdfs:domain rdf:resource="#Parameter"/>
+        <rdfs:subPropertyOf rdf:resource="#has_value"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_position -->
+
+    <owl:DatatypeProperty rdf:about="#has_position"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_sequence_end_position -->
+
+    <owl:DatatypeProperty rdf:about="#has_sequence_end_position">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:domain rdf:resource="#Biological_Sequence_Datum"/>
+        <rdfs:subPropertyOf rdf:resource="#has_sequence_position"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_sequence_length -->
+
+    <owl:DatatypeProperty rdf:about="#has_sequence_length">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:domain rdf:resource="#Maximal_DNA_Sequence_Datum"/>
+        <rdfs:subPropertyOf rdf:resource="#has_length"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_sequence_position -->
+
+    <owl:DatatypeProperty rdf:about="#has_sequence_position">
+        <rdfs:domain rdf:resource="#Biological_Sequence_Datum"/>
+        <rdfs:subPropertyOf rdf:resource="#has_position"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_sequence_start_position -->
+
+    <owl:DatatypeProperty rdf:about="#has_sequence_start_position">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+        <rdfs:subPropertyOf rdf:resource="#has_sequence_position"/>
+        <rdfs:domain rdf:resource="#Biological_Sequence_Datum"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_strand -->
+
+    <owl:DatatypeProperty rdf:about="#has_strand">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:range rdf:resource="&xsd;int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_synonym -->
+
+    <owl:DatatypeProperty rdf:about="#has_synonym">
+        <rdfs:range rdf:resource="&xsd;string"/>
+        <rdfs:domain rdf:resource="#Physical_Genetic_Entity"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_value -->
+
+    <owl:DatatypeProperty rdf:about="#has_value"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_xref_db -->
+
+    <owl:DatatypeProperty rdf:about="#has_xref_db">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#XREF"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#has_xref_id -->
+
+    <owl:DatatypeProperty rdf:about="#has_xref_id">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <rdfs:domain rdf:resource="#XREF"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Agent -->
+
+    <owl:Class rdf:about="#Agent">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <owl:disjointWith rdf:resource="#Datum"/>
+        <owl:disjointWith rdf:resource="#Component_of_Biological_Conceptual_Model"/>
+        <owl:disjointWith rdf:resource="#Pair_Association_Assertion"/>
+        <owl:disjointWith rdf:resource="#Biological_Conceptual_Model"/>
+        <Developer_Confidence>2</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BAC_Clone_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#BAC_Clone_Insert_DNA_Molecule">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_recombinant_part_of"/>
+                <owl:someValuesFrom rdf:resource="#Recombinant_BAC_DNA"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Insert_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BAC_End -->
+
+    <owl:Class rdf:about="#BAC_End">
+        <rdfs:subClassOf rdf:resource="#Clone_End"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_section_of"/>
+                <owl:allValuesFrom rdf:resource="#BAC_Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>7</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BAC_End_Representation -->
+
+    <owl:Class rdf:about="#BAC_End_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#BAC_End"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Clone_Insert_Section_Representation"/>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BAC_Insert_Representation -->
+
+    <owl:Class rdf:about="#BAC_Insert_Representation">
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Insert_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#BAC_Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BAC_Map -->
+
+    <owl:Class rdf:about="#BAC_Map">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Bacterial_Artificial_Chromosome_Clone"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BLAST_Experiment -->
+
+    <owl:Class rdf:about="#BLAST_Experiment">
+        <rdfs:subClassOf rdf:resource="#Sequence_Similarity_Experiment"/>
+        <Developer_Confidence>5</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BLAST_Hit_DNA_Sequence_Pair -->
+
+    <owl:Class rdf:about="#BLAST_Hit_DNA_Sequence_Pair">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:someValuesFrom rdf:resource="#BLAST_Experiment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Pair_Similarity_Measure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:allValuesFrom rdf:resource="#BLAST_Experiment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#BLAST_Hit_Representation_Pair -->
+
+    <owl:Class rdf:about="#BLAST_Hit_Representation_Pair">
+        <rdfs:subClassOf rdf:resource="#BLAST_Hit_DNA_Sequence_Pair"/>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Bacterial_Artificial_Chromosome_Clone -->
+
+    <owl:Class rdf:about="#Bacterial_Artificial_Chromosome_Clone">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl11:onClass rdf:resource="#Recombinant_BAC_DNA"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Bacterial_Artificial_Chromosome_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Bacterial_Artificial_Chromosome_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Cloning_Vector_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Biological_Conceptual_Model -->
+
+    <owl:Class rdf:about="#Biological_Conceptual_Model">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:allValuesFrom rdf:resource="#Component_of_Biological_Conceptual_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <owl:disjointWith rdf:resource="#Experimental_Procedure"/>
+        <owl:disjointWith rdf:resource="#Physical_Entity"/>
+        <owl:disjointWith rdf:resource="#Experimental_Outcome"/>
+        <Developer_Confidence>7</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Biological_Datum -->
+
+    <owl:Class rdf:about="#Biological_Datum">
+        <rdfs:subClassOf rdf:resource="#Datum"/>
+        <Developer_Confidence>9</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Biological_Sequence_Datum -->
+
+    <owl:Class rdf:about="#Biological_Sequence_Datum">
+        <rdfs:subClassOf rdf:resource="#Biological_Datum"/>
+        <Developer_Confidence>9</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Blast_Parameter -->
+
+    <owl:Class rdf:about="#Blast_Parameter">
+        <rdfs:subClassOf rdf:resource="#Experimental_Parameter"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosomal_DNA_Fragment -->
+
+    <owl:Class rdf:about="#Chromosomal_DNA_Fragment">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_source_chromosome"/>
+                <owl:someValuesFrom rdf:resource="#Chromosome"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosomal_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Chromosomal_DNA_Molecule">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_part_of"/>
+                <owl:someValuesFrom rdf:resource="#Chromosome"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+        <Developer_Confidence>5</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosomal_DNA_Representation -->
+
+    <owl:Class rdf:about="#Chromosomal_DNA_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Chromosomal_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule_Representation"/>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosomal_DNA_Section -->
+
+    <owl:Class rdf:about="#Chromosomal_DNA_Section">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_section_of"/>
+                <owl:allValuesFrom rdf:resource="#Chromosomal_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule_Section"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosomal_DNA_Section_Representation -->
+
+    <owl:Class rdf:about="#Chromosomal_DNA_Section_Representation">
+        <rdfs:subClassOf rdf:resource="#DNA_Section_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Chromosomal_DNA_Section"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosome -->
+
+    <owl:Class rdf:about="#Chromosome">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_source_organism"/>
+                <owl11:onClass rdf:resource="#Organism"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Whole"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl11:onClass rdf:resource="#Chromosomal_DNA_Molecule"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosome_Container -->
+
+    <owl:Class rdf:about="#Chromosome_Container">
+        <rdfs:subClassOf rdf:resource="#Genetic_Whole_Container"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosome_Map -->
+
+    <owl:Class rdf:about="#Chromosome_Map">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl11:onClass rdf:resource="#Chromosome_Container"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosome_Part -->
+
+    <owl:Class rdf:about="#Chromosome_Part">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_part_of"/>
+                <owl:allValuesFrom rdf:resource="#Chromosome"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Chromosome_Section_Container -->
+
+    <owl:Class rdf:about="#Chromosome_Section_Container">
+        <rdfs:subClassOf rdf:resource="#Genetic_Section_Container"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_Container -->
+
+    <owl:Class rdf:about="#Clone_Container">
+        <rdfs:subClassOf rdf:resource="#Genetic_Whole_Container"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_End -->
+
+    <owl:Class rdf:about="#Clone_End">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule_Section"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_section_of"/>
+                <owl:allValuesFrom rdf:resource="#Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Clone_Insert_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_Insert_Representation -->
+
+    <owl:Class rdf:about="#Clone_Insert_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule_Representation"/>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_Insert_Section_Representation -->
+
+    <owl:Class rdf:about="#Clone_Insert_Section_Representation">
+        <rdfs:subClassOf rdf:resource="#DNA_Section_Representation"/>
+        <owl:disjointWith rdf:resource="#Chromosomal_DNA_Section_Representation"/>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Clone_Map -->
+
+    <owl:Class rdf:about="#Clone_Map">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:someValuesFrom rdf:resource="#Clone_Container"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Cloning_Vector_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Cloning_Vector_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Component_of_Biological_Conceptual_Model -->
+
+    <owl:Class rdf:about="#Component_of_Biological_Conceptual_Model">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_model_of"/>
+                        <owl:someValuesFrom rdf:resource="#Physical_Biological_Entity"/>
+                    </owl:Restriction>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="#is_component_of"/>
+                                <owl:someValuesFrom rdf:resource="#Biological_Conceptual_Model"/>
+                            </owl:Restriction>
+                            <rdf:Description rdf:about="#Biological_Conceptual_Model"/>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_component_of"/>
+                <owl:allValuesFrom rdf:resource="#Biological_Conceptual_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Biological_Conceptual_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Biological_Entity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Component_of_Genetic_Model -->
+
+    <owl:Class rdf:about="#Component_of_Genetic_Model">
+        <rdfs:subClassOf rdf:resource="#Component_of_Biological_Conceptual_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_component_of"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#Genetic_Map"/>
+                            <rdf:Description rdf:about="#Genetic_Group"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Genetic_Entity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >note these might also have to be part of genetic groups in the current ontology...</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Contig_Container -->
+
+    <owl:Class rdf:about="#Contig_Container">
+        <rdfs:subClassOf rdf:resource="#Chromosome_Section_Container"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Contig_Map -->
+
+    <owl:Class rdf:about="#Contig_Map">
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:allValuesFrom rdf:resource="#Genetic_Section_Container"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >distinguished by experimental technique</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Contig_Section -->
+
+    <owl:Class rdf:about="#Contig_Section">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_representation"/>
+                <owl:someValuesFrom rdf:resource="#Contig_Sequence"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Chromosomal_DNA_Section"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Contig_Sequence -->
+
+    <owl:Class rdf:about="#Contig_Sequence">
+        <rdfs:subClassOf rdf:resource="#Chromosomal_DNA_Section_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Contig_Section"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Cow -->
+
+    <owl:Class rdf:about="#Cow">
+        <rdfs:subClassOf rdf:resource="#Eukaryotic_Organism"/>
+        <owl:disjointWith rdf:resource="#Human"/>
+        <owl:disjointWith rdf:resource="#Pig"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Cytogenetic_Map -->
+
+    <owl:Class rdf:about="#Cytogenetic_Map">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Chromosome_Part"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >distinguished by experimental technique</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Molecule -->
+
+    <owl:Class rdf:about="#DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Maximal_Physical_Biological_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Molecule_Representation -->
+
+    <owl:Class rdf:about="#DNA_Molecule_Representation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DNA_Sequence_Representation"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_representation_of"/>
+                        <owl:allValuesFrom rdf:resource="#DNA_Molecule"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Representation"/>
+        <owl:disjointWith rdf:resource="#DNA_Section_Representation"/>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Molecule_Section -->
+
+    <owl:Class rdf:about="#DNA_Molecule_Section">
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Molecule_Section"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_section_of"/>
+                <owl:allValuesFrom rdf:resource="#DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Section_Representation -->
+
+    <owl:Class rdf:about="#DNA_Section_Representation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_representation_of"/>
+                        <owl:allValuesFrom rdf:resource="#DNA_Molecule_Section"/>
+                    </owl:Restriction>
+                    <rdf:Description rdf:about="#DNA_Sequence_Representation"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#DNA_Molecule_Section"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Sequence_Datum -->
+
+    <owl:Class rdf:about="#DNA_Sequence_Datum">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Maximal_DNA_Sequence_Datum"/>
+                    <rdf:Description rdf:about="#Region_of_DNA_Sequence_Datum"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Biological_Sequence_Datum"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Sequence_Pair_Similarity_Measure -->
+
+    <owl:Class rdf:about="#DNA_Sequence_Pair_Similarity_Measure">
+        <rdfs:subClassOf rdf:resource="#Sequence_Similarity_Experimental_Outcome"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_similar_member"/>
+                <owl11:onClass rdf:resource="#Biological_Sequence_Datum"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>5</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#DNA_Sequence_Representation -->
+
+    <owl:Class rdf:about="#DNA_Sequence_Representation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DNA_Sequence_Datum"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_representation_of"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="#DNA_Molecule"/>
+                                    <rdf:Description rdf:about="#DNA_Molecule_Section"/>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#DNA_Molecule"/>
+                            <rdf:Description rdf:about="#DNA_Molecule_Section"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Datum"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Datum -->
+
+    <owl:Class rdf:about="#Datum">
+        <owl:disjointWith rdf:resource="#Physical_Entity"/>
+        <owl:disjointWith rdf:resource="#Biological_Conceptual_Model"/>
+        <Developer_Confidence>9</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Chromosomal_DNA_Section -->
+
+    <owl:Class rdf:about="#Detectable_Chromosomal_DNA_Section">
+        <rdfs:subClassOf rdf:resource="#Chromosomal_DNA_Section"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_part_of"/>
+                <owl:someValuesFrom rdf:resource="#Detectable_Physical_Genetic_Part"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Chromosome_Part -->
+
+    <owl:Class rdf:about="#Detectable_Chromosome_Part">
+        <rdfs:subClassOf rdf:resource="#Detectable_Physical_Genetic_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Chromosome_Section_Representation -->
+
+    <owl:Class rdf:about="#Detectable_Chromosome_Section_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Detectable_Chromosomal_DNA_Section"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Chromosomal_DNA_Section_Representation"/>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Clone_Part -->
+
+    <owl:Class rdf:about="#Detectable_Clone_Part">
+        <rdfs:subClassOf rdf:resource="#Detectable_Physical_Genetic_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Gene -->
+
+    <owl:Class rdf:about="#Detectable_Gene">
+        <rdfs:subClassOf rdf:resource="#Gene"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_detection_technique"/>
+                <owl:allValuesFrom rdf:resource="#Gene_Detection_Technique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Genetic_Section_Model -->
+
+    <owl:Class rdf:about="#Detectable_Genetic_Section_Model">
+        <rdfs:subClassOf rdf:resource="#Component_of_Genetic_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Detectable_Physical_Genetic_Part"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Microsatellite -->
+
+    <owl:Class rdf:about="#Detectable_Microsatellite">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_detection_technique"/>
+                <owl:allValuesFrom rdf:resource="#Microsatellite_Detection_Technique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Microsatellite"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_Physical_Genetic_Part -->
+
+    <owl:Class rdf:about="#Detectable_Physical_Genetic_Part">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Physical_Genetic_Part"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#has_detection_technique"/>
+                        <owl:someValuesFrom rdf:resource="#Marker_Detection_Technique"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_detection_technique"/>
+                <owl:someValuesFrom rdf:resource="#Marker_Detection_Technique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl:someValuesFrom rdf:resource="#Detectable_Chromosomal_DNA_Section"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Part"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Detectable_QTL -->
+
+    <owl:Class rdf:about="#Detectable_QTL">
+        <rdfs:subClassOf rdf:resource="#QTL"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_detection_technique"/>
+                <owl:allValuesFrom rdf:resource="#Quantitative_Trait_Detection_Technique"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#ENSEMBL_XREF -->
+
+    <owl:Class rdf:about="#ENSEMBL_XREF">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_xref_db"/>
+                <owl:hasValue rdf:datatype="&xsd;string">ENSEMBL</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#XREF"/>
+        <dc:date>30/07/07</dc:date>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#EST_Clone -->
+
+    <owl:Class rdf:about="#EST_Clone">
+        <rdfs:subClassOf rdf:resource="#cDNA_Clone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#EST_Clone_Insert_Representation -->
+
+    <owl:Class rdf:about="#EST_Clone_Insert_Representation">
+        <rdfs:subClassOf rdf:resource="#cDNA_Clone_Insert_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#EST_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#EST_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#EST_Insert_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#cDNA_Clone_Insert_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#EST_Map -->
+
+    <owl:Class rdf:about="#EST_Map">
+        <rdfs:subClassOf rdf:resource="#cDNA_Clone_Map"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#EST_Clone"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Eukaryotic_Organism -->
+
+    <owl:Class rdf:about="#Eukaryotic_Organism">
+        <rdfs:subClassOf rdf:resource="#Organism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Experimental_Outcome -->
+
+    <owl:Class rdf:about="#Experimental_Outcome">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:someValuesFrom rdf:resource="#Experimental_Procedure"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:allValuesFrom rdf:resource="#Experimental_Procedure"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Experimental_Parameter -->
+
+    <owl:Class rdf:about="#Experimental_Parameter">
+        <rdfs:subClassOf rdf:resource="#Parameter"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Experimental_Procedure -->
+
+    <owl:Class rdf:about="#Experimental_Procedure">
+        <rdfs:subClassOf rdf:resource="&owl;Thing"/>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Expressed_Sequence_Detection_Technique -->
+
+    <owl:Class rdf:about="#Expressed_Sequence_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Sequence_Based_Detection_Technique"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#GENBANK_XREF -->
+
+    <owl:Class rdf:about="#GENBANK_XREF">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_xref_db"/>
+                <owl:hasValue rdf:datatype="&xsd;string">GENBANK</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#XREF"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+        <dc:date>30/07/07</dc:date>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Gene -->
+
+    <owl:Class rdf:about="#Gene">
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Part"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Gene_Associated_DNA_Molecule_Section -->
+
+    <owl:Class rdf:about="#Gene_Associated_DNA_Molecule_Section">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule_Section"/>
+        <Developer_Confidence>1</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Gene_Detection_Technique -->
+
+    <owl:Class rdf:about="#Gene_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Sequence_Based_Detection_Technique"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Group -->
+
+    <owl:Class rdf:about="#Genetic_Group">
+        <rdfs:subClassOf rdf:resource="#Genetic_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl11:onClass rdf:resource="#Detectable_Genetic_Section_Model"/>
+                <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:minCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Map -->
+
+    <owl:Class rdf:about="#Genetic_Map">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#Genetic_Model"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="#has_component"/>
+                                <owl:someValuesFrom rdf:resource="#Detectable_Genetic_Section_Model"/>
+                            </owl:Restriction>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#has_component"/>
+                        <owl11:onClass rdf:resource="#Genetic_Model_Container"/>
+                        <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#has_map_length"/>
+                        <owl:someValuesFrom rdf:resource="&xsd;float"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl11:onClass rdf:resource="#Genetic_Model_Container"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_map_length"/>
+                <owl:someValuesFrom rdf:resource="&xsd;float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:someValuesFrom rdf:resource="#Detectable_Genetic_Section_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Model"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Model -->
+
+    <owl:Class rdf:about="#Genetic_Model">
+        <rdfs:subClassOf rdf:resource="#Biological_Conceptual_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:someValuesFrom rdf:resource="#Component_of_Genetic_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl:allValuesFrom rdf:resource="#Component_of_Genetic_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Model_Container -->
+
+    <owl:Class rdf:about="#Genetic_Model_Container">
+        <rdfs:subClassOf rdf:resource="#Component_of_Genetic_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:someValuesFrom rdf:resource="#Physical_Genetic_Entity"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_component_of"/>
+                <owl:allValuesFrom rdf:resource="#Genetic_Model"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Region_Map -->
+
+    <owl:Class rdf:about="#Genetic_Region_Map">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Genetic_Map"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#has_component"/>
+                        <owl:someValuesFrom rdf:resource="#Genetic_Section_Container"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Genetic_Part"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Section_Container -->
+
+    <owl:Class rdf:about="#Genetic_Section_Container">
+        <rdfs:subClassOf rdf:resource="#Genetic_Model_Container"/>
+        <owl:disjointWith rdf:resource="#Genetic_Whole_Container"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Whole_Container -->
+
+    <owl:Class rdf:about="#Genetic_Whole_Container">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Genetic_Whole"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Model_Container"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:someValuesFrom rdf:resource="#Physical_Genetic_Whole"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genetic_Whole_Map -->
+
+    <owl:Class rdf:about="#Genetic_Whole_Map">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Genetic_Map"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#has_component"/>
+                        <owl:someValuesFrom rdf:resource="#Genetic_Whole_Container"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Genetic_Whole"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+        <owl:disjointWith rdf:resource="#Genetic_Region_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genomic_Clone -->
+
+    <owl:Class rdf:about="#Genomic_Clone">
+        <rdfs:subClassOf rdf:resource="#Recombinant_Clone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genomic_Clone_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Genomic_Clone_Insert_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Clone_Insert_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genomic_Clone_Insert_Representation -->
+
+    <owl:Class rdf:about="#Genomic_Clone_Insert_Representation">
+        <rdfs:subClassOf rdf:resource="#Clone_Insert_Representation"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#Genomic_Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Genomic_Clone_Map -->
+
+    <owl:Class rdf:about="#Genomic_Clone_Map">
+        <rdfs:subClassOf rdf:resource="#Clone_Map"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Genomic_Clone"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Human -->
+
+    <owl:Class rdf:about="#Human">
+        <rdfs:subClassOf rdf:resource="#Eukaryotic_Organism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#In_Silico_Experimental_Outcome -->
+
+    <owl:Class rdf:about="#In_Silico_Experimental_Outcome">
+        <rdfs:subClassOf rdf:resource="#Experimental_Outcome"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:allValuesFrom rdf:resource="#In_Silico_Experimental_Procedure"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#In_Silico_Experimental_Procedure -->
+
+    <owl:Class rdf:about="#In_Silico_Experimental_Procedure">
+        <rdfs:subClassOf rdf:resource="#Experimental_Procedure"/>
+        <owl:disjointWith rdf:resource="#Physical_Experimental_Procedure"/>
+        <Developer_Confidence>5</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Linkage_Group -->
+
+    <owl:Class rdf:about="#Linkage_Group">
+        <rdfs:subClassOf rdf:resource="#Synteny_Group"/>
+        <rdfs:comment
+            >Can add in an assertion about linkage between members in future work</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Linkage_Map -->
+
+    <owl:Class rdf:about="#Linkage_Map">
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >distinguished by experimental technique</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Marker_Detection_Technique -->
+
+    <owl:Class rdf:about="#Marker_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Physical_Experimental_Procedure"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Maximal_DNA_Sequence_Datum -->
+
+    <owl:Class rdf:about="#Maximal_DNA_Sequence_Datum">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DNA_Sequence_Datum"/>
+                    <owl:Class>
+                        <owl:complementOf>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="#is_region_of"/>
+                                <owl:someValuesFrom rdf:resource="&owl;Thing"/>
+                            </owl:Restriction>
+                        </owl:complementOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_sequence_length"/>
+                <owl:someValuesFrom rdf:resource="&xsd;float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_region_of"/>
+                        <owl:someValuesFrom rdf:resource="&owl;Thing"/>
+                    </owl:Restriction>
+                </owl:complementOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_nucleotide_string"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Datum"/>
+        <Developer_Confidence>9</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Maximal_DNA_Sequence_Representation -->
+
+    <owl:Class rdf:about="#Maximal_DNA_Sequence_Representation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_representation_of"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="#DNA_Molecule"/>
+                                    <rdf:Description rdf:about="#DNA_Molecule_Section"/>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                    <rdf:Description rdf:about="#Maximal_DNA_Sequence_Datum"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#DNA_Molecule"/>
+                            <rdf:Description rdf:about="#DNA_Molecule_Section"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Maximal_DNA_Sequence_Datum"/>
+        <Developer_Confidence>8</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Maximal_Physical_Biological_Molecule -->
+
+    <owl:Class rdf:about="#Maximal_Physical_Biological_Molecule">
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Molecule"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:complementOf>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_section_of"/>
+                        <owl:someValuesFrom rdf:resource="&owl;Thing"/>
+                    </owl:Restriction>
+                </owl:complementOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Microsatellite -->
+
+    <owl:Class rdf:about="#Microsatellite">
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Part"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Microsatellite_Detection_Technique -->
+
+    <owl:Class rdf:about="#Microsatellite_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Sequence_Based_Detection_Technique"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Organism -->
+
+    <owl:Class rdf:about="#Organism">
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Entity"/>
+        <owl:disjointWith rdf:resource="#Physical_Biological_Molecule_Section"/>
+        <owl:disjointWith rdf:resource="#Physical_Biological_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#PUBMED_XREF -->
+
+    <owl:Class rdf:about="#PUBMED_XREF">
+        <rdfs:subClassOf rdf:resource="#XREF"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_xref_db"/>
+                <owl:hasValue rdf:datatype="&xsd;string">PUBMED</owl:hasValue>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+        <dc:date>30/07/07</dc:date>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Pair_Association_Assertion -->
+
+    <owl:Class rdf:about="#Pair_Association_Assertion">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_asserting_agent"/>
+                <owl:someValuesFrom rdf:resource="#Agent"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_member"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="#Physical_Entity"/>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >An assertion that two things are related, without the need for them to interact with each other. One-to-one by definition</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Pair_Homology_Assertion -->
+
+    <owl:Class rdf:about="#Pair_Homology_Assertion">
+        <rdfs:subClassOf rdf:resource="#Pair_Association_Assertion"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_homologous_member"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >A Pair_Homology_Assertion is a Pair Association Assertion that is a statement that two things are homologous</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Pair_Orthology_Assertion -->
+
+    <owl:Class rdf:about="#Pair_Orthology_Assertion">
+        <rdfs:subClassOf rdf:resource="#Pair_Association_Assertion"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_orthologous_member"/>
+                <owl11:onClass rdf:resource="#Physical_Genetic_Entity"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >A Pair_Orthology Assertion is a Pair Association Assertion which is the outcome of a statement made that two things are orthologous</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Parameter -->
+
+    <owl:Class rdf:about="#Parameter">
+        <rdfs:subClassOf rdf:resource="#Datum"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Phenotype_Detection_Technique -->
+
+    <owl:Class rdf:about="#Phenotype_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Marker_Detection_Technique"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Biological_Entity -->
+
+    <owl:Class rdf:about="#Physical_Biological_Entity">
+        <rdfs:subClassOf rdf:resource="#Physical_Entity"/>
+        <Developer_Confidence>10</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Biological_Molecule -->
+
+    <owl:Class rdf:about="#Physical_Biological_Molecule">
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Biological_Molecule_Section -->
+
+    <owl:Class rdf:about="#Physical_Biological_Molecule_Section">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_section_of"/>
+                <owl:someValuesFrom rdf:resource="#Physical_Biological_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Entity -->
+
+    <owl:Class rdf:about="#Physical_Entity">
+        <owl:disjointWith rdf:resource="#Component_of_Biological_Conceptual_Model"/>
+        <Developer_Confidence>10</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Experimental_Procedure -->
+
+    <owl:Class rdf:about="#Physical_Experimental_Procedure">
+        <rdfs:subClassOf rdf:resource="#Experimental_Procedure"/>
+        <Developer_Confidence>2</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Genetic_Entity -->
+
+    <owl:Class rdf:about="#Physical_Genetic_Entity">
+        <rdfs:subClassOf rdf:resource="#Physical_Biological_Entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_id"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="#Organism"/>
+        <Developer_Confidence>4</Developer_Confidence>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >A physical genetic entity is a physical biological entity that has a role in heredity</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Genetic_Entity_Pair_Homology_Assertion -->
+
+    <owl:Class rdf:about="#Physical_Genetic_Entity_Pair_Homology_Assertion">
+        <rdfs:subClassOf rdf:resource="#Pair_Homology_Assertion"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_homologous_member"/>
+                <owl11:onClass rdf:resource="#Physical_Genetic_Entity"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Genetic_Part -->
+
+    <owl:Class rdf:about="#Physical_Genetic_Part">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_part_of"/>
+                <owl:allValuesFrom rdf:resource="#Physical_Genetic_Whole"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl11:onClass rdf:resource="#DNA_Molecule_Section"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_part_of"/>
+                <owl:someValuesFrom rdf:resource="#Physical_Genetic_Whole"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Entity"/>
+        <owl:disjointWith rdf:resource="#Physical_Genetic_Whole"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Physical_Genetic_Whole -->
+
+    <owl:Class rdf:about="#Physical_Genetic_Whole">
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Entity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl11:onClass rdf:resource="#DNA_Molecule"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >A physical genetic whole is a physical genetic entity that is physically discrete</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Pig -->
+
+    <owl:Class rdf:about="#Pig">
+        <rdfs:subClassOf rdf:resource="#Eukaryotic_Organism"/>
+        <owl:disjointWith rdf:resource="#Human"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Prokaryotic_Organism -->
+
+    <owl:Class rdf:about="#Prokaryotic_Organism">
+        <rdfs:subClassOf rdf:resource="#Organism"/>
+        <owl:disjointWith rdf:resource="#Eukaryotic_Organism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#QTL -->
+
+    <owl:Class rdf:about="#QTL">
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Part"/>
+        <dc:creator>Trevor Paterson</dc:creator>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Quantitative_Trait_Detection_Technique -->
+
+    <owl:Class rdf:about="#Quantitative_Trait_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Phenotype_Detection_Technique"/>
+        <dc:contributor>Trevor Paterson</dc:contributor>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Radiation_Hybrid_Map -->
+
+    <owl:Class rdf:about="#Radiation_Hybrid_Map">
+        <rdfs:subClassOf rdf:resource="#Genetic_Map"/>
+        <rdfs:comment rdf:datatype="&xsd;string"
+            >distinguished by experimental technique</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Recombinant_BAC_DNA -->
+
+    <owl:Class rdf:about="#Recombinant_BAC_DNA">
+        <rdfs:subClassOf rdf:resource="#Recombinant_Clone_DNA_Molecule"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_recombinant_part"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#BAC_Clone_Insert_DNA_Molecule"/>
+                            <rdf:Description rdf:about="#Cloning_Vector_DNA_Molecule"/>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>3</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Recombinant_Clone -->
+
+    <owl:Class rdf:about="#Recombinant_Clone">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_part"/>
+                <owl11:onClass rdf:resource="#Recombinant_Clone_DNA_Molecule"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Physical_Genetic_Whole"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Recombinant_Clone_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Recombinant_Clone_DNA_Molecule">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_recombinant_part"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="#Cloning_Vector_DNA_Molecule"/>
+                            <rdf:Description rdf:about="#Clone_Insert_DNA_Molecule"/>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Recombinant_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Recombinant_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Recombinant_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_recombinant_part"/>
+                <owl11:onClass rdf:resource="#DNA_Molecule"/>
+                <owl:minCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:minCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Region_of_DNA_Representation -->
+
+    <owl:Class rdf:about="#Region_of_DNA_Representation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Region_of_DNA_Sequence_Datum"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_region_of"/>
+                        <owl:allValuesFrom rdf:resource="#DNA_Sequence_Representation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Region_of_DNA_Sequence_Datum"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_region_of"/>
+                <owl:allValuesFrom rdf:resource="#DNA_Sequence_Representation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Region_of_DNA_Sequence_Datum -->
+
+    <owl:Class rdf:about="#Region_of_DNA_Sequence_Datum">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#is_region_of"/>
+                        <owl:someValuesFrom rdf:resource="#DNA_Sequence_Datum"/>
+                    </owl:Restriction>
+                    <rdf:Description rdf:about="#DNA_Sequence_Datum"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_sequence_end_position"/>
+                <owl:someValuesFrom rdf:resource="&xsd;float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_sequence_start_position"/>
+                <owl:someValuesFrom rdf:resource="&xsd;float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_region_of"/>
+                <owl:allValuesFrom rdf:resource="#DNA_Sequence_Datum"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_region_of"/>
+                <owl:someValuesFrom rdf:resource="#DNA_Sequence_Datum"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#DNA_Sequence_Datum"/>
+        <owl:disjointWith rdf:resource="#Maximal_DNA_Sequence_Datum"/>
+        <Developer_Comment
+            >This distinction is unproven</Developer_Comment>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Sequence_Based_Detection_Technique -->
+
+    <owl:Class rdf:about="#Sequence_Based_Detection_Technique">
+        <rdfs:subClassOf rdf:resource="#Marker_Detection_Technique"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Sequence_Pair_Homology_Assertion -->
+
+    <owl:Class rdf:about="#Sequence_Pair_Homology_Assertion">
+        <rdfs:subClassOf rdf:resource="#Pair_Homology_Assertion"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_homologous_member"/>
+                <owl11:onClass rdf:resource="#DNA_Sequence_Datum"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Sequence_Similarity_Experiment -->
+
+    <owl:Class rdf:about="#Sequence_Similarity_Experiment">
+        <rdfs:subClassOf rdf:resource="#In_Silico_Experimental_Procedure"/>
+        <Developer_Confidence>3</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Sequence_Similarity_Experimental_Outcome -->
+
+    <owl:Class rdf:about="#Sequence_Similarity_Experimental_Outcome">
+        <rdfs:subClassOf rdf:resource="#In_Silico_Experimental_Outcome"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_outcome_of"/>
+                <owl:allValuesFrom rdf:resource="#Sequence_Similarity_Experiment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <Developer_Confidence>4</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Synteny_Group -->
+
+    <owl:Class rdf:about="#Synteny_Group">
+        <rdfs:subClassOf rdf:resource="#Genetic_Group"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_component"/>
+                <owl11:onClass rdf:resource="#Chromosome_Container"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#XREF -->
+
+    <owl:Class rdf:about="#XREF">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_xref_db"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#has_xref_id"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Datum"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#YAC_Clone_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#YAC_Clone_Insert_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Insert_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#YAC_Insert_Representation -->
+
+    <owl:Class rdf:about="#YAC_Insert_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#YAC_Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Insert_Representation"/>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#YAC_Map -->
+
+    <owl:Class rdf:about="#YAC_Map">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#Yeast_Artificial_Chromosome_Clone"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone_Map"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Yeast_Artificial_Chromosome_Clone -->
+
+    <owl:Class rdf:about="#Yeast_Artificial_Chromosome_Clone">
+        <rdfs:subClassOf rdf:resource="#Genomic_Clone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Yeast_Artificial_Chromosome_DNA_Molecule -->
+
+    <owl:Class rdf:about="#Yeast_Artificial_Chromosome_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Cloning_Vector_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cDNA_Clone -->
+
+    <owl:Class rdf:about="#cDNA_Clone">
+        <rdfs:subClassOf rdf:resource="#Recombinant_Clone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cDNA_Clone_Insert_DNA_Molecule -->
+
+    <owl:Class rdf:about="#cDNA_Clone_Insert_DNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#Clone_Insert_DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cDNA_Clone_Insert_Representation -->
+
+    <owl:Class rdf:about="#cDNA_Clone_Insert_Representation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_representation_of"/>
+                <owl:allValuesFrom rdf:resource="#cDNA_Clone_Insert_DNA_Molecule"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="#Clone_Insert_Representation"/>
+        <Developer_Confidence>6</Developer_Confidence>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cDNA_Clone_Map -->
+
+    <owl:Class rdf:about="#cDNA_Clone_Map">
+        <rdfs:subClassOf rdf:resource="#Clone_Map"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="#is_model_of"/>
+                <owl:allValuesFrom rdf:resource="#cDNA_Clone"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#cDNA_Molecule -->
+
+    <owl:Class rdf:about="#cDNA_Molecule">
+        <rdfs:subClassOf rdf:resource="#DNA_Molecule"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Gene1 -->
+
+    <Gene rdf:about="#Gene1"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Gene2 -->
+
+    <rdf:Description rdf:about="#Gene2"/>
+    
+
+
+    <!-- http://www.comparagrid.org/cgao.owl#Homology -->
+
+    <Pair_Homology_Assertion rdf:about="#Homology">
+        <has_homologous_member rdf:resource="#Gene1"/>
+    </Pair_Homology_Assertion>
+</rdf:RDF>

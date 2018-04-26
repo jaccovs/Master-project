@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="file:/Users/matthewhorridge/Desktop/InconsistentOntologies/out-coerced.owl" uri="out.coercedliterals.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="file:/Users/matthewhorridge/Desktop/InconsistentOntologies/out.owl" uri="out.rdf.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.co-ode.org/roberts/country.owl" uri="country.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.co-ode.org/roberts/travel+upper" uri="travel.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.co-ode.org/roberts/travel-coerced.owl" uri="travel.coerced.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.co-ode.org/teaching-examples/classes-as-values/classesasvalues.owl" uri="teaching.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.comparagrid.org/cgao.owl" uri="cgo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.cs.man.ac.uk/~seanb/teaching/COMP30412/assignment4-base.owl" uri="assignment4-kh.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.foodontology.nl/units" uri="unit.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.owl-ontologies.com/boat" uri="boat.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.pizza.com/ontologies/pizza.owl" uri="pizza.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.semanticweb.org/ontologies/iedbexportmerged.owl" uri="iedbexportmerged.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.semanticweb.org/ontologies/microdemomerged.owl" uri="microdemomerged.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1522077543896" name="http://www.w3.org/2006/12/owl2-xml#" uri="fish.owl"/>
+    </group>
+</catalog>

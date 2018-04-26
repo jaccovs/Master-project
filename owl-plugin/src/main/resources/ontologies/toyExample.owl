@@ -1,0 +1,88 @@
+Prefix(:=<http://owl.api.toyExample#>)
+Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+
+
+Ontology(<http://owl.api.toyExample>
+
+Declaration(Class(:Car))
+Declaration(Class(:Driver))
+Declaration(Class(:Ferrari))
+Declaration(Class(:Human))
+Declaration(Class(:Mechanic))
+Declaration(Class(:Renault))
+Declaration(Class(:TeamMember))
+Declaration(ObjectProperty(:Drives))
+Declaration(ObjectProperty(:IsDrivenBy))
+Declaration(NamedIndividual(:Max))
+Declaration(NamedIndividual(:fr5))
+Declaration(NamedIndividual(:rb14))
+############################
+#   Object Properties
+############################
+
+# Object Property: :Drives (:Drives)
+
+FunctionalObjectProperty(:Drives)
+ObjectPropertyDomain(:Drives :Driver)
+ObjectPropertyRange(:Drives :Car)
+
+# Object Property: :IsDrivenBy (:IsDrivenBy)
+
+ObjectPropertyDomain(:IsDrivenBy :Car)
+ObjectPropertyRange(:IsDrivenBy :Driver)
+
+
+############################
+#   Classes
+############################
+
+# Class: :Driver (:Driver)
+
+SubClassOf(:Driver :TeamMember)
+DisjointClasses(:Driver :Mechanic)
+
+# Class: :Ferrari (:Ferrari)
+
+SubClassOf(:Ferrari :Car)
+
+DisjointClasses(:Ferrari :Renault)
+
+# Class: :Mechanic (:Mechanic)
+
+SubClassOf(:Mechanic :TeamMember)
+
+# Class: :Renault (:Renault)
+
+SubClassOf(:Renault :Car)
+
+# Class: :TeamMember (:TeamMember)
+
+SubClassOf(:TeamMember :Human)
+
+
+############################
+#   Named Individuals
+############################
+
+# Individual: :Max (:Max)
+
+ClassAssertion(:Driver :Max)
+ObjectPropertyAssertion(:Drives :Max :fr5)
+ObjectPropertyAssertion(:Drives :Max :rb14)
+
+# Individual: :fr5 (:fr5)
+
+ClassAssertion(:Ferrari :fr5)
+ObjectPropertyAssertion(:IsDrivenBy :fr5 :Max)
+
+# Individual: :rb14 (:rb14)
+
+ClassAssertion(:Renault :rb14)
+ObjectPropertyAssertion(:IsDrivenBy :rb14 :Max)
+
+
+)
