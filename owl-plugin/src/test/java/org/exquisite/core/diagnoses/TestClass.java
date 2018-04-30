@@ -36,7 +36,7 @@ public class TestClass extends AbstractTest {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(40);
+//        diagnosisEngine.setMaxNumberOfDiagnoses();
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
         logger.debug("based on " + diagnosisEngine.getSolver().getDiagnosisModel());
