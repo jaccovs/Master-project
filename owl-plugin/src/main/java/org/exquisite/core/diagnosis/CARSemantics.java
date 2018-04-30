@@ -47,10 +47,12 @@ public class CARSemantics extends Semantics{
 
             for (int i = 0 ; i < repairs.length ; i++) {
                 OWLDataFactory dfRepair = repairs[i].getManager().getOWLDataFactory();
-                OWLReasonerFactory rf = new ReasonerFactory();
+                OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
                 OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
 
                 InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
+                System.out.println(repairs[i].getOntology());
+                System.out.println(r.isConsistent());
                 Set<OWLClassAssertionAxiom> classAssertionAxioms = classAssertionAxiomGenerator.createAxioms(dfRepair, r);
 
                 Set<OWLClassAssertionAxiom> removeThings = new HashSet<>();
@@ -109,7 +111,7 @@ public class CARSemantics extends Semantics{
 
             for (int i = 0 ; i < CARrepairs.length ; i++) {
                 OWLDataFactory df = CARrepairs[i].getManager().getOWLDataFactory();
-                OWLReasonerFactory rf = new ReasonerFactory();
+                OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();;
                 OWLReasoner r = rf.createReasoner(CARrepairs[i].getOntology());
 
                 InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
@@ -144,7 +146,7 @@ public class CARSemantics extends Semantics{
 
             for (int i = 0 ; i < CARrepairs.length ; i++) {
                 OWLDataFactory df = CARrepairs[i].getManager().getOWLDataFactory();
-                OWLReasonerFactory rf = new ReasonerFactory();
+                OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();;
                 OWLReasoner r = rf.createReasoner(CARrepairs[i].getOntology());
 
                 InferredPropertyAssertionGenerator propertyAssertionGenerator = new InferredPropertyAssertionGenerator();

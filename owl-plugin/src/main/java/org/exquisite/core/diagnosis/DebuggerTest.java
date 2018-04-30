@@ -31,37 +31,38 @@ public class DebuggerTest {
 
         if (!r.isConsistent()) {
 
-            ARSemantics AR = new ARSemantics(original);
+            System.out.println(original.getOntology());
+//            ARSemantics AR = new ARSemantics(original);
 
-            BraveSemantics Brave = new BraveSemantics(original, AR.getRepairs());
-
-            IARSemantics IAR = new IARSemantics(original, AR.getRepairs());
-
-            CARSemantics CAR = new CARSemantics(original, AR.getRepairs());
-
-            ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
+//            BraveSemantics Brave = new BraveSemantics(original, AR.getRepairs());
+//
+//            IARSemantics IAR = new IARSemantics(original, AR.getRepairs());
+//
+            CARSemantics CAR = new CARSemantics(original);
+//
+//            ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 
 //            MyOntology[] repairList = AR.getRepairs();
 //            for (int i = 0; i < repairList.length; i++) {
 //                System.out.println(repairList[i].getOntology());
 //            }
 
-        System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
+//        System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
+//
+//        System.out.println("The number of asserted + inferred classAssertionAxioms under AR semantics = " + AR.getClassAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under AR semantics = " + AR.getPropertyAssertionAxioms().size() + "\n");
+//
+//        System.out.println("The number of asserted + inferred classAssertionAxioms under Brave semantics = " + Brave.getClassAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under Brave semantics = " + Brave.getPropertyAssertionAxioms().size() + "\n");
+//
+//        System.out.println("The number of asserted + inferred classAssertionAxioms under IAR semantics = " + IAR.getClassAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under IAR semantics = " + IAR.getPropertyAssertionAxioms().size() + "\n");
 
-        System.out.println("The number of asserted + inferred classAssertionAxioms under AR semantics = " + AR.getClassAssertionAxioms().size());
-        System.out.println("The number of asserted + inferred propertyAssertionAxioms under AR semantics = " + AR.getPropertyAssertionAxioms().size() + "\n");
+//        System.out.println("The number of asserted + inferred classAssertionAxioms under CAR semantics = " + CAR.getClassAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under CAR semantics = " + CAR.getPropertyAssertionAxioms().size() + "\n");
 
-        System.out.println("The number of asserted + inferred classAssertionAxioms under Brave semantics = " + Brave.getClassAssertionAxioms().size());
-        System.out.println("The number of asserted + inferred propertyAssertionAxioms under Brave semantics = " + Brave.getPropertyAssertionAxioms().size() + "\n");
-
-        System.out.println("The number of asserted + inferred classAssertionAxioms under IAR semantics = " + IAR.getClassAssertionAxioms().size());
-        System.out.println("The number of asserted + inferred propertyAssertionAxioms under IAR semantics = " + IAR.getPropertyAssertionAxioms().size() + "\n");
-
-        System.out.println("The number of asserted + inferred classAssertionAxioms under CAR semantics = " + CAR.getClassAssertionAxioms().size());
-        System.out.println("The number of asserted + inferred propertyAssertionAxioms under CAR semantics = " + CAR.getPropertyAssertionAxioms().size() + "\n");
-
-        System.out.println("The number of asserted + inferred classAssertionAxioms under ICR semantics = " + ICR.getClassAssertionAxioms().size());
-        System.out.println("The number of asserted + inferred propertyAssertionAxioms under ICR semantics = " + ICR.getPropertyAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred classAssertionAxioms under ICR semantics = " + ICR.getClassAssertionAxioms().size());
+//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under ICR semantics = " + ICR.getPropertyAssertionAxioms().size());
 
         }
         else {
