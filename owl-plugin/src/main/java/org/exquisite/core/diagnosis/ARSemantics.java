@@ -53,7 +53,7 @@ public class ARSemantics extends Semantics {
 
         for (int i = 0 ; i < repairs.length ; i++) {
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
-            OWLReasonerFactory rf = new ReasonerFactory();
+            OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
             OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
 
             InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
@@ -88,7 +88,7 @@ public class ARSemantics extends Semantics {
 
         for (int i = 0 ; i < repairs.length ; i++) {
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
-            OWLReasonerFactory rf = new ReasonerFactory();
+            OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
             OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
 
             InferredPropertyAssertionGenerator propertyAssertionGenerator = new InferredPropertyAssertionGenerator();

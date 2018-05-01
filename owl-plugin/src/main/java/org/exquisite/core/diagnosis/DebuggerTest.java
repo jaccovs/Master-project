@@ -11,7 +11,7 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/travel.owl");
+        MyOntology original = new MyOntology("ontologies/Matthew/boat.owl");
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
@@ -70,7 +70,7 @@ public class DebuggerTest {
 
 //    private static Boolean CARSemantics(MyOntology original, OWLAxiom axiomToCheck) {
 //        OWLDataFactory df = original.getManager().getOWLDataFactory();
-//        OWLReasonerFactory rf = new ReasonerFactory();
+//        OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
 //        OWLReasoner r = rf.createReasoner(original.getOntology());
 //
 //        InferredClassAssertionAxiomGenerator classAssertionGen = new InferredClassAssertionAxiomGenerator();

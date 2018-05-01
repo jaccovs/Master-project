@@ -93,7 +93,7 @@ public class Semantics {
 
     public Boolean repairEntailment(MyOntology repair, OWLAxiom axiomToCheck) {
         OWLOntology o = repair.getOntology();
-        OWLReasonerFactory rf = new ReasonerFactory();
+        OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
         OWLReasoner r = rf.createReasoner(o);
         Boolean answer = r.isEntailed(axiomToCheck);
 
