@@ -64,7 +64,7 @@ public class ICRSemantics extends Semantics {
             InferredPropertyAssertionGenerator propertyAssertionGen = new InferredPropertyAssertionGenerator();
 
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
-            OWLReasonerFactory rf = new ReasonerFactory();
+            OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
             OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
 
             Set<OWLClassAssertionAxiom> classAssertionInference = classAssertionGen.createAxioms(df, r);
@@ -148,7 +148,7 @@ public class ICRSemantics extends Semantics {
 
     public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
         OWLDataFactory df = intersectionClosedRepairs.getManager().getOWLDataFactory();
-        OWLReasonerFactory rf = new ReasonerFactory();
+        OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
         OWLReasoner r = rf.createReasoner(intersectionClosedRepairs.getOntology());
 
         InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
@@ -159,7 +159,7 @@ public class ICRSemantics extends Semantics {
 
     public Set<OWLPropertyAssertionAxiom<?,?>> getPropertyAssertionAxioms() throws Exception {
         OWLDataFactory df = intersectionClosedRepairs.getManager().getOWLDataFactory();
-        OWLReasonerFactory rf = new ReasonerFactory();
+        OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
         OWLReasoner r = rf.createReasoner(intersectionClosedRepairs.getOntology());
 
         InferredPropertyAssertionGenerator propertyAssertionAxiomGenerator = new InferredPropertyAssertionGenerator();

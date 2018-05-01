@@ -51,8 +51,6 @@ public class CARSemantics extends Semantics{
                 OWLReasoner r = rf.createReasoner(repairs[i].getOntology());
 
                 InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
-                System.out.println(repairs[i].getOntology());
-                System.out.println(r.isConsistent());
                 Set<OWLClassAssertionAxiom> classAssertionAxioms = classAssertionAxiomGenerator.createAxioms(dfRepair, r);
 
                 Set<OWLClassAssertionAxiom> removeThings = new HashSet<>();
