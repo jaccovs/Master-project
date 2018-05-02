@@ -11,7 +11,7 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/country.owl");
+        MyOntology original = new MyOntology("ontologies/Matthew/unit.owl");
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
