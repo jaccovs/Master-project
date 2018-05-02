@@ -71,6 +71,7 @@ SubClassOf(:TeamMember :Human)
 # Individual: :Max (:Max)
 
 ClassAssertion(:Driver :Max)
+ClassAssertion(:Mechanic :Max)
 ObjectPropertyAssertion(:Drives :Max :fr5)
 ObjectPropertyAssertion(:Drives :Max :rb14)
 

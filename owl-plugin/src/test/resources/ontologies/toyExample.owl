@@ -48,7 +48,6 @@ DisjointClasses(:Driver :Mechanic)
 # Class: :Ferrari (:Ferrari)
 
 SubClassOf(:Ferrari :Car)
-
 DisjointClasses(:Ferrari :Renault)
 
 # Class: :Mechanic (:Mechanic)
@@ -71,6 +70,7 @@ SubClassOf(:TeamMember :Human)
 # Individual: :Max (:Max)
 
 ClassAssertion(:Driver :Max)
+ClassAssertion(:Mechanic :Max)
 ObjectPropertyAssertion(:Drives :Max :fr5)
 ObjectPropertyAssertion(:Drives :Max :rb14)
 
