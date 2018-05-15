@@ -11,7 +11,7 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/unit.owl");
+        MyOntology original = new MyOntology("ontologies/travel.owl");
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
@@ -53,6 +53,8 @@ public class DebuggerTest {
 
         System.out.println("The number of asserted + inferred classAssertionAxioms under Brave semantics = " + Brave.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under Brave semantics = " + Brave.getPropertyAssertionAxioms().size() + "\n");
+
+        IAR.testIAR();
 
         System.out.println("The number of asserted + inferred classAssertionAxioms under IAR semantics = " + IAR.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under IAR semantics = " + IAR.getPropertyAssertionAxioms().size() + "\n");

@@ -39,6 +39,15 @@ public class IARSemantics extends Semantics {
         original = newOnt;
     }
 
+    public void testIAR() {
+            MyOntology[] repairList = this.getRepairs();
+            for (int i = 0; i < repairList.length; i++) {
+                System.out.println(repairList[i].getOntology());
+            }
+
+            System.out.println(this.intersectionRepairs.getOntology() + "\n");
+    }
+
     public void setRepairs(MyOntology[] newRepairs) {
         repairs = newRepairs;
     }
