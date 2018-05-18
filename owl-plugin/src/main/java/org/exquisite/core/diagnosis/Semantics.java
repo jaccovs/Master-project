@@ -15,8 +15,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Semantics {
+
+    private static final Logger LOGGER = Logger.getLogger("Semantics");
 
     MyOntology original;
     MyOntology[] repairs;
@@ -24,7 +28,7 @@ public class Semantics {
     public MyOntology[] createRepairs(MyOntology ont) throws Exception {
         original = ont;
         Set<Diagnosis<OWLLogicalAxiom>> result = calculateDiagnoses(original);
-        System.out.println("------------> " + result.size());
+        LOGGER.log(Level.WARNING, "" + result.size());
         Iterator<Diagnosis<OWLLogicalAxiom>> it = result.iterator();
 
         int numberOfRepairs = result.size();
