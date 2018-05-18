@@ -24,6 +24,7 @@ public class Semantics {
     public MyOntology[] createRepairs(MyOntology ont) throws Exception {
         original = ont;
         Set<Diagnosis<OWLLogicalAxiom>> result = calculateDiagnoses(original);
+        System.out.println("------------> " + result.size());
         Iterator<Diagnosis<OWLLogicalAxiom>> it = result.iterator();
 
         int numberOfRepairs = result.size();

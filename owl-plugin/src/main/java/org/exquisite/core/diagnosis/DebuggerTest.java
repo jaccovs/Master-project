@@ -37,7 +37,7 @@ public class DebuggerTest {
 
             IARSemantics IAR = new IARSemantics(original, AR.getRepairs());
 
-            CARSemantics CAR = new CARSemantics(original);
+            CARSemantics CAR = new CARSemantics(original, AR.getRepairs());
 
 //            ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 

@@ -111,7 +111,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, List<F> path) throws DiagnosisException {
         final int diagsSize = diagnoses.size();
-        System.out.println(sizeAlreadyFoundDiagnoses);
         if (diagsSize > sizeAlreadyFoundDiagnoses) {
             sizeAlreadyFoundDiagnoses = diagsSize;
             notifyTaskProgress(sizeAlreadyFoundDiagnoses); // progress
@@ -131,7 +130,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         for (Set<F> diagnosis : newDiagnoses) {
 
             diagnoses.add(new Diagnosis<>(diagnosis));
-
+            System.out.println(diagnoses.size());
             for (F formula : diagnosis) {
                 DiagnosisModel<F> model = getSolver().getDiagnosisModel();
                 model.getPossiblyFaultyFormulas().remove(formula);
