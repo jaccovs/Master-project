@@ -1,6 +1,7 @@
 package org.exquisite.core.diagnosis;
 
 import org.exquisite.core.DiagnosisException;
+import org.exquisite.core.engines.HSTreeEngine;
 import org.exquisite.core.engines.IDiagnosisEngine;
 import org.exquisite.core.engines.InverseDiagnosisEngine;
 import org.exquisite.core.model.Diagnosis;
