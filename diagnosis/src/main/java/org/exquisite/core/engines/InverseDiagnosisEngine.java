@@ -73,38 +73,38 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
-        System.out.println("The number of Abox Repairs = " + "\n");
-        start(TIMER_INVERSE_DIAGNOSES);
-
-        this.sizeAlreadyFoundDiagnoses = 0;
-        notifyTaskStarted(); // progress
-
-        try {
-            InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
-
-            final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
-            final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
-
-            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new ArrayList<>());
-
-            // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
-            // therefore we restore the original order.
-
-            assert correctFormulasCopy.size() == getSolver().getDiagnosisModel().getCorrectFormulas().size();
-            assert possiblyFaultyFormulasCopy.size() == getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().size();
-
-            getSolver().getDiagnosisModel().setPossiblyFaultyFormulas(possiblyFaultyFormulasCopy);
-            getSolver().getDiagnosisModel().setCorrectFormulas(correctFormulasCopy);
-
-            incrementCounter(COUNTER_INVERSE_DIAGNOSES);
-
-            setDiagnosesMeasures(diagnoses);
-
-            return diagnoses;
-        } finally {
-            notifyTaskStopped(); // progress
-            stop(TIMER_INVERSE_DIAGNOSES);
-        }
+        return null;
+//        start(TIMER_INVERSE_DIAGNOSES);
+//
+//        this.sizeAlreadyFoundDiagnoses = 0;
+//        notifyTaskStarted(); // progress
+//
+//        try {
+//            InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
+//
+//            final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
+//            final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
+//
+//            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new ArrayList<>());
+//
+//            // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
+//            // therefore we restore the original order.
+//
+//            assert correctFormulasCopy.size() == getSolver().getDiagnosisModel().getCorrectFormulas().size();
+//            assert possiblyFaultyFormulasCopy.size() == getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().size();
+//
+//            getSolver().getDiagnosisModel().setPossiblyFaultyFormulas(possiblyFaultyFormulasCopy);
+//            getSolver().getDiagnosisModel().setCorrectFormulas(correctFormulasCopy);
+//
+//            incrementCounter(COUNTER_INVERSE_DIAGNOSES);
+//
+//            setDiagnosesMeasures(diagnoses);
+//
+//            return diagnoses;
+//        } finally {
+//            notifyTaskStopped(); // progress
+//            stop(TIMER_INVERSE_DIAGNOSES);
+//        }
     }
 
     private void setDiagnosesMeasures(Set<Diagnosis<F>> diagnoses) {
