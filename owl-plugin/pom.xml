@@ -16,8 +16,6 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <id>Version Calculation</id>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
