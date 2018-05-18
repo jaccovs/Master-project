@@ -11,6 +11,8 @@ import org.exquisite.core.solver.ISolver;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
@@ -23,6 +25,8 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  * @author wolfi
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
+
+    Logger LOGGER = Logger.getLogger("InverseDiagnosisEngine");
 
     private int sizeAlreadyFoundDiagnoses; // we save the number of already found diagnoses to notify the progress
 
@@ -111,10 +115,14 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, List<F> path) throws DiagnosisException {
         final int diagsSize = diagnoses.size();
-        System.out.println(diagnoses.size());
+
         if (diagsSize > sizeAlreadyFoundDiagnoses) {
             sizeAlreadyFoundDiagnoses = diagsSize;
             notifyTaskProgress(sizeAlreadyFoundDiagnoses); // progress
+        }
+
+        if (diagsSize % 10 == 0){
+            LOGGER.log(Level.WARNING, "" + diagnoses.size());
         }
 
         // terminate computations if the required number of diagnoses is reached
