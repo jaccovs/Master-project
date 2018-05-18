@@ -81,6 +81,8 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         try {
             InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
 
+            System.out.println("The number of Abox Repairs = " + "\n");
+
             final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
             final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
 
