@@ -22,8 +22,6 @@ public class DebuggerTest {
         OWLObjectProperty drives = df.getOWLObjectProperty(IRI.create("http://owl.api.toyExample#Drives"));
         OWLClassExpression drivesSomeCar = df.getOWLObjectSomeValuesFrom(drives, car);
 
-        System.out.println("The number of Abox Repairs = " + "\n");
-
         OWLClass mechanic = df.getOWLClass(IRI.create("http://owl.api.toyExample#Human"));
         OWLIndividual max = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#Max"));
         OWLIndividual rb14 = df.getOWLNamedIndividual(IRI.create("http://owl.api.toyExample#rb14"));

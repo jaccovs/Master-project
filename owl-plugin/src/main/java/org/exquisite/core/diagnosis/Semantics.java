@@ -63,6 +63,7 @@ public class Semantics {
     }
 
     public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(MyOntology ont) throws DiagnosisException, OWLOntologyCreationException {
+        System.out.println("The number of Abox Repairs = " + "\n");
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
