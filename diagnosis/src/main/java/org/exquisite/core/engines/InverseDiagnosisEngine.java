@@ -76,7 +76,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         start(TIMER_INVERSE_DIAGNOSES);
 
         this.sizeAlreadyFoundDiagnoses = 0;
-        System.out.println("The number of Abox Repairs = " + "\n");
         notifyTaskStarted(); // progress
 
         try {
