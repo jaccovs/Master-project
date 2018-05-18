@@ -48,13 +48,12 @@ public class DebuggerTest {
 
         System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
 
+//            System.out.println("The number of Abox Repairs = " + AR.isEntailed(maxDrivesCar));
         System.out.println("The number of asserted + inferred classAssertionAxioms under AR semantics = " + AR.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under AR semantics = " + AR.getPropertyAssertionAxioms().size() + "\n");
 
         System.out.println("The number of asserted + inferred classAssertionAxioms under Brave semantics = " + Brave.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under Brave semantics = " + Brave.getPropertyAssertionAxioms().size() + "\n");
-
-        IAR.testIAR();
 
         System.out.println("The number of asserted + inferred classAssertionAxioms under IAR semantics = " + IAR.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under IAR semantics = " + IAR.getPropertyAssertionAxioms().size() + "\n");
@@ -62,6 +61,7 @@ public class DebuggerTest {
         System.out.println("The number of asserted + inferred classAssertionAxioms under CAR semantics = " + CAR.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under CAR semantics = " + CAR.getPropertyAssertionAxioms().size() + "\n");
 
+//            System.out.println("The number of Abox Repairs = " + ICR.isEntailed(maxDrivesCar));
 //        System.out.println("The number of asserted + inferred classAssertionAxioms under ICR semantics = " + ICR.getClassAssertionAxioms().size());
 //        System.out.println("The number of asserted + inferred propertyAssertionAxioms under ICR semantics = " + ICR.getPropertyAssertionAxioms().size());
 
