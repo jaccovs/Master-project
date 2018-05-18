@@ -11,8 +11,6 @@ import org.exquisite.core.solver.ISolver;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
 
@@ -25,8 +23,6 @@ import static org.exquisite.core.perfmeasures.PerfMeasurementManager.*;
  * @author wolfi
  */
 public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
-
-    Logger LOGGER = Logger.getLogger("InverseDiagnosisEngine");
 
     private int sizeAlreadyFoundDiagnoses; // we save the number of already found diagnoses to notify the progress
 
@@ -73,7 +69,37 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
-        return null;
+        start(TIMER_INVERSE_DIAGNOSES);
+
+        this.sizeAlreadyFoundDiagnoses = 0;
+        notifyTaskStarted(); // progress
+
+        try {
+            InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
+
+            final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
+            final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
+
+            Set<Diagnosis<F>> diagnoses = recDepthFirstSearch(inverseQuickXPlain, this.getDiagnoses(), new ArrayList<>());
+
+            // method recDepthFirstSearch() manipulates as side effect the order of correctFormulas and possiblyFaultyFormulas
+            // therefore we restore the original order.
+
+            assert correctFormulasCopy.size() == getSolver().getDiagnosisModel().getCorrectFormulas().size();
+            assert possiblyFaultyFormulasCopy.size() == getSolver().getDiagnosisModel().getPossiblyFaultyFormulas().size();
+
+            getSolver().getDiagnosisModel().setPossiblyFaultyFormulas(possiblyFaultyFormulasCopy);
+            getSolver().getDiagnosisModel().setCorrectFormulas(correctFormulasCopy);
+
+            incrementCounter(COUNTER_INVERSE_DIAGNOSES);
+
+            setDiagnosesMeasures(diagnoses);
+
+            return diagnoses;
+        } finally {
+            notifyTaskStopped(); // progress
+            stop(TIMER_INVERSE_DIAGNOSES);
+        }
     }
 
     private void setDiagnosesMeasures(Set<Diagnosis<F>> diagnoses) {
@@ -90,10 +116,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         if (diagsSize > sizeAlreadyFoundDiagnoses) {
             sizeAlreadyFoundDiagnoses = diagsSize;
             notifyTaskProgress(sizeAlreadyFoundDiagnoses); // progress
-        }
-
-        if (diagsSize % 10 == 0){
-            LOGGER.log(Level.WARNING, "" + diagnoses.size());
         }
 
         // terminate computations if the required number of diagnoses is reached
