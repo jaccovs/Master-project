@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_diagnosis" default="compile.module.diagnosis">
+  <dirname property="module.diagnosis.basedir" file="${ant.file.module_diagnosis}"/>
+  
+  <property name="module.jdk.home.diagnosis" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.diagnosis" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.diagnosis" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.diagnosis" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="diagnosis.output.dir" value="${module.diagnosis.basedir}/target/classes"/>
+  <property name="diagnosis.testoutput.dir" value="${module.diagnosis.basedir}/target/test-classes"/>
+  
+  <path id="diagnosis.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="diagnosis.module.production.classpath">
+    <path refid="${module.jdk.classpath.diagnosis}"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+  </path>
+  
+  <path id="diagnosis.runtime.production.module.classpath">
+    <pathelement location="${diagnosis.output.dir}"/>
+  </path>
+  
+  <path id="diagnosis.module.classpath">
+    <path refid="${module.jdk.classpath.diagnosis}"/>
+    <pathelement location="${diagnosis.output.dir}"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  <path id="diagnosis.runtime.module.classpath">
+    <pathelement location="${diagnosis.testoutput.dir}"/>
+    <pathelement location="${diagnosis.output.dir}"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.diagnosis">
+    <patternset refid="ignored.files"/>
+    <exclude name="org/exquisite/core/query/exclude_search/**"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.diagnosis">
+    <patternset refid="excluded.from.module.diagnosis"/>
+  </patternset>
+  
+  <path id="diagnosis.module.sourcepath">
+    <dirset dir="${module.diagnosis.basedir}">
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="diagnosis.module.test.sourcepath">
+    <dirset dir="${module.diagnosis.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.diagnosis" depends="compile.module.diagnosis.production,compile.module.diagnosis.tests" description="Compile module diagnosis"/>
+  
+  <target name="compile.module.diagnosis.production" depends="register.custom.compilers" description="Compile module diagnosis; production classes">
+    <mkdir dir="${diagnosis.output.dir}"/>
+    <javac2 destdir="${diagnosis.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.diagnosis}/javac">
+      <compilerarg line="${compiler.args.diagnosis}"/>
+      <bootclasspath refid="diagnosis.module.bootclasspath"/>
+      <classpath refid="diagnosis.module.production.classpath"/>
+      <src refid="diagnosis.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.diagnosis"/>
+    </javac2>
+    
+    <copy todir="${diagnosis.output.dir}">
+      <fileset dir="${module.diagnosis.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.diagnosis.tests" depends="register.custom.compilers,compile.module.diagnosis.production" description="compile module diagnosis; test classes" unless="skip.tests">
+    <mkdir dir="${diagnosis.testoutput.dir}"/>
+    <javac2 destdir="${diagnosis.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.diagnosis}/javac">
+      <compilerarg line="${compiler.args.diagnosis}"/>
+      <bootclasspath refid="diagnosis.module.bootclasspath"/>
+      <classpath refid="diagnosis.module.classpath"/>
+      <src refid="diagnosis.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.diagnosis"/>
+    </javac2>
+    
+    <copy todir="${diagnosis.testoutput.dir}">
+      <fileset dir="${module.diagnosis.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.diagnosis" description="cleanup module">
+    <delete dir="${diagnosis.output.dir}"/>
+    <delete dir="${diagnosis.testoutput.dir}"/>
+  </target>
+</project>

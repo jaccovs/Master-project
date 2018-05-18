@@ -73,7 +73,6 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     @Override
     public Set<Diagnosis<F>> calculateDiagnoses() throws DiagnosisException {
-        System.out.println("hello");
         start(TIMER_INVERSE_DIAGNOSES);
 
         this.sizeAlreadyFoundDiagnoses = 0;

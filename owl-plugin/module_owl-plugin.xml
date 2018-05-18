@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_owl-plugin" default="compile.module.owl-plugin">
+  <dirname property="module.owl-plugin.basedir" file="${ant.file.module_owl-plugin}"/>
+  
+  <property name="module.jdk.home.owl-plugin" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.owl-plugin" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.owl-plugin" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.owl-plugin" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="owl-plugin.output.dir" value="${module.owl-plugin.basedir}/target/classes"/>
+  <property name="owl-plugin.testoutput.dir" value="${module.owl-plugin.basedir}/target/test-classes"/>
+  
+  <path id="owl-plugin.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="owl-plugin.module.production.classpath">
+    <path refid="${module.jdk.classpath.owl-plugin}"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.3.classpath"/>
+    <pathelement location="${diagnosis.output.dir}"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-distribution:4.2.8.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-databind:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.5.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.5.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-model:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-api:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-languages:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-datatypes:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-binary:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-n3:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-nquads:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-ntriples:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfjson:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfxml:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trix:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-turtle:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trig:2.7.16.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java-sesame:0.5.0.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-sesame:0.6.1.classpath"/>
+    <path refid="library.maven:_net.sf.trove4j:trove4j:3.0.3.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:18.0.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-assistedinject:4.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-multibindings:4.0.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:2.0.1.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.4.classpath"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-osgidistribution:5.0.0-beta5-snapshot.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-rdf-api:0.1.0-incubating.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-util:4.0.2.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.8.0.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.4.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.4.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.4.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-core:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdfa:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdf:0.6.1.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6.classpath"/>
+    <path refid="library.maven:_com.github.ben-manes.caffeine:caffeine:2.1.0.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+  </path>
+  
+  <path id="owl-plugin.runtime.production.module.classpath">
+    <pathelement location="${owl-plugin.output.dir}"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.3.classpath"/>
+    <path refid="diagnosis.runtime.production.module.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-databind:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.5.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.5.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-model:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-api:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-languages:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-datatypes:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-binary:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-n3:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-nquads:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-ntriples:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfjson:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfxml:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trix:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-turtle:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trig:2.7.16.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-sesame:0.6.1.classpath"/>
+    <path refid="library.maven:_net.sf.trove4j:trove4j:3.0.3.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:18.0.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-assistedinject:4.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-multibindings:4.0.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:2.0.1.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.4.classpath"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-osgidistribution:5.0.0-beta5-snapshot.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-rdf-api:0.1.0-incubating.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-util:4.0.2.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.8.0.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.4.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.4.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.13.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.4.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-core:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdfa:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdf:0.6.1.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6.classpath"/>
+    <path refid="library.maven:_com.github.ben-manes.caffeine:caffeine:2.1.0.classpath"/>
+  </path>
+  
+  <path id="owl-plugin.module.classpath">
+    <path refid="${module.jdk.classpath.owl-plugin}"/>
+    <pathelement location="${owl-plugin.output.dir}"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:org.semanticweb.hermit:1.3.8.413.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.3.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-api:1.2.14.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.1.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-javamail_1.4_spec:1.7.1.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1.4.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-c14n:1.2.14.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-impl:1.2.14.classpath"/>
+    <path refid="library.maven:_org.codehaus.woodstox:woodstox-core-asl:4.1.4.classpath"/>
+    <path refid="library.maven:_org.codehaus.woodstox:stax2-api:3.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-dom:1.2.14.classpath"/>
+    <path refid="library.maven:_dk.brics.automaton:automaton:1.11-8.classpath"/>
+    <pathelement location="${diagnosis.testoutput.dir}"/>
+    <pathelement location="${diagnosis.output.dir}"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-distribution:4.2.8.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-databind:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.5.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.5.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-model:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-api:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-languages:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-datatypes:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-binary:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-n3:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-nquads:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-ntriples:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfjson:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfxml:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trix:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-turtle:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trig:2.7.16.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java-sesame:0.5.0.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-sesame:0.6.1.classpath"/>
+    <path refid="library.maven:_net.sf.trove4j:trove4j:3.0.3.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:18.0.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-assistedinject:4.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-multibindings:4.0.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:2.0.1.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.4.classpath"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-osgidistribution:5.0.0-beta5-snapshot.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-rdf-api:0.1.0-incubating.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-util:4.0.2.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.8.0.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.4.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.4.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.13.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.4.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-core:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdfa:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdf:0.6.1.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6.classpath"/>
+    <path refid="library.maven:_com.github.ben-manes.caffeine:caffeine:2.1.0.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  <path id="owl-plugin.runtime.module.classpath">
+    <pathelement location="${owl-plugin.testoutput.dir}"/>
+    <pathelement location="${owl-plugin.output.dir}"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:org.semanticweb.hermit:1.3.8.413.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.3.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-api:1.2.14.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.1.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-javamail_1.4_spec:1.7.1.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1.4.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-c14n:1.2.14.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-impl:1.2.14.classpath"/>
+    <path refid="library.maven:_org.codehaus.woodstox:woodstox-core-asl:4.1.4.classpath"/>
+    <path refid="library.maven:_org.codehaus.woodstox:stax2-api:3.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.ws.commons.axiom:axiom-dom:1.2.14.classpath"/>
+    <path refid="library.maven:_dk.brics.automaton:automaton:1.11-8.classpath"/>
+    <path refid="diagnosis.runtime.module.classpath"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-distribution:4.2.8.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-databind:2.5.1.classpath"/>
+    <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.5.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.5.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-model:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-api:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-languages:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-datatypes:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-binary:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-n3:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-nquads:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-ntriples:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfjson:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-rdfxml:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trix:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-turtle:2.7.16.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-rio-trig:2.7.16.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java-sesame:0.5.0.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-sesame:0.6.1.classpath"/>
+    <path refid="library.maven:_net.sf.trove4j:trove4j:3.0.3.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:18.0.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-assistedinject:4.0.classpath"/>
+    <path refid="library.maven:_com.google.inject.extensions:guice-multibindings:4.0.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:2.0.1.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.4.classpath"/>
+    <path refid="library.maven:_net.sourceforge.owlapi:owlapi-osgidistribution:5.0.0-beta5-snapshot.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-rdf-api:0.1.0-incubating.classpath"/>
+    <path refid="library.maven:_org.openrdf.sesame:sesame-util:4.0.2.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.8.0.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.4.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.4.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.13.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.4.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-core:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdfa:0.6.1.classpath"/>
+    <path refid="library.maven:_org.semarglproject:semargl-rdf:0.6.1.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6.classpath"/>
+    <path refid="library.maven:_com.github.ben-manes.caffeine:caffeine:2.1.0.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-classic:1.1.8.classpath"/>
+    <path refid="library.maven:_ch.qos.logback:logback-core:1.1.8.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.7.21.classpath"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.owl-plugin">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.owl-plugin">
+    <patternset refid="excluded.from.module.owl-plugin"/>
+  </patternset>
+  
+  <path id="owl-plugin.module.sourcepath">
+    <dirset dir="${module.owl-plugin.basedir}">
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="owl-plugin.module.test.sourcepath">
+    <dirset dir="${module.owl-plugin.basedir}">
+      <include name="src/test/java"/>
+      <include name="src/test/resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.owl-plugin" depends="compile.module.owl-plugin.production,compile.module.owl-plugin.tests" description="Compile module owl-plugin"/>
+  
+  <target name="compile.module.owl-plugin.production" depends="register.custom.compilers,compile.module.diagnosis" description="Compile module owl-plugin; production classes">
+    <mkdir dir="${owl-plugin.output.dir}"/>
+    <javac2 destdir="${owl-plugin.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.owl-plugin}/javac">
+      <compilerarg line="${compiler.args.owl-plugin}"/>
+      <bootclasspath refid="owl-plugin.module.bootclasspath"/>
+      <classpath refid="owl-plugin.module.production.classpath"/>
+      <src refid="owl-plugin.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.owl-plugin"/>
+    </javac2>
+    
+    <copy todir="${owl-plugin.output.dir}">
+      <fileset dir="${module.owl-plugin.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.owl-plugin.tests" depends="register.custom.compilers,compile.module.owl-plugin.production" description="compile module owl-plugin; test classes" unless="skip.tests">
+    <mkdir dir="${owl-plugin.testoutput.dir}"/>
+    <javac2 destdir="${owl-plugin.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.owl-plugin}/javac">
+      <compilerarg line="${compiler.args.owl-plugin}"/>
+      <bootclasspath refid="owl-plugin.module.bootclasspath"/>
+      <classpath refid="owl-plugin.module.classpath"/>
+      <src refid="owl-plugin.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.owl-plugin"/>
+    </javac2>
+    
+    <copy todir="${owl-plugin.testoutput.dir}">
+      <fileset dir="${module.owl-plugin.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.owl-plugin.basedir}/src/test/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.owl-plugin" description="cleanup module">
+    <delete dir="${owl-plugin.output.dir}"/>
+    <delete dir="${owl-plugin.testoutput.dir}"/>
+  </target>
+</project>
