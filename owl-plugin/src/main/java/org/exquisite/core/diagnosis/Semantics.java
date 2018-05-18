@@ -66,7 +66,6 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        System.out.println("The number of Abox Repairs = " + "\n");
         diagnosisEngine.setMaxNumberOfDiagnoses(100);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
