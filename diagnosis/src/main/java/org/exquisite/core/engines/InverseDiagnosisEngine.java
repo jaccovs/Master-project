@@ -76,12 +76,11 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
         start(TIMER_INVERSE_DIAGNOSES);
 
         this.sizeAlreadyFoundDiagnoses = 0;
+        System.out.println("The number of Abox Repairs = " + "\n");
         notifyTaskStarted(); // progress
 
         try {
             InverseQuickXPlain<F> inverseQuickXPlain = new InverseQuickXPlain<>(this.getSolver());
-
-            System.out.println("The number of Abox Repairs = " + "\n");
 
             final List<F> correctFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getCorrectFormulas());
             final List<F> possiblyFaultyFormulasCopy = new ArrayList<>(getSolver().getDiagnosisModel().getPossiblyFaultyFormulas());
