@@ -67,7 +67,7 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(100);
+        diagnosisEngine.setMaxNumberOfDiagnoses(50);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
         return diagnoses;
@@ -83,7 +83,7 @@ public class Semantics {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSubClass(cls));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSuperClass(cls));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDisjointClassesAxioms(cls));
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getEquivalentClassesAxioms(cls));
+//            diagnosisModel.getCorrectFormulas().addAll(ontology.getEquivalentClassesAxioms(cls));
         }
 
         for (OWLObjectProperty prop : ontology.getObjectPropertiesInSignature()) {
