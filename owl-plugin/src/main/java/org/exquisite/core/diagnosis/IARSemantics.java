@@ -125,8 +125,8 @@ public class IARSemantics extends Semantics {
         OWLReasoner r = rf.createReasoner(intersectionRepairs.getOntology());
 
         InferredPropertyAssertionGenerator propertyAssertionAxiomGenerator = new InferredPropertyAssertionGenerator();
-        Set<OWLPropertyAssertionAxiom<?,?>> ICRPropertyAssertionAxioms = propertyAssertionAxiomGenerator.createAxioms(df, r);
+        Set<OWLPropertyAssertionAxiom<?,?>> IARPropertyAssertionAxioms = propertyAssertionAxiomGenerator.createAxioms(df, r);
 
-        return ICRPropertyAssertionAxioms;
+        return IARPropertyAssertionAxioms;
     }
 }
