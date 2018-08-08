@@ -18,7 +18,7 @@ Declaration(Class(:TeamMember))
 Declaration(ObjectProperty(:Drives))
 Declaration(ObjectProperty(:IsDrivenBy))
 Declaration(NamedIndividual(:Max))
-Declaration(NamedIndividual(:fr5))
+Declaration(NamedIndividual(:fr05))
 Declaration(NamedIndividual(:rb14))
 ############################
 #   Object Properties
@@ -26,14 +26,10 @@ Declaration(NamedIndividual(:rb14))
 
 # Object Property: :Drives (:Drives)
 
+DifferentIndividuals( :fr05 :rb14 )
 FunctionalObjectProperty(:Drives)
 ObjectPropertyDomain(:Drives :Driver)
 ObjectPropertyRange(:Drives :Car)
-
-# Object Property: :IsDrivenBy (:IsDrivenBy)
-
-ObjectPropertyDomain(:IsDrivenBy :Car)
-ObjectPropertyRange(:IsDrivenBy :Driver)
 
 
 ############################
@@ -71,19 +67,16 @@ SubClassOf(:TeamMember :Human)
 # Individual: :Max (:Max)
 
 ClassAssertion(:Driver :Max)
-ClassAssertion(:Mechanic :Max)
-ObjectPropertyAssertion(:Drives :Max :fr5)
+ObjectPropertyAssertion(:Drives :Max :fr05)
 ObjectPropertyAssertion(:Drives :Max :rb14)
 
-# Individual: :fr5 (:fr5)
+# Individual: :fr05 (:fr05)
 
-ClassAssertion(:Ferrari :fr5)
-ObjectPropertyAssertion(:IsDrivenBy :fr5 :Max)
+ClassAssertion(:Ferrari :fr05)
 
 # Individual: :rb14 (:rb14)
 
 ClassAssertion(:Renault :rb14)
-ObjectPropertyAssertion(:IsDrivenBy :rb14 :Max)
 
 
 )

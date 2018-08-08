@@ -12,6 +12,9 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,6 +43,7 @@ public class Semantics {
         for (int i = 0; i < numberOfRepairs; i++) {
             repairList[i] = new MyOntology("urn:absolute:repair nr." + (i + 1) + ".owl", ontologies);
             Diagnosis<OWLLogicalAxiom> diagnosis = it.next();
+            System.out.println(diagnosis.getFormulas());
             ArrayList<OWLOntologyChange> changes = determineRepair(repairList[i].getOntology(), diagnosis.getFormulas());
             repairList[i].getManager().applyChanges(changes);
         }
@@ -63,13 +67,18 @@ public class Semantics {
         return answers;
     }
 
-    public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(MyOntology ont) throws DiagnosisException, OWLOntologyCreationException {
+    public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(MyOntology ont) throws DiagnosisException, OWLOntologyCreationException, FileNotFoundException, UnsupportedEncodingException {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
-        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new HSTreeEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(3);
+        diagnosisEngine.setMaxNumberOfDiagnoses(10);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
-
+        Iterator iter = diagnoses.iterator();
+        PrintWriter writer = new PrintWriter("the-file-name20.txt", "UTF-8");
+        while (iter.hasNext()) {
+            writer.println(iter.next().toString());
+        }
+        writer.close();
         return diagnoses;
 
     }
