@@ -48,7 +48,7 @@ public class ARSemantics extends Semantics {
         return true;
     }
 
-    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms(){
+    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
         Hashtable<OWLClassAssertionAxiom, Integer> instancesInRepairs = new Hashtable<OWLClassAssertionAxiom, Integer>();
 
         for (int i = 0 ; i < repairs.length ; i++) {
@@ -83,7 +83,7 @@ public class ARSemantics extends Semantics {
         return ARClassAssertionAxioms;
     }
 
-    public Set<OWLPropertyAssertionAxiom> getPropertyAssertionAxioms(){
+    public Set<OWLPropertyAssertionAxiom> getPropertyAssertionAxioms() throws Exception{
         Hashtable<OWLPropertyAssertionAxiom, Integer> instancesInRepairs = new Hashtable<OWLPropertyAssertionAxiom, Integer>();
 
         for (int i = 0 ; i < repairs.length ; i++) {
