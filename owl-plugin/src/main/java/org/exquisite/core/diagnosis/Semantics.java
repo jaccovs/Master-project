@@ -67,7 +67,7 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(10);
+        diagnosisEngine.setMaxNumberOfDiagnoses(100);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
         return diagnoses;
@@ -83,15 +83,36 @@ public class Semantics {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSubClass(cls));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getSubClassAxiomsForSuperClass(cls));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDisjointClassesAxioms(cls));
-//            diagnosisModel.getCorrectFormulas().addAll(ontology.getEquivalentClassesAxioms(cls));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getEquivalentClassesAxioms(cls));
         }
 
         for (OWLObjectProperty prop : ontology.getObjectPropertiesInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyDomainAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectPropertyRangeAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getInverseObjectPropertyAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getInverseFunctionalObjectPropertyAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectSubPropertyAxiomsForSubProperty(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getObjectSubPropertyAxiomsForSuperProperty(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalObjectPropertyAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getSymmetricObjectPropertyAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getTransitiveObjectPropertyAxioms(prop));
+
+
+        }
+
+        for (OWLDataProperty prop : ontology.getDataPropertiesInSignature()) {
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalDataPropertyAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSubProperty(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSuperProperty(prop));
         }
 
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
+
+        for (OWLAxiom ax: diagnosisModel.getPossiblyFaultyFormulas()) {
+            System.out.println(ax);
+        }
 
         return new ExquisiteOWLReasoner(diagnosisModel, reasonerFactory);
     }

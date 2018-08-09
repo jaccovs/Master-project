@@ -54,9 +54,9 @@ public class BraveSemantics extends Semantics{
         return false;
     }
 
-    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
+    public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
 
-        Set<OWLClassAssertionAxiom> braveClassAssertionAxioms = new HashSet<>();
+        Set<OWLAxiom> braveClassAssertionAxioms = new HashSet<>();
 
         for (int i = 0 ; i < repairs.length ; i++) {
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
@@ -65,6 +65,16 @@ public class BraveSemantics extends Semantics{
 
             InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
             Set<OWLClassAssertionAxiom> classAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+
+            for (OWLClassAssertionAxiom classAssertionAxiom: classAssertionAxioms){
+                braveClassAssertionAxioms.add(classAssertionAxiom);
+            }
+
+            for (OWLClass cls : original.getOntology().getClassesInSignature()) {
+                for (OWLSubClassOfAxiom classAssertionAxiom : repairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
+                    braveClassAssertionAxioms.add(classAssertionAxiom);
+                }
+            }
 
             braveClassAssertionAxioms.addAll(classAssertionAxioms);
         }

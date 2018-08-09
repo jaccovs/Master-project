@@ -11,7 +11,7 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/unit.owl");
+        MyOntology original = new MyOntology("ontologies/Matthew/travel.owl");
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
@@ -37,14 +37,14 @@ public class DebuggerTest {
 
             IARSemantics IAR = new IARSemantics(original, AR.getRepairs());
 
-            CARSemantics CAR = new CARSemantics(original, AR.getRepairs());
+            CARSemantics CAR = new CARSemantics(original);
 
-//            ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
+            ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 
-//            MyOntology[] repairList = AR.getRepairs();
-//            for (int i = 0; i < repairList.length; i++) {
-//                System.out.println(repairList[i].getOntology());
-//            }
+            MyOntology[] repairList = AR.getRepairs();
+            for (int i = 0; i < repairList.length; i++) {
+                System.out.println(repairList[i].getOntology());
+            }
 
         System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
 
@@ -62,8 +62,8 @@ public class DebuggerTest {
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under CAR semantics = " + CAR.getPropertyAssertionAxioms().size() + "\n");
 
 //            System.out.println("The number of Abox Repairs = " + ICR.isEntailed(maxDrivesCar));
-//        System.out.println("The number of asserted + inferred classAssertionAxioms under ICR semantics = " + ICR.getClassAssertionAxioms().size());
-//        System.out.println("The number of asserted + inferred propertyAssertionAxioms under ICR semantics = " + ICR.getPropertyAssertionAxioms().size());
+        System.out.println("The number of asserted + inferred classAssertionAxioms under ICR semantics = " + ICR.getClassAssertionAxioms().size());
+        System.out.println("The number of asserted + inferred propertyAssertionAxioms under ICR semantics = " + ICR.getPropertyAssertionAxioms().size());
 
         }
         else {

@@ -108,13 +108,25 @@ public class IARSemantics extends Semantics {
         return axiomsToRemove;
     }
 
-    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
+    public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
+        Set<OWLAxiom> IARClassAssertionAxioms = new HashSet<>();
+
         OWLDataFactory df = intersectionRepairs.getManager().getOWLDataFactory();
         OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
         OWLReasoner r = rf.createReasoner(intersectionRepairs.getOntology());
 
         InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
-        Set<OWLClassAssertionAxiom> IARClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+        Set<OWLClassAssertionAxiom> infIARClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+
+        for (OWLClassAssertionAxiom classAssertionAxiom: infIARClassAssertionAxioms){
+            IARClassAssertionAxioms.add(classAssertionAxiom);
+        }
+
+        for (OWLClass cls : original.getOntology().getClassesInSignature()) {
+            for (OWLSubClassOfAxiom classAssertionAxiom : intersectionRepairs.getOntology().getSubClassAxiomsForSubClass(cls)) {
+                IARClassAssertionAxioms.add(classAssertionAxiom);
+            }
+        }
 
         return IARClassAssertionAxioms;
     }

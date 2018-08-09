@@ -104,8 +104,8 @@ public class CARSemantics extends Semantics{
             return false;
         }
 
-        public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
-            Hashtable<OWLClassAssertionAxiom, Integer> instancesInRepairs = new Hashtable<OWLClassAssertionAxiom, Integer>();
+        public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
+            Hashtable<OWLAxiom, Integer> instancesInRepairs = new Hashtable<OWLAxiom, Integer>();
 
             for (int i = 0 ; i < CARrepairs.length ; i++) {
                 OWLDataFactory df = CARrepairs[i].getManager().getOWLDataFactory();
@@ -118,6 +118,12 @@ public class CARSemantics extends Semantics{
                 for (OWLClassAssertionAxiom classAssertionAxiom: classAssertionAxioms){
                     instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
                 }
+
+                for (OWLClass cls : original.getOntology().getClassesInSignature()) {
+                    for (OWLSubClassOfAxiom classAssertionAxiom : CARrepairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
+                        instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                    }
+                }
             }
 
 //        for (Map.Entry<OWLClassAssertionAxiom, Integer> entry : instancesInRepairs.entrySet()) {
@@ -128,15 +134,15 @@ public class CARSemantics extends Semantics{
 //        }
 
             Integer value = CARrepairs.length;
-            Set<OWLClassAssertionAxiom> ARClassAssertionAxioms = new HashSet();
+            Set<OWLAxiom> CARClassAssertionAxioms = new HashSet();
 
             for(Map.Entry entry: instancesInRepairs.entrySet()){
                 if(value.equals(entry.getValue())){
-                    ARClassAssertionAxioms.add((OWLClassAssertionAxiom) entry.getKey());
+                    CARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
                 }
             }
 
-            return ARClassAssertionAxioms;
+            return CARClassAssertionAxioms;
         }
 
         public Set<OWLPropertyAssertionAxiom> getPropertyAssertionAxioms() throws Exception{

@@ -146,13 +146,25 @@ public class ICRSemantics extends Semantics {
         return axiomsToRemove;
     }
 
-    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
+    public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
+        Set<OWLAxiom> ICRClassAssertionAxioms = new HashSet<>();
+
         OWLDataFactory df = intersectionClosedRepairs.getManager().getOWLDataFactory();
         OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
         OWLReasoner r = rf.createReasoner(intersectionClosedRepairs.getOntology());
 
         InferredClassAssertionAxiomGenerator classAssertionAxiomGenerator = new InferredClassAssertionAxiomGenerator();
-        Set<OWLClassAssertionAxiom> ICRClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+        Set<OWLClassAssertionAxiom> infIARClassAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
+
+        for (OWLClassAssertionAxiom classAssertionAxiom: infIARClassAssertionAxioms){
+            ICRClassAssertionAxioms.add(classAssertionAxiom);
+        }
+
+        for (OWLClass cls : original.getOntology().getClassesInSignature()) {
+            for (OWLSubClassOfAxiom classAssertionAxiom : intersectionClosedRepairs.getOntology().getSubClassAxiomsForSubClass(cls)) {
+                ICRClassAssertionAxioms.add(classAssertionAxiom);
+            }
+        }
 
         return ICRClassAssertionAxioms;
     }

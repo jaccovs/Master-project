@@ -48,8 +48,8 @@ public class ARSemantics extends Semantics {
         return true;
     }
 
-    public Set<OWLClassAssertionAxiom> getClassAssertionAxioms() throws Exception{
-        Hashtable<OWLClassAssertionAxiom, Integer> instancesInRepairs = new Hashtable<OWLClassAssertionAxiom, Integer>();
+    public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
+        Hashtable<OWLAxiom, Integer> instancesInRepairs = new Hashtable<OWLAxiom, Integer>();
 
         for (int i = 0 ; i < repairs.length ; i++) {
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
@@ -62,21 +62,27 @@ public class ARSemantics extends Semantics {
             for (OWLClassAssertionAxiom classAssertionAxiom: classAssertionAxioms){
                 instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
             }
+
+            for (OWLClass cls : original.getOntology().getClassesInSignature()) {
+                for (OWLSubClassOfAxiom classAssertionAxiom : repairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
+                    instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                }
+            }
         }
 
-//        for (Map.Entry<OWLClassAssertionAxiom, Integer> entry : instancesInRepairs.entrySet()) {
-//            OWLClassAssertionAxiom key = entry.getKey();
-//            Integer value = entry.getValue();
-//
-//            System.out.println ("Key: " + key + " Value: " + value);
-//        }
+//        for (Map.Entry<OWLAxiom, Integer> entry : instancesInRepairs.entrySet()) {
+////            OWLAxiom key = entry.getKey();
+////            Integer value = entry.getValue();
+////
+////            System.out.println ("Key: " + key + " Value: " + value);
+////        }
 
         Integer value = repairs.length;
-        Set<OWLClassAssertionAxiom> ARClassAssertionAxioms = new HashSet();
+        Set<OWLAxiom> ARClassAssertionAxioms = new HashSet();
 
         for(Map.Entry entry: instancesInRepairs.entrySet()){
             if(value.equals(entry.getValue())){
-                ARClassAssertionAxioms.add((OWLClassAssertionAxiom) entry.getKey());
+                ARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
             }
         }
 
@@ -99,8 +105,8 @@ public class ARSemantics extends Semantics {
             }
         }
 
-//        for (Map.Entry<OWLClassAssertionAxiom, Integer> entry : instancesInRepairs.entrySet()) {
-//            OWLClassAssertionAxiom key = entry.getKey();
+//        for (Map.Entry<OWLPropertyAssertionAxiom, Integer> entry : instancesInRepairs.entrySet()) {
+//            OWLPropertyAssertionAxiom key = entry.getKey();
 //            Integer value = entry.getValue();
 //
 //            System.out.println ("Key: " + key + " Value: " + value);
