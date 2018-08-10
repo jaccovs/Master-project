@@ -95,6 +95,8 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
             setDiagnosesMeasures(diagnoses);
 
+//            System.out.println(diagnoses);
+
             return diagnoses;
         } finally {
             notifyTaskStopped(); // progress
