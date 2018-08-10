@@ -65,10 +65,12 @@ public class Semantics {
 
     public  Set<Diagnosis<OWLLogicalAxiom>> calculateDiagnoses(MyOntology ont) throws DiagnosisException, OWLOntologyCreationException {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
-        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
+        IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new HSTreeEngine<>(reasoner);
         diagnosisEngine.resetEngine();
         diagnosisEngine.setMaxNumberOfDiagnoses(100);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
+
+//        System.out.println(diagnoses);
 
         return diagnoses;
 
@@ -110,9 +112,9 @@ public class Semantics {
 
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
 
-        for (OWLAxiom ax: diagnosisModel.getPossiblyFaultyFormulas()) {
-            System.out.println(ax);
-        }
+//        for (OWLAxiom ax: diagnosisModel.getPossiblyFaultyFormulas()) {
+//            System.out.println(ax);
+//        }
 
         return new ExquisiteOWLReasoner(diagnosisModel, reasonerFactory);
     }
