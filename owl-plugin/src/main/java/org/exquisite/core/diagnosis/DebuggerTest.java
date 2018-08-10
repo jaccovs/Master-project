@@ -41,14 +41,16 @@ public class DebuggerTest {
 
             ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 
-            MyOntology[] repairList = AR.getRepairs();
-            for (int i = 0; i < repairList.length; i++) {
-                System.out.println(repairList[i].getOntology());
-            }
+//            MyOntology[] repairList = AR.getRepairs();
+//            for (int i = 0; i < repairList.length; i++) {
+//                System.out.println(repairList[i].getOntology());
+//            }
 
         System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
 
-//            System.out.println("The number of Abox Repairs = " + AR.isEntailed(maxDrivesCar));
+//        System.out.println("Under AR-Semantics = " + AR.isEntailed(CarRb14));
+//        System.out.println("Under CAR-Semantics = " + CAR.isEntailed(CarRb14));
+
         System.out.println("The number of asserted + inferred classAssertionAxioms under AR semantics = " + AR.getClassAssertionAxioms().size());
         System.out.println("The number of asserted + inferred propertyAssertionAxioms under AR semantics = " + AR.getPropertyAssertionAxioms().size() + "\n");
 
