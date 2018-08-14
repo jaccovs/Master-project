@@ -51,6 +51,9 @@ public class ARSemantics extends Semantics {
     public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
         Hashtable<OWLAxiom, Integer> instancesInRepairs = new Hashtable<OWLAxiom, Integer>();
 
+        Integer value = repairs.length;
+        Set<OWLAxiom> ARClassAssertionAxioms = new HashSet();
+
         for (int i = 0 ; i < repairs.length ; i++) {
             OWLDataFactory df = repairs[i].getManager().getOWLDataFactory();
             OWLReasonerFactory rf = new com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory();
@@ -76,9 +79,6 @@ public class ARSemantics extends Semantics {
 ////
 ////            System.out.println ("Key: " + key + " Value: " + value);
 ////        }
-
-        Integer value = repairs.length;
-        Set<OWLAxiom> ARClassAssertionAxioms = new HashSet();
 
         for(Map.Entry entry: instancesInRepairs.entrySet()){
             if(value.equals(entry.getValue())){

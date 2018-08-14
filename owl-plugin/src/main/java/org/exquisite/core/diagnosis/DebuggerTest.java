@@ -11,7 +11,7 @@ public class DebuggerTest {
 
     public static void main(String[] args) throws Exception {
         
-        MyOntology original = new MyOntology("ontologies/Matthew/travel.coerced.owl");
+        MyOntology original = new MyOntology("ontologies/Matthew/unit.owl");
         File ontologySource = new File(ClassLoader.getSystemResource(original.getOntologyName()).getFile());
         original.setOntology(original.getManager().loadOntologyFromOntologyDocument(ontologySource));
 
@@ -41,10 +41,10 @@ public class DebuggerTest {
 
             ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 
-//            MyOntology[] repairList = AR.getRepairs();
-//            for (int i = 0; i < repairList.length; i++) {
-//                System.out.println(repairList[i].getOntology());
-//            }
+            MyOntology[] repairList = AR.getRepairs();
+            for (int i = 0; i < repairList.length; i++) {
+                System.out.println(repairList[i].getOntology());
+            }
 
         System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
 

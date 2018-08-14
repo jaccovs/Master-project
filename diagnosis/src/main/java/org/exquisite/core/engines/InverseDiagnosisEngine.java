@@ -113,7 +113,7 @@ public class InverseDiagnosisEngine<F> extends AbstractDiagnosisEngine<F> {
 
     private Set<Diagnosis<F>> recDepthFirstSearch(InverseQuickXPlain<F> inverseQuickXPlain, Set<Diagnosis<F>> diagnoses, List<F> path) throws DiagnosisException {
         final int diagsSize = diagnoses.size();
-        System.out.println(diagsSize);
+//        System.out.println(diagsSize);
 
         if (diagsSize > sizeAlreadyFoundDiagnoses) {
             sizeAlreadyFoundDiagnoses = diagsSize;

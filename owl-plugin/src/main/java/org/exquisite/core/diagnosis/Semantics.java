@@ -12,10 +12,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +27,11 @@ public class Semantics {
         original = ont;
         Set<Diagnosis<OWLLogicalAxiom>> result = calculateDiagnoses(original);
         Iterator<Diagnosis<OWLLogicalAxiom>> it = result.iterator();
+        Set<OWLLogicalAxiom> axiomsInConflict = new HashSet<>();
+
+        for (Diagnosis<OWLLogicalAxiom> diag : result){
+            axiomsInConflict.addAll(diag.getFormulas());
+        }
 
         int numberOfRepairs = result.size();
 
@@ -44,6 +46,7 @@ public class Semantics {
             repairList[i].getManager().applyChanges(changes);
         }
 
+        System.out.println(axiomsInConflict.size());
         return repairList;
     }
 
@@ -67,7 +70,7 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(100);
+        diagnosisEngine.setMaxNumberOfDiagnoses(10);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
 //        for (Diagnosis<OWLLogicalAxiom> d : diagnoses){
@@ -105,7 +108,7 @@ public class Semantics {
         }
 
         for (OWLDataProperty prop : ontology.getDataPropertiesInSignature()) {
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
+//            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalDataPropertyAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSubProperty(prop));
