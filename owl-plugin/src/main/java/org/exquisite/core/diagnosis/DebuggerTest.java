@@ -41,10 +41,10 @@ public class DebuggerTest {
 
             ICRSemantics ICR = new ICRSemantics(original, AR.getRepairs());
 
-            MyOntology[] repairList = AR.getRepairs();
-            for (int i = 0; i < repairList.length; i++) {
-                System.out.println(repairList[i].getOntology());
-            }
+//            MyOntology[] repairList = AR.getRepairs();
+//            for (int i = 0; i < repairList.length; i++) {
+//                System.out.println(repairList[i].getOntology());
+//            }
 
         System.out.println("The number of Abox Repairs = " + AR.getRepairs().length + "\n");
 
