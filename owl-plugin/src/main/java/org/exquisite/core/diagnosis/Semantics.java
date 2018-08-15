@@ -109,7 +109,7 @@ public class Semantics {
 
         for (OWLDataProperty prop : ontology.getDataPropertiesInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
-            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
+//            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalDataPropertyAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSubProperty(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSuperProperty(prop));
