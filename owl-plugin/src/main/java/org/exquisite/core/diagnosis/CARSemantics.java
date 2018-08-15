@@ -169,15 +169,15 @@ public class CARSemantics extends Semantics{
 //        }
 
             Integer value = CARrepairs.length;
-            Set<OWLPropertyAssertionAxiom> ARPropertyAssertionAxioms = new HashSet();
+            Set<OWLPropertyAssertionAxiom> CARPropertyAssertionAxioms = new HashSet();
 
             for(Map.Entry entry: instancesInRepairs.entrySet()){
                 if(value.equals(entry.getValue())){
-                        ARPropertyAssertionAxioms.add((OWLPropertyAssertionAxiom) entry.getKey());
+                        CARPropertyAssertionAxioms.add((OWLPropertyAssertionAxiom) entry.getKey());
                 }
             }
 
-            return ARPropertyAssertionAxioms;
+            return CARPropertyAssertionAxioms;
         }
 
     }

@@ -46,7 +46,7 @@ public class Semantics {
             repairList[i].getManager().applyChanges(changes);
         }
 
-        System.out.println(axiomsInConflict.size());
+        System.out.println("In conflict" + axiomsInConflict.size());
         return repairList;
     }
 
@@ -70,7 +70,7 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(15);
+        diagnosisEngine.setMaxNumberOfDiagnoses(20);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
 //        for (Diagnosis<OWLLogicalAxiom> d : diagnoses){
@@ -109,13 +109,14 @@ public class Semantics {
 
         for (OWLDataProperty prop : ontology.getDataPropertiesInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
-//            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalDataPropertyAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSubProperty(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSuperProperty(prop));
         }
 
         diagnosisModel.getPossiblyFaultyFormulas().removeAll(diagnosisModel.getCorrectFormulas());
+        System.out.println("possFaulty:" + diagnosisModel.getPossiblyFaultyFormulas().size());
 
 //        for (OWLAxiom ax: diagnosisModel.getPossiblyFaultyFormulas()) {
 //            System.out.println(ax);
