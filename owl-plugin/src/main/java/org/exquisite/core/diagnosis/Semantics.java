@@ -70,7 +70,7 @@ public class Semantics {
         ExquisiteOWLReasoner reasoner = createReasoner(ont.getOntology(), false, false);
         IDiagnosisEngine<OWLLogicalAxiom> diagnosisEngine = new InverseDiagnosisEngine<>(reasoner);
         diagnosisEngine.resetEngine();
-        diagnosisEngine.setMaxNumberOfDiagnoses(20);
+        diagnosisEngine.setMaxNumberOfDiagnoses(5);
         Set<Diagnosis<OWLLogicalAxiom>> diagnoses = diagnosisEngine.calculateDiagnoses();
 
 //        for (Diagnosis<OWLLogicalAxiom> d : diagnoses){
@@ -109,7 +109,7 @@ public class Semantics {
 
         for (OWLDataProperty prop : ontology.getDataPropertiesInSignature()) {
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyDomainAxioms(prop));
-//            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
+            diagnosisModel.getCorrectFormulas().addAll(ontology.getDataPropertyRangeAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getFunctionalDataPropertyAxioms(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSubProperty(prop));
             diagnosisModel.getCorrectFormulas().addAll(ontology.getDataSubPropertyAxiomsForSuperProperty(prop));

@@ -71,7 +71,7 @@ public class BraveSemantics extends Semantics{
             }
 
             for (OWLClass cls : original.getOntology().getClassesInSignature()) {
-                for (OWLSubClassOfAxiom classAssertionAxiom : repairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
+                for (OWLClassAssertionAxiom classAssertionAxiom : repairs[i].getOntology().getClassAssertionAxioms(cls)) {
                     braveClassAssertionAxioms.add(classAssertionAxiom);
                 }
             }

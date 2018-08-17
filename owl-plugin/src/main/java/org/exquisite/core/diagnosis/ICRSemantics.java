@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
 import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
 
 import java.util.*;
 
@@ -58,7 +59,6 @@ public class ICRSemantics extends Semantics {
             }   catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             InferredClassAssertionAxiomGenerator classAssertionGen = new InferredClassAssertionAxiomGenerator();
             InferredPropertyAssertionGenerator propertyAssertionGen = new InferredPropertyAssertionGenerator();
@@ -161,7 +161,7 @@ public class ICRSemantics extends Semantics {
         }
 
         for (OWLClass cls : original.getOntology().getClassesInSignature()) {
-            for (OWLSubClassOfAxiom classAssertionAxiom : intersectionClosedRepairs.getOntology().getSubClassAxiomsForSubClass(cls)) {
+            for (OWLClassAssertionAxiom classAssertionAxiom : intersectionClosedRepairs.getOntology().getClassAssertionAxioms(cls)) {
                 ICRClassAssertionAxioms.add(classAssertionAxiom);
             }
         }

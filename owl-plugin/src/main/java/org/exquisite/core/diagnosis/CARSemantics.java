@@ -105,7 +105,8 @@ public class CARSemantics extends Semantics{
         }
 
         public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
-            Hashtable<OWLAxiom, Integer> instancesInRepairs = new Hashtable<OWLAxiom, Integer>();
+            Hashtable<OWLAxiom, Integer> classAssertionsDerived = new Hashtable<OWLAxiom, Integer>();
+            Hashtable<OWLAxiom, Integer> ClassAssertionsInRepair = new Hashtable<OWLAxiom, Integer>();
 
             for (int i = 0 ; i < CARrepairs.length ; i++) {
                 OWLDataFactory df = CARrepairs[i].getManager().getOWLDataFactory();
@@ -116,12 +117,12 @@ public class CARSemantics extends Semantics{
                 Set<OWLClassAssertionAxiom> classAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
 
                 for (OWLClassAssertionAxiom classAssertionAxiom: classAssertionAxioms){
-                    instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                    classAssertionsDerived.put(classAssertionAxiom, classAssertionsDerived.containsKey(classAssertionAxiom) ? classAssertionsDerived.get(classAssertionAxiom) + 1 : 1);
                 }
 
                 for (OWLClass cls : original.getOntology().getClassesInSignature()) {
-                    for (OWLSubClassOfAxiom classAssertionAxiom : CARrepairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
-                        instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                    for (OWLClassAssertionAxiom classAssertionAxiom : CARrepairs[i].getOntology().getClassAssertionAxioms(cls)) {
+                        ClassAssertionsInRepair.put(classAssertionAxiom, ClassAssertionsInRepair.containsKey(classAssertionAxiom) ? ClassAssertionsInRepair.get(classAssertionAxiom) + 1 : 1);
                     }
                 }
             }
@@ -136,7 +137,13 @@ public class CARSemantics extends Semantics{
             Integer value = CARrepairs.length;
             Set<OWLAxiom> CARClassAssertionAxioms = new HashSet();
 
-            for(Map.Entry entry: instancesInRepairs.entrySet()){
+            for(Map.Entry entry: classAssertionsDerived.entrySet()){
+                if(value.equals(entry.getValue())){
+                    CARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
+                }
+            }
+
+            for(Map.Entry entry: ClassAssertionsInRepair.entrySet()){
                 if(value.equals(entry.getValue())){
                     CARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
                 }

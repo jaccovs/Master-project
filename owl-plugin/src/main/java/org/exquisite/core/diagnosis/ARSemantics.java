@@ -4,8 +4,7 @@ import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import org.semanticweb.owlapi.util.InferredClassAssertionAxiomGenerator;
-import org.semanticweb.owlapi.util.InferredPropertyAssertionGenerator;
+import org.semanticweb.owlapi.util.*;
 
 import java.util.*;
 
@@ -49,7 +48,8 @@ public class ARSemantics extends Semantics {
     }
 
     public Set<OWLAxiom> getClassAssertionAxioms() throws Exception{
-        Hashtable<OWLAxiom, Integer> instancesInRepairs = new Hashtable<OWLAxiom, Integer>();
+        Hashtable<OWLAxiom, Integer> classAssertionsDerived = new Hashtable<OWLAxiom, Integer>();
+        Hashtable<OWLAxiom, Integer> classAssertionsInRepair = new Hashtable<OWLAxiom, Integer>();
 
         Integer value = repairs.length;
         Set<OWLAxiom> ARClassAssertionAxioms = new HashSet();
@@ -63,12 +63,12 @@ public class ARSemantics extends Semantics {
             Set<OWLClassAssertionAxiom> classAssertionAxioms = classAssertionAxiomGenerator.createAxioms(df, r);
 
             for (OWLClassAssertionAxiom classAssertionAxiom: classAssertionAxioms){
-                instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                classAssertionsDerived.put(classAssertionAxiom, classAssertionsDerived.containsKey(classAssertionAxiom) ? classAssertionsDerived.get(classAssertionAxiom) + 1 : 1);
             }
 
             for (OWLClass cls : original.getOntology().getClassesInSignature()) {
-                for (OWLSubClassOfAxiom classAssertionAxiom : repairs[i].getOntology().getSubClassAxiomsForSubClass(cls)) {
-                    instancesInRepairs.put(classAssertionAxiom, instancesInRepairs.containsKey(classAssertionAxiom) ? instancesInRepairs.get(classAssertionAxiom) + 1 : 1);
+                for (OWLClassAssertionAxiom classAssertionAxiom : repairs[i].getOntology().getClassAssertionAxioms(cls)) {
+                    classAssertionsInRepair.put(classAssertionAxiom, classAssertionsInRepair.containsKey(classAssertionAxiom) ? classAssertionsInRepair.get(classAssertionAxiom) + 1 : 1);
                 }
             }
         }
@@ -80,7 +80,13 @@ public class ARSemantics extends Semantics {
 ////            System.out.println ("Key: " + key + " Value: " + value);
 ////        }
 
-        for(Map.Entry entry: instancesInRepairs.entrySet()){
+        for(Map.Entry entry: classAssertionsDerived.entrySet()){
+            if(value.equals(entry.getValue())){
+                ARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
+            }
+        }
+
+        for(Map.Entry entry: classAssertionsInRepair.entrySet()){
             if(value.equals(entry.getValue())){
                 ARClassAssertionAxioms.add((OWLAxiom) entry.getKey());
             }

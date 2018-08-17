@@ -123,7 +123,7 @@ public class IARSemantics extends Semantics {
         }
 
         for (OWLClass cls : original.getOntology().getClassesInSignature()) {
-            for (OWLSubClassOfAxiom classAssertionAxiom : intersectionRepairs.getOntology().getSubClassAxiomsForSubClass(cls)) {
+            for (OWLClassAssertionAxiom classAssertionAxiom : intersectionRepairs.getOntology().getClassAssertionAxioms(cls)) {
                 IARClassAssertionAxioms.add(classAssertionAxiom);
             }
         }
